@@ -17,7 +17,7 @@ public class RepositoryInventory implements IItemHandler {
 
     @Override
     public int getSlots() {
-        return 1000000000;
+        return stacks.size();
     }
 
     public int getStoredCount() {
@@ -25,7 +25,7 @@ public class RepositoryInventory implements IItemHandler {
     }
 
     public boolean isFull() {
-        return getStoredCount() >= getSlots();
+        return getStoredCount() >= 1000000000;
     }
 
     @Override

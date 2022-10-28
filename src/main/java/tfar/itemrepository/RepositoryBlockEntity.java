@@ -8,7 +8,9 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,6 +34,29 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
 
     public LazyOptional<IItemHandler> inputOptional = LazyOptional.of(() -> new RepositoryInventoryInputWrapper(getInventory()));
 
+    protected final ContainerData dataAccess = new ContainerData() {
+        public int get(int pIndex) {
+            switch (pIndex) {
+                case 0:
+                    return getInventory().getSlots();
+                default:
+                    return 0;
+            }
+        }
+
+        public void set(int pIndex, int pValue) {
+            switch (pIndex) {
+                case 0:
+
+            }
+
+        }
+
+        public int getCount() {
+            return 1;
+        }
+    };
+
     public RepositoryInventory getInventory() {
         return ItemRepository.instance.data.getOrCreateInventory(settings.getInt(Utils.ID));
     }
@@ -52,7 +77,7 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new RepositoryMenu(pContainerId,pPlayerInventory,getInventory());
+        return new RepositoryMenu(pContainerId,pPlayerInventory,getInventory(), dataAccess);
     }
     @Nonnull
     @Override

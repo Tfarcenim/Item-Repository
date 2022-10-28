@@ -2,9 +2,7 @@ package tfar.itemrepository;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import tfar.itemrepository.init.ModMenuTypes;
@@ -17,20 +15,32 @@ public class RepositoryMenu extends AbstractContainerMenu {
 
     private final RepositoryInventory repositoryInventory;
 
-    protected RepositoryMenu(int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory) {
-        this(ModMenuTypes.REPOSITORY, pContainerId, inventory, repositoryInventory);
+    private final RepositorySlot[] repoSlots = new RepositorySlot[54];
+    private final ContainerData data;
+
+    private int row;
+
+
+
+    protected RepositoryMenu(int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory, ContainerData data) {
+        this(ModMenuTypes.REPOSITORY, pContainerId, inventory, repositoryInventory,data);
     }
 
     public RepositoryMenu(int i, Inventory inventory) {
-        this(ModMenuTypes.REPOSITORY, i, inventory, new RepositoryInventory());
+        this(ModMenuTypes.REPOSITORY, i, inventory, new RepositoryInventory(),new SimpleContainerData(1));
     }
 
-    protected RepositoryMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory) {
+    protected RepositoryMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory,ContainerData
+                             data) {
         super(pMenuType, pContainerId);
+        this.data = data;
         this.repositoryInventory = repositoryInventory;
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlot(new RepositorySlot(repositoryInventory, x + 6 * y, 8 + 18 * x, 18 + 18 * y, this));
+                int ind =  x + 6 * y;
+                RepositorySlot slot = new RepositorySlot(repositoryInventory, ind, 8 + 18 * x, 18 + 18 * y, this);
+                repoSlots[ind] = slot;
+                addSlot(slot);
             }
         }
 
@@ -45,6 +55,7 @@ public class RepositoryMenu extends AbstractContainerMenu {
         for (int i = 0; i < 9; i++) {
             this.addSlot(new Slot(inventory, i, i * 18 + playerX, playerY + 58));
         }
+        this.addDataSlots(data);
     }
 
 
@@ -135,5 +146,13 @@ public class RepositoryMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return true;
+    }
+
+    public int getRealSlots() {
+        return data.get(0);
+    }
+
+    public void handleScroll(int scroll_amount) {
+
     }
 }

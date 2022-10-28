@@ -49,4 +49,10 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
         int j = (this.height - this.imageHeight) / 2;
         this.blit(stack,i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
+
+    @Override
+    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+        super.renderLabels(pPoseStack, pMouseX, pMouseY);
+        this.font.draw(pPoseStack, "" + menu.getRealSlots(), (float)this.titleLabelX + 60, (float)this.titleLabelY, 0x404040);
+    }
 }

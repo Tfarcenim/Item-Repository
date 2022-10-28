@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -19,10 +20,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
+import tfar.itemrepository.command.RepositoryCommands;
 import tfar.itemrepository.init.ModBlockEntityTypes;
 import tfar.itemrepository.init.ModBlocks;
 import tfar.itemrepository.init.ModItems;
 import tfar.itemrepository.init.ModMenuTypes;
+import tfar.itemrepository.net.PacketHandler;
 import tfar.itemrepository.world.RepositorySavedData;
 
 import java.util.stream.Collectors;
@@ -46,6 +49,7 @@ public class ItemRepository {
             bus.addListener(Client::setup);
         }
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
+        MinecraftForge.EVENT_BUS.addListener(this::commands);
         instance = this;
     }
 
@@ -56,7 +60,11 @@ public class ItemRepository {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
+        PacketHandler.registerMessages();
+    }
 
+    private void commands(RegisterCommandsEvent e) {
+        RepositoryCommands.register(e.getDispatcher());
     }
 
     public void onBlocksRegistry(final RegisterEvent e) {
