@@ -1,5 +1,6 @@
 package tfar.itemrepository.inventory;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -45,6 +46,8 @@ public class ItemStackWidget extends AbstractWidget {
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         if (!stack.isEmpty()) {
             if (isHovered) {
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
                 fill(pPoseStack, x, y, x + 16, y + 16, 0x80ffffff);
                 renderTooltip(pPoseStack, pMouseX, pMouseY);
             }

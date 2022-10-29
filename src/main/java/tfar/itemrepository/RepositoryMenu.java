@@ -22,14 +22,14 @@ public class RepositoryMenu extends AbstractContainerMenu {
     private final ContainerData data;
     private final ContainerData syncSlots;
 
-    private int row;
+    private final DataSlot row = DataSlot.standalone();
 
     protected RepositoryMenu(int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory, ContainerData data,ContainerData syncSlots) {
         this(ModMenuTypes.REPOSITORY, pContainerId, inventory, repositoryInventory,data,syncSlots);
     }
 
     public RepositoryMenu(int i, Inventory inventory) {
-        this(ModMenuTypes.REPOSITORY, i, inventory, null,new SimpleContainerData(1),new SimpleContainerData(54));
+        this(ModMenuTypes.REPOSITORY, i, inventory, null,new SimpleContainerData(2),new SimpleContainerData(54));
     }
 
     protected RepositoryMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory,ContainerData
@@ -52,6 +52,8 @@ public class RepositoryMenu extends AbstractContainerMenu {
         }
         addDataSlots(data);
         addDataSlots(syncSlots);
+
+        addDataSlot(row);
     }
 
     @Override
@@ -84,8 +86,15 @@ public class RepositoryMenu extends AbstractContainerMenu {
         return itemstack;
     }
 
-    public int getRows() {
-        return (int) Math.ceil((double) getSlotCount() / 9);
+    public int getTotalRows() {
+        return (int) Math.ceil((double) getTotalSlotCount() / 9);
+    }
+    public int getSearchRows() {
+        return (int) Math.ceil((double) getSearchSlotCount() / 9);
+    }
+
+    public int getCurrentRow() {
+        return row.get();
     }
 
     @Override
@@ -93,17 +102,21 @@ public class RepositoryMenu extends AbstractContainerMenu {
         return true;
     }
 
-    public int getSlotCount() {
+    public int getTotalSlotCount() {
         return data.get(0);
     }
 
+    public int getSearchSlotCount() {
+        return data.get(1);
+    }
+
     public void handleScroll(ServerPlayer player,int scroll_amount) {
-        int rows = getRows();
+        int rows = getSearchRows();
         if (rows > 6) {
-            if (scroll_amount < 0 && row < rows - 6) {
-                row++;
-            } else if (scroll_amount > 0 && row > 0) {
-                row--;
+            if (scroll_amount < 0 && row.get() < rows - 6) {
+                row.set(row.get() + 1);
+            } else if (scroll_amount > 0 && row.get() > 0) {
+                row.set(row.get() - 1);
             }
         }
         refreshDisplay(player);
@@ -128,7 +141,7 @@ public class RepositoryMenu extends AbstractContainerMenu {
 
     public void refreshDisplay(ServerPlayer player) {
         List<ItemStack> list = new ArrayList<>();
-        List<Integer> syncSlots = repositoryInventory.getDisplaySlots(row,"");
+        List<Integer> syncSlots = repositoryInventory.getDisplaySlots(row.get(),"");
         for (int i = 0; i < syncSlots.size();i++) {
             list.add(repositoryInventory.getStackInSlot(syncSlots.get(i)));
         }

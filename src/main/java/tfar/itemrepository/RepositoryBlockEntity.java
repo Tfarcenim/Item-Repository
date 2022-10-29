@@ -33,11 +33,15 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
 
     public LazyOptional<IItemHandler> inputOptional = LazyOptional.of(() -> new RepositoryInventoryInputWrapper(getInventory()));
 
+    public String search = "";
+
     protected final ContainerData dataAccess = new ContainerData() {
         public int get(int pIndex) {
             switch (pIndex) {
                 case 0:
                     return getInventory().getSlots();
+                case 1:
+                    return getInventory().getFullSlots(search);
                 default:
                     return 0;
             }
@@ -46,13 +50,11 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
         public void set(int pIndex, int pValue) {
             switch (pIndex) {
                 case 0:
-
             }
-
         }
 
         public int getCount() {
-            return 1;
+            return 2;
         }
     };
 

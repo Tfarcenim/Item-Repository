@@ -101,6 +101,16 @@ public class RepositoryInventory implements IItemHandler {
         return stacks;
     }
 
+    public int getFullSlots(String search) {
+        int i = 0;
+        for (ItemStack stack : stacks) {
+            if (matches(stack,search)){
+             i++;
+            }
+        }
+        return i;
+    }
+
     public List<Integer> getDisplaySlots(int row,String search) {
         List<Integer> disp = new ArrayList<>();
         int countForDisplay = 0;

@@ -3,12 +3,17 @@ package tfar.itemrepository;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundRenameItemPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 import tfar.itemrepository.inventory.ItemStackWidget;
+import tfar.itemrepository.inventory.ScrollbarWidget;
 import tfar.itemrepository.net.C2SGetDisplayPacket;
 import tfar.itemrepository.net.C2SScrollPacket;
 import tfar.itemrepository.net.PacketHandler;
@@ -18,18 +23,20 @@ import java.util.List;
 public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
 
     private final ItemStackWidget[] widgets = new ItemStackWidget[54];
+    private EditBox editBox;
     public RepositoryScreen(RepositoryMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageHeight += 56;
+        imageWidth+=16;
         this.inventoryLabelY = this.imageHeight - 94;
-        PacketHandler.sendToServer(new C2SGetDisplayPacket());
     }
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ItemRepository.MODID,"textures/gui/container/repository.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ItemRepository.MODID,"textures/gui/container/repository.png");
 
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+        editBox.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pPoseStack, pMouseX, pMouseY);
     }
 
@@ -52,7 +59,35 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
                 addRenderableWidget(widget);
             }
         }
+        initEditBox();
+        addRenderableWidget(new ScrollbarWidget(leftPos + 174,topPos + 18,8,18 * 6 - 17,Component.literal("scroll"), this));
+        PacketHandler.sendToServer(new C2SGetDisplayPacket());
     }
+
+    protected void initEditBox() {
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+        this.editBox = new EditBox(this.font, i + 82, j + 6, 103, 12, Component.translatable("container.repair"));
+        this.editBox.setCanLoseFocus(false);
+        this.editBox.setTextColor(-1);
+        this.editBox.setTextColorUneditable(-1);
+        this.editBox.setBordered(false);
+        this.editBox.setMaxLength(50);
+        this.editBox.setResponder(this::onNameChanged);
+        this.editBox.setValue("");
+        this.addWidget(this.editBox);
+        this.setInitialFocus(this.editBox);
+        this.editBox.setEditable(true);
+    }
+
+    private void onNameChanged(String string) {
+        if (!string.isEmpty()) {
+            String s = string;
+            //this.minecraft.player.connection.send(new ServerboundRenameItemPacket(s));
+        }
+    }
+
 
     @Override
     public List<Component> getTooltipFromItem(ItemStack itemStack) {
@@ -81,7 +116,7 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
     @Override
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        this.font.draw(pPoseStack, "" + menu.getSlotCount(), (float)this.titleLabelX + 60, (float)this.titleLabelY, 0x404040);
+        this.font.draw(pPoseStack, menu.getSearchSlotCount()+"/"+menu.getTotalSlotCount(), (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
     }
 
     public void setGuiStacks(List<ItemStack> stacks, List<Integer> ints) {
@@ -96,7 +131,7 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
     }
 
     public boolean canScroll() {
-        return menu.getSlotCount() > 54;
+        return menu.getTotalSlotCount() > 54;
     }
 
     @Override
@@ -108,4 +143,18 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
 
         return super.mouseScrolled(pMouseX, pMouseY, pDelta);
     }
+
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        if (pKeyCode == GLFW.GLFW_KEY_ESCAPE) {
+            this.minecraft.player.closeContainer();
+        }
+
+        return this.editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || this.editBox.canConsumeInput() || super.keyPressed(pKeyCode, pScanCode, pModifiers);
+    }
+
+    public void removed() {
+        super.removed();
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+    }
+
 }
