@@ -1,24 +1,27 @@
 package tfar.itemrepository;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import tfar.itemrepository.init.ModMenuTypes;
-import tfar.itemrepository.inventory.RepositorySlot;
+import tfar.itemrepository.net.PacketHandler;
+import tfar.itemrepository.net.S2CRefreshClientStacksPacket;
 import tfar.itemrepository.world.RepositoryInventory;
 
-import javax.annotation.Nonnull;
+import java.util.List;
 
 public class RepositoryMenu extends AbstractContainerMenu {
 
-    private final RepositoryInventory repositoryInventory;
+    public final RepositoryInventory repositoryInventory;
 
-    private final RepositorySlot[] repoSlots = new RepositorySlot[54];
     private final ContainerData data;
 
     private int row;
+    public final int[] displaySlots = new int[54];
 
 
 
@@ -27,7 +30,7 @@ public class RepositoryMenu extends AbstractContainerMenu {
     }
 
     public RepositoryMenu(int i, Inventory inventory) {
-        this(ModMenuTypes.REPOSITORY, i, inventory, new RepositoryInventory(),new SimpleContainerData(1));
+        this(ModMenuTypes.REPOSITORY, i, inventory, null,new SimpleContainerData(1));
     }
 
     protected RepositoryMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory,ContainerData
@@ -35,14 +38,6 @@ public class RepositoryMenu extends AbstractContainerMenu {
         super(pMenuType, pContainerId);
         this.data = data;
         this.repositoryInventory = repositoryInventory;
-        for (int y = 0; y < 6; y++) {
-            for (int x = 0; x < 9; x++) {
-                int ind =  x + 6 * y;
-                RepositorySlot slot = new RepositorySlot(repositoryInventory, ind, 8 + 18 * x, 18 + 18 * y, this);
-                repoSlots[ind] = slot;
-                addSlot(slot);
-            }
-        }
 
         int playerX = 8;
         int playerY = 140;
@@ -56,83 +51,44 @@ public class RepositoryMenu extends AbstractContainerMenu {
             this.addSlot(new Slot(inventory, i, i * 18 + playerX, playerY + 58));
         }
         this.addDataSlots(data);
+        defaultDisplaySlots();
     }
 
+    private void defaultDisplaySlots() {
+        for (int i = 0; i < displaySlots.length;i++) {
+            displaySlots[i] = i;
+        }
+    }
 
-    @Nonnull
     @Override
-    public ItemStack quickMoveStack(Player playerIn, int index) {
-
-        Slot slot = this.slots.get(index);
-
-        if (slot == null || !slot.hasItem()) {
+    public ItemStack quickMoveStack(Player playerIn, int slotIndex) {
+        if (playerIn.level.isClientSide) {
             return ItemStack.EMPTY;
         }
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(slotIndex);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
 
-        ItemStack ret = slot.getItem().copy();
-        ItemStack stack = slot.getItem().copy();
-
-        boolean nothingDone;
-
-        //is this the crafting output slot?
-        if (index < 54) {
-            // Try moving module -> player inventory
-            nothingDone = !moveToPlayerInventory((RepositorySlot) slot, stack);
-
-            // Try moving module -> tile inventory
-        }
-        // Is the slot from the tile?
-        else {
-            // try moving player -> modules
-            nothingDone = !moveToRepository(stack);
-        }
-
-        if (nothingDone) {
-            return ItemStack.EMPTY;
-        }
-        return notifySlotAfterTransfer(playerIn, stack, ret, slot);
-    }
-
-    @Nonnull
-    protected ItemStack notifySlotAfterTransfer(Player player, @Nonnull ItemStack stack, @Nonnull ItemStack original, Slot slot) {
-        // notify slot
-
-        if (stack.getCount() == original.getCount()) {
-            return ItemStack.EMPTY;
-        }
-
-        // update slot we pulled from
-        slot.set(stack);
-        slot.onTake(player, stack);
-
-        if (slot.hasItem() && slot.getItem().isEmpty()) {
-            slot.set(ItemStack.EMPTY);
-        }
-
-        return original;
-    }
-
-    protected boolean moveToPlayerInventory(RepositorySlot slot, @Nonnull ItemStack itemstack) {
-        for (int i = getSlotCount(); i < slots.size(); i++) {
-            Slot targetSlot = slots.get(i);
-            if (!targetSlot.hasItem()) {
-                targetSlot.set(itemstack.copy());
-                itemstack.setCount(0);
-                slot.removeItem();
-                return true;
+            if (!repositoryInventory.isItemValid(0,itemstack1)) {
+                return ItemStack.EMPTY;
             }
-        }
-        return false;
-    }
 
-    protected boolean moveToRepository(@Nonnull ItemStack itemstack) {
-        if (itemstack.getMaxStackSize() != 1) {
-            return false;
-        } else {
-            repositoryInventory.addItem(itemstack.copy());
-            itemstack.setCount(0);
-            return true;
+            repositoryInventory.addItem(itemstack1);
+            ItemStack stack = ItemStack.EMPTY;
+            slot.set(stack);
+            broadcastChanges();
+            List<ItemStack> list = repositoryInventory.getStacks();
+            if (playerIn instanceof ServerPlayer sp) {
+                PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list), sp);
+            }
+            if (stack.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
+            slot.onTake(playerIn, itemstack1);
+            return ItemStack.EMPTY;
         }
+        return itemstack;
     }
 
     public int getRows() {
@@ -153,6 +109,33 @@ public class RepositoryMenu extends AbstractContainerMenu {
     }
 
     public void handleScroll(int scroll_amount) {
+    }
 
+    public void handleRequest(ServerPlayer player, int slot, int amount, boolean shift) {
+
+        if (!repositoryInventory.isSlotValid(slot)) {
+            return;
+        }
+
+        if (shift) {
+            ItemHandlerHelper.giveItemToPlayer(player,repositoryInventory.getStackInSlot(slot).copy());
+        } else {
+            setCarried(repositoryInventory.getStackInSlot(slot).copy());
+        }
+
+        repositoryInventory.extractItem(slot,amount,false);
+
+        refreshDisplay(player);
+    }
+
+    public void refreshDisplay(ServerPlayer player) {
+        List<ItemStack> list = repositoryInventory.getDisplayStacks(displaySlots);
+        PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list), player);
+    }
+
+    public void handleInsert(ServerPlayer player) {
+        repositoryInventory.addItem(getCarried().copy());
+        setCarried(ItemStack.EMPTY);
+        refreshDisplay(player);
     }
 }

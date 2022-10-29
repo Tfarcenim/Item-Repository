@@ -15,16 +15,38 @@ public class PacketHandler {
 
         INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ItemRepository.MODID, ItemRepository.MODID), () -> "1.0", s -> true, s -> true);
 
-        INSTANCE.registerMessage(id++, C2SScroll.class,
-                C2SScroll::encode,
-                C2SScroll::new,
-                C2SScroll::handle);    }
+        INSTANCE.registerMessage(id++, C2SScrollPacket.class,
+                C2SScrollPacket::encode,
+                C2SScrollPacket::new,
+                C2SScrollPacket::handle);
 
-    public static void sendToClient(Object packet, ServerPlayer player) {
+        INSTANCE.registerMessage(id++, C2SRequestPacket.class,
+                C2SRequestPacket::encode,
+                C2SRequestPacket::new,
+                C2SRequestPacket::handle);
+
+        INSTANCE.registerMessage(id++, C2SInsertPacket.class,
+                C2SInsertPacket::encode,
+                C2SInsertPacket::new,
+                C2SInsertPacket::handle);
+
+
+        INSTANCE.registerMessage(id++, C2SGetDisplayPacket.class,
+                C2SGetDisplayPacket::encode,
+                C2SGetDisplayPacket::new,
+                C2SGetDisplayPacket::handle);
+
+        INSTANCE.registerMessage(id++, S2CRefreshClientStacksPacket.class,
+                S2CRefreshClientStacksPacket::encode,
+                S2CRefreshClientStacksPacket::decode,
+                S2CRefreshClientStacksPacket::handle);
+    }
+
+    public static <MSG> void sendToClient(MSG packet, ServerPlayer player) {
         INSTANCE.sendTo(packet, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static void sendToServer(Object packet) {
+    public static <MSG> void sendToServer(MSG packet) {
         INSTANCE.sendToServer(packet);
     }
 }

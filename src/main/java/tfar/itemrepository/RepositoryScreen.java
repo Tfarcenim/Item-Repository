@@ -8,14 +8,20 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import tfar.itemrepository.inventory.ItemStackWidget;
+import tfar.itemrepository.net.C2SGetDisplayPacket;
+import tfar.itemrepository.net.PacketHandler;
 
 import java.util.List;
 
 public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
+
+    private final ItemStackWidget[] widgets = new ItemStackWidget[54];
     public RepositoryScreen(RepositoryMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageHeight += 56;
-        this.inventoryLabelY = this.imageHeight - 94;;
+        this.inventoryLabelY = this.imageHeight - 94;
+        PacketHandler.sendToServer(new C2SGetDisplayPacket());
     }
     private static final ResourceLocation TEXTURE = new ResourceLocation(ItemRepository.MODID,"textures/gui/container/repository.png");
 
@@ -24,6 +30,22 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
         this.renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pPoseStack, pMouseX, pMouseY);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        int xPos = leftPos + 8;
+        int yPos = topPos + 18;
+        for (int y = 0; y < 6;y++) {
+            for (int x = 0; x < 9;x++) {
+                int index = x + 9 * y;
+                ItemStackWidget widget = new ItemStackWidget(xPos+ 18 * x,yPos + 18 * y, 18, 18, Component.literal("test"),
+                        this,menu.displaySlots[index]);
+                widgets[index] = widget;
+                addRenderableWidget(widget);
+            }
+        }
     }
 
     @Override
@@ -54,5 +76,24 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
         this.font.draw(pPoseStack, "" + menu.getRealSlots(), (float)this.titleLabelX + 60, (float)this.titleLabelY, 0x404040);
+    }
+
+    public void setGuiStacks(List<ItemStack> stacks) {
+        for (int i = 0; i < 54;i++) {
+            if (i < stacks.size()) {
+                widgets[i].setStack(stacks.get(i));
+            } else {
+                widgets[i].setStack(ItemStack.EMPTY);
+            }
+        }
+    }
+
+    public boolean canScroll() {
+        return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+        return super.mouseScrolled(pMouseX, pMouseY, pDelta);
     }
 }

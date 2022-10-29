@@ -9,16 +9,16 @@ import tfar.itemrepository.RepositoryMenu;
 import java.util.function.Supplier;
 
 
-public class C2SScroll {
+public class C2SScrollPacket {
 
   int scroll_amount;
 
-  public C2SScroll(){}
+  public C2SScrollPacket(){}
 
-  public C2SScroll(int amount){ this.scroll_amount = amount;}
+  public C2SScrollPacket(int amount){ this.scroll_amount = amount;}
 
   //decode
-  public C2SScroll(FriendlyByteBuf buf) {
+  public C2SScrollPacket(FriendlyByteBuf buf) {
     this.scroll_amount = buf.readInt();
   }
 

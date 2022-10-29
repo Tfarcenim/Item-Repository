@@ -3,16 +3,21 @@ package tfar.itemrepository.world;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.itemrepository.ItemRepository;
+import tfar.itemrepository.RepositoryMenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryInventory implements IItemHandler {
 
+    public RepositoryInventory() {}
     private List<ItemStack> stacks = new ArrayList<>();
 
     @Override
@@ -26,6 +31,10 @@ public class RepositoryInventory implements IItemHandler {
 
     public boolean isFull() {
         return getStoredCount() >= 1000000000;
+    }
+
+    public void setClientItemStack(int slot, ItemStack stack) {
+        stacks.set(slot,stack);
     }
 
     @Override
@@ -92,6 +101,18 @@ public class RepositoryInventory implements IItemHandler {
         return stacks;
     }
 
+    public List<ItemStack> getDisplayStacks(int[] slots) {
+        List<ItemStack> disp = new ArrayList<>();
+        for (int i = 0 ; i < slots.length;i++) {
+            int slotid = slots[i];
+            ItemStack stack = getStackInSlot(slotid);
+            if (!stack.isEmpty()) {
+                disp.add(stack);
+            }
+        }
+        return disp;
+    }
+
     public void setStacks(List<ItemStack> stacks) {
         this.stacks = stacks;
     }
@@ -101,6 +122,11 @@ public class RepositoryInventory implements IItemHandler {
     public void setChanged() {
         if (ItemRepository.instance.data != null) {
             ItemRepository.instance.data.setDirty();
+        }
+        for (ServerPlayer player : ItemRepository.instance.server.getPlayerList().getPlayers()) {
+            if (player.containerMenu instanceof RepositoryMenu repositoryMenu && repositoryMenu.repositoryInventory == this) {
+                repositoryMenu.refreshDisplay(player);
+            }
         }
     }
 
@@ -119,5 +145,9 @@ public class RepositoryInventory implements IItemHandler {
         for (Tag tag1 : tag) {
             stacks.add(ItemStack.of((CompoundTag) tag1));
         }
+    }
+
+    public boolean isSlotValid(int slot) {
+        return slot < getSlots();
     }
 }

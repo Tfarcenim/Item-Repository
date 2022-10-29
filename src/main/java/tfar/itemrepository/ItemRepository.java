@@ -39,6 +39,7 @@ public class ItemRepository {
 
     public static ItemRepository instance;
     public RepositorySavedData data;
+    public MinecraftServer server;
 
     public ItemRepository() {
         // Register the setup method for modloading
@@ -55,6 +56,7 @@ public class ItemRepository {
 
     public void onServerStarted(ServerStartingEvent event) {
         MinecraftServer server = event.getServer();
+        instance.server = server;
         instance.data = server.getLevel(Level.OVERWORLD).getDataStorage()
                 .computeIfAbsent(RepositorySavedData::loadStatic, RepositorySavedData::new,MODID);
     }
