@@ -33,6 +33,11 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
     }
 
     @Override
+    public void renderTooltip(PoseStack pPoseStack, ItemStack pItemStack, int pMouseX, int pMouseY) {
+        super.renderTooltip(pPoseStack, pItemStack, pMouseX, pMouseY);
+    }
+
+    @Override
     protected void init() {
         super.init();
         int xPos = leftPos + 8;

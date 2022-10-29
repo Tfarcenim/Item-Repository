@@ -33,24 +33,31 @@ public class ItemStackWidget extends AbstractWidget {
     public void onClick(double pMouseX, double pMouseY) {
         boolean shift = Screen.hasShiftDown();
 
-        if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {
+        if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {//try to take item
             PacketHandler.sendToServer(new C2SRequestPacket(index, 1, shift));
-        } else {
+        } else {//try to insert item
             PacketHandler.sendToServer(new C2SInsertPacket());
         }
         super.onClick(pMouseX, pMouseY);
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        //super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        renderItem(pPoseStack);
+    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        if (!stack.isEmpty()) {
+            if (isHovered) {
+                fill(pPoseStack, x, y, x + 16, y + 16, 0x80ffffff);
+                renderTooltip(pPoseStack, pMouseX, pMouseY);
+            }
+            renderItem(pPoseStack);
+        }
     }
 
     public void renderItem(PoseStack matrices) {
-        if (!stack.isEmpty()) {
-            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack,x,y);
-        }
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack,x,y);
+    }
+
+    public void renderTooltip(PoseStack matrices,int x,int y) {
+        screen.renderTooltip(matrices,stack,x,y);
     }
 
     public ItemStack getStack() {
