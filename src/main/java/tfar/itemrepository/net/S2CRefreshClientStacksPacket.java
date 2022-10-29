@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import tfar.itemrepository.RepositoryScreen;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -15,17 +16,19 @@ public class S2CRefreshClientStacksPacket {
 
   private final int size;
   private final List<ItemStack> stacks;
-  public S2CRefreshClientStacksPacket(List<ItemStack> stacks) {
+  private final List<Integer> ints;
+  public S2CRefreshClientStacksPacket(List<ItemStack> stacks,List<Integer> ints) {
     super();
     this.stacks = stacks;
     size = stacks.size();
+    this.ints = ints;
   }
 
   public static void handle(S2CRefreshClientStacksPacket message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       Minecraft mc = Minecraft.getInstance();
       if (mc.screen instanceof RepositoryScreen repositoryScreen) {
-        repositoryScreen.setGuiStacks(message.stacks);
+        repositoryScreen.setGuiStacks(message.stacks,message.ints);
       }
     });
     ctx.get().setPacketHandled(true);
@@ -36,6 +39,9 @@ public class S2CRefreshClientStacksPacket {
     for (ItemStack stack : msg.stacks) {
       buf.writeNbt(stack.serializeNBT());
       buf.writeInt(stack.getCount());
+    }
+    for (int i = 0; i < msg.ints.size();i++) {
+      buf.writeInt(msg.ints.get(i));
     }
   }
 
@@ -48,6 +54,12 @@ public class S2CRefreshClientStacksPacket {
       stack.setCount(buf.readInt());
       stacks.add(stack);
     }
-    return new S2CRefreshClientStacksPacket(stacks);
+
+    List<Integer> ints = new ArrayList<>();
+    for (int i = 0; i < size;i++) {
+      ints.add(buf.readInt());
+    }
+
+    return new S2CRefreshClientStacksPacket(stacks,ints);
   }
 }

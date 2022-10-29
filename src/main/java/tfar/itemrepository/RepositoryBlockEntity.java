@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,12 +56,37 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
         }
     };
 
+    protected final int[] syncSlots = new int[54];
+
+    private static void defaultDisplaySlots(int[] ints) {
+        for (int i = 0; i <  ints.length;i++) {
+            ints[i] = i;
+        }
+    }
+    protected final ContainerData syncSlotsAccess = new ContainerData() {
+        @Override
+        public int get(int pIndex) {
+            return syncSlots[pIndex];
+        }
+
+        @Override
+        public void set(int pIndex, int pValue) {
+            syncSlots[pIndex] = pValue;
+        }
+
+        @Override
+        public int getCount() {
+            return syncSlots.length;
+        }
+    };
+
     public RepositoryInventory getInventory() {
         return ItemRepository.instance.data.getOrCreateInventory(settings.getInt(Utils.ID));
     }
 
     public RepositoryBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
+        defaultDisplaySlots(syncSlots);
     }
 
     public RepositoryBlockEntity(BlockPos pos,BlockState state) {
@@ -77,7 +101,7 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new RepositoryMenu(pContainerId,pPlayerInventory,getInventory(), dataAccess);
+        return new RepositoryMenu(pContainerId,pPlayerInventory,getInventory(), dataAccess, syncSlotsAccess);
     }
     @Nonnull
     @Override

@@ -1,6 +1,7 @@
 package tfar.itemrepository.net;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
@@ -27,12 +28,12 @@ public class C2SScrollPacket {
   }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-      Player player = ctx.get().getSender();
+      ServerPlayer player = ctx.get().getSender();
       if (player == null) return;
       ctx.get().enqueueWork(  ()->  {
         AbstractContainerMenu container = player.containerMenu;
         if (container instanceof RepositoryMenu repositoryMenu) {
-          repositoryMenu.handleScroll(scroll_amount);
+          repositoryMenu.handleScroll(player,scroll_amount);
 
         }
       });

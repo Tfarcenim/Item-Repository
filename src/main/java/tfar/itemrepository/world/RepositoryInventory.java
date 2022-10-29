@@ -101,16 +101,24 @@ public class RepositoryInventory implements IItemHandler {
         return stacks;
     }
 
-    public List<ItemStack> getDisplayStacks(int[] slots) {
-        List<ItemStack> disp = new ArrayList<>();
-        for (int i = 0 ; i < slots.length;i++) {
-            int slotid = slots[i];
-            ItemStack stack = getStackInSlot(slotid);
-            if (!stack.isEmpty()) {
-                disp.add(stack);
+    public List<Integer> getDisplaySlots(int row,String search) {
+        List<Integer> disp = new ArrayList<>();
+        int countForDisplay = 0;
+        int startPos = 9 * row;
+        while (countForDisplay < 54) {
+            ItemStack stack = getStackInSlot(startPos + countForDisplay);
+            if (matches(stack,search)) {
+                disp.add(startPos + countForDisplay);
+                countForDisplay++;
+            } else if (stack.isEmpty()) {
+                break;
             }
         }
         return disp;
+    }
+
+    public boolean matches(ItemStack stack,String search) {
+        return true;
     }
 
     public void setStacks(List<ItemStack> stacks) {

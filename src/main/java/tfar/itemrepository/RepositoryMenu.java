@@ -12,6 +12,7 @@ import tfar.itemrepository.net.PacketHandler;
 import tfar.itemrepository.net.S2CRefreshClientStacksPacket;
 import tfar.itemrepository.world.RepositoryInventory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepositoryMenu extends AbstractContainerMenu {
@@ -19,24 +20,23 @@ public class RepositoryMenu extends AbstractContainerMenu {
     public final RepositoryInventory repositoryInventory;
 
     private final ContainerData data;
+    private final ContainerData syncSlots;
 
     private int row;
-    public final int[] displaySlots = new int[54];
 
-
-
-    protected RepositoryMenu(int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory, ContainerData data) {
-        this(ModMenuTypes.REPOSITORY, pContainerId, inventory, repositoryInventory,data);
+    protected RepositoryMenu(int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory, ContainerData data,ContainerData syncSlots) {
+        this(ModMenuTypes.REPOSITORY, pContainerId, inventory, repositoryInventory,data,syncSlots);
     }
 
     public RepositoryMenu(int i, Inventory inventory) {
-        this(ModMenuTypes.REPOSITORY, i, inventory, null,new SimpleContainerData(1));
+        this(ModMenuTypes.REPOSITORY, i, inventory, null,new SimpleContainerData(1),new SimpleContainerData(54));
     }
 
     protected RepositoryMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory,ContainerData
-                             data) {
+                             data,ContainerData syncSlots) {
         super(pMenuType, pContainerId);
         this.data = data;
+        this.syncSlots = syncSlots;
         this.repositoryInventory = repositoryInventory;
 
         int playerX = 8;
@@ -50,14 +50,8 @@ public class RepositoryMenu extends AbstractContainerMenu {
         for (int i = 0; i < 9; i++) {
             this.addSlot(new Slot(inventory, i, i * 18 + playerX, playerY + 58));
         }
-        this.addDataSlots(data);
-        defaultDisplaySlots();
-    }
-
-    private void defaultDisplaySlots() {
-        for (int i = 0; i < displaySlots.length;i++) {
-            displaySlots[i] = i;
-        }
+        addDataSlots(data);
+        addDataSlots(syncSlots);
     }
 
     @Override
@@ -78,9 +72,8 @@ public class RepositoryMenu extends AbstractContainerMenu {
             ItemStack stack = ItemStack.EMPTY;
             slot.set(stack);
             broadcastChanges();
-            List<ItemStack> list = repositoryInventory.getStacks();
             if (playerIn instanceof ServerPlayer sp) {
-                PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list), sp);
+                refreshDisplay(sp);
             }
             if (stack.isEmpty()) {
                 return ItemStack.EMPTY;
@@ -92,11 +85,7 @@ public class RepositoryMenu extends AbstractContainerMenu {
     }
 
     public int getRows() {
-        return (int) Math.ceil((double) getSlotCount() / 6);
-    }
-
-    public int getSlotCount() {
-        return 54;
+        return (int) Math.ceil((double) getSlotCount() / 9);
     }
 
     @Override
@@ -104,11 +93,20 @@ public class RepositoryMenu extends AbstractContainerMenu {
         return true;
     }
 
-    public int getRealSlots() {
+    public int getSlotCount() {
         return data.get(0);
     }
 
-    public void handleScroll(int scroll_amount) {
+    public void handleScroll(ServerPlayer player,int scroll_amount) {
+        int rows = getRows();
+        if (rows > 6) {
+            if (scroll_amount < 0 && row < rows - 6) {
+                row++;
+            } else if (scroll_amount > 0 && row > 0) {
+                row--;
+            }
+        }
+        refreshDisplay(player);
     }
 
     public void handleRequest(ServerPlayer player, int slot, int amount, boolean shift) {
@@ -129,8 +127,16 @@ public class RepositoryMenu extends AbstractContainerMenu {
     }
 
     public void refreshDisplay(ServerPlayer player) {
-        List<ItemStack> list = repositoryInventory.getDisplayStacks(displaySlots);
-        PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list), player);
+        List<ItemStack> list = new ArrayList<>();
+        List<Integer> syncSlots = repositoryInventory.getDisplaySlots(row,"");
+        for (int i = 0; i < syncSlots.size();i++) {
+            list.add(repositoryInventory.getStackInSlot(syncSlots.get(i)));
+        }
+        PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list,syncSlots), player);
+    }
+
+    public int getDisplaySlot(int slot) {
+        return syncSlots.get(slot);
     }
 
     public void handleInsert(ServerPlayer player) {
