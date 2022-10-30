@@ -20,6 +20,11 @@ public class PacketHandler {
                 C2SScrollPacket::new,
                 C2SScrollPacket::handle);
 
+        INSTANCE.registerMessage(id++, C2SSearchPacket.class,
+                C2SSearchPacket::encode,
+                C2SSearchPacket::new,
+                C2SSearchPacket::handle);
+
         INSTANCE.registerMessage(id++, C2SRequestPacket.class,
                 C2SRequestPacket::encode,
                 C2SRequestPacket::new,

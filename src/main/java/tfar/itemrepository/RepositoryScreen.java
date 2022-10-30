@@ -16,6 +16,7 @@ import tfar.itemrepository.inventory.ItemStackWidget;
 import tfar.itemrepository.inventory.ScrollbarWidget;
 import tfar.itemrepository.net.C2SGetDisplayPacket;
 import tfar.itemrepository.net.C2SScrollPacket;
+import tfar.itemrepository.net.C2SSearchPacket;
 import tfar.itemrepository.net.PacketHandler;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
     public RepositoryScreen(RepositoryMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageHeight += 56;
-        imageWidth+=16;
+        imageWidth+=18;
         this.inventoryLabelY = this.imageHeight - 94;
     }
     public static final ResourceLocation TEXTURE = new ResourceLocation(ItemRepository.MODID,"textures/gui/container/repository.png");
@@ -82,10 +83,7 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
     }
 
     private void onNameChanged(String string) {
-        if (!string.isEmpty()) {
-            String s = string;
-            //this.minecraft.player.connection.send(new ServerboundRenameItemPacket(s));
-        }
+            PacketHandler.sendToServer(new C2SSearchPacket(string));
     }
 
 
@@ -116,7 +114,7 @@ public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
     @Override
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        this.font.draw(pPoseStack, menu.getSearchSlotCount()+"/"+menu.getTotalSlotCount(), (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
+        this.font.draw(pPoseStack, menu.getSearchSlotCount()+"/"+(menu.getTotalSlotCount()-1), (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
     }
 
     public void setGuiStacks(List<ItemStack> stacks, List<Integer> ints) {

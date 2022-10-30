@@ -15,7 +15,7 @@ public class RepositoryInventoryInputWrapper implements IItemHandler {
 
     @Override
     public int getSlots() {
-        return internal.isFull() ? 0 : 1;
+        return 1;
     }
 
     //need to trick the inserting inventory into thinking there's nothing
@@ -26,7 +26,7 @@ public class RepositoryInventoryInputWrapper implements IItemHandler {
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        return internal.insertItem(slot,stack,simulate);
+        return internal.isFull() ? stack : internal.insertItem(slot,stack,simulate);
     }
 
     @Override

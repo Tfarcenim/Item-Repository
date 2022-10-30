@@ -5,22 +5,22 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.itemrepository.world.RepositoryInventory;
 
-public class RepositoryInventoryWrapper implements IItemHandler {
+public class RepositoryInventoryOutputWrapper implements IItemHandler {
 
     private RepositoryInventory internal;
 
-    public RepositoryInventoryWrapper(RepositoryInventory internal) {
+    public RepositoryInventoryOutputWrapper(RepositoryInventory internal) {
         this.internal = internal;
     }
 
     @Override
     public int getSlots() {
-        return internal.isFull() ? 0 : 1;
+        return 1;
     }
 
     @Override
     public @NotNull ItemStack getStackInSlot(int slot) {
-        return internal.getStackInSlot(slot);
+        return internal.getStackInSlot(getSlots() - 1);
     }
 
     @Override

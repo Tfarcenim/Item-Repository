@@ -5,6 +5,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import tfar.itemrepository.init.ModMenuTypes;
@@ -19,22 +20,24 @@ public class RepositoryMenu extends AbstractContainerMenu {
 
     public final RepositoryInventory repositoryInventory;
 
+    private final ContainerLevelAccess access;
     private final ContainerData data;
     private final ContainerData syncSlots;
 
     private final DataSlot row = DataSlot.standalone();
 
-    protected RepositoryMenu(int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory, ContainerData data,ContainerData syncSlots) {
-        this(ModMenuTypes.REPOSITORY, pContainerId, inventory, repositoryInventory,data,syncSlots);
+    protected RepositoryMenu(int pContainerId, Inventory inventory,ContainerLevelAccess pAccess, RepositoryInventory repositoryInventory, ContainerData data,ContainerData syncSlots) {
+        this(ModMenuTypes.REPOSITORY, pContainerId, inventory,pAccess, repositoryInventory,data,syncSlots);
     }
 
     public RepositoryMenu(int i, Inventory inventory) {
-        this(ModMenuTypes.REPOSITORY, i, inventory, null,new SimpleContainerData(2),new SimpleContainerData(54));
+        this(ModMenuTypes.REPOSITORY, i, inventory,ContainerLevelAccess.NULL, null,new SimpleContainerData(2),new SimpleContainerData(54));
     }
 
-    protected RepositoryMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, RepositoryInventory repositoryInventory,ContainerData
-                             data,ContainerData syncSlots) {
+    protected RepositoryMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, RepositoryInventory repositoryInventory, ContainerData
+                             data, ContainerData syncSlots) {
         super(pMenuType, pContainerId);
+        this.access = access;
         this.data = data;
         this.syncSlots = syncSlots;
         this.repositoryInventory = repositoryInventory;
@@ -141,7 +144,13 @@ public class RepositoryMenu extends AbstractContainerMenu {
 
     public void refreshDisplay(ServerPlayer player) {
         List<ItemStack> list = new ArrayList<>();
-        List<Integer> syncSlots = repositoryInventory.getDisplaySlots(row.get(),"");
+        List<Integer> syncSlots = repositoryInventory.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof RepositoryBlockEntity repositoryBlock) {
+                return repositoryBlock.search;
+            }
+            return "";
+        },""));
         for (int i = 0; i < syncSlots.size();i++) {
             list.add(repositoryInventory.getStackInSlot(syncSlots.get(i)));
         }
@@ -155,6 +164,16 @@ public class RepositoryMenu extends AbstractContainerMenu {
     public void handleInsert(ServerPlayer player) {
         repositoryInventory.addItem(getCarried().copy());
         setCarried(ItemStack.EMPTY);
+        refreshDisplay(player);
+    }
+
+    public void handleSearch(ServerPlayer player, String search) {
+        access.execute((level, pos) -> {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof RepositoryBlockEntity repositoryBlock) {
+                repositoryBlock.search = search;
+            }
+        });
         refreshDisplay(player);
     }
 }

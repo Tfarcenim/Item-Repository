@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -17,21 +18,21 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.Nullable;
 import tfar.itemrepository.init.ModBlockEntityTypes;
 import tfar.itemrepository.inventory.RepositoryInventoryInputWrapper;
-import tfar.itemrepository.inventory.RepositoryInventoryWrapper;
+import tfar.itemrepository.inventory.RepositoryInventoryOutputWrapper;
 import tfar.itemrepository.world.RepositoryInventory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
 
     public CompoundTag settings = new CompoundTag();
     private Component customName;
-    public LazyOptional<IItemHandler> optional = LazyOptional.of(() -> new RepositoryInventoryWrapper(getInventory()));
-
+    public LazyOptional<IItemHandler> fullOptional = LazyOptional.of(this::getInventory);
     public LazyOptional<IItemHandler> inputOptional = LazyOptional.of(() -> new RepositoryInventoryInputWrapper(getInventory()));
+    public LazyOptional<IItemHandler> outputOptional = LazyOptional.of(() -> new RepositoryInventoryOutputWrapper(getInventory()));
 
     public String search = "";
 
@@ -103,18 +104,19 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new RepositoryMenu(pContainerId,pPlayerInventory,getInventory(), dataAccess, syncSlotsAccess);
+        return new RepositoryMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()), getInventory(), dataAccess, syncSlotsAccess);
     }
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
-
             if (side == Direction.UP) {
                 return inputOptional.cast();
             }
-
-            return optional.cast();
+            if (side == Direction.DOWN) {
+                return outputOptional.cast();
+            }
+            return fullOptional.cast();
         }
         return super.getCapability(cap, side);
     }
@@ -122,7 +124,7 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     public void setRemoved() {
         super.setRemoved();
-        optional.invalidate();
+        fullOptional.invalidate();
     }
 
     public void saveAdditional(CompoundTag tag) {

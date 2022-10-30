@@ -1,10 +1,13 @@
 package tfar.itemrepository.world;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.IItemHandler;
@@ -13,6 +16,7 @@ import tfar.itemrepository.ItemRepository;
 import tfar.itemrepository.RepositoryMenu;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class RepositoryInventory implements IItemHandler {
@@ -22,7 +26,7 @@ public class RepositoryInventory implements IItemHandler {
 
     @Override
     public int getSlots() {
-        return stacks.size();
+        return stacks.size() + 1;
     }
 
     public int getStoredCount() {
@@ -114,21 +118,41 @@ public class RepositoryInventory implements IItemHandler {
     public List<Integer> getDisplaySlots(int row,String search) {
         List<Integer> disp = new ArrayList<>();
         int countForDisplay = 0;
+        int index = 0;
         int startPos = 9 * row;
         while (countForDisplay < 54) {
-            ItemStack stack = getStackInSlot(startPos + countForDisplay);
+            ItemStack stack = getStackInSlot(startPos + index);
             if (matches(stack,search)) {
-                disp.add(startPos + countForDisplay);
+                disp.add(startPos + index);
                 countForDisplay++;
             } else if (stack.isEmpty()) {
                 break;
             }
+            index++;
         }
         return disp;
     }
 
     public boolean matches(ItemStack stack,String search) {
-        return true;
+        if (search.isEmpty()) {
+            return true;
+        } else {
+            Item item = stack.getItem();
+            if (search.startsWith("#")) {
+                String sub = search.substring(1);
+
+                List<TagKey<Item>> tags = item.builtInRegistryHolder().tags().toList();
+                for (TagKey<Item> tag : tags) {
+                    if (tag.location().getPath().startsWith(sub)) {
+                        return true;
+                    }
+                }
+                return false;
+            } else if (Registry.ITEM.getKey(item).getPath().startsWith(search)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setStacks(List<ItemStack> stacks) {
