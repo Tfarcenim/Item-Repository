@@ -7,41 +7,38 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import tfar.itemrepository.RepositoryScreen;
+import tfar.itemrepository.net.util.S2CPacketHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class S2CRefreshClientStacksPacket {
+public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
 
   private final int size;
   private final List<ItemStack> stacks;
   private final List<Integer> ints;
   public S2CRefreshClientStacksPacket(List<ItemStack> stacks,List<Integer> ints) {
-    super();
     this.stacks = stacks;
     size = stacks.size();
     this.ints = ints;
   }
 
-  public static void handle(S2CRefreshClientStacksPacket message, Supplier<NetworkEvent.Context> ctx) {
-    ctx.get().enqueueWork(() -> {
+  public void handleClient() {
       Minecraft mc = Minecraft.getInstance();
       if (mc.screen instanceof RepositoryScreen repositoryScreen) {
-        repositoryScreen.setGuiStacks(message.stacks,message.ints);
+        repositoryScreen.setGuiStacks(stacks,ints);
       }
-    });
-    ctx.get().setPacketHandled(true);
   }
 
-  public static void encode(S2CRefreshClientStacksPacket msg, FriendlyByteBuf buf) {
-    buf.writeInt(msg.size);
-    for (ItemStack stack : msg.stacks) {
+  public void encode(FriendlyByteBuf buf) {
+    buf.writeInt(size);
+    for (ItemStack stack : stacks) {
       buf.writeNbt(stack.serializeNBT());
       buf.writeInt(stack.getCount());
     }
-    for (int i = 0; i < msg.ints.size();i++) {
-      buf.writeInt(msg.ints.get(i));
+    for (int i = 0; i < ints.size();i++) {
+      buf.writeInt(ints.get(i));
     }
   }
 

@@ -26,7 +26,7 @@ public class C2SSearchPacket implements C2SPacketHelper {
     buf.writeUtf(search);
   }
 
-  public void handleInternal(ServerPlayer player) {
+  public void handleServer(ServerPlayer player) {
     AbstractContainerMenu container = player.containerMenu;
     if (container instanceof RepositoryMenu repositoryMenu) {
       repositoryMenu.handleSearch(player, search);

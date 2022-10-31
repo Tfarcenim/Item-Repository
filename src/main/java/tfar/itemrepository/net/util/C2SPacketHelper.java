@@ -5,13 +5,12 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public interface C2SPacketHelper {
-    void handleInternal(ServerPlayer player);
-
+public interface C2SPacketHelper extends PacketHelper {
     default void handle(Supplier<NetworkEvent.Context> ctx) {
         ServerPlayer player = ctx.get().getSender();
         if (player == null) return;
-        ctx.get().enqueueWork(()-> handleInternal(player));
+        ctx.get().enqueueWork(()-> handleServer(player));
         ctx.get().setPacketHandled(true);
     }
+    void handleServer(ServerPlayer player);
 }

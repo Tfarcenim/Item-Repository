@@ -26,7 +26,7 @@ public class C2SScrollPacket implements C2SPacketHelper {
   public void encode(FriendlyByteBuf buf) {
     buf.writeInt(scroll_amount);
   }
-    public void handleInternal(ServerPlayer player) {
+    public void handleServer(ServerPlayer player) {
         AbstractContainerMenu container = player.containerMenu;
         if (container instanceof RepositoryMenu repositoryMenu) {
           repositoryMenu.handleScroll(player,scroll_amount);

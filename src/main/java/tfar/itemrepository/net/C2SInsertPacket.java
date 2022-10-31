@@ -17,7 +17,7 @@ public class C2SInsertPacket implements C2SPacketHelper {
     public void encode(FriendlyByteBuf buf) {
     }
 
-    public void handleInternal(ServerPlayer player) {
+    public void handleServer(ServerPlayer player) {
         AbstractContainerMenu container = player.containerMenu;
         if (container instanceof RepositoryMenu repositoryMenu) {
             repositoryMenu.handleInsert(player);
