@@ -3,11 +3,8 @@ package tfar.itemrepository.net;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.NetworkEvent;
 import tfar.itemrepository.RepositoryMenu;
 import tfar.itemrepository.net.util.C2SPacketHelper;
-
-import java.util.function.Supplier;
 
 
 public class C2SScrollPacket implements C2SPacketHelper {

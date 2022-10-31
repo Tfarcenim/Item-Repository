@@ -10,9 +10,6 @@ import tfar.itemrepository.net.util.C2SPacketHelper;
 public class C2SSearchPacket implements C2SPacketHelper {
 
   String search;
-
-  public C2SSearchPacket(){}
-
   public C2SSearchPacket(String search) {
     this.search = search;
   }
