@@ -35,7 +35,6 @@ public class PacketHandler {
                 C2SInsertPacket::new,
                 C2SInsertPacket::handle);
 
-
         INSTANCE.registerMessage(id++, C2SGetDisplayPacket.class,
                 C2SGetDisplayPacket::encode,
                 C2SGetDisplayPacket::new,
