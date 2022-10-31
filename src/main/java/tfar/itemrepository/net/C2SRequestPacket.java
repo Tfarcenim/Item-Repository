@@ -6,14 +6,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
 import tfar.itemrepository.RepositoryMenu;
+import tfar.itemrepository.net.util.C2SPacketHelper;
 
 import java.util.function.Supplier;
 
-public class C2SRequestPacket {
+public class C2SRequestPacket implements C2SPacketHelper {
 
-    private int slot;
-    private int amount;
-    private boolean shift;
+    private final int slot;
+    private final int amount;
+    private final boolean shift;
 
     public C2SRequestPacket(int slot, int amount, boolean shift) {
         this.slot = slot;
@@ -34,17 +35,10 @@ public class C2SRequestPacket {
         buf.writeBoolean(shift);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ServerPlayer player = ctx.get().getSender();
-        if (player == null) return;
-        ctx.get().enqueueWork(  ()->  {
-            AbstractContainerMenu container = player.containerMenu;
-            if (container instanceof RepositoryMenu repositoryMenu) {
-                repositoryMenu.handleRequest(player,slot,amount,shift);
-
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    public void handleInternal(ServerPlayer player) {
+        AbstractContainerMenu container = player.containerMenu;
+        if (container instanceof RepositoryMenu repositoryMenu) {
+            repositoryMenu.handleRequest(player, slot, amount, shift);
+        }
     }
-
 }

@@ -2,15 +2,15 @@ package tfar.itemrepository.net;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent;
 import tfar.itemrepository.RepositoryMenu;
+import tfar.itemrepository.net.util.C2SPacketHelper;
 
 import java.util.function.Supplier;
 
 
-public class C2SScrollPacket {
+public class C2SScrollPacket implements C2SPacketHelper {
 
   int scroll_amount;
 
@@ -26,18 +26,11 @@ public class C2SScrollPacket {
   public void encode(FriendlyByteBuf buf) {
     buf.writeInt(scroll_amount);
   }
-
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-      ServerPlayer player = ctx.get().getSender();
-      if (player == null) return;
-      ctx.get().enqueueWork(  ()->  {
+    public void handleInternal(ServerPlayer player) {
         AbstractContainerMenu container = player.containerMenu;
         if (container instanceof RepositoryMenu repositoryMenu) {
           repositoryMenu.handleScroll(player,scroll_amount);
-
         }
-      });
-      ctx.get().setPacketHandled(true);
     }
 }
 
