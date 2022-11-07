@@ -5,6 +5,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import tfar.itemrepository.datagen.providers.ModBlockStateProvider;
 import tfar.itemrepository.datagen.providers.ModItemModelProvider;
+import tfar.itemrepository.datagen.providers.ModLangProvider;
 
 public class ModDatagen {
     public static void start(GatherDataEvent e) {
@@ -14,5 +15,6 @@ public class ModDatagen {
         boolean server = e.includeServer();
         dataGenerator.addProvider(client,new ModBlockStateProvider(dataGenerator,helper));
         dataGenerator.addProvider(client,new ModItemModelProvider(dataGenerator,helper));
+        dataGenerator.addProvider(client,new ModLangProvider(dataGenerator));
     }
 }
