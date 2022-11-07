@@ -1,4 +1,4 @@
-package tfar.itemrepository;
+package tfar.itemrepository.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +18,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import tfar.itemrepository.ItemRepository;
+import tfar.itemrepository.RepositoryMenu;
+import tfar.itemrepository.util.Utils;
 import tfar.itemrepository.init.ModBlockEntityTypes;
 import tfar.itemrepository.inventory.RepositoryInventoryInputWrapper;
 import tfar.itemrepository.inventory.RepositoryInventoryOutputWrapper;

@@ -1,4 +1,4 @@
-package tfar.itemrepository;
+package tfar.itemrepository.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import tfar.itemrepository.blockentity.RepositoryBlockEntity;
 
 public class RespositoryBlock extends Block implements EntityBlock {
     public RespositoryBlock(Properties pProperties) {

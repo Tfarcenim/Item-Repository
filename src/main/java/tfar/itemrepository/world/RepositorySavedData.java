@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.saveddata.SavedData;
-import tfar.itemrepository.Utils;
+import tfar.itemrepository.util.Utils;
 
 import javax.annotation.Nullable;
 import java.io.File;

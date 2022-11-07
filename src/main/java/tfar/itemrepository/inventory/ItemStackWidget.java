@@ -8,7 +8,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import tfar.itemrepository.RepositoryScreen;
+import tfar.itemrepository.client.RepositoryScreen;
 import tfar.itemrepository.net.C2SInsertPacket;
 import tfar.itemrepository.net.C2SRequestPacket;
 import tfar.itemrepository.net.PacketHandler;

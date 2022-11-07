@@ -5,13 +5,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import tfar.itemrepository.RepositoryScreen;
+import tfar.itemrepository.client.RepositoryScreen;
 import tfar.itemrepository.net.util.S2CPacketHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
 

@@ -1,4 +1,4 @@
-package tfar.itemrepository;
+package tfar.itemrepository.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,6 +12,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
+import tfar.itemrepository.ItemRepository;
+import tfar.itemrepository.RepositoryMenu;
 import tfar.itemrepository.inventory.ItemStackWidget;
 import tfar.itemrepository.inventory.ScrollbarWidget;
 import tfar.itemrepository.net.C2SGetDisplayPacket;

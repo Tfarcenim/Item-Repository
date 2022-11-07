@@ -1,4 +1,4 @@
-package tfar.itemrepository;
+package tfar.itemrepository.client;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;

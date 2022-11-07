@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import tfar.itemrepository.RepositoryScreen;
+import tfar.itemrepository.client.RepositoryScreen;
 
 public class ScrollbarWidget extends AbstractWidget {
     private final RepositoryScreen screen;

@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
+import tfar.itemrepository.blockentity.RepositoryBlockEntity;
 import tfar.itemrepository.init.ModMenuTypes;
 import tfar.itemrepository.net.PacketHandler;
 import tfar.itemrepository.net.S2CRefreshClientStacksPacket;
@@ -26,7 +27,7 @@ public class RepositoryMenu extends AbstractContainerMenu {
 
     private final DataSlot row = DataSlot.standalone();
 
-    protected RepositoryMenu(int pContainerId, Inventory inventory,ContainerLevelAccess pAccess, RepositoryInventory repositoryInventory, ContainerData data,ContainerData syncSlots) {
+    public RepositoryMenu(int pContainerId, Inventory inventory,ContainerLevelAccess pAccess, RepositoryInventory repositoryInventory, ContainerData data,ContainerData syncSlots) {
         this(ModMenuTypes.REPOSITORY, pContainerId, inventory,pAccess, repositoryInventory,data,syncSlots);
     }
 
