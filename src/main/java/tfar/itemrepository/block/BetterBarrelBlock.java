@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -46,11 +47,16 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
                 if (item instanceof UpgradeItem upgradeItem) {
                     tryUpgrade(upgradeItem);
                 } else {
-                    betterBarrelBlockEntity.tryAddItem(itemstack);
+                    ItemStack stack = betterBarrelBlockEntity.tryAddItem(itemstack);
+                    pPlayer.setItemInHand(pHand,stack);
                 }
             }
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        return InteractionResult.sidedSuccess(pLevel.isClientSide);
+    }
+
+    public RenderShape getRenderShape(BlockState pState) {
+        return RenderShape.MODEL;
     }
 
     public boolean tryUpgrade(UpgradeItem item) {
