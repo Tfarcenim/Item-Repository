@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
+import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
 
@@ -36,6 +37,10 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
     @Override
     public void render(BetterBarrelBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         renderTextAndItems(pBlockEntity, pPoseStack, pBufferSource,pPackedLight,pPackedOverlay);
+
+        if (pBlockEntity.getBlockState().getValue(BetterBarrelBlock.VOID)) {
+
+        }
     }
 
     protected void renderTextAndItems(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {

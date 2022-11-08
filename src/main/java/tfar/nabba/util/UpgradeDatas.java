@@ -5,7 +5,6 @@ import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModItems;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static tfar.nabba.util.Utils.BASE_STORAGE;
@@ -17,7 +16,7 @@ public enum UpgradeDatas implements UpgradeData {
     x64_STORAGE(64,BASE_STORAGE * 64,Utils.add_to_internal_upgrades,() -> ModItems.x64_STORAGE_UPGRADE),
     x256_STORAGE(256,BASE_STORAGE * 256,Utils.add_to_internal_upgrades,() -> ModItems.x256_STORAGE_UPGRADE),
     x1024_STORAGE(1024,BASE_STORAGE * 1024,Utils.add_to_internal_upgrades,() -> ModItems.x1024_STORAGE_UPGRADE),
-    VOID(1,0,Utils.add_to_internal_upgrades,() -> ModItems.VOID_UPGRADE),
+    VOID(1,0,Utils.apply_void,() -> ModItems.VOID_UPGRADE),
     PICKUP_3x3(27,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_3x3_UPGRADE),
     PICKUP_9x9(243,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_9x9_UPGRADE),
     INFINITE_STORAGE(1000000000,32000000,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_STORAGE_UPGRADE),

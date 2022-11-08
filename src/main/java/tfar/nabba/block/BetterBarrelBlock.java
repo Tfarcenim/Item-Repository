@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -36,10 +37,11 @@ import java.util.List;
 public class BetterBarrelBlock extends Block implements EntityBlock {
     private final BarrelTier barrelTier;
     public static final BooleanProperty VOID = BooleanProperty.create("void");
+    public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
 
     public BetterBarrelBlock(Properties pProperties, BarrelTier barrelTier) {
         super(pProperties);
-        registerDefaultState(this.stateDefinition.any().setValue(VOID,false));
+        registerDefaultState(this.stateDefinition.any().setValue(VOID,false).setValue(LOCKED,false));
         this.barrelTier = barrelTier;
     }
 
@@ -129,6 +131,6 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(VOID);
+        pBuilder.add(VOID,LOCKED);
     }
 }
