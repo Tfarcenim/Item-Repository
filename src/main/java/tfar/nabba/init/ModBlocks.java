@@ -4,12 +4,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
+import tfar.nabba.block.AntiBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
-import tfar.nabba.block.RespositoryBlock;
 import tfar.nabba.util.BarrelTiers;
 
 public class ModBlocks {
-    public static final Block REPOSITORY = new RespositoryBlock(BlockBehaviour.Properties.of(Material.METAL));
+    public static final Block ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.of(Material.METAL));
     public static final Block BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelTiers.WOOD);
     public static final Block STONE_BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL),BarrelTiers.STONE);
     public static final Block COPPER_BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL),BarrelTiers.COPPER);

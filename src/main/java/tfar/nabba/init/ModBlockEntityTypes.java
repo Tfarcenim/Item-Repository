@@ -1,11 +1,11 @@
 package tfar.nabba.init;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
-import tfar.nabba.blockentity.RepositoryBlockEntity;
 
 public class ModBlockEntityTypes {
-    public static final BlockEntityType<RepositoryBlockEntity> REPOSITORY = BlockEntityType.Builder.of(RepositoryBlockEntity::new,ModBlocks.REPOSITORY).build(null);
+    public static final BlockEntityType<AntiBarrelBlockEntity> REPOSITORY = BlockEntityType.Builder.of(AntiBarrelBlockEntity::new,ModBlocks.ANTI_BARREL).build(null);
     public static final BlockEntityType<BetterBarrelBlockEntity> BETTER_BARREL =
             BlockEntityType.Builder.of(Suppliers.WOOD,ModBlocks.BETTER_BARREL,ModBlocks.STONE_BETTER_BARREL
                     ,ModBlocks.COPPER_BETTER_BARREL,ModBlocks.IRON_BETTER_BARREL,ModBlocks.LAPIS_BETTER_BARREL,
