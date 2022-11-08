@@ -15,12 +15,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import tfar.itemrepository.blockentity.BetterBarrelBlockEntity;
 
 public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlockEntity> {
@@ -34,6 +29,8 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         font = pContext.getFont();
         itemRenderer = pContext.getItemRenderer();
     }
+
+    public static final double zFighting = -.0001;
 
     @Override
     public void render(BetterBarrelBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
@@ -58,8 +55,6 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         float f2 = -width / 2f;
         int j = (int)(f1 * 255.0F) << 24;
         int color = 0xff00ff;
-
-        double zFighting = -.0001;
 
         {
             pPoseStack.pushPose();
@@ -100,7 +95,14 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
 
     protected void renderItem(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
         ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
+        if (stack.isEmpty()) return;
         try {
+            pPoseStack.pushPose();
+            pPoseStack.translate(.5,.5,zFighting);
+
+            float scale = .5f;
+            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.001f));
+
             BakedModel bakedmodel = this.itemRenderer.getModel(stack, betterBarrelBlockEntity.getLevel(), null, 0);
             itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
 
@@ -112,6 +114,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         } catch (Exception e) {
             //bruh
         }
+        pPoseStack.popPose();
     }
 
 
