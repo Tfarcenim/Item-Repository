@@ -20,6 +20,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
         makeBarrel(ModBlocks.COPPER_BETTER_BARREL);
         makeBarrel(ModBlocks.STONE_BETTER_BARREL);
         makeBarrel(ModBlocks.IRON_BETTER_BARREL);
+        makeBarrel(ModBlocks.LAPIS_BETTER_BARREL);
+        makeBarrel(ModBlocks.GOLD_BETTER_BARREL);
+        makeBarrel(ModBlocks.DIAMOND_BETTER_BARREL);
+        makeBarrel(ModBlocks.EMERALD_BETTER_BARREL);
+        makeBarrel(ModBlocks.NETHERITE_BETTER_BARREL);
+        makeBarrel(ModBlocks.CREATIVE_BETTER_BARREL);
     }
 
     protected void makeBarrel(Block block) {

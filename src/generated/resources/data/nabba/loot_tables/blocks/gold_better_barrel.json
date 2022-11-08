@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:air"
+          "name": "nabba:gold_better_barrel"
         }
       ],
       "rolls": 1.0

@@ -8,7 +8,7 @@ public enum UpgradeDatas implements UpgradeData {
     x256_STORAGE(256,BASE_STORAGE * 256), x1024_STORAGE(1024,BASE_STORAGE * 1024),
 
     VOID(1,0),
-    PICKUP_3x3(27,0),PICKUP_9x9(729,0),
+    PICKUP_3x3(27,0),PICKUP_9x9(243,0),
     INFINITE_STORAGE(1000000000,32000000),
     INFINITE_VENDING(1000000000,0);
 
@@ -20,7 +20,6 @@ public enum UpgradeDatas implements UpgradeData {
         this.additionalStorage = additionalStorage;
     }
 
-    //todo, config stuff
     public void setSlotsRequired(int slotsRequired) {
         this.slotsRequired = slotsRequired;
     }

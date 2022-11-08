@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:ingots/iron"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    },
+    "b": {
+      "item": "nabba:copper_better_barrel"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "SbS",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:iron_better_barrel"
+  }
+}

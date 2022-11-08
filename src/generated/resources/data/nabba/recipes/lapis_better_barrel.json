@@ -2,18 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "P": {
+      "tag": "forge:gems/lapis"
+    },
+    "S": {
       "tag": "forge:rods/wooden"
     },
     "b": {
-      "item": "nabba:better_barrel"
+      "item": "nabba:iron_better_barrel"
     }
   },
   "pattern": [
-    "P P",
-    " b ",
-    "P P"
+    "PSP",
+    "SbS",
+    "PSP"
   ],
   "result": {
-    "item": "nabba:storage_upgrade"
+    "item": "nabba:lapis_better_barrel"
   }
 }

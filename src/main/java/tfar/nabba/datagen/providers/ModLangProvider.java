@@ -31,6 +31,8 @@ public class ModLangProvider extends LanguageProvider {
         addItem(() -> ModItems.x4_STORAGE_UPGRADE,"x4 Storage Upgrade");
         addItem(() -> ModItems.x16_STORAGE_UPGRADE,"x16 Storage Upgrade");
         addItem(() -> ModItems.x64_STORAGE_UPGRADE,"x64 Storage Upgrade");
+        addItem(() -> ModItems.x256_STORAGE_UPGRADE,"x256 Storage Upgrade");
+        addItem(() -> ModItems.x1024_STORAGE_UPGRADE,"x1024 Storage Upgrade");
 
         add(BetterBarrelBlock.info,"Has %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");

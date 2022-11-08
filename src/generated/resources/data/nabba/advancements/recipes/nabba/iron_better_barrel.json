@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "nabba:better_barrel"
+              "nabba:copper_better_barrel"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "nabba:storage_upgrade"
+        "recipe": "nabba:iron_better_barrel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "nabba:storage_upgrade"
+      "nabba:iron_better_barrel"
     ]
   }
 }

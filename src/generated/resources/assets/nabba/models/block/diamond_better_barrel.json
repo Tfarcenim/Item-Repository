@@ -1,0 +1,6 @@
+{
+  "parent": "nabba:block/better_barrel_block",
+  "textures": {
+    "frame_side": "nabba:block/diamond_better_barrel_frame_side"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:gems/emerald"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    },
+    "b": {
+      "item": "nabba:diamond_better_barrel"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "SbS",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:emerald_better_barrel"
+  }
+}

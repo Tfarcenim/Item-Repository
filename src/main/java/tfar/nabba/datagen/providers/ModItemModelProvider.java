@@ -20,12 +20,21 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         makeOneLayerItem(ModItems.STORAGE_UPGRADE);
         makeOneLayerItem(ModItems.x4_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x16_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x64_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x256_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x1024_STORAGE_UPGRADE);
 
         makeSimpleBlockItem(ModBlocks.BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.COPPER_BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.STONE_BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.IRON_BETTER_BARREL.asItem());
-
+        makeSimpleBlockItem(ModBlocks.LAPIS_BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.GOLD_BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.DIAMOND_BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.EMERALD_BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.NETHERITE_BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.CREATIVE_BETTER_BARREL.asItem());
     }
 
 
