@@ -108,7 +108,10 @@ public class ItemRepository {
 
     private void leftClick(PlayerInteractEvent.LeftClickBlock e) {
         BlockState state = e.getEntity().level.getBlockState(e.getPos());
-        if (state.getBlock() instanceof BetterBarrelBlock && !e.getEntity().isCrouching() && e.getEntity().getMainHandItem().getItem() instanceof AxeItem) {
+
+        boolean crouch = e.getEntity().isCrouching();
+        
+        if (state.getBlock() instanceof BetterBarrelBlock && !crouch && e.getEntity().getMainHandItem().getItem() instanceof AxeItem) {
             e.setCanceled(true);
         }
     }

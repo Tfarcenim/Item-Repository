@@ -3,7 +3,6 @@ package tfar.itemrepository.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -18,6 +17,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 import tfar.itemrepository.blockentity.BetterBarrelBlockEntity;
+import tfar.itemrepository.item.UpgradeItem;
 
 public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlockEntity> {
 
@@ -39,59 +39,65 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
     }
 
     protected void renderTextAndItems(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
-        renderText(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay);
-        renderItem(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay);
-    }
-
-    protected void renderText(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
         ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
 
         int cap = betterBarrelBlockEntity.getStorage() * 64;
         String toDraw = stack.getCount()+" / "+ cap;
-        int width = font.width(toDraw);
+
+        renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,15/16d,0xff00ff,-1);
+
+
+        if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem) {
+            String slots = betterBarrelBlockEntity.getUsedSlots() + " / " + betterBarrelBlockEntity.getTotalUpgradeSlots();
+            renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d, 0x00ffff, .01f);
+        }
+
+        renderItem(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay);
+    }
+
+    protected void renderText(PoseStack pPoseStack, MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay, String text, double yHeight,int color,float dScale) {
+
+        int width = font.width(text);
         //text starts in bottom left
 
-        float scale = 1f / width;
+        float scale = dScale == -1 ? 1f / width : dScale;
         float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0);
         float f2 = -width / 2f;
         int j = (int)(f1 * 255.0F) << 24;
-        int color = 0xff00ff;
-
-        double height = 15/16d;
 
         {
             pPoseStack.pushPose();
-            pPoseStack.translate(0.5D, height, zFighting);
+            pPoseStack.translate(0.5D, yHeight, zFighting);
             pPoseStack.scale(-scale, -scale, scale);
             Matrix4f matrix4f = pPoseStack.last().pose();
-            font.drawInBatch(toDraw, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
+            font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             pPoseStack.popPose();
         }
         {
             pPoseStack.pushPose();
-            pPoseStack.translate(1 - zFighting, height, .5);
+            pPoseStack.translate(1 - zFighting, yHeight, .5);
             pPoseStack.scale(-scale, -scale, scale);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
             Matrix4f matrix4f = pPoseStack.last().pose();
-            font.drawInBatch(toDraw, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
+            font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             pPoseStack.popPose();
         }
         {
             pPoseStack.pushPose();
-            pPoseStack.translate(0.5D, height, 1 - zFighting);
+            pPoseStack.translate(0.5D, yHeight, 1 - zFighting);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
             pPoseStack.scale(-scale, -scale, scale);
             Matrix4f matrix4f = pPoseStack.last().pose();
-            font.drawInBatch(toDraw, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
+            font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             pPoseStack.popPose();
         }
         {
             pPoseStack.pushPose();
-            pPoseStack.translate(zFighting, height, .5);
+            pPoseStack.translate(zFighting, yHeight, .5);
             pPoseStack.scale(-scale, -scale, scale);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270));
             Matrix4f matrix4f = pPoseStack.last().pose();
-            font.drawInBatch(toDraw, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
+            font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             pPoseStack.popPose();
         }
     }

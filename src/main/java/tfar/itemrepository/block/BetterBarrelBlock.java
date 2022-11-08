@@ -10,7 +10,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -44,8 +43,8 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
                 Item item = itemstack.getItem();
-                if (item instanceof UpgradeItem upgradeItem) {
-                    tryUpgrade(upgradeItem);
+                if (item instanceof UpgradeItem upgradeItem && tryUpgrade(itemstack,betterBarrelBlockEntity,upgradeItem)) {
+
                 } else {
                     ItemStack stack = betterBarrelBlockEntity.tryAddItem(itemstack);
                     pPlayer.setItemInHand(pHand,stack);
@@ -70,8 +69,14 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
         return RenderShape.MODEL;
     }
 
-    public boolean tryUpgrade(UpgradeItem item) {
-        return true;
+    public boolean tryUpgrade(ItemStack itemstack, BetterBarrelBlockEntity betterBarrelBlockEntity, UpgradeItem item) {
+        boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(item.getData());
+        if (attempt) {
+            betterBarrelBlockEntity.upgrade(item);
+            itemstack.shrink(1);
+            return true;
+        }
+        return false;
     }
 
     @Nullable
