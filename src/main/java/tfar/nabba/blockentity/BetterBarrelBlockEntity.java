@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class BetterBarrelBlockEntity extends BlockEntity {
 
-    private Map<UpgradeItem, Integer> upgrades = new HashMap<>();
+    private Map<UpgradeData, Integer> upgrades = new HashMap<>();
     private transient int cachedStorage = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
 
@@ -62,16 +62,20 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     }
     private int computeUsedUpgradeSlots() {
         int slots = 0;
-        for (Map.Entry<UpgradeItem, Integer> entry : upgrades.entrySet()) {
-            slots += entry.getKey().getData().getSlotRequirement() * entry.getValue();
+        for (Map.Entry<UpgradeData, Integer> entry : upgrades.entrySet()) {
+            slots += entry.getKey().getSlotRequirement() * entry.getValue();
         }
         return slots;
     }
 
+    public Map<UpgradeData, Integer> getUpgrades() {
+        return upgrades;
+    }
+
     private int computeStorage() {
         int storage = Utils.BASE_STORAGE;
-        for (Map.Entry<UpgradeItem, Integer> entry : upgrades.entrySet()) {
-            storage += entry.getKey().getData().getAdditionalStorageStacks() * entry.getValue();
+        for (Map.Entry<UpgradeData, Integer> entry : upgrades.entrySet()) {
+            storage += entry.getKey().getAdditionalStorageStacks() * entry.getValue();
         }
         return storage;
     }
@@ -84,13 +88,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return data.getSlotRequirement() <= getFreeSlots();
     }
 
-    public void upgrade(UpgradeItem item) {
-        int existing = upgrades.getOrDefault(item,0);
-        if (existing == 0) {
-            upgrades.put(item,1);
-        } else {
-            upgrades.put(item,existing + 1);
-        }
+    public void upgrade(UpgradeData data) {
+        data.onUpgrade(this);
         invalidateCaches();
         setChanged();
     }
@@ -116,9 +115,9 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
         ListTag upgradesTag = new ListTag();
 
-        for (Map.Entry<UpgradeItem, Integer> entry : upgrades.entrySet()) {
+        for (Map.Entry<UpgradeData, Integer> entry : upgrades.entrySet()) {
             CompoundTag tag = new CompoundTag();
-            tag.putString("Item", Registry.ITEM.getKey(entry.getKey()).toString());
+            tag.putString("Upgrade", Registry.ITEM.getKey(entry.getKey().getItem().get()).toString());
             tag.putInt("Count",entry.getValue());
             upgradesTag.add(tag);
         }
@@ -135,8 +134,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         ListTag upgradesTag = pTag.getList("Upgrades", Tag.TAG_COMPOUND);
         for (Tag tag : upgradesTag) {
             CompoundTag compoundTag = (CompoundTag)tag;
-            ResourceLocation name = new ResourceLocation(compoundTag.getString("Item"));
-            upgrades.put((UpgradeItem)Registry.ITEM.get(name),compoundTag.getInt("Count"));
+            ResourceLocation name = new ResourceLocation(compoundTag.getString("Upgrade"));
+            upgrades.put(((UpgradeItem)Registry.ITEM.get(name)).getData(),compoundTag.getInt("Count"));
         }
         invalidateCaches();
     }

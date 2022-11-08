@@ -20,6 +20,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.NABBA;
@@ -33,9 +35,11 @@ import java.util.List;
 
 public class BetterBarrelBlock extends Block implements EntityBlock {
     private final BarrelTier barrelTier;
+    public static final BooleanProperty VOID = BooleanProperty.create("void");
 
     public BetterBarrelBlock(Properties pProperties, BarrelTier barrelTier) {
         super(pProperties);
+        registerDefaultState(this.stateDefinition.any().setValue(VOID,false));
         this.barrelTier = barrelTier;
     }
 
@@ -68,7 +72,7 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
                             ItemStack fromPlayer = main.get(i);
                             if (!fromPlayer.isEmpty()) {
                                 ItemStack insert = betterBarrelBlockEntity.tryAddItem(fromPlayer);
-                                //if the item changed, something happeneda
+                                //if the item changed, something happened
                                 if (insert != fromPlayer) {
                                     main.set(i, insert);
                                 }
@@ -105,7 +109,7 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
     public boolean tryUpgrade(ItemStack itemstack, BetterBarrelBlockEntity betterBarrelBlockEntity, UpgradeItem item) {
         boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(item.getData());
         if (attempt) {
-            betterBarrelBlockEntity.upgrade(item);
+            betterBarrelBlockEntity.upgrade(item.getData());
             itemstack.shrink(1);
             return true;
         }
@@ -120,6 +124,11 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : (BetterBarrelBlockEntity::serverTick);
+        return pLevel.isClientSide ? null : BetterBarrelBlockEntity::serverTick;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        pBuilder.add(VOID);
     }
 }

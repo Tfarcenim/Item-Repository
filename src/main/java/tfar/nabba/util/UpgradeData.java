@@ -1,5 +1,10 @@
 package tfar.nabba.util;
 
+import net.minecraft.world.item.Item;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+
+import java.util.function.Supplier;
+
 public interface UpgradeData {
 
     int getSlotRequirement();
@@ -8,5 +13,7 @@ public interface UpgradeData {
     void setSlotsRequired(int slotsRequired);
 
     int getAdditionalStorageStacks();
+    void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity);
+    Supplier<Item> getItem();
 
 }
