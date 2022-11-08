@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:rods/wooden"
+    },
+    "b": {
+      "tag": "forge:obsidian"
+    }
+  },
+  "pattern": [
+    "P P",
+    " b ",
+    "P P"
+  ],
+  "result": {
+    "item": "nabba:void_upgrade"
+  }
+}

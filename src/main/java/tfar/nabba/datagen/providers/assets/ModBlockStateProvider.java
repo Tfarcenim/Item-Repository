@@ -1,4 +1,4 @@
-package tfar.nabba.datagen.providers;
+package tfar.nabba.datagen.providers.assets;
 
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
@@ -31,6 +31,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void makeBarrel(Block block) {
         String name = Registry.BLOCK.getKey(block).getPath();
         BlockModelBuilder modelBuilder = models().withExistingParent(name,modLoc("block/better_barrel_block"));
-        simpleBlock(block,modelBuilder.texture("frame_side",modLoc("block/"+name+"_frame_side")));
+        simpleBlock(block,modelBuilder
+                .texture("frame_side",modLoc("block/"+name+"_frame_side"))
+                .texture("frame_top",modLoc("block/"+name+"_frame_side"))
+                .texture("frame_bottom",modLoc("block/"+name+"_frame_side"))
+        );
     }
 }

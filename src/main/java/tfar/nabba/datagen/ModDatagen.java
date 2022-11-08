@@ -4,6 +4,8 @@ import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import tfar.nabba.datagen.providers.*;
+import tfar.nabba.datagen.providers.assets.ModBlockStateProvider;
+import tfar.nabba.datagen.providers.assets.ModItemModelProvider;
 
 public class ModDatagen {
     public static void start(GatherDataEvent e) {

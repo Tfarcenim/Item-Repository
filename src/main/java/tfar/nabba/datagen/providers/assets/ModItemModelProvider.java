@@ -1,4 +1,4 @@
-package tfar.nabba.datagen.providers;
+package tfar.nabba.datagen.providers.assets;
 
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;

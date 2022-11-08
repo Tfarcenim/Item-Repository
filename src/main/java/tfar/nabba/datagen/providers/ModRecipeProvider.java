@@ -23,7 +23,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
-        ShapedRecipeBuilder.shaped(ModBlocks.BETTER_BARREL, 1)
+        ShapedRecipeBuilder.shaped(ModBlocks.BETTER_BARREL)
                 .define('P', ItemTags.PLANKS)
                 .define('S', ItemTags.WOODEN_SLABS)
                 .define('b', Blocks.BARREL)
@@ -31,6 +31,24 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("PbP")
                 .pattern("PSP")
                 .unlockedBy("has_barrel", has(Blocks.BARREL))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.STORAGE_UPGRADE)
+                .define('P',Tags.Items.RODS_WOODEN)
+                .define('b', ModBlocks.BETTER_BARREL)
+                .pattern("P P")
+                .pattern(" b ")
+                .pattern("P P")
+                .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.VOID_UPGRADE)
+                .define('P',Tags.Items.RODS_WOODEN)
+                .define('b', Tags.Items.OBSIDIAN)
+                .pattern("P P")
+                .pattern(" b ")
+                .pattern("P P")
+                .unlockedBy("has_obsidian", has(Tags.Items.OBSIDIAN))
                 .save(consumer);
 
         barrelFrameUpgrade(ModBlocks.STONE_BETTER_BARREL,ModBlocks.BETTER_BARREL,ItemTags.STONE_CRAFTING_MATERIALS,consumer);
