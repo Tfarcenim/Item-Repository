@@ -3,8 +3,10 @@ package tfar.itemrepository.datagen.providers;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 import tfar.itemrepository.ItemRepository;
+import tfar.itemrepository.block.BetterBarrelBlock;
 import tfar.itemrepository.init.ModBlocks;
 import tfar.itemrepository.init.ModItems;
+import tfar.itemrepository.item.UpgradeItem;
 
 public class ModLangProvider extends LanguageProvider {
     public ModLangProvider(DataGenerator gen) {
@@ -28,5 +30,8 @@ public class ModLangProvider extends LanguageProvider {
         addItem(() -> ModItems.x4_STORAGE_UPGRADE,"x4 Storage Upgrade");
         addItem(() -> ModItems.x16_STORAGE_UPGRADE,"x16 Storage Upgrade");
         addItem(() -> ModItems.x64_STORAGE_UPGRADE,"x64 Storage Upgrade");
+
+        add(BetterBarrelBlock.info,"Has %s upgrade slots");
+        add(UpgradeItem.info,"Requires %s upgrade slots");
     }
 }

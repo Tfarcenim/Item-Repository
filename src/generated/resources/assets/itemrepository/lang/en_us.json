@@ -12,5 +12,7 @@
   "item.itemrepository.storage_upgrade": "Storage Upgrade",
   "item.itemrepository.x16_storage_upgrade": "x16 Storage Upgrade",
   "item.itemrepository.x4_storage_upgrade": "x4 Storage Upgrade",
-  "item.itemrepository.x64_storage_upgrade": "x64 Storage Upgrade"
+  "item.itemrepository.x64_storage_upgrade": "x64 Storage Upgrade",
+  "itemrepository.better_barrel.info": "Has %s upgrade slots",
+  "itemrepository.upgrade.info": "Requires %s Upgrade slots"
 }
