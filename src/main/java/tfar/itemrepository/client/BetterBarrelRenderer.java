@@ -3,6 +3,7 @@ package tfar.itemrepository.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -46,7 +47,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
 
         int cap = betterBarrelBlockEntity.getStorage() * 64;
-        String toDraw = stack.toString()+" / "+ cap;
+        String toDraw = stack.getCount()+" / "+ cap;
         int width = font.width(toDraw);
         //text starts in bottom left
 
@@ -56,9 +57,11 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         int j = (int)(f1 * 255.0F) << 24;
         int color = 0xff00ff;
 
+        double height = 15/16d;
+
         {
             pPoseStack.pushPose();
-            pPoseStack.translate(0.5D, 1, zFighting);
+            pPoseStack.translate(0.5D, height, zFighting);
             pPoseStack.scale(-scale, -scale, scale);
             Matrix4f matrix4f = pPoseStack.last().pose();
             font.drawInBatch(toDraw, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
@@ -66,7 +69,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         }
         {
             pPoseStack.pushPose();
-            pPoseStack.translate(1 - zFighting, 1, .5);
+            pPoseStack.translate(1 - zFighting, height, .5);
             pPoseStack.scale(-scale, -scale, scale);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
             Matrix4f matrix4f = pPoseStack.last().pose();
@@ -75,7 +78,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         }
         {
             pPoseStack.pushPose();
-            pPoseStack.translate(0.5D, 1, 1 - zFighting);
+            pPoseStack.translate(0.5D, height, 1 - zFighting);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
             pPoseStack.scale(-scale, -scale, scale);
             Matrix4f matrix4f = pPoseStack.last().pose();
@@ -84,7 +87,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         }
         {
             pPoseStack.pushPose();
-            pPoseStack.translate(zFighting, 1, .5);
+            pPoseStack.translate(zFighting, height, .5);
             pPoseStack.scale(-scale, -scale, scale);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270));
             Matrix4f matrix4f = pPoseStack.last().pose();
@@ -96,21 +99,76 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
     protected void renderItem(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
         ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
         if (stack.isEmpty()) return;
+        float scale = .5f;
+
         try {
             pPoseStack.pushPose();
-            pPoseStack.translate(.5,.5,zFighting);
-
-            float scale = .5f;
-            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.001f));
-
+            pPoseStack.translate(.5,.5,1 - zFighting);
+            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
             BakedModel bakedmodel = this.itemRenderer.getModel(stack, betterBarrelBlockEntity.getLevel(), null, 0);
-            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-
             if (bakedmodel.isGui3d())
                 pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
             else
                 pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+        } catch (Exception e) {
+            //bruh
+        }
+        pPoseStack.popPose();
 
+        try {
+            pPoseStack.pushPose();
+            pPoseStack.translate(1 - zFighting,.5,.5);
+
+            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+
+            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
+
+
+            BakedModel bakedmodel = this.itemRenderer.getModel(stack, betterBarrelBlockEntity.getLevel(), null, 0);
+            if (bakedmodel.isGui3d())
+                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+            else
+                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+        } catch (Exception e) {
+            //bruh
+        }
+        pPoseStack.popPose();
+
+
+        try {
+            pPoseStack.pushPose();
+            pPoseStack.translate(.5,.5,zFighting);
+
+            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+
+            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
+            BakedModel bakedmodel = this.itemRenderer.getModel(stack, betterBarrelBlockEntity.getLevel(), null, 0);
+            if (bakedmodel.isGui3d())
+                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+            else
+                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+        } catch (Exception e) {
+            //bruh
+        }
+        pPoseStack.popPose();
+
+
+        try {
+            pPoseStack.pushPose();
+            pPoseStack.translate(zFighting,.5,.5);
+
+            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270));
+
+            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
+            BakedModel bakedmodel = this.itemRenderer.getModel(stack, betterBarrelBlockEntity.getLevel(), null, 0);
+            if (bakedmodel.isGui3d())
+                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+            else
+                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
         } catch (Exception e) {
             //bruh
         }
