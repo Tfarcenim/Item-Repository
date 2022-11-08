@@ -1,0 +1,18 @@
+{
+  "block.nabba.better_barrel": "Better Barrel",
+  "block.nabba.copper_better_barrel": "Copper Better Barrel",
+  "block.nabba.creative_better_barrel": "Creative Better Barrel",
+  "block.nabba.diamond_better_barrel": "Diamond Better Barrel",
+  "block.nabba.emerald_better_barrel": "Emerald Better Barrel",
+  "block.nabba.gold_better_barrel": "Gold Better Barrel",
+  "block.nabba.iron_better_barrel": "Iron Better Barrel",
+  "block.nabba.lapis_better_barrel": "Lapis Better Barrel",
+  "block.nabba.netherite_better_barrel": "Netherite Better Barrel",
+  "block.nabba.stone_better_barrel": "Stone Better Barrel",
+  "item.nabba.storage_upgrade": "Storage Upgrade",
+  "item.nabba.x16_storage_upgrade": "x16 Storage Upgrade",
+  "item.nabba.x4_storage_upgrade": "x4 Storage Upgrade",
+  "item.nabba.x64_storage_upgrade": "x64 Storage Upgrade",
+  "nabba.better_barrel.info": "Has %s upgrade slots",
+  "nabba.upgrade.info": "Requires %s upgrade slots"
+}

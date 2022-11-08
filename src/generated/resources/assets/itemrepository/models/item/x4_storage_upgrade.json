@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "itemrepository:item/x4_storage_upgrade"
-  }
-}
