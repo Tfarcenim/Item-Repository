@@ -17,5 +17,6 @@ public class ModDatagen {
 
         dataGenerator.addProvider(server,new ModRecipeProvider(dataGenerator));
         dataGenerator.addProvider(server,new ModLootTableProvider(dataGenerator));
+        dataGenerator.addProvider(server,new ModBlockTagsProvider(dataGenerator,helper));
     }
 }

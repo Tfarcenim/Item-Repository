@@ -25,6 +25,11 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.x256_STORAGE_UPGRADE);
         makeOneLayerItem(ModItems.x1024_STORAGE_UPGRADE);
 
+        makeOneLayerItem(ModItems.INFINITE_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.INFINITE_VENDING_UPGRADE);
+
+        makeOneLayerItem(ModItems.VOID_UPGRADE);
+
         makeSimpleBlockItem(ModBlocks.BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.COPPER_BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.STONE_BETTER_BARREL.asItem());

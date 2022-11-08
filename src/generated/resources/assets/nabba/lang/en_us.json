@@ -1,4 +1,5 @@
 {
+  "block.nabba.anti_barrel": "Anti Barrel",
   "block.nabba.better_barrel": "Better Barrel",
   "block.nabba.copper_better_barrel": "Copper Better Barrel",
   "block.nabba.creative_better_barrel": "Creative Better Barrel",
@@ -16,9 +17,11 @@
   "item.nabba.storage_upgrade": "Storage Upgrade",
   "item.nabba.storage_upgrade.desc": "Adds %s stacks of storage",
   "item.nabba.void_upgrade.desc": "Barrel voids excess items",
+  "item.nabba.x1024_storage_upgrade": "x1024 Storage Upgrade",
   "item.nabba.x1024_storage_upgrade.desc": "Adds %s stacks of storage",
   "item.nabba.x16_storage_upgrade": "x16 Storage Upgrade",
   "item.nabba.x16_storage_upgrade.desc": "Adds %s stacks of storage",
+  "item.nabba.x256_storage_upgrade": "x256 Storage Upgrade",
   "item.nabba.x256_storage_upgrade.desc": "Adds %s stacks of storage",
   "item.nabba.x4_storage_upgrade": "x4 Storage Upgrade",
   "item.nabba.x4_storage_upgrade.desc": "Adds %s stacks of storage",

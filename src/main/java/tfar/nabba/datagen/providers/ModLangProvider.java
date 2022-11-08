@@ -27,6 +27,8 @@ public class ModLangProvider extends LanguageProvider {
         addBlock(() -> ModBlocks.NETHERITE_BETTER_BARREL,"Netherite Better Barrel");
         addBlock(() -> ModBlocks.CREATIVE_BETTER_BARREL,"Creative Better Barrel");
 
+        addBlock(() -> ModBlocks.ANTI_BARREL,"Anti Barrel");
+
         addItem(() -> ModItems.STORAGE_UPGRADE,"Storage Upgrade");
         addItem(() -> ModItems.x4_STORAGE_UPGRADE,"x4 Storage Upgrade");
         addItem(() -> ModItems.x16_STORAGE_UPGRADE,"x16 Storage Upgrade");
