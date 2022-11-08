@@ -34,6 +34,10 @@ public class ModItems {
     public static final Item x1024_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.x1024_STORAGE);
     public static final Item INFINITE_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.INFINITE_STORAGE);
     public static final Item INFINITE_VENDING_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.INFINITE_VENDING);
+    public static final Item VOID_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.VOID);
+    public static final Item PICKUP_3x3_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.PICKUP_3x3);
+    public static final Item PICKUP_9x9_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.PICKUP_9x9);
+
     private static Item.Properties basic() {
         return new Item.Properties().tab(tab);
     }

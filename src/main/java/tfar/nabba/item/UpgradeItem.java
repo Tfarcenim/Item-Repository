@@ -23,7 +23,13 @@ public class UpgradeItem extends Item {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getSlotRequirement()).withStyle(ChatFormatting.AQUA)));
-        pTooltipComponents.add(Component.translatable(getDescriptionId()+".desc"));
+        if (data.getAdditionalStorageStacks() > 0) {
+            pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc",
+                    Component.literal(data.getAdditionalStorageStacks()+"").withStyle(ChatFormatting.AQUA)));
+        }
+        else {
+            pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc"));
+        }
     }
 
     public UpgradeData getData() {
