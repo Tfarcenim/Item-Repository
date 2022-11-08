@@ -45,8 +45,6 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         String toDraw = stack.getCount()+" / "+ cap;
 
         renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,15/16d,0xff00ff,-1);
-
-
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem) {
             String slots = betterBarrelBlockEntity.getUsedSlots() + " / " + betterBarrelBlockEntity.getTotalUpgradeSlots();
             renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d, 0x00ffff, .01f);
@@ -60,7 +58,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         int width = font.width(text);
         //text starts in bottom left
 
-        float scale = dScale == -1 ? 1f / width : dScale;
+        float scale = dScale == -1 ? .75f / width : dScale;
         float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0);
         float f2 = -width / 2f;
         int j = (int)(f1 * 255.0F) << 24;
