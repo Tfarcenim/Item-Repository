@@ -5,13 +5,18 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -20,6 +25,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
+import tfar.itemrepository.block.BetterBarrelBlock;
 import tfar.itemrepository.client.Client;
 import tfar.itemrepository.command.RepositoryCommands;
 import tfar.itemrepository.datagen.ModDatagen;
@@ -53,9 +59,14 @@ public class ItemRepository {
         if (FMLEnvironment.dist.isClient()) {
             bus.addListener(Client::setup);
         }
+        addGameEvents();
+        instance = this;
+    }
+
+    private void addGameEvents() {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
         MinecraftForge.EVENT_BUS.addListener(this::commands);
-        instance = this;
+        MinecraftForge.EVENT_BUS.addListener(this::leftClick);
     }
 
     public void onServerStarted(ServerStartingEvent event) {
@@ -95,4 +106,10 @@ public class ItemRepository {
     }
 
 
+    private void leftClick(PlayerInteractEvent.LeftClickBlock e) {
+        BlockState state = e.getEntity().level.getBlockState(e.getPos());
+        if (state.getBlock() instanceof BetterBarrelBlock && !e.getEntity().isCrouching() && e.getEntity().getMainHandItem().getItem() instanceof AxeItem) {
+            e.setCanceled(true);
+        }
+    }
 }

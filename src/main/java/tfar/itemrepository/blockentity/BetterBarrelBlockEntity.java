@@ -1,7 +1,13 @@
 package tfar.itemrepository.blockentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,6 +23,7 @@ import tfar.itemrepository.util.BarrelTier;
 import tfar.itemrepository.util.UpgradeData;
 import tfar.itemrepository.util.Utils;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,7 +76,17 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.put("Stack", barrelHandler.getStack().save(new CompoundTag()));
-        pTag.putInt("RealCount",barrelHandler.getStack().getCount());
+        pTag.putInt("RealCount", barrelHandler.getStack().getCount());
+
+        ListTag upgradesTag = new ListTag();
+
+        for (Map.Entry<UpgradeItem, Integer> entry : upgrades.entrySet()) {
+            CompoundTag tag = new CompoundTag();
+            tag.putString("Item", Registry.ITEM.getKey(entry.getKey()).toString());
+            tag.putInt("Count",entry.getValue());
+            upgradesTag.add(tag);
+        }
+        pTag.put("Upgrades",upgradesTag);
     }
 
     @Override
@@ -77,11 +94,21 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         super.load(pTag);
         ItemStack stack = ItemStack.of(pTag.getCompound("Stack"));
         stack.setCount(pTag.getInt("RealCount"));
-        barrelHandler.stack = stack;
+        barrelHandler.setStack(stack);
+        upgrades.clear();
+        ListTag upgradesTag = pTag.getList("Upgrades", Tag.TAG_COMPOUND);
+        for (Tag tag : upgradesTag) {
+            CompoundTag compoundTag = (CompoundTag)tag;
+            upgrades.put((UpgradeItem)Registry.ITEM.get(new ResourceLocation( compoundTag.getString("Item"))),compoundTag.getInt("Count"));
+        }
     }
 
     public BarrelHandler getBarrelHandler() {
         return barrelHandler;
+    }
+
+    public ItemStack tryRemoveItem() {
+        return getBarrelHandler().extractItem(0,64,false);
     }
 
     public static class BarrelHandler implements IItemHandler {
@@ -102,6 +129,10 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             return stack;
         }
 
+        public void setStack(ItemStack stack) {
+            this.stack = stack;
+        }
+
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
             return stack;
@@ -113,16 +144,16 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
             int limit = getSlotLimit(slot);
             int count = stack.getCount();
-            int existing = this.stack.isEmpty() ? 0 :this.stack.getCount();
+            int existing = this.stack.isEmpty() ? 0 : this.stack.getCount();
             if (count + existing > limit) {
                 if (!simulate) {
-                    this.stack = ItemHandlerHelper.copyStackWithSize(stack,limit);
+                    this.stack = ItemHandlerHelper.copyStackWithSize(stack, limit);
                     markDirty();
                 }
                 return ItemHandlerHelper.copyStackWithSize(stack, count + existing - limit);
             } else {
                 if (!simulate) {
-                    this.stack = ItemHandlerHelper.copyStackWithSize(stack,existing + count);
+                    this.stack = ItemHandlerHelper.copyStackWithSize(stack, existing + count);
                     markDirty();
                 }
                 return ItemStack.EMPTY;
@@ -131,9 +162,25 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return ItemStack.EMPTY;
+            if (amount == 0 || stack.isEmpty()) return ItemStack.EMPTY;
+            int existing = stack.getCount();
+            ItemStack newStack;
+            if (amount > existing) {
+                newStack = ItemHandlerHelper.copyStackWithSize(stack, existing);
+                if (!simulate) {
+                    setStack(ItemStack.EMPTY);
+                }
+            } else {
+                newStack = ItemHandlerHelper.copyStackWithSize(stack, amount);
+                if (!simulate) {
+                    stack.shrink(amount);
+                }
+            }
+            if (!simulate) {
+                markDirty();
+            }
+            return newStack;
         }
-
         @Override
         public int getSlotLimit(int slot) {
             return barrelBlockEntity.getStorage() * 64;
@@ -147,5 +194,28 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         public void markDirty() {
             barrelBlockEntity.setChanged();
         }
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        //let the client know the block changed
+        level.sendBlockUpdated(getBlockPos(),getBlockState(),getBlockState(),3);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+    }
+
+    @Nonnull
+    @Override
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

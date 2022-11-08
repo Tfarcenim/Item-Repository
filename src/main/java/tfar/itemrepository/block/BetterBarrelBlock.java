@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.itemrepository.blockentity.BetterBarrelBlockEntity;
 import tfar.itemrepository.init.ModBlockEntityTypes;
 import tfar.itemrepository.item.UpgradeItem;
@@ -42,7 +43,6 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
         if (!pLevel.isClientSide) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
-                BetterBarrelBlockEntity.BarrelHandler barrelHandler = betterBarrelBlockEntity.getBarrelHandler();
                 Item item = itemstack.getItem();
                 if (item instanceof UpgradeItem upgradeItem) {
                     tryUpgrade(upgradeItem);
@@ -53,6 +53,17 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
             }
         }
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
+    }
+
+    @Override
+    public void attack(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
+        if (!pLevel.isClientSide) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+                ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
+                ItemHandlerHelper.giveItemToPlayer(pPlayer,stack);
+            }
+        }
     }
 
     public RenderShape getRenderShape(BlockState pState) {
