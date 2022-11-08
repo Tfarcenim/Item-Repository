@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:x1024_storage_upgrade"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "nabba:x256_storage_upgrade"
+  }
+}
