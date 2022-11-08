@@ -15,7 +15,7 @@ public class ModItems {
             return new ItemStack(ModItems.REPOSITORY);
         }
     };
-    public static final Item REPOSITORY = new BlockItem(ModBlocks.REPOSITORY,basic());
+    public static final Item REPOSITORY = new BlockItem(ModBlocks.ANTI_BARREL,basic());
     public static final Item BETTER_BARREL = new BlockItem(ModBlocks.BETTER_BARREL,basic());
     public static final Item STONE_BETTER_BARREL = new BlockItem(ModBlocks.STONE_BETTER_BARREL,basic());
     public static final Item COPPER_BETTER_BARREL = new BlockItem(ModBlocks.COPPER_BETTER_BARREL,basic());

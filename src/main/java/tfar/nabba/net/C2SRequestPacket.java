@@ -3,7 +3,7 @@ package tfar.nabba.net;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import tfar.nabba.RepositoryMenu;
+import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.net.util.C2SPacketHelper;
 
 public class C2SRequestPacket implements C2SPacketHelper {
@@ -33,8 +33,8 @@ public class C2SRequestPacket implements C2SPacketHelper {
 
     public void handleServer(ServerPlayer player) {
         AbstractContainerMenu container = player.containerMenu;
-        if (container instanceof RepositoryMenu repositoryMenu) {
-            repositoryMenu.handleRequest(player, slot, amount, shift);
+        if (container instanceof AntiBarrelMenu antiBarrelMenu) {
+            antiBarrelMenu.handleRequest(player, slot, amount, shift);
         }
     }
 }

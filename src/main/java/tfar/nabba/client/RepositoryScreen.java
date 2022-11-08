@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
-import tfar.nabba.RepositoryMenu;
+import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.inventory.ItemStackWidget;
 import tfar.nabba.inventory.ScrollbarWidget;
 import tfar.nabba.net.C2SGetDisplayPacket;
@@ -21,11 +21,11 @@ import tfar.nabba.net.PacketHandler;
 
 import java.util.List;
 
-public class RepositoryScreen extends AbstractContainerScreen<RepositoryMenu> {
+public class RepositoryScreen extends AbstractContainerScreen<AntiBarrelMenu> {
 
     private final ItemStackWidget[] widgets = new ItemStackWidget[54];
     private EditBox editBox;
-    public RepositoryScreen(RepositoryMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public RepositoryScreen(AntiBarrelMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageHeight += 56;
         imageWidth+=18;

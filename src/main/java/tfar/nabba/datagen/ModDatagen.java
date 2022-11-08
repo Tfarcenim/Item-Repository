@@ -3,10 +3,7 @@ package tfar.nabba.datagen;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
-import tfar.nabba.datagen.providers.ModBlockStateProvider;
-import tfar.nabba.datagen.providers.ModItemModelProvider;
-import tfar.nabba.datagen.providers.ModLangProvider;
-import tfar.nabba.datagen.providers.ModRecipeProvider;
+import tfar.nabba.datagen.providers.*;
 
 public class ModDatagen {
     public static void start(GatherDataEvent e) {
@@ -19,5 +16,6 @@ public class ModDatagen {
         dataGenerator.addProvider(client,new ModLangProvider(dataGenerator));
 
         dataGenerator.addProvider(server,new ModRecipeProvider(dataGenerator));
+        dataGenerator.addProvider(server,new ModLootTableProvider(dataGenerator));
     }
 }

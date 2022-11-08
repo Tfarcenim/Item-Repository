@@ -15,10 +15,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.blockentity.RepositoryBlockEntity;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 
-public class RespositoryBlock extends Block implements EntityBlock {
-    public RespositoryBlock(Properties pProperties) {
+public class AntiBarrelBlock extends Block implements EntityBlock {
+    public AntiBarrelBlock(Properties pProperties) {
         super(pProperties);
     }
 
@@ -48,16 +48,16 @@ public class RespositoryBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new RepositoryBlockEntity(pPos, pState);
+        return new AntiBarrelBlockEntity(pPos, pState);
     }
 
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-        if (blockentity instanceof RepositoryBlockEntity repositoryBlockEntity) {
+        if (blockentity instanceof AntiBarrelBlockEntity antiBarrelBlockEntity) {
             if (pStack.hasCustomHoverName()) {
-                repositoryBlockEntity.setCustomName(pStack.getHoverName());
+                antiBarrelBlockEntity.setCustomName(pStack.getHoverName());
             }
-            repositoryBlockEntity.initialize(pStack);
+            antiBarrelBlockEntity.initialize(pStack);
         }
     }
 }

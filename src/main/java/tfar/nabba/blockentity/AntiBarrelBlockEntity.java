@@ -19,7 +19,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import tfar.nabba.NABBA;
-import tfar.nabba.RepositoryMenu;
+import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.util.Utils;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.inventory.RepositoryInventoryInputWrapper;
@@ -29,7 +29,7 @@ import tfar.nabba.world.RepositoryInventory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
+public class AntiBarrelBlockEntity extends BlockEntity implements MenuProvider {
 
     public CompoundTag settings = new CompoundTag();
     private Component customName;
@@ -90,12 +90,12 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
         return NABBA.instance.data.getOrCreateInventory(settings.getInt(Utils.ID));
     }
 
-    public RepositoryBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
+    public AntiBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         defaultDisplaySlots(syncSlots);
     }
 
-    public RepositoryBlockEntity(BlockPos pos,BlockState state) {
+    public AntiBarrelBlockEntity(BlockPos pos, BlockState state) {
         this(ModBlockEntityTypes.REPOSITORY,pos,state);
     }
 
@@ -107,7 +107,7 @@ public class RepositoryBlockEntity extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new RepositoryMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()), getInventory(), dataAccess, syncSlotsAccess);
+        return new AntiBarrelMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()), getInventory(), dataAccess, syncSlotsAccess);
     }
     @Nonnull
     @Override

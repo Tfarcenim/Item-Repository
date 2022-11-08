@@ -1,4 +1,4 @@
-package tfar.nabba;
+package tfar.nabba.menu;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.blockentity.RepositoryBlockEntity;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.S2CRefreshClientStacksPacket;
@@ -17,7 +17,7 @@ import tfar.nabba.world.RepositoryInventory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepositoryMenu extends AbstractContainerMenu {
+public class AntiBarrelMenu extends AbstractContainerMenu {
 
     public final RepositoryInventory repositoryInventory;
 
@@ -27,15 +27,15 @@ public class RepositoryMenu extends AbstractContainerMenu {
 
     private final DataSlot row = DataSlot.standalone();
 
-    public RepositoryMenu(int pContainerId, Inventory inventory,ContainerLevelAccess pAccess, RepositoryInventory repositoryInventory, ContainerData data,ContainerData syncSlots) {
+    public AntiBarrelMenu(int pContainerId, Inventory inventory, ContainerLevelAccess pAccess, RepositoryInventory repositoryInventory, ContainerData data, ContainerData syncSlots) {
         this(ModMenuTypes.REPOSITORY, pContainerId, inventory,pAccess, repositoryInventory,data,syncSlots);
     }
 
-    public RepositoryMenu(int i, Inventory inventory) {
+    public AntiBarrelMenu(int i, Inventory inventory) {
         this(ModMenuTypes.REPOSITORY, i, inventory,ContainerLevelAccess.NULL, null,new SimpleContainerData(2),new SimpleContainerData(54));
     }
 
-    protected RepositoryMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, RepositoryInventory repositoryInventory, ContainerData
+    protected AntiBarrelMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, RepositoryInventory repositoryInventory, ContainerData
                              data, ContainerData syncSlots) {
         super(pMenuType, pContainerId);
         this.access = access;
@@ -147,7 +147,7 @@ public class RepositoryMenu extends AbstractContainerMenu {
         List<ItemStack> list = new ArrayList<>();
         List<Integer> syncSlots = repositoryInventory.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof RepositoryBlockEntity repositoryBlock) {
+            if (blockEntity instanceof AntiBarrelBlockEntity repositoryBlock) {
                 return repositoryBlock.search;
             }
             return "";
@@ -171,7 +171,7 @@ public class RepositoryMenu extends AbstractContainerMenu {
     public void handleSearch(ServerPlayer player, String search) {
         access.execute((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof RepositoryBlockEntity repositoryBlock) {
+            if (blockEntity instanceof AntiBarrelBlockEntity repositoryBlock) {
                 repositoryBlock.search = search;
             }
         });

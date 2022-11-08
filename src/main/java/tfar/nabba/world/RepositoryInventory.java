@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
-import tfar.nabba.RepositoryMenu;
+import tfar.nabba.menu.AntiBarrelMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,8 +163,8 @@ public class RepositoryInventory implements IItemHandler {
             NABBA.instance.data.setDirty();
         }
         for (ServerPlayer player : NABBA.instance.server.getPlayerList().getPlayers()) {
-            if (player.containerMenu instanceof RepositoryMenu repositoryMenu && repositoryMenu.repositoryInventory == this) {
-                repositoryMenu.refreshDisplay(player);
+            if (player.containerMenu instanceof AntiBarrelMenu antiBarrelMenu && antiBarrelMenu.repositoryInventory == this) {
+                antiBarrelMenu.refreshDisplay(player);
             }
         }
     }
