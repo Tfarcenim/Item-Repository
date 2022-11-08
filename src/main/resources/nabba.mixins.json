@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "tfar.nabba.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "nabba.refmap.json",
+  "mixins": [
+  ],
+  "client":[
+    "ExampleMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8.4"
+}

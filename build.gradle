@@ -70,7 +70,7 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                itemrepository {
+                nabba {
                     source sourceSets.main
                 }
             }
@@ -91,7 +91,7 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                itemrepository {
+                nabba {
                     source sourceSets.main
                 }
             }
@@ -119,7 +119,7 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', 'examplemod'
 
             mods {
-                itemrepository {
+                nabba {
                     source sourceSets.main
                 }
             }
@@ -136,7 +136,7 @@ minecraft {
             args '--mod', modid, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                itemrepository {
+                nabba {
                     source sourceSets.main
                 }
             }
