@@ -1,7 +1,12 @@
 package tfar.nabba.datagen.providers.loot;
 
+import net.minecraft.core.Registry;
 import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.world.level.block.Block;
+import tfar.nabba.NABBA;
 import tfar.nabba.init.ModBlocks;
+
+import java.util.stream.Collectors;
 
 public class ModBlockLoot extends BlockLoot {
 
@@ -19,5 +24,10 @@ public class ModBlockLoot extends BlockLoot {
         dropSelf(ModBlocks.CREATIVE_BETTER_BARREL);
 
         dropSelf(ModBlocks.ANTI_BARREL);
+    }
+
+    @Override
+    protected Iterable<Block> getKnownBlocks() {
+        return Registry.BLOCK.stream().filter(block -> (Registry.BLOCK.getKey(block).getNamespace().equals(NABBA.MODID))).collect(Collectors.toList());
     }
 }
