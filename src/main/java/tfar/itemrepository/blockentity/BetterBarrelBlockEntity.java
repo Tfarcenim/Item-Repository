@@ -243,11 +243,6 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         level.sendBlockUpdated(getBlockPos(),getBlockState(),getBlockState(),3);
     }
 
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-    }
-
     @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
