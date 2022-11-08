@@ -12,10 +12,10 @@ public class ModItems {
     static CreativeModeTab tab = new CreativeModeTab(NABBA.MODID) {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ModItems.REPOSITORY);
+            return new ItemStack(ModItems.ANTI_BARREL);
         }
     };
-    public static final Item REPOSITORY = new BlockItem(ModBlocks.ANTI_BARREL,basic());
+    public static final Item ANTI_BARREL = new BlockItem(ModBlocks.ANTI_BARREL,basic());
     public static final Item BETTER_BARREL = new BlockItem(ModBlocks.BETTER_BARREL,basic());
     public static final Item STONE_BETTER_BARREL = new BlockItem(ModBlocks.STONE_BETTER_BARREL,basic());
     public static final Item COPPER_BETTER_BARREL = new BlockItem(ModBlocks.COPPER_BETTER_BARREL,basic());

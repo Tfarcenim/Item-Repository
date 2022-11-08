@@ -1,3 +1,5 @@
-// 1.19.2	2022-11-08T14:59:26.2919618	Tags for minecraft:block
-64a9d344579ab0bc311d8798074cfba9f6217a00 data/minecraft/tags/blocks/mineable/axe.json
-24543d4ccd88d85012244fc4fe444490fcdc527d data/minecraft/tags/blocks/mineable/pickaxe.json
+// 1.19.2	2022-11-08T16:00:14.9128929	Tags for minecraft:block
+a4949928bf0025ea737a395fa687594b397663f2 data/minecraft/tags/blocks/mineable/axe.json
+37dd34392c4ba444c050e5f3ee6d808e5ca8de14 data/minecraft/tags/blocks/mineable/pickaxe.json
+24543d4ccd88d85012244fc4fe444490fcdc527d data/nabba/tags/blocks/anti_barrels.json
+64a9d344579ab0bc311d8798074cfba9f6217a00 data/nabba/tags/blocks/better_barrels.json

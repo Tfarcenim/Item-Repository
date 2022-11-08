@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "nabba:repository"
+          "name": "nabba:anti_barrel"
         }
       ],
       "rolls": 1.0

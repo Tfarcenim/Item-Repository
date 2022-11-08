@@ -1,6 +1,7 @@
 package tfar.nabba.datagen;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import tfar.nabba.datagen.providers.*;
@@ -19,6 +20,8 @@ public class ModDatagen {
 
         dataGenerator.addProvider(server,new ModRecipeProvider(dataGenerator));
         dataGenerator.addProvider(server,new ModLootTableProvider(dataGenerator));
-        dataGenerator.addProvider(server,new ModBlockTagsProvider(dataGenerator,helper));
+        BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(dataGenerator,helper);
+        dataGenerator.addProvider(server,blockTagsProvider);
+        dataGenerator.addProvider(server,new ModItemTagsProvider(dataGenerator,blockTagsProvider,helper));
     }
 }
