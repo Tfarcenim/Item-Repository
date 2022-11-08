@@ -2,9 +2,11 @@ package tfar.nabba.block;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,17 +45,36 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
+        ItemStack handStack = pPlayer.getItemInHand(pHand);
 
         if (!pLevel.isClientSide) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
-                Item item = itemstack.getItem();
-                if (item instanceof UpgradeItem upgradeItem && tryUpgrade(itemstack,betterBarrelBlockEntity,upgradeItem)) {
+                Item item = handStack.getItem();
+                if (item instanceof UpgradeItem upgradeItem && tryUpgrade(handStack,betterBarrelBlockEntity,upgradeItem)) {
 
                 } else {
-                    ItemStack stack = betterBarrelBlockEntity.tryAddItem(itemstack);
-                    pPlayer.setItemInHand(pHand,stack);
+
+                    ItemStack existing = betterBarrelBlockEntity.getBarrelHandler().getStack();
+                    //there is no items in the barrel OR the item that the player is holding is the same as the item in the barrel
+                    if (existing.isEmpty() || ItemStack.isSameItemSameTags(handStack,existing)) {
+                        ItemStack stack = betterBarrelBlockEntity.tryAddItem(handStack);
+                        pPlayer.setItemInHand(pHand, stack);
+                    } else {
+                        //search the entire inventory for item stacks
+                        Inventory inventory = pPlayer.getInventory();
+                        NonNullList<ItemStack> main = inventory.items;
+                        for (int i = 0; i < main.size();i++) {
+                            ItemStack fromPlayer = main.get(i);
+                            if (!fromPlayer.isEmpty()) {
+                                ItemStack insert = betterBarrelBlockEntity.tryAddItem(fromPlayer);
+                                //if the item changed, something happeneda
+                                if (insert != fromPlayer) {
+                                    main.set(i, insert);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
