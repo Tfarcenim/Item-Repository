@@ -5,6 +5,7 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import tfar.itemrepository.init.ModBlocks;
@@ -29,6 +30,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_barrel", has(Blocks.BARREL))
                 .save(pFinishedRecipeConsumer);
 
+        ShapedRecipeBuilder.shaped(ModBlocks.STONE_BETTER_BARREL, 1)
+                .define('P', ItemTags.STONE_CRAFTING_MATERIALS)
+                .define('S', Tags.Items.RODS_WOODEN)
+                .define('b', ModBlocks.BETTER_BARREL)
+                .pattern("PSP")
+                .pattern("SbS")
+                .pattern("PSP")
+                .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
+                .save(pFinishedRecipeConsumer);
+
         ShapedRecipeBuilder.shaped(ModItems.STORAGE_UPGRADE, 1)
                 .define('P', Tags.Items.RODS_WOODEN)
                 .define('b', ModBlocks.BETTER_BARREL)
@@ -37,5 +48,9 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("P P")
                 .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
                 .save(pFinishedRecipeConsumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.x4_STORAGE_UPGRADE).define('#', ModItems.STORAGE_UPGRADE)
+                .pattern("##").pattern("##").unlockedBy("has_storage_upgrade", has(ModItems.STORAGE_UPGRADE)).save(pFinishedRecipeConsumer);
+
     }
 }
