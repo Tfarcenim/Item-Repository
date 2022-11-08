@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tfar.itemrepository.ItemRepository;
+import tfar.itemrepository.init.ModBlocks;
 import tfar.itemrepository.init.ModItems;
 
 public class ModItemModelProvider extends ItemModelProvider {
@@ -19,6 +20,12 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         makeOneLayerItem(ModItems.STORAGE_UPGRADE);
         makeOneLayerItem(ModItems.x4_STORAGE_UPGRADE);
+
+        makeSimpleBlockItem(ModBlocks.BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.COPPER_BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.STONE_BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.IRON_BETTER_BARREL.asItem());
+
     }
 
 

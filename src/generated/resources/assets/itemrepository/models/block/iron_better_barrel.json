@@ -1,6 +1,6 @@
 {
   "parent": "itemrepository:block/better_barrel_block",
   "textures": {
-    "frame_side": "itemrepository:block/better_barrel_frame_side"
+    "frame_side": "itemrepository:block/iron_better_barrel_frame_side"
   }
 }

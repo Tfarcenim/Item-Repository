@@ -1,3 +1,7 @@
-// 1.19.2	2022-11-07T02:34:46.1043641	Item Models: itemrepository
+// 1.19.2	2022-11-07T22:45:20.4704772	Item Models: itemrepository
+f6c04cca1d7dc3e55fe6ae49332340f72eb520eb assets/itemrepository/models/item/better_barrel.json
+2e3d49ce5fbc5b598b5819637720e3e392e3efc2 assets/itemrepository/models/item/copper_better_barrel.json
+61ac4a9ea66852f244c4ed06ed65420f2f5082a5 assets/itemrepository/models/item/iron_better_barrel.json
+e5dec3a713afdd3ffe1fdaaf50de59f2feea6be7 assets/itemrepository/models/item/stone_better_barrel.json
 feeb8c0602da776f8e33a5a98dfab71960633b83 assets/itemrepository/models/item/storage_upgrade.json
 2bfce3bc64ea9438d86a3c0dd4d9222bc2a8f9d1 assets/itemrepository/models/item/x4_storage_upgrade.json

@@ -1,3 +1,9 @@
-// 1.19.2	2022-11-07T03:02:51.4144996	Block States: itemrepository
+// 1.19.2	2022-11-07T22:45:20.468477	Block States: itemrepository
 d86f73c79ffe133b53ace9f402ed939a89c9e564 assets/itemrepository/blockstates/better_barrel.json
-cfff4a50fe1adeafac33d4947253a373d17ff577 assets/itemrepository/models/block/better_barrel.json
+a65940aa280b48030401d167f3624b6462bafcf3 assets/itemrepository/blockstates/copper_better_barrel.json
+f143d246b6feb1b4d037f2540a52ed1d03fbe5e9 assets/itemrepository/blockstates/iron_better_barrel.json
+fe50f91e946ece055c0c5342dbdaea83962a05fb assets/itemrepository/blockstates/stone_better_barrel.json
+f2d4950b77492e76131ef4b2242f0b2209487b58 assets/itemrepository/models/block/better_barrel.json
+c2de2f7255c9cdce48dafc1369f410add0b962ad assets/itemrepository/models/block/copper_better_barrel.json
+60e77fe2993856c0587cb015662a5dc6ce5792f6 assets/itemrepository/models/block/iron_better_barrel.json
+a6f6c47faa674dfe3044cb132f651d98734c5e43 assets/itemrepository/models/block/stone_better_barrel.json

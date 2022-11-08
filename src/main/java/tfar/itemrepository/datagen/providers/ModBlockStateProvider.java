@@ -1,7 +1,9 @@
 package tfar.itemrepository.datagen.providers;
 
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tfar.itemrepository.ItemRepository;
@@ -14,7 +16,15 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        simpleBlock(ModBlocks.BETTER_BARREL,models()
-                .cubeBottomTop("better_barrel",modLoc( "block/better_barrel_side"),modLoc( "block/better_barrel_bottom"),modLoc( "block/better_barrel_top")));
+        makeBarrel(ModBlocks.BETTER_BARREL);
+        makeBarrel(ModBlocks.COPPER_BETTER_BARREL);
+        makeBarrel(ModBlocks.STONE_BETTER_BARREL);
+        makeBarrel(ModBlocks.IRON_BETTER_BARREL);
+    }
+
+    protected void makeBarrel(Block block) {
+        String name = Registry.BLOCK.getKey(block).getPath();
+        BlockModelBuilder modelBuilder = models().withExistingParent(name,modLoc("block/better_barrel_block"));
+        simpleBlock(block,modelBuilder.texture("frame_side",modLoc("block/"+name+"_frame_side")));
     }
 }
