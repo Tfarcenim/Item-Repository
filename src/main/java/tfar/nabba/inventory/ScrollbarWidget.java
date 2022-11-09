@@ -6,12 +6,12 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import tfar.nabba.client.RepositoryScreen;
+import tfar.nabba.client.screen.AntiBarrelScreen;
 
 public class ScrollbarWidget extends AbstractWidget {
-    private final RepositoryScreen screen;
+    private final AntiBarrelScreen screen;
 
-    public ScrollbarWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, RepositoryScreen screen) {
+    public ScrollbarWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, AntiBarrelScreen screen) {
         super(pX, pY, pWidth, pHeight, pMessage);
         this.screen = screen;
     }
@@ -19,7 +19,7 @@ public class ScrollbarWidget extends AbstractWidget {
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, RepositoryScreen.TEXTURE);
+        RenderSystem.setShaderTexture(0, AntiBarrelScreen.TEXTURE);
         int rows = screen.getMenu().getSearchRows();
 
         if (rows > 6) {

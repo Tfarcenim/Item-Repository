@@ -6,14 +6,18 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import tfar.nabba.client.screen.AntiBarrelScreen;
+import tfar.nabba.client.screen.VanityKeyScreen;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModMenuTypes;
+import tfar.nabba.menu.VanityKeyMenu;
 
 public class Client {
 
     public static void setup(FMLClientSetupEvent e) {
-        MenuScreens.register(ModMenuTypes.REPOSITORY,RepositoryScreen::new);
+        MenuScreens.register(ModMenuTypes.ANTI_BARREL, AntiBarrelScreen::new);
+        MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL,BetterBarrelRenderer::new);
         setRenderLayer(ModBlocks.BETTER_BARREL);
         setRenderLayer(ModBlocks.STONE_BETTER_BARREL);

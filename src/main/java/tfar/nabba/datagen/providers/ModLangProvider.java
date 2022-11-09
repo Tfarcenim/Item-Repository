@@ -40,6 +40,8 @@ public class ModLangProvider extends LanguageProvider {
         addItem(() -> ModItems.VOID_UPGRADE,"Void Upgrade");
 
         addItem(() -> ModItems.HIDE_KEY,"Hide Key");
+        addItem(() -> ModItems.LOCK_KEY,"Lock Key");
+        addItem(() -> ModItems.VANITY_KEY,"Vanity Key");
 
         add(BetterBarrelBlock.info,"Has %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");

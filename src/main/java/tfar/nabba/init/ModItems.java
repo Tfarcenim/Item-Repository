@@ -5,6 +5,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.NABBA;
+import tfar.nabba.item.HideKeyItem;
 import tfar.nabba.item.KeyItem;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.item.VanityKeyItem;
@@ -42,8 +43,8 @@ public class ModItems {
     public static final Item PICKUP_9x9_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.PICKUP_9x9);
 
     public static final Item KEY_RING = new Item(basic());
-    public static final Item HIDE_KEY = new KeyItem(basic());
-    public static final Item LOCK_KEY = new KeyItem(basic());
+    public static final Item HIDE_KEY = new HideKeyItem(basic());
+    public static final Item LOCK_KEY = new HideKeyItem(basic());
     public static final Item VANITY_KEY = new VanityKeyItem(basic());
 
     private static Item.Properties basic() {

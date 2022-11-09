@@ -61,7 +61,9 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
                 Item item = handStack.getItem();
 
                 if (item instanceof KeyItem) {
-                    handleKey(pState,handStack,pLevel,pPos);
+                    if (handleKey(pState,handStack,pLevel,pPos,pPlayer)) {
+
+                    }
                 }
 
                 else if (item instanceof UpgradeItem upgradeItem && tryUpgrade(handStack,betterBarrelBlockEntity,upgradeItem)) {
@@ -94,10 +96,11 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
     }
 
-    public void handleKey(BlockState state,ItemStack itemstack,Level level, BlockPos pos) {
-        BlockState newState = state.setValue(BetterBarrelBlock.DISCRETE,!state.getValue(BetterBarrelBlock.DISCRETE));
-        level.setBlock(pos,newState,3);
-        level.sendBlockUpdated(pos,state,newState,3);
+    public boolean handleKey(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
+        ((KeyItem)itemstack.getItem() ).handleBarrel(state, itemstack, level, pos, pPlayer);
+
+
+        return true;
     }
 
     @Override

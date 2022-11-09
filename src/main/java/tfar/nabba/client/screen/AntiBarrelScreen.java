@@ -1,4 +1,4 @@
-package tfar.nabba.client;
+package tfar.nabba.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,17 +21,17 @@ import tfar.nabba.net.PacketHandler;
 
 import java.util.List;
 
-public class RepositoryScreen extends AbstractContainerScreen<AntiBarrelMenu> {
+public class AntiBarrelScreen extends AbstractContainerScreen<AntiBarrelMenu> {
 
     private final ItemStackWidget[] widgets = new ItemStackWidget[54];
     private EditBox editBox;
-    public RepositoryScreen(AntiBarrelMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public AntiBarrelScreen(AntiBarrelMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageHeight += 56;
         imageWidth+=18;
         this.inventoryLabelY = this.imageHeight - 94;
     }
-    public static final ResourceLocation TEXTURE = new ResourceLocation(NABBA.MODID,"textures/gui/container/repository.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(NABBA.MODID,"textures/gui/container/anti_barrel.png");
 
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
@@ -69,7 +69,7 @@ public class RepositoryScreen extends AbstractContainerScreen<AntiBarrelMenu> {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.editBox = new EditBox(this.font, i + 82, j + 6, 103, 12, Component.translatable("container.repair"));
+        this.editBox = new EditBox(this.font, i + 82, j + 6, 103, 12, Component.translatable("container.anti_barrel"));
         this.editBox.setCanLoseFocus(false);
         this.editBox.setTextColor(-1);
         this.editBox.setTextColorUneditable(-1);

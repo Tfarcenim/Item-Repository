@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import tfar.nabba.client.RepositoryScreen;
+import tfar.nabba.client.screen.AntiBarrelScreen;
 import tfar.nabba.net.util.S2CPacketHelper;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
 
   public void handleClient() {
       Minecraft mc = Minecraft.getInstance();
-      if (mc.screen instanceof RepositoryScreen repositoryScreen) {
-        repositoryScreen.setGuiStacks(stacks,ints);
+      if (mc.screen instanceof AntiBarrelScreen antiBarrelScreen) {
+        antiBarrelScreen.setGuiStacks(stacks,ints);
       }
   }
 
