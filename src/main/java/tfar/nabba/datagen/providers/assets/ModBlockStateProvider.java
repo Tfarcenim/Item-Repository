@@ -40,6 +40,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .texture("frame_bottom",modLoc("block/"+name+"_frame_side"));
 
         getMultipartBuilder(block).part().modelFile(modelBuilder).addModel().end()
-                .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_void"))).addModel().condition(BetterBarrelBlock.VOID,true).end();
+                .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_void")))
+                .addModel().condition(BetterBarrelBlock.VOID,true).end()
+                .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_lock")))
+                .addModel().condition(BetterBarrelBlock.LOCKED,true).end();
     }
 }
