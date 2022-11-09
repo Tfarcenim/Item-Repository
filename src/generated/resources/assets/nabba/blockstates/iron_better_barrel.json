@@ -1,7 +1,17 @@
 {
-  "variants": {
-    "": {
-      "model": "nabba:block/iron_better_barrel"
+  "multipart": [
+    {
+      "apply": {
+        "model": "nabba:block/iron_better_barrel"
+      }
+    },
+    {
+      "apply": {
+        "model": "nabba:block/better_barrel_void"
+      },
+      "when": {
+        "void": "true"
+      }
     }
-  }
+  ]
 }

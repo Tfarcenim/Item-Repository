@@ -7,6 +7,8 @@ import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tfar.nabba.NABBA;
+import tfar.nabba.block.BetterBarrelBlock;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlocks;
 
 public class ModBlockStateProvider extends BlockStateProvider {
@@ -30,11 +32,14 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     protected void makeBarrel(Block block) {
         String name = Registry.BLOCK.getKey(block).getPath();
+
         BlockModelBuilder modelBuilder = models().withExistingParent(name,modLoc("block/better_barrel_block"));
-        simpleBlock(block,modelBuilder
+        modelBuilder
                 .texture("frame_side",modLoc("block/"+name+"_frame_side"))
                 .texture("frame_top",modLoc("block/"+name+"_frame_side"))
-                .texture("frame_bottom",modLoc("block/"+name+"_frame_side"))
-        );
+                .texture("frame_bottom",modLoc("block/"+name+"_frame_side"));
+
+        getMultipartBuilder(block).part().modelFile(modelBuilder).addModel().end()
+                .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_void"))).addModel().condition(BetterBarrelBlock.VOID,true).end();
     }
 }
