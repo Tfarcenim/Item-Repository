@@ -35,6 +35,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     private Map<UpgradeData, Integer> upgrades = new HashMap<>();
     private int color = 0xff99ff;
     private double size = .5;
+    private ItemStack ghost = ItemStack.EMPTY;
     private transient int cachedStorage = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
 
@@ -125,6 +126,18 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return size;
     }
 
+    public boolean hasGhost() {
+        return getBlockState().getValue(BetterBarrelBlock.LOCKED) && !ghost.isEmpty();
+    }
+    public ItemStack getGhost() {
+        return ghost;
+    }
+
+    public void clearGhost() {
+        ghost = ItemStack.EMPTY;
+        setChanged();
+    }
+
     public static <T extends BlockEntity> void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) {
 
     }
@@ -146,6 +159,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         pTag.put("Upgrades",upgradesTag);
         pTag.putInt("color",color);
         pTag.putDouble("size",size);
+        pTag.put("Ghost",ghost.save(new CompoundTag()));
     }
 
     @Override
@@ -163,6 +177,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         }
         color = pTag.getInt("color");
         size = pTag.getDouble("size");
+        ghost = ItemStack.of(pTag.getCompound("Ghost"));
         invalidateCaches();
     }
 
@@ -216,6 +231,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             if (stack.isEmpty() || !isItemValid(slot, stack)) return stack;
 
             //reverse the "trick" we did earlier
+
             int limit = getSlotLimit(slot) - (barrelBlockEntity.isVoid() ? 1 : 0);
             int count = stack.getCount();
             int existing = this.stack.isEmpty() ? 0 : this.stack.getCount();
@@ -242,11 +258,16 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             if (amount > existing) {
                 newStack = ItemHandlerHelper.copyStackWithSize(stack, existing);
                 if (!simulate) {
+                    barrelBlockEntity.ghost = ItemHandlerHelper.copyStackWithSize(stack,1);
+
                     setStack(ItemStack.EMPTY);
                 }
             } else {
                 newStack = ItemHandlerHelper.copyStackWithSize(stack, amount);
                 if (!simulate) {
+                    if (amount == existing) {
+                        barrelBlockEntity.ghost = ItemHandlerHelper.copyStackWithSize(stack,1);
+                    }
                     stack.shrink(amount);
                 }
             }
@@ -261,8 +282,9 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return this.stack.isEmpty() || ItemStack.isSameItemSameTags(this.stack, stack);
+        public boolean isItemValid(int slot, @NotNull ItemStack incoming) {
+            return (!barrelBlockEntity.hasGhost() || ItemStack.isSameItemSameTags(incoming, barrelBlockEntity.getGhost()))
+                    && (this.stack.isEmpty() || ItemStack.isSameItemSameTags(this.stack, incoming));
         }
 
         public void markDirty() {

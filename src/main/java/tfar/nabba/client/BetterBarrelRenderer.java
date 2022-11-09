@@ -109,7 +109,12 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
 
     protected void renderItem(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
         ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
-        if (stack.isEmpty()) return;
+
+        if (stack.isEmpty() && !betterBarrelBlockEntity.hasGhost()) return;
+
+        if (stack.isEmpty())stack = betterBarrelBlockEntity.getGhost();
+        if (stack.isEmpty())return;
+
         float scale = (float) betterBarrelBlockEntity.getSize();
 
         try {
