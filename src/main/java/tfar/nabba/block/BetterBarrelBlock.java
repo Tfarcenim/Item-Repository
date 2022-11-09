@@ -28,6 +28,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.item.KeyItem;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.util.BarrelTier;
 
@@ -37,11 +38,12 @@ import java.util.List;
 public class BetterBarrelBlock extends Block implements EntityBlock {
     private final BarrelTier barrelTier;
     public static final BooleanProperty VOID = BooleanProperty.create("void");
+    public static final BooleanProperty DISCRETE = BooleanProperty.create("discrete");
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
 
     public BetterBarrelBlock(Properties pProperties, BarrelTier barrelTier) {
         super(pProperties);
-        registerDefaultState(this.stateDefinition.any().setValue(VOID,false).setValue(LOCKED,false));
+        registerDefaultState(this.stateDefinition.any().setValue(VOID,false).setValue(LOCKED,false).setValue(DISCRETE,false));
         this.barrelTier = barrelTier;
     }
 
@@ -57,7 +59,12 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
                 Item item = handStack.getItem();
-                if (item instanceof UpgradeItem upgradeItem && tryUpgrade(handStack,betterBarrelBlockEntity,upgradeItem)) {
+
+                if (item instanceof KeyItem) {
+                    handleKey(pState,handStack,pLevel,pPos);
+                }
+
+                else if (item instanceof UpgradeItem upgradeItem && tryUpgrade(handStack,betterBarrelBlockEntity,upgradeItem)) {
 
                 } else {
 
@@ -85,6 +92,12 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
             }
         }
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
+    }
+
+    public void handleKey(BlockState state,ItemStack itemstack,Level level, BlockPos pos) {
+        BlockState newState = state.setValue(BetterBarrelBlock.DISCRETE,!state.getValue(BetterBarrelBlock.DISCRETE));
+        level.setBlock(pos,newState,3);
+        level.sendBlockUpdated(pos,state,newState,3);
     }
 
     @Override
@@ -121,7 +134,7 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return ModBlockEntityTypes.Suppliers.WOOD.create(pPos, pState);
+        return ModBlockEntityTypes.Suppliers.WOOD.create(pPos,pState);
     }
 
     @Nullable
@@ -131,6 +144,6 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(VOID,LOCKED);
+        pBuilder.add(VOID,LOCKED,DISCRETE);
     }
 }

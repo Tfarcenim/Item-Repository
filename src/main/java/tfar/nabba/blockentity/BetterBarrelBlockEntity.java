@@ -31,17 +31,16 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     private transient int cachedStorage = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
 
-    public BetterBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
+    protected BetterBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         barrelHandler = new BarrelHandler(this);
     }
 
     private final BarrelHandler barrelHandler;
 
-    public BetterBarrelBlockEntity(BlockPos pos, BlockState state) {
-        this(ModBlockEntityTypes.BETTER_BARREL, pos, state);
+    public static BetterBarrelBlockEntity create(BlockPos pos, BlockState state) {
+        return new BetterBarrelBlockEntity(ModBlockEntityTypes.BETTER_BARREL, pos, state);
     }
-
 
     public int getStorage() {
         if (cachedStorage == -1) {//save CPU cycles by not iterating the upgrade map
@@ -101,6 +100,9 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
     public int getFreeSlots() {
         return getTotalUpgradeSlots() - getUsedSlots();
+    }
+    public boolean isDiscrete() {
+        return getBlockState().getValue(BetterBarrelBlock.DISCRETE);
     }
 
     public static <T extends BlockEntity> void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) {

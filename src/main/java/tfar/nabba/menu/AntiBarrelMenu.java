@@ -45,6 +45,7 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
 
         int playerX = 8;
         int playerY = 140;
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 this.addSlot(new Slot(inventory, j + i * 9 + 9, j * 18 + playerX, i * 18 + playerY));

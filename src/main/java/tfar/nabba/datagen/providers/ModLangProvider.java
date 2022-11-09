@@ -39,6 +39,8 @@ public class ModLangProvider extends LanguageProvider {
         addItem(() -> ModItems.INFINITE_VENDING_UPGRADE,"Infinite Vending Upgrade");
         addItem(() -> ModItems.VOID_UPGRADE,"Void Upgrade");
 
+        addItem(() -> ModItems.HIDE_KEY,"Hide Key");
+
         add(BetterBarrelBlock.info,"Has %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");
         addDesc(ModItems.STORAGE_UPGRADE,"Adds %s stacks of storage");

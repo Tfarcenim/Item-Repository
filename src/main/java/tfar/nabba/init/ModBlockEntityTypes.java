@@ -12,6 +12,6 @@ public class ModBlockEntityTypes {
                     ModBlocks.GOLD_BETTER_BARREL,ModBlocks.DIAMOND_BETTER_BARREL,ModBlocks.EMERALD_BETTER_BARREL,
                     ModBlocks.NETHERITE_BETTER_BARREL,ModBlocks.CREATIVE_BETTER_BARREL).build(null);
     public static class Suppliers {
-        public static final BlockEntityType.BlockEntitySupplier<BetterBarrelBlockEntity> WOOD = BetterBarrelBlockEntity::new;
+        public static final BlockEntityType.BlockEntitySupplier<BetterBarrelBlockEntity> WOOD = BetterBarrelBlockEntity::create;
     }
 }
