@@ -5,6 +5,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.NABBA;
+import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.item.*;
 import tfar.nabba.util.UpgradeDatas;
 
@@ -39,9 +40,9 @@ public class ModItems {
     public static final Item PICKUP_3x3_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.PICKUP_3x3);
     public static final Item PICKUP_9x9_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.PICKUP_9x9);
 
-    public static final Item KEY_RING = new Item(basic());
-    public static final Item HIDE_KEY = new HideKeyItem(basic());
-    public static final Item LOCK_KEY = new LockKeyItem(basic());
+    public static final Item KEY_RING = new KeyRingItem(basic());
+    public static final Item HIDE_KEY = new BlockStateKeyItem(basic(),BetterBarrelBlock.DISCRETE);
+    public static final Item LOCK_KEY = new BlockStateKeyItem(basic(), BetterBarrelBlock.LOCKED);
     public static final Item VANITY_KEY = new VanityKeyItem(basic());
 
     private static Item.Properties basic() {

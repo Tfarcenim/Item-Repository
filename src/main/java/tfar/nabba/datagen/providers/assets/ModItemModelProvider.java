@@ -33,6 +33,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.HIDE_KEY);
         makeOneLayerItem(ModItems.LOCK_KEY);
         makeOneLayerItem(ModItems.VANITY_KEY);
+        makeOneLayerItem(ModItems.KEY_RING);
 
         makeSimpleBlockItem(ModBlocks.BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.COPPER_BETTER_BARREL.asItem());

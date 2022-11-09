@@ -1,4 +1,4 @@
-// 1.19.2	2022-11-09T04:05:58.4721786	Item Models: nabba
+// 1.19.2	2022-11-09T12:59:26.2131793	Item Models: nabba
 ecf8667a935b50479f8da420dd4994eb6f946cbc assets/nabba/models/item/better_barrel.json
 7ca0502f50cdcf2ac0b7410c942eefbbce41e56d assets/nabba/models/item/copper_better_barrel.json
 a2d384bb737843cde849eae702897a931c1117e7 assets/nabba/models/item/creative_better_barrel.json
@@ -9,6 +9,7 @@ de10ee5e1e749b65346f82699142a4edb783ad70 assets/nabba/models/item/gold_better_ba
 0a5da44a40c1a6ece5cf1b1a7d7a817704acaba7 assets/nabba/models/item/infinite_storage_upgrade.json
 53f5b5643f592baf70f62b93a3363449acc6b615 assets/nabba/models/item/infinite_vending_upgrade.json
 55ab1ec7308dc9213fa1b846b1053ed6471a2a6e assets/nabba/models/item/iron_better_barrel.json
+af1ba2e1d1b3945c41728feb73c30c2e2c0e220a assets/nabba/models/item/key_ring.json
 c872e183da0d54f1fa49f2d96d417f84bdc39a94 assets/nabba/models/item/lapis_better_barrel.json
 52cee6744f71b219716fd3fbf0dd1c84bcda42cf assets/nabba/models/item/lock_key.json
 64b616c4cee0933caf9ee55da7666e705ca60783 assets/nabba/models/item/netherite_better_barrel.json
