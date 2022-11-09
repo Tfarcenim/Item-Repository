@@ -30,8 +30,8 @@ public class C2SVanityPacket implements C2SPacketHelper {
 
   public void handleServer(ServerPlayer player) {
     AbstractContainerMenu container = player.containerMenu;
-    if (container instanceof VanityKeyMenu antiBarrelMenu) {
-      antiBarrelMenu.receiveVanity(color,size);
+    if (container instanceof VanityKeyMenu vanityKeyMenu) {
+      vanityKeyMenu.receiveVanity(color,size);
     }
   }
 }

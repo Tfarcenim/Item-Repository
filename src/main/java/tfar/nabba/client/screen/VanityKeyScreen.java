@@ -7,9 +7,11 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.inventory.BackgroundEditBox;
 import tfar.nabba.menu.VanityKeyMenu;
 import tfar.nabba.net.C2SSearchPacket;
@@ -17,10 +19,12 @@ import tfar.nabba.net.C2SVanityPacket;
 import tfar.nabba.net.PacketHandler;
 
 public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
+
+    final Player player;
     public VanityKeyScreen(VanityKeyMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-
         this.inventoryLabelY = this.imageHeight - 94;
+        player = pPlayerInventory.player;
     }
 
     private int localColor;
@@ -43,13 +47,25 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         super.init();
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
+
+        BetterBarrelBlockEntity betterBarrelBlockEntity = (BetterBarrelBlockEntity) player.level.getBlockEntity(menu.getPos());
+
+        int initialColor = betterBarrelBlockEntity.getColor();
+        double initialSize = betterBarrelBlockEntity.getSize();
+
         slider = new ForgeSlider(i + 38,j + 46,100,20,Component.empty(),Component.empty(),
-                0,1,0,.01,0,true);
+                0,1,initialSize,.01,0,true){
+            @Override
+            public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+                syncVanity();
+                return super.mouseReleased(pMouseX, pMouseY, pButton);
+            }
+        };
         addRenderableWidget(slider);
-        initEditBox(58,28);
+        initEditBox(58,28,initialColor);
     }
 
-    protected void initEditBox(int posX,int posY) {
+    protected void initEditBox(int posX,int posY,int color) {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
@@ -58,9 +74,9 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         this.editBox.setTextColor(-1);
         this.editBox.setTextColorUneditable(-1);
         this.editBox.setBordered(false);
-        this.editBox.setMaxLength(8);
+        this.editBox.setMaxLength(6);
         this.editBox.setResponder(this::onNameChanged);
-        this.editBox.setValue("");
+        this.editBox.setValue(Integer.toHexString(color));
         this.addWidget(this.editBox);
         this.setInitialFocus(this.editBox);
         this.editBox.setEditable(true);
@@ -76,10 +92,9 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
 
     private void onNameChanged(String string) {
         editBox.setBgColor(validColor(string) ? 0xff00ff00 : 0xffff0000);
-
         try {
             localColor = Integer.parseInt(string,16);
-            PacketHandler.sendToServer(new C2SVanityPacket(localColor,slider.getValue()));
+            syncVanity();
         } catch (NumberFormatException e) {
             //whatever
         }
@@ -120,6 +135,10 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         }
 
         return this.editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || this.editBox.canConsumeInput() || super.keyPressed(pKeyCode, pScanCode, pModifiers);
+    }
+
+    protected void syncVanity() {
+        PacketHandler.sendToServer(new C2SVanityPacket(localColor,slider.getValue()));
     }
 
     public void removed() {

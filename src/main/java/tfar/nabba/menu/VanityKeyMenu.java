@@ -1,10 +1,10 @@
 package tfar.nabba.menu;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -14,15 +14,12 @@ import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 
 public class VanityKeyMenu extends AbstractContainerMenu {
-    private final ContainerLevelAccess access;
-
-    public VanityKeyMenu(int pContainerId, Inventory inventory) {
-        this(pContainerId, inventory,ContainerLevelAccess.NULL);
-    }
-
-    public VanityKeyMenu(int pContainerId, Inventory inventory, ContainerLevelAccess access) {
+    private final BlockPos pos;
+    private final Player player;
+    public VanityKeyMenu(int pContainerId, Inventory inventory, BlockPos access) {
             super(ModMenuTypes.VANITY_KEY, pContainerId);
-        this.access = access;
+        this.pos = access;
+        this.player = inventory.player;
         int playerX = 8;
             int playerY = 84;
 
@@ -37,7 +34,9 @@ public class VanityKeyMenu extends AbstractContainerMenu {
             }
         }
 
-
+    public BlockPos getPos() {
+        return pos;
+    }
 
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
@@ -46,19 +45,19 @@ public class VanityKeyMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        return stillValid(access,pPlayer, ModBlockTags.BETTER_BARRELS);
+        return stillValid(pPlayer, ModBlockTags.BETTER_BARRELS);
     }
 
     public void receiveVanity(int color,double size) {
-        access.execute((level, pos) -> {
-            BlockEntity blockEntity= level.getBlockEntity(pos);
+            BlockEntity blockEntity= player.level.getBlockEntity(pos);
             if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
                 betterBarrelBlockEntity.setColor(color);
+                betterBarrelBlockEntity.setSize(size);
             }
-        });
     }
 
-    protected static boolean stillValid(ContainerLevelAccess pAccess, Player pPlayer, TagKey<Block> targetBlocks) {
-        return pAccess.evaluate((level, pos) -> level.getBlockState(pos).is(targetBlocks) && pPlayer.distanceToSqr((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D) <= 64.0D, true);
+    protected boolean stillValid(Player pPlayer, TagKey<Block> targetBlocks) {
+        return pPlayer.level.getBlockState(pos).is(targetBlocks)
+                && pPlayer.distanceToSqr((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D) <= 64.0D;
     }
 }

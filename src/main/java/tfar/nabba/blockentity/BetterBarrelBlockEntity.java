@@ -135,7 +135,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         }
         pTag.put("Upgrades",upgradesTag);
         pTag.putInt("color",color);
-        //pTag.putDouble("size",size);
+        pTag.putDouble("size",size);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             upgrades.put(((UpgradeItem)Registry.ITEM.get(name)).getData(),compoundTag.getInt("Count"));
         }
         color = pTag.getInt("color");
-        //size = pTag.getDouble("size");
+        size = pTag.getDouble("size");
         invalidateCaches();
     }
 
@@ -167,6 +167,10 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     public void setColor(int color) {
         this.color = color;
         setChanged();
+    }
+
+    public void setSize(double size) {
+        this.size = size;
     }
 
     public static class BarrelHandler implements IItemHandler {

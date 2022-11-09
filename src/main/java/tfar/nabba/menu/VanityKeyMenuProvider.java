@@ -1,21 +1,20 @@
 package tfar.nabba.menu;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 import javax.annotation.Nullable;
 
 public class VanityKeyMenuProvider implements MenuProvider {
 
-    private final BetterBarrelBlockEntity betterBarrelBlockEntity;
+    private final BlockPos pos;
 
-    public VanityKeyMenuProvider(BetterBarrelBlockEntity betterBarrelBlockEntity) {
-        this.betterBarrelBlockEntity = betterBarrelBlockEntity;
+    public VanityKeyMenuProvider(BlockPos pos) {
+        this.pos = pos;
     }
 
     @Override
@@ -26,6 +25,6 @@ public class VanityKeyMenuProvider implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player player) {
-        return new VanityKeyMenu(i,playerInventory, ContainerLevelAccess.create(betterBarrelBlockEntity.getLevel(),betterBarrelBlockEntity.getBlockPos()));
+        return new VanityKeyMenu(i,playerInventory, pos);
     }
 }
