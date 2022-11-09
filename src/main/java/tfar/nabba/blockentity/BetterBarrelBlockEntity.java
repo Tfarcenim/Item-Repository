@@ -71,7 +71,12 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         for (Map.Entry<UpgradeData, Integer> entry : upgrades.entrySet()) {
             slots += entry.getKey().getSlotRequirement() * entry.getValue();
         }
+        if (isVoid()) slots++;
         return slots;
+    }
+
+    public boolean isVoid() {
+        return getBlockState().getValue(BetterBarrelBlock.VOID);
     }
 
     public Map<UpgradeData, Integer> getUpgrades() {
@@ -210,7 +215,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (stack.isEmpty() || !isItemValid(slot, stack)) return stack;
 
-            int limit = getSlotLimit(slot);
+            //reverse the "trick" we did earlier
+            int limit = getSlotLimit(slot) - (barrelBlockEntity.isVoid() ? 1 : 0);
             int count = stack.getCount();
             int existing = this.stack.isEmpty() ? 0 : this.stack.getCount();
             if (count + existing > limit) {
@@ -218,7 +224,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
                     this.stack = ItemHandlerHelper.copyStackWithSize(stack, limit);
                     markDirty();
                 }
-                return ItemHandlerHelper.copyStackWithSize(stack, count + existing - limit);
+                return barrelBlockEntity.isVoid() ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(stack, count + existing - limit);
             } else {
                 if (!simulate) {
                     this.stack = ItemHandlerHelper.copyStackWithSize(stack, existing + count);
@@ -250,8 +256,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             return newStack;
         }
         @Override
-        public int getSlotLimit(int slot) {
-            return barrelBlockEntity.getStorage() * 64;
+        public int getSlotLimit(int slot) {//have to trick the vanilla hopper into inserting so voiding work
+            return barrelBlockEntity.getStorage() * 64 + (barrelBlockEntity.isVoid() ? 1 : 0);
         }
 
         @Override

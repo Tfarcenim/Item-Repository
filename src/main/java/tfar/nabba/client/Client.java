@@ -42,7 +42,7 @@ public class Client {
     }
 
     private static void scroll(InputEvent.MouseScrollingEvent e) {
-        if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.getMainHandItem().is(ModItems.KEY_RING)) {
+        if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.getMainHandItem().is(ModItems.KEY_RING) && Minecraft.getInstance().player.isCrouching()) {
             C2SScrollKeyPacket.send(e.getScrollDelta() > 0);
             e.setCanceled(true);
         }
