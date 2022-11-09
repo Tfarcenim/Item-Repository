@@ -25,6 +25,11 @@ public class PacketHandler {
                 C2SSearchPacket::new,
                 C2SSearchPacket::handle);
 
+        INSTANCE.registerMessage(id++, C2SVanityPacket.class,
+                C2SVanityPacket::encode,
+                C2SVanityPacket::new,
+                C2SVanityPacket::handle);
+
         INSTANCE.registerMessage(id++, C2SRequestPacket.class,
                 C2SRequestPacket::encode,
                 C2SRequestPacket::new,

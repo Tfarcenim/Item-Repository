@@ -28,6 +28,8 @@ import java.util.Map;
 public class BetterBarrelBlockEntity extends BlockEntity {
 
     private Map<UpgradeData, Integer> upgrades = new HashMap<>();
+    private int color = 0xff99ff;
+    private double size = .5;
     private transient int cachedStorage = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
 
@@ -105,6 +107,14 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return getBlockState().getValue(BetterBarrelBlock.DISCRETE);
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
     public static <T extends BlockEntity> void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) {
 
     }
@@ -124,6 +134,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             upgradesTag.add(tag);
         }
         pTag.put("Upgrades",upgradesTag);
+        pTag.putInt("color",color);
+        //pTag.putDouble("size",size);
     }
 
     @Override
@@ -139,6 +151,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             ResourceLocation name = new ResourceLocation(compoundTag.getString("Upgrade"));
             upgrades.put(((UpgradeItem)Registry.ITEM.get(name)).getData(),compoundTag.getInt("Count"));
         }
+        color = pTag.getInt("color");
+        //size = pTag.getDouble("size");
         invalidateCaches();
     }
 
@@ -148,6 +162,11 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
     public ItemStack tryRemoveItem() {
         return getBarrelHandler().extractItem(0,64,false);
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        setChanged();
     }
 
     public static class BarrelHandler implements IItemHandler {

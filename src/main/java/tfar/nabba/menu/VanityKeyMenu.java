@@ -8,6 +8,8 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 
@@ -22,7 +24,7 @@ public class VanityKeyMenu extends AbstractContainerMenu {
             super(ModMenuTypes.VANITY_KEY, pContainerId);
         this.access = access;
         int playerX = 8;
-            int playerY = 100;
+            int playerY = 84;
 
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 9; j++) {
@@ -45,6 +47,15 @@ public class VanityKeyMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(access,pPlayer, ModBlockTags.BETTER_BARRELS);
+    }
+
+    public void receiveVanity(int color,double size) {
+        access.execute((level, pos) -> {
+            BlockEntity blockEntity= level.getBlockEntity(pos);
+            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+                betterBarrelBlockEntity.setColor(color);
+            }
+        });
     }
 
     protected static boolean stillValid(ContainerLevelAccess pAccess, Player pPlayer, TagKey<Block> targetBlocks) {

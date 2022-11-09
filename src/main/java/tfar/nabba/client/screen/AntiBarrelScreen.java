@@ -154,5 +154,4 @@ public class AntiBarrelScreen extends AbstractContainerScreen<AntiBarrelMenu> {
         super.removed();
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
     }
-
 }

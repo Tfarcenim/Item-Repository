@@ -1,4 +1,4 @@
-package tfar.nabba.datagen.providers;
+package tfar.nabba.datagen.providers.assets;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;

@@ -7,6 +7,7 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import tfar.nabba.datagen.providers.*;
 import tfar.nabba.datagen.providers.assets.ModBlockStateProvider;
 import tfar.nabba.datagen.providers.assets.ModItemModelProvider;
+import tfar.nabba.datagen.providers.assets.ModLangProvider;
 
 public class ModDatagen {
     public static void start(GatherDataEvent e) {
