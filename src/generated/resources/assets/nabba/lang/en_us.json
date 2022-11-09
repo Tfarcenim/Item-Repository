@@ -15,6 +15,7 @@
   "item.nabba.infinite_storage_upgrade.desc": "Adds %s stacks of storage",
   "item.nabba.infinite_vending_upgrade": "Infinite Vending Upgrade",
   "item.nabba.infinite_vending_upgrade.desc": "Items don't deplete when extracted",
+  "item.nabba.key_ring": "Key Ring",
   "item.nabba.lock_key": "Lock Key",
   "item.nabba.pickup_3x3_upgrade.desc": "Picks up items in a 3x3x3 volume centered on the barrel",
   "item.nabba.pickup_9x9_upgrade.desc": "Picks up items in a 9x3x9 area centered on the barrel",
@@ -34,5 +35,6 @@
   "item.nabba.x64_storage_upgrade": "x64 Storage Upgrade",
   "item.nabba.x64_storage_upgrade.desc": "Adds %s stacks of storage",
   "nabba.better_barrel.info": "Has %s upgrade slots",
+  "nabba.key_ring.selected_key": "%s (%s)",
   "nabba.upgrade.info": "Requires %s upgrade slots"
 }

@@ -42,6 +42,7 @@ public class ModLangProvider extends LanguageProvider {
         addItem(() -> ModItems.HIDE_KEY,"Hide Key");
         addItem(() -> ModItems.LOCK_KEY,"Lock Key");
         addItem(() -> ModItems.VANITY_KEY,"Vanity Key");
+        addItem(() -> ModItems.KEY_RING,"Key Ring");
 
         add(BetterBarrelBlock.info,"Has %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");
@@ -56,6 +57,8 @@ public class ModLangProvider extends LanguageProvider {
         addDesc(ModItems.VOID_UPGRADE,"Barrel voids excess items");
         addDesc(ModItems.PICKUP_3x3_UPGRADE,"Picks up items in a 3x3x3 volume centered on the barrel");
         addDesc(ModItems.PICKUP_9x9_UPGRADE,"Picks up items in a 9x3x9 area centered on the barrel");
+
+        add("nabba.key_ring.selected_key","%s (%s)");
     }
 
     protected void addDesc(Item item,String s) {

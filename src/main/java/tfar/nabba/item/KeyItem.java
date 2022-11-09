@@ -14,6 +14,8 @@ public abstract class KeyItem extends Item {
     public KeyItem(Properties pProperties) {
         super(pProperties);
     }
+
+    //note, cannot use onItemUse because the block's method is called BEFORE the item's method, so we have the barrel call here instead
     public abstract boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer);
 
 }
