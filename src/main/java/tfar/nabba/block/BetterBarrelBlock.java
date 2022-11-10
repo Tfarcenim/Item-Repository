@@ -3,6 +3,7 @@ package tfar.nabba.block;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -108,6 +109,17 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         pTooltip.add(Component.translatable(info,Component.translatable(barrelTier.getUpgradeSlots()+"").withStyle(ChatFormatting.AQUA)));
+        if (pStack.hasTag()) {
+
+            CompoundTag tag = pStack.getTag().getCompound("BlockStateTag");
+            if (!tag.isEmpty()) {
+                pTooltip.add(Component.empty());
+                pTooltip.add(Component.literal("Locked: ").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
+                pTooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
+            }
+
+            pTooltip.add(Component.literal(tag.toString()).withStyle(ChatFormatting.GRAY));
+        }
     }
 
     public RenderShape getRenderShape(BlockState pState) {
