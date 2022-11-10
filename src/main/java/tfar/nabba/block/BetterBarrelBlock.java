@@ -28,26 +28,27 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.item.InteractsWithBarrel;
 import tfar.nabba.item.KeyItem;
 import tfar.nabba.item.UpgradeItem;
-import tfar.nabba.util.BarrelTier;
+import tfar.nabba.api.BarrelFrameTier;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class BetterBarrelBlock extends Block implements EntityBlock {
-    private final BarrelTier barrelTier;
+    private final BarrelFrameTier barrelTier;
     public static final BooleanProperty VOID = BooleanProperty.create("void");
     public static final BooleanProperty DISCRETE = BooleanProperty.create("discrete");
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
 
-    public BetterBarrelBlock(Properties pProperties, BarrelTier barrelTier) {
+    public BetterBarrelBlock(Properties pProperties, BarrelFrameTier barrelTier) {
         super(pProperties);
         registerDefaultState(this.stateDefinition.any().setValue(VOID,false).setValue(LOCKED,false).setValue(DISCRETE,false));
         this.barrelTier = barrelTier;
     }
 
-    public BarrelTier getBarrelTier() {
+    public BarrelFrameTier getBarrelTier() {
         return barrelTier;
     }
 
@@ -60,13 +61,8 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
             if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
                 Item item = handStack.getItem();
 
-                if (item instanceof KeyItem) {
-                    if (handleKey(pState,handStack,pLevel,pPos,pPlayer)) {
-
-                    }
-                }
-
-                else if (item instanceof UpgradeItem upgradeItem && tryUpgrade(handStack,betterBarrelBlockEntity,upgradeItem)) {
+                //remember, this gets called before the item's onUse method does
+                if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(pState,handStack,pLevel,pPos,pPlayer)) {
 
                 } else {
 
@@ -96,13 +92,6 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
     }
 
-    public boolean handleKey(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
-        ((KeyItem)itemstack.getItem() ).handleBarrel(state, itemstack, level, pos, pPlayer);
-
-
-        return true;
-    }
-
     @Override
     public void attack(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         if (!pLevel.isClientSide) {
@@ -122,16 +111,6 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
-    }
-
-    public boolean tryUpgrade(ItemStack itemstack, BetterBarrelBlockEntity betterBarrelBlockEntity, UpgradeItem item) {
-        boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(item.getData());
-        if (attempt) {
-            betterBarrelBlockEntity.upgrade(item.getData());
-            itemstack.shrink(1);
-            return true;
-        }
-        return false;
     }
 
     @Nullable

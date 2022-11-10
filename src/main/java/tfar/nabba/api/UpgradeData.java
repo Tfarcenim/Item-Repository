@@ -1,4 +1,4 @@
-package tfar.nabba.util;
+package tfar.nabba.api;
 
 import net.minecraft.world.item.Item;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;

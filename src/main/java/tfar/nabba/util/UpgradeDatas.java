@@ -1,6 +1,7 @@
 package tfar.nabba.util;
 
 import net.minecraft.world.item.Item;
+import tfar.nabba.api.UpgradeData;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModItems;
 

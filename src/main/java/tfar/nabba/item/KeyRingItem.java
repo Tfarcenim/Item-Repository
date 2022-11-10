@@ -131,7 +131,7 @@ public class KeyRingItem extends KeyItem {
 
     public static Item getSelectedKey(ItemStack keyRing) {
         if (!keyRing.hasTag())
-        return Items.AIR;
+            return Items.AIR;
 
         List<Item> keys = getKeys(keyRing);
         int selected = keyRing.getTag().getInt("Selected");

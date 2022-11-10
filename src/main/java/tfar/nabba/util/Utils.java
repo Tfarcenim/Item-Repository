@@ -1,6 +1,7 @@
 package tfar.nabba.util;
 
 import net.minecraft.world.level.block.state.BlockState;
+import tfar.nabba.api.UpgradeData;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 import java.util.function.BiConsumer;
@@ -12,7 +13,7 @@ public class Utils {
     public static String ID = "id";
     public static final int BASE_STORAGE = 64;
 
-    public static final BiConsumer<BetterBarrelBlockEntity,UpgradeData> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {
+    public static final BiConsumer<BetterBarrelBlockEntity, UpgradeData> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {
         int existing = betterBarrelBlockEntity.getUpgrades().getOrDefault(upgradeData,0);
         if (existing == 0) {
             betterBarrelBlockEntity.getUpgrades().put(upgradeData,1);

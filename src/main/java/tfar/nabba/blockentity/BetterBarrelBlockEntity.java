@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.UpgradeItem;
-import tfar.nabba.util.UpgradeData;
+import tfar.nabba.api.UpgradeData;
 import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
