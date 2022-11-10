@@ -1,14 +1,12 @@
 package tfar.nabba.util;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import tfar.nabba.api.UpgradeData;
+import tfar.nabba.api.UpgradeDataStack;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 import java.util.List;
@@ -22,22 +20,27 @@ public class Utils {
     public static String ID = "id";
     public static final int BASE_STORAGE = 64;
 
-    public static final BiConsumer<BetterBarrelBlockEntity, UpgradeData> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {
-        int existing = betterBarrelBlockEntity.getUpgrades().getOrDefault(upgradeData,0);
+    public static final BiConsumer<BetterBarrelBlockEntity, UpgradeDataStack> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {
+
+        int existing = betterBarrelBlockEntity.countUpgrade(upgradeData.getData());
         if (existing == 0) {
-            betterBarrelBlockEntity.getUpgrades().put(upgradeData,1);
+            betterBarrelBlockEntity.getUpgrades().add(upgradeData);
         } else {
-            betterBarrelBlockEntity.getUpgrades().put(upgradeData,existing + 1);
+            for (UpgradeDataStack upgradeDataStack : betterBarrelBlockEntity.getUpgrades()) {
+                if (upgradeDataStack.getData() == upgradeData.getData()) {
+                    upgradeDataStack.grow(upgradeData.getCount());break;
+                }
+            }
         }
     };
 
-    public static final BiConsumer<BetterBarrelBlockEntity,UpgradeData> apply_void = (betterBarrelBlockEntity, upgradeData) -> {
+    public static final BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> apply_void = (betterBarrelBlockEntity, upgradeData) -> {
         BlockState state = betterBarrelBlockEntity.getBlockState();
         betterBarrelBlockEntity.getLevel().setBlock(betterBarrelBlockEntity.getBlockPos(),state.setValue(VOID,true),3);
     };
 
-    public static final Consumer<BetterBarrelBlockEntity> PICKUP_3x3_TICK = betterBarrelBlockEntity -> pickupItemsInBox(betterBarrelBlockEntity,3,3,3);
-    public static final Consumer<BetterBarrelBlockEntity> PICKUP_9x9_TICK = betterBarrelBlockEntity -> pickupItemsInBox(betterBarrelBlockEntity,9,3,9);
+    public static final BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> PICKUP_TICK =
+            (betterBarrelBlockEntity,upgradeDataStack) -> pickupItemsInBox(betterBarrelBlockEntity, upgradeDataStack.getCount(), 3, upgradeDataStack.getCount());
 
     public static void pickupItemsInBox(BetterBarrelBlockEntity betterBarrelBlockEntity,int x,int y, int z) {
         Level level = betterBarrelBlockEntity.getLevel();

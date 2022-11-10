@@ -2,12 +2,10 @@ package tfar.nabba.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,20 +18,20 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.UpgradeDataStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.api.UpgradeData;
 import tfar.nabba.util.UpgradeDatas;
 import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BetterBarrelBlockEntity extends BlockEntity {
 
-    private Map<UpgradeData, Integer> upgrades = new HashMap<>();
+    private List<UpgradeDataStack> upgrades = new ArrayList<>();
     private int color = 0xff99ff;
     private double size = .5;
     private ItemStack ghost = ItemStack.EMPTY;
@@ -70,8 +68,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     }
     private int computeUsedUpgradeSlots() {
         int slots = 0;
-        for (Map.Entry<UpgradeData, Integer> entry : upgrades.entrySet()) {
-            slots += entry.getKey().getSlotRequirement() * entry.getValue();
+        for (UpgradeDataStack entry : upgrades) {
+            slots += entry.getUpgradeSlotsRequired();
         }
         if (isVoid()) slots++;
         return slots;
@@ -79,9 +77,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
     private int computeStorage() {
         int storage = Utils.BASE_STORAGE;
-        for (Map.Entry<UpgradeData, Integer> entry : upgrades.entrySet()) {
-            storage += entry.getKey().getAdditionalStorageStacks() * entry.getValue();
-        }
+        storage +=0;
         return storage;
     }
 
@@ -89,7 +85,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return getBlockState().getValue(BetterBarrelBlock.VOID);
     }
 
-    public Map<UpgradeData, Integer> getUpgrades() {
+    public List<UpgradeDataStack> getUpgrades() {
         return upgrades;
     }
 
@@ -98,8 +94,12 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return barrelHandler.insertItem(0, stack, false);
     }
 
-    public boolean canAcceptUpgrade(UpgradeData data) {
-        return data.getSlotRequirement() <= getFreeSlots() && data.maxAllowed() > countUpgrade(data);
+    public boolean canAcceptUpgrade(UpgradeDataStack data) {
+
+        int existing = countUpgrade(data.getData());
+        int max = data.getData().getMaxStackSize();
+        return existing + data.getCount() <= max && data.getUpgradeSlotsRequired() <= getFreeSlots();
+
     }
 
     public int countUpgrade(UpgradeData data) {
@@ -107,11 +107,14 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             return isVoid() ? 1 : 0;
         }
 
-        return upgrades.getOrDefault(data,0);
+        for (UpgradeDataStack dataStack : getUpgrades()) {
+            if (dataStack.getData() == data) return dataStack.getCount();
+        }
+        return 0;
     }
 
-    public void upgrade(UpgradeData data) {
-        data.onUpgrade(this);
+    public void upgrade(UpgradeDataStack dataStack) {
+        dataStack.getData().onUpgrade(this,dataStack);
         invalidateCaches();
         setChanged();
     }
@@ -149,8 +152,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     }
 
     public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, BetterBarrelBlockEntity pBlockEntity) {
-        for (UpgradeData upgradeData : pBlockEntity.getUpgrades().keySet()) {
-            upgradeData.tick(pBlockEntity);
+        for (UpgradeDataStack upgradeData : pBlockEntity.getUpgrades()) {
+            upgradeData.getData().tick(pBlockEntity,upgradeData);
         }
     }
 
@@ -162,10 +165,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
         ListTag upgradesTag = new ListTag();
 
-        for (Map.Entry<UpgradeData, Integer> entry : upgrades.entrySet()) {
-            CompoundTag tag = new CompoundTag();
-            tag.putString("Upgrade", Registry.ITEM.getKey(entry.getKey().getItem().get()).toString());
-            tag.putInt("Count",entry.getValue());
+        for (UpgradeDataStack entry : upgrades) {
+            CompoundTag tag = entry.save();
             upgradesTag.add(tag);
         }
         pTag.put("Upgrades",upgradesTag);
@@ -184,8 +185,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         ListTag upgradesTag = pTag.getList("Upgrades", Tag.TAG_COMPOUND);
         for (Tag tag : upgradesTag) {
             CompoundTag compoundTag = (CompoundTag)tag;
-            ResourceLocation name = new ResourceLocation(compoundTag.getString("Upgrade"));
-            upgrades.put(((UpgradeItem)Registry.ITEM.get(name)).getData(),compoundTag.getInt("Count"));
+            upgrades.add(UpgradeDataStack.of(compoundTag));
         }
         color = pTag.getInt("color");
         size = pTag.getDouble("size");

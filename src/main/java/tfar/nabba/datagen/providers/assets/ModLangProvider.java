@@ -46,6 +46,7 @@ public class ModLangProvider extends LanguageProvider {
         addItem(() -> ModItems.INFINITE_STORAGE_UPGRADE,"Infinite Storage Upgrade");
         addItem(() -> ModItems.INFINITE_VENDING_UPGRADE,"Infinite Vending Upgrade");
         addItem(() -> ModItems.VOID_UPGRADE,"Void Upgrade");
+        addItem(() -> ModItems.PICKUP_1x1_UPGRADE,"Pickup 1x1 Upgrade");
         addItem(() -> ModItems.PICKUP_3x3_UPGRADE,"Pickup 3x3 Upgrade");
         addItem(()-> ModItems.PICKUP_9x9_UPGRADE,"Pickup 9x9 Upgrade");
 

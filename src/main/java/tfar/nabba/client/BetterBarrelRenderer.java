@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
 
@@ -55,7 +54,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem) {
             String slots = betterBarrelBlockEntity.getUsedSlots() + " / " + betterBarrelBlockEntity.getTotalUpgradeSlots();
             renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d,
-                    betterBarrelBlockEntity.canAcceptUpgrade(upgradeItem.getData()) ? 0x00ffff : 0xff0000, .01f);
+                    betterBarrelBlockEntity.canAcceptUpgrade(upgradeItem.getDataStack()) ? 0x00ffff : 0xff0000, .01f);
         }
 
         renderItem(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay);

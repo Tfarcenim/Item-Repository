@@ -12,14 +12,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
-import tfar.nabba.api.UpgradeData;
+import tfar.nabba.api.UpgradeDataStack;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 import java.util.List;
 
 public class UpgradeItem extends Item implements InteractsWithBarrel {
-    private final UpgradeData data;
-    public UpgradeItem(Properties pProperties, UpgradeData data) {
+    private final UpgradeDataStack data;
+    public UpgradeItem(Properties pProperties, UpgradeDataStack data) {
         super(pProperties);
         this.data = data;
     }
@@ -29,18 +29,18 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getSlotRequirement()).withStyle(ChatFormatting.AQUA)));
-        pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.maxAllowed()).withStyle(ChatFormatting.AQUA)));
-        if (data.getAdditionalStorageStacks() > 0) {
+        pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getUpgradeSlotsRequired()).withStyle(ChatFormatting.AQUA)));
+        pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.getMaxPermitted()).withStyle(ChatFormatting.AQUA)));
+        if (data.getStorageStacks() > 0) {
             pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc",
-                    Component.literal(data.getAdditionalStorageStacks()+"").withStyle(ChatFormatting.AQUA)));
+                    Component.literal(data.getStorageStacks()+"").withStyle(ChatFormatting.AQUA)));
         }
         else {
             pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc"));
         }
     }
 
-    public UpgradeData getData() {
+    public UpgradeDataStack getDataStack() {
         return data;
     }
 
@@ -49,9 +49,9 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
-            boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(this.getData());
+            boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(this.getDataStack());
             if (attempt) {
-                betterBarrelBlockEntity.upgrade(this.getData());
+                betterBarrelBlockEntity.upgrade(this.getDataStack());
                 itemstack.shrink(1);
                 return true;
             }

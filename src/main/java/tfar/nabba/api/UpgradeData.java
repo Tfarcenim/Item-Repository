@@ -1,24 +1,31 @@
 package tfar.nabba.api;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface UpgradeData {
 
+    Map<ResourceLocation,UpgradeData> MAP = new HashMap<>();
+
     int getSlotRequirement();
 
     //todo, config stuff
     void setSlotsRequired(int slotsRequired);
-    int maxAllowed();
+    int getMaxStackSize();
 
-    int getAdditionalStorageStacks();
-    void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity);
+    int getStorageBonus();
+    void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity,UpgradeDataStack stack);
     Supplier<Item> getItem();
+    BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> NOTHING = (b,u) -> {};
+    void tick(BetterBarrelBlockEntity barrelBlockEntity,UpgradeDataStack upgradeDataStack);
 
-    Consumer<BetterBarrelBlockEntity> NOTHING = betterBarrelBlockEntity -> {};
-    void tick(BetterBarrelBlockEntity barrelBlockEntity);
+    ResourceLocation getName();
 
 }

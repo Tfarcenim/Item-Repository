@@ -5,6 +5,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.NABBA;
+import tfar.nabba.api.UpgradeDataStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.item.*;
 import tfar.nabba.util.BarrelFrameTiers;
@@ -29,17 +30,18 @@ public class ModItems {
     public static final Item NETHERITE_BETTER_BARREL = new BlockItem(ModBlocks.NETHERITE_BETTER_BARREL,basic());
     public static final Item CREATIVE_BETTER_BARREL = new BlockItem(ModBlocks.CREATIVE_BETTER_BARREL,basic());
 
-    public static final Item STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.x1_STORAGE);
-    public static final Item x4_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.x4_STORAGE);
-    public static final Item x16_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.x16_STORAGE);
-    public static final Item x64_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.x64_STORAGE);
-    public static final Item x256_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.x256_STORAGE);
-    public static final Item x1024_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.x1024_STORAGE);
-    public static final Item INFINITE_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.INFINITE_STORAGE);
-    public static final Item INFINITE_VENDING_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.INFINITE_VENDING);
-    public static final Item VOID_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.VOID);
-    public static final Item PICKUP_3x3_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.PICKUP_3x3);
-    public static final Item PICKUP_9x9_UPGRADE = new UpgradeItem(basic(), UpgradeDatas.PICKUP_9x9);
+    public static final Item STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.STORAGE);
+    public static final Item x4_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.x4_STORAGE);
+    public static final Item x16_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.x16_STORAGE);
+    public static final Item x64_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.x64_STORAGE);
+    public static final Item x256_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.x256_STORAGE);
+    public static final Item x1024_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.x1024_STORAGE);
+    public static final Item INFINITE_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.INFINITE_STORAGE);
+    public static final Item INFINITE_VENDING_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.INFINITE_VENDING);
+    public static final Item VOID_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.VOID);
+    public static final Item PICKUP_1x1_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.PICKUP_1x1);
+    public static final Item PICKUP_3x3_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.PICKUP_3x3);
+    public static final Item PICKUP_9x9_UPGRADE = new UpgradeItem(basic(), UpgradeDataStack.PICKUP_9x9);
 
     public static final Item KEY_RING = new KeyRingItem(basic());
     public static final Item HIDE_KEY = new BlockStateKeyItem(basic(),BetterBarrelBlock.DISCRETE);

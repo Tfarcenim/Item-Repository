@@ -3,6 +3,7 @@ package tfar.nabba.datagen.providers.loot;
 import net.minecraft.core.Registry;
 import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
 import tfar.nabba.NABBA;
 import tfar.nabba.init.ModBlocks;
 
@@ -24,6 +25,12 @@ public class ModBlockLoot extends BlockLoot {
         dropSelf(ModBlocks.CREATIVE_BETTER_BARREL);
 
         dropSelf(ModBlocks.ANTI_BARREL);
+    }
+
+    protected void dropBarrel(Block block) {
+        LootTable.Builder builder = new LootTable.Builder();
+     //   builder.
+    //    add(block,block);
     }
 
     @Override
