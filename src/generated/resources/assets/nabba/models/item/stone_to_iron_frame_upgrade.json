@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nabba:item/frame_upgrade/from_stone",
+    "layer1": "nabba:item/frame_upgrade/to_iron"
+  }
+}

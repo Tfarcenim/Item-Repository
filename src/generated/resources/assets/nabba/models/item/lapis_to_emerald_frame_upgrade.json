@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nabba:item/frame_upgrade/from_lapis",
+    "layer1": "nabba:item/frame_upgrade/to_emerald"
+  }
+}

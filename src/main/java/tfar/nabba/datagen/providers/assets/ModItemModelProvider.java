@@ -10,6 +10,8 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import tfar.nabba.NABBA;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
+import tfar.nabba.item.BarrelFrameUpgradeItem;
+import tfar.nabba.item.KeyItem;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(DataGenerator generator,  ExistingFileHelper existingFileHelper) {
@@ -45,6 +47,12 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeSimpleBlockItem(ModBlocks.EMERALD_BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.NETHERITE_BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.CREATIVE_BETTER_BARREL.asItem());
+
+        for (Item item : Registry.ITEM) {
+            if (item instanceof BarrelFrameUpgradeItem) {
+                registerUpgrade(item);
+            }
+        }
     }
 
 
@@ -73,4 +81,18 @@ public class ModItemModelProvider extends ItemModelProvider {
         ResourceLocation texture = Registry.ITEM.getKey(item);
         makeOneLayerItem(item, texture);
     }
+
+    //wood_to_iron_frame_upgrade
+    protected void registerUpgrade(Item item) {
+        String name = Registry.ITEM.getKey(item).getPath();
+        registerUpgrade(name);
+    }
+    protected void registerUpgrade(String name) {
+        String[] strings = name.split("_");
+        getBuilder(name)
+                .parent(getExistingFile(mcLoc("item/generated")))
+                .texture("layer0","item/frame_upgrade/from_"+strings[0])
+                .texture("layer1","item/frame_upgrade/to_"+strings[2]);
+    }
+
 }
