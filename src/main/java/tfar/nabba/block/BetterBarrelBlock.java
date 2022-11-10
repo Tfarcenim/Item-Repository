@@ -61,7 +61,7 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
             if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
                 Item item = handStack.getItem();
 
-                //remember, this gets called before the item's onUse method does
+                //remember, this gets called before the item's onUse method
                 if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(pState,handStack,pLevel,pPos,pPlayer)) {
 
                 } else {
@@ -121,7 +121,7 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : BetterBarrelBlockEntity::serverTick;
+        return pLevel.isClientSide ? null : (Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) -> BetterBarrelBlockEntity.serverTick(pLevel1, pPos, pState1, (BetterBarrelBlockEntity) pBlockEntity);
     }
 
     @Override

@@ -107,7 +107,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             return isVoid() ? 1 : 0;
         }
 
-        return upgrades.get(data);
+        return upgrades.getOrDefault(data,0);
     }
 
     public void upgrade(UpgradeData data) {
@@ -148,8 +148,10 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         setChanged();
     }
 
-    public static <T extends BlockEntity> void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) {
-
+    public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, BetterBarrelBlockEntity pBlockEntity) {
+        for (UpgradeData upgradeData : pBlockEntity.getUpgrades().keySet()) {
+            upgradeData.tick(pBlockEntity);
+        }
     }
 
     @Override
