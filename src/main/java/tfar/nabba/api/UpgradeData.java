@@ -11,6 +11,7 @@ public interface UpgradeData {
 
     //todo, config stuff
     void setSlotsRequired(int slotsRequired);
+    int maxAllowed();
 
     int getAdditionalStorageStacks();
     void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity);

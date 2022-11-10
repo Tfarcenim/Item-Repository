@@ -24,6 +24,7 @@ import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.api.UpgradeData;
+import tfar.nabba.util.UpgradeDatas;
 import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
@@ -76,14 +77,6 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return slots;
     }
 
-    public boolean isVoid() {
-        return getBlockState().getValue(BetterBarrelBlock.VOID);
-    }
-
-    public Map<UpgradeData, Integer> getUpgrades() {
-        return upgrades;
-    }
-
     private int computeStorage() {
         int storage = Utils.BASE_STORAGE;
         for (Map.Entry<UpgradeData, Integer> entry : upgrades.entrySet()) {
@@ -92,12 +85,29 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return storage;
     }
 
+    public boolean isVoid() {
+        return getBlockState().getValue(BetterBarrelBlock.VOID);
+    }
+
+    public Map<UpgradeData, Integer> getUpgrades() {
+        return upgrades;
+    }
+
+
     public ItemStack tryAddItem(ItemStack stack) {
         return barrelHandler.insertItem(0, stack, false);
     }
 
     public boolean canAcceptUpgrade(UpgradeData data) {
-        return data.getSlotRequirement() <= getFreeSlots();
+        return data.getSlotRequirement() <= getFreeSlots() && data.maxAllowed() > countUpgrade(data);
+    }
+
+    public int countUpgrade(UpgradeData data) {
+        if (data == UpgradeDatas.VOID) {
+            return isVoid() ? 1 : 0;
+        }
+
+        return upgrades.get(data);
     }
 
     public void upgrade(UpgradeData data) {

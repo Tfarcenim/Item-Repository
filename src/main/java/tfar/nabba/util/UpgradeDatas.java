@@ -17,27 +17,37 @@ public enum UpgradeDatas implements UpgradeData {
     x64_STORAGE(64,BASE_STORAGE * 64,Utils.add_to_internal_upgrades,() -> ModItems.x64_STORAGE_UPGRADE),
     x256_STORAGE(256,BASE_STORAGE * 256,Utils.add_to_internal_upgrades,() -> ModItems.x256_STORAGE_UPGRADE),
     x1024_STORAGE(1024,BASE_STORAGE * 1024,Utils.add_to_internal_upgrades,() -> ModItems.x1024_STORAGE_UPGRADE),
-    VOID(1,0,Utils.apply_void,() -> ModItems.VOID_UPGRADE),
-    PICKUP_3x3(27,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_3x3_UPGRADE),
-    PICKUP_9x9(243,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_9x9_UPGRADE),
-    INFINITE_STORAGE(1000000000,32000000,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_STORAGE_UPGRADE),
-    INFINITE_VENDING(1000000000,0,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_VENDING_UPGRADE);
+    VOID(1,0,Utils.apply_void,() -> ModItems.VOID_UPGRADE,1),
+    PICKUP_3x3(27,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_3x3_UPGRADE,1),
+    PICKUP_9x9(243,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_9x9_UPGRADE,1),
+    INFINITE_STORAGE(1000000000,32000000,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_STORAGE_UPGRADE,1),
+    INFINITE_VENDING(1000000000,0,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_VENDING_UPGRADE,1);
 
     private int slotsRequired;
     private int additionalStorage;
     private BiConsumer<BetterBarrelBlockEntity, UpgradeData> onUpgrade;
     private final Supplier<Item> itemSupplier;
+    private int maxAllowed;
 
     UpgradeDatas(int slotsRequired, int additionalStorage,BiConsumer<BetterBarrelBlockEntity,UpgradeData> onUpgrade, Supplier<Item> itemSupplier) {
+        this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,32768);
+    }
+    UpgradeDatas(int slotsRequired, int additionalStorage,BiConsumer<BetterBarrelBlockEntity,UpgradeData> onUpgrade, Supplier<Item> itemSupplier,int maxAllowed) {
         this.slotsRequired = slotsRequired;
         this.additionalStorage = additionalStorage;
         this.onUpgrade = onUpgrade;
 
         this.itemSupplier = itemSupplier;
+        this.maxAllowed = maxAllowed;
     }
 
     public void setSlotsRequired(int slotsRequired) {
         this.slotsRequired = slotsRequired;
+    }
+
+    @Override
+    public int maxAllowed() {
+        return maxAllowed;
     }
 
     @Override

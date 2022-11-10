@@ -25,9 +25,12 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
     }
 
     public static final String info = NABBA.MODID+".upgrade.info";
+    public static final String info1 = NABBA.MODID+".upgrade.info1";
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getSlotRequirement()).withStyle(ChatFormatting.AQUA)));
+        pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.maxAllowed()).withStyle(ChatFormatting.AQUA)));
         if (data.getAdditionalStorageStacks() > 0) {
             pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc",
                     Component.literal(data.getAdditionalStorageStacks()+"").withStyle(ChatFormatting.AQUA)));

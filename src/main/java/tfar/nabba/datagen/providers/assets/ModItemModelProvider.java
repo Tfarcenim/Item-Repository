@@ -31,6 +31,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.INFINITE_VENDING_UPGRADE);
 
         makeOneLayerItem(ModItems.VOID_UPGRADE);
+        makeOneLayerItem(ModItems.PICKUP_3x3_UPGRADE);
+        makeOneLayerItem(ModItems.PICKUP_9x9_UPGRADE);
 
         makeOneLayerItem(ModItems.HIDE_KEY);
         makeOneLayerItem(ModItems.LOCK_KEY);

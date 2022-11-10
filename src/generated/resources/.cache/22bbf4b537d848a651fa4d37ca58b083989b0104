@@ -1,4 +1,4 @@
-// 1.19.2	2022-11-10T03:20:47.0234559	Item Models: nabba
+// 1.19.2	2022-11-10T03:33:43.1282541	Item Models: nabba
 ecf8667a935b50479f8da420dd4994eb6f946cbc assets/nabba/models/item/better_barrel.json
 7ca0502f50cdcf2ac0b7410c942eefbbce41e56d assets/nabba/models/item/copper_better_barrel.json
 3d5f18a16363c5f1bdbe176ce49ab16ee1f1f4e4 assets/nabba/models/item/copper_to_creative_frame_upgrade.json
@@ -41,6 +41,8 @@ c00bd0a0ea120c7c83394db0aa1e5d8d0ac33280 assets/nabba/models/item/lapis_to_emera
 52cee6744f71b219716fd3fbf0dd1c84bcda42cf assets/nabba/models/item/lock_key.json
 64b616c4cee0933caf9ee55da7666e705ca60783 assets/nabba/models/item/netherite_better_barrel.json
 97825b4215925f7d2e9e58710e283f6c21858602 assets/nabba/models/item/netherite_to_creative_frame_upgrade.json
+4af46d54349937f4c0903850d8f91124390c54e1 assets/nabba/models/item/pickup_3x3_upgrade.json
+9db9d10a1d0b47b5ae4545cc9f1c7c02d3c7dcc8 assets/nabba/models/item/pickup_9x9_upgrade.json
 f07c8200d2029f39c55195fa17ed12171c27dc79 assets/nabba/models/item/stone_better_barrel.json
 f6b3518053035e4b9e635f03626e39ef51ae895f assets/nabba/models/item/stone_to_copper_frame_upgrade.json
 9703104596f1ea77f64d4a2ea02dd1f6ee339fe1 assets/nabba/models/item/stone_to_creative_frame_upgrade.json

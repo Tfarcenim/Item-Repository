@@ -81,5 +81,6 @@
   "item.nabba.x64_storage_upgrade.desc": "Adds %s stacks of storage",
   "nabba.better_barrel.info": "Has %s upgrade slots",
   "nabba.key_ring.selected_key": "%s (%s)",
-  "nabba.upgrade.info": "Requires %s upgrade slots"
+  "nabba.upgrade.info": "Requires %s upgrade slots",
+  "nabba.upgrade.info1": "Max of %s allowed per barrel"
 }

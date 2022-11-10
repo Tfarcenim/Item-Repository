@@ -52,9 +52,10 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         String toDraw = stack.getCount()+" / "+ cap;
 
         renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(), -1);
-        if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem) {
+        if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem) {
             String slots = betterBarrelBlockEntity.getUsedSlots() + " / " + betterBarrelBlockEntity.getTotalUpgradeSlots();
-            renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d, 0x00ffff, .01f);
+            renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d,
+                    betterBarrelBlockEntity.canAcceptUpgrade(upgradeItem.getData()) ? 0x00ffff : 0xff0000, .01f);
         }
 
         renderItem(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay);
@@ -108,6 +109,10 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
     }
 
     protected void renderItem(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
+
+        float scale = (float) betterBarrelBlockEntity.getSize();
+        if (scale < .01) return;
+
         ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
 
         if (stack.isEmpty() && !betterBarrelBlockEntity.hasGhost()) return;
@@ -115,7 +120,6 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         if (stack.isEmpty())stack = betterBarrelBlockEntity.getGhost();
         if (stack.isEmpty())return;
 
-        float scale = (float) betterBarrelBlockEntity.getSize();
 
         try {
             pPoseStack.pushPose();

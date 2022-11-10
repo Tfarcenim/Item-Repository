@@ -46,6 +46,6 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel 
         //need to make sure the game saves it!
         blockEntity.setChanged();
         if (!player.getAbilities().instabuild) itemstack.shrink(1);
-        return false;
+        return true;
     }
 }
