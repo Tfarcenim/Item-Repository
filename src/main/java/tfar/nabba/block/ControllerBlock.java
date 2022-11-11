@@ -20,11 +20,12 @@ public class ControllerBlock extends Block {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         ItemStack stack = pPlayer.getItemInHand(pHand);
         if (stack.getItem() instanceof KeyItem keyItem) {
+            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos().set(pPos);
             for (int z = -15; z < 15;z++) {
                 for (int y = -15; y < 15;y++) {
                     for (int x = -15; x < 15; x++) {
-                        BlockPos pos = pPos.offset(x,y,z);
-                        keyItem.handleBarrel(pLevel.getBlockState(pos), stack, pLevel,pos, pPlayer);
+                     //   mutableBlockPos.
+                     //   keyItem.handleBarrel(pLevel.getBlockState(pos), stack, pLevel,pos, pPlayer);
                     }
                 }
             }

@@ -25,6 +25,6 @@ public class VanityKeyItem extends KeyItem {
         if (blockEntity instanceof BetterBarrelBlockEntity) {
             NetworkHooks.openScreen((ServerPlayer) pPlayer,new VanityKeyMenuProvider(pos),pos);
         }
-        return false;
+        return true;
     }
 }

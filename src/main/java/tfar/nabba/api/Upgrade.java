@@ -7,12 +7,11 @@ import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public interface UpgradeData {
+public interface Upgrade {
 
-    Map<ResourceLocation,UpgradeData> MAP = new HashMap<>();
+    Map<ResourceLocation, Upgrade> REGISTRY = new HashMap<>();
 
     int getSlotRequirement();
 
@@ -21,11 +20,11 @@ public interface UpgradeData {
     int getMaxStackSize();
 
     int getStorageBonus();
-    void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity,UpgradeDataStack stack);
+    void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity, UpgradeStack stack);
     Supplier<Item> getItem();
-    BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> NOTHING = (b,u) -> {};
-    void tick(BetterBarrelBlockEntity barrelBlockEntity,UpgradeDataStack upgradeDataStack);
+    BiConsumer<BetterBarrelBlockEntity, UpgradeStack> NOTHING = (b, u) -> {};
+    void tick(BetterBarrelBlockEntity barrelBlockEntity, UpgradeStack upgradeStack);
 
-    ResourceLocation getName();
+    ResourceLocation getKey();
 
 }

@@ -4,8 +4,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import tfar.nabba.NABBA;
-import tfar.nabba.api.UpgradeData;
-import tfar.nabba.api.UpgradeDataStack;
+import tfar.nabba.api.Upgrade;
+import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModItems;
 
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 
 import static tfar.nabba.util.Utils.*;
 
-public enum UpgradeDatas implements UpgradeData {
+public enum Upgrades implements Upgrade {
     DUMMY(0,0,NOTHING,() -> Items.AIR),
     STORAGE(1,BASE_STORAGE,Utils.add_to_internal_upgrades,() -> ModItems.STORAGE_UPGRADE),
     VOID(1,0,Utils.apply_void,() -> ModItems.VOID_UPGRADE,1),
@@ -24,21 +24,21 @@ public enum UpgradeDatas implements UpgradeData {
 
     private int slotsRequired;
     private final int additionalStorage;
-    private final BiConsumer<BetterBarrelBlockEntity, UpgradeDataStack> onUpgrade;
-    private final BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> onTick;
+    private final BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade;
+    private final BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onTick;
     private final Supplier<Item> itemSupplier;
     private final int maxAllowed;
 
-    UpgradeDatas(int slotsRequired, int additionalStorage,BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> onUpgrade, Supplier<Item> itemSupplier) {
+    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier) {
         this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,32768);
     }
 
-    UpgradeDatas(int slotsRequired, int additionalStorage,BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> onUpgrade, Supplier<Item> itemSupplier,int maxAllowed) {
+    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier, int maxAllowed) {
         this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,maxAllowed,NOTHING);
     }
 
-    UpgradeDatas(int slotsRequired, int additionalStorage,BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> onUpgrade,
-                 Supplier<Item> itemSupplier,int maxAllowed,BiConsumer<BetterBarrelBlockEntity,UpgradeDataStack> onTick) {
+    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade,
+             Supplier<Item> itemSupplier, int maxAllowed, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onTick) {
         this.slotsRequired = slotsRequired;
         this.additionalStorage = additionalStorage;
         this.onUpgrade = onUpgrade;
@@ -46,6 +46,7 @@ public enum UpgradeDatas implements UpgradeData {
         this.itemSupplier = itemSupplier;
         this.maxAllowed = maxAllowed;
         this.onTick = onTick;
+        REGISTRY.put(this.getKey(),this);
     }
 
     public void setSlotsRequired(int slotsRequired) {
@@ -68,7 +69,7 @@ public enum UpgradeDatas implements UpgradeData {
     }
 
     @Override
-    public void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity,UpgradeDataStack stack) {
+    public void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity, UpgradeStack stack) {
         onUpgrade.accept(betterBarrelBlockEntity,stack);
     }
 
@@ -78,12 +79,12 @@ public enum UpgradeDatas implements UpgradeData {
     }
 
     @Override
-    public void tick(BetterBarrelBlockEntity barrelBlockEntity,UpgradeDataStack upgradeDataStack) {
-        onTick.accept(barrelBlockEntity,upgradeDataStack);
+    public void tick(BetterBarrelBlockEntity barrelBlockEntity, UpgradeStack upgradeStack) {
+        onTick.accept(barrelBlockEntity, upgradeStack);
     }
 
     @Override
-    public ResourceLocation getName() {
+    public ResourceLocation getKey() {
         return new ResourceLocation(NABBA.MODID,name().toLowerCase(Locale.ROOT));
     }
 }

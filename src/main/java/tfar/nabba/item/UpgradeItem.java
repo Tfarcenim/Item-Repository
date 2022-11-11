@@ -12,14 +12,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
-import tfar.nabba.api.UpgradeDataStack;
+import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 import java.util.List;
 
 public class UpgradeItem extends Item implements InteractsWithBarrel {
-    private final UpgradeDataStack data;
-    public UpgradeItem(Properties pProperties, UpgradeDataStack data) {
+    private final UpgradeStack data;
+    public UpgradeItem(Properties pProperties, UpgradeStack data) {
         super(pProperties);
         this.data = data;
     }
@@ -40,7 +40,7 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
         }
     }
 
-    public UpgradeDataStack getDataStack() {
+    public UpgradeStack getDataStack() {
         return data;
     }
 

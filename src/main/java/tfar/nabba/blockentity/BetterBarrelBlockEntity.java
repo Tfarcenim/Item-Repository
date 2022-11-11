@@ -18,11 +18,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.api.UpgradeDataStack;
+import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.api.UpgradeData;
-import tfar.nabba.util.UpgradeDatas;
+import tfar.nabba.api.Upgrade;
+import tfar.nabba.util.NBTKeys;
+import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class BetterBarrelBlockEntity extends BlockEntity {
 
-    private List<UpgradeDataStack> upgrades = new ArrayList<>();
+    private List<UpgradeStack> upgrades = new ArrayList<>();
     private int color = 0xff99ff;
     private double size = .5;
     private ItemStack ghost = ItemStack.EMPTY;
@@ -72,7 +73,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     }
     private int computeUsedUpgradeSlots() {
         int slots = 0;
-        for (UpgradeDataStack entry : upgrades) {
+        for (UpgradeStack entry : upgrades) {
             slots += entry.getUpgradeSlotsRequired();
         }
         if (isVoid()) slots++;
@@ -81,7 +82,9 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
     private int computeStorage() {
         int storage = Utils.BASE_STORAGE;
-        storage +=0;
+        for (UpgradeStack upgradeStack : upgrades) {
+            storage += upgradeStack.getStorageStacks();
+        }
         return storage;
     }
 
@@ -89,7 +92,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return getBlockState().getValue(BetterBarrelBlock.VOID);
     }
 
-    public List<UpgradeDataStack> getUpgrades() {
+    public List<UpgradeStack> getUpgrades() {
         return upgrades;
     }
 
@@ -98,7 +101,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return barrelHandler.insertItem(0, stack, false);
     }
 
-    public boolean canAcceptUpgrade(UpgradeDataStack data) {
+    public boolean canAcceptUpgrade(UpgradeStack data) {
 
         int existing = countUpgrade(data.getData());
         int max = data.getData().getMaxStackSize();
@@ -106,18 +109,18 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
     }
 
-    public int countUpgrade(UpgradeData data) {
-        if (data == UpgradeDatas.VOID) {
+    public int countUpgrade(Upgrade data) {
+        if (data == Upgrades.VOID) {
             return isVoid() ? 1 : 0;
         }
 
-        for (UpgradeDataStack dataStack : getUpgrades()) {
+        for (UpgradeStack dataStack : getUpgrades()) {
             if (dataStack.getData() == data) return dataStack.getCount();
         }
         return 0;
     }
 
-    public void upgrade(UpgradeDataStack dataStack) {
+    public void upgrade(UpgradeStack dataStack) {
         dataStack.getData().onUpgrade(this,dataStack);
         invalidateCaches();
         setChanged();
@@ -156,7 +159,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     }
 
     public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, BetterBarrelBlockEntity pBlockEntity) {
-        for (UpgradeDataStack upgradeData : pBlockEntity.getUpgrades()) {
+        for (UpgradeStack upgradeData : pBlockEntity.getUpgrades()) {
             upgradeData.getData().tick(pBlockEntity,upgradeData);
         }
     }
@@ -164,36 +167,36 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("Stack", barrelHandler.getStack().save(new CompoundTag()));
-        pTag.putInt("RealCount", barrelHandler.getStack().getCount());
+        pTag.put(NBTKeys.Stack.name(), barrelHandler.getStack().save(new CompoundTag()));
+        pTag.putInt(NBTKeys.RealCount.name(), barrelHandler.getStack().getCount());
 
         ListTag upgradesTag = new ListTag();
 
-        for (UpgradeDataStack entry : upgrades) {
-            CompoundTag tag = entry.save();
+        for (UpgradeStack stack : upgrades) {
+            CompoundTag tag = stack.save();
             upgradesTag.add(tag);
         }
-        pTag.put("Upgrades",upgradesTag);
-        pTag.putInt("color",color);
-        pTag.putDouble("size",size);
-        pTag.put("Ghost",ghost.save(new CompoundTag()));
+        pTag.put(NBTKeys.Upgrades.name(), upgradesTag);
+        pTag.putInt(NBTKeys.Color.name(), color);
+        pTag.putDouble(NBTKeys.Size.name(), size);
+        pTag.put(NBTKeys.Ghost.name(), ghost.save(new CompoundTag()));
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        ItemStack stack = ItemStack.of(pTag.getCompound("Stack"));
-        stack.setCount(pTag.getInt("RealCount"));
+        ItemStack stack = ItemStack.of(pTag.getCompound(NBTKeys.Stack.name()));
+        stack.setCount(pTag.getInt(NBTKeys.RealCount.name()));
         barrelHandler.setStack(stack);
         upgrades.clear();
-        ListTag upgradesTag = pTag.getList("Upgrades", Tag.TAG_COMPOUND);
+        ListTag upgradesTag = pTag.getList(NBTKeys.Upgrades.name(), Tag.TAG_COMPOUND);
         for (Tag tag : upgradesTag) {
             CompoundTag compoundTag = (CompoundTag)tag;
-            upgrades.add(UpgradeDataStack.of(compoundTag));
+            upgrades.add(UpgradeStack.of(compoundTag));
         }
-        color = pTag.getInt("color");
-        size = pTag.getDouble("size");
-        ghost = ItemStack.of(pTag.getCompound("Ghost"));
+        color = pTag.getInt(NBTKeys.Color.name());
+        size = pTag.getDouble(NBTKeys.Size.name());
+        ghost = ItemStack.of(pTag.getCompound(NBTKeys.Ghost.name()));
         invalidateCaches();
     }
 

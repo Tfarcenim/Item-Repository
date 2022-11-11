@@ -118,6 +118,7 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
             pTooltip.add(Component.literal(tag.toString()).withStyle(ChatFormatting.GRAY));
         }
+        pTooltip.add(Component.literal(pStack.getOrCreateTag().toString()).withStyle(ChatFormatting.YELLOW));
     }
 
     public RenderShape getRenderShape(BlockState pState) {
