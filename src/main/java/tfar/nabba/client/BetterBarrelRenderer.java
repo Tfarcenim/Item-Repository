@@ -53,7 +53,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         int cap = betterBarrelBlockEntity.getStorage() * 64;
         String toDraw = infiniteVend ? "\u221E" :stack.getCount() + " / "+ cap;
 
-        renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(),.008f);
+        renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(),.00875f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem) {
             String slots = betterBarrelBlockEntity.getUsedSlots() + " / " + betterBarrelBlockEntity.getTotalUpgradeSlots();
             renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d,
@@ -68,7 +68,6 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         int width = font.width(text);
         //text starts in bottom left
 
-        float scale = dScale == -1 ? .625f / width : dScale;
         float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0);
         float f2 = -width / 2f;
         int j = (int)(f1 * 255.0F) << 24;
@@ -76,7 +75,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         {
             pPoseStack.pushPose();
             pPoseStack.translate(0.5D, yHeight, zFighting);
-            pPoseStack.scale(-scale, -scale, scale);
+            pPoseStack.scale(-dScale, -dScale, dScale);
             Matrix4f matrix4f = pPoseStack.last().pose();
             font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             pPoseStack.popPose();
@@ -84,7 +83,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         {
             pPoseStack.pushPose();
             pPoseStack.translate(1 - zFighting, yHeight, .5);
-            pPoseStack.scale(-scale, -scale, scale);
+            pPoseStack.scale(-dScale, -dScale, dScale);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
             Matrix4f matrix4f = pPoseStack.last().pose();
             font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
@@ -94,7 +93,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
             pPoseStack.pushPose();
             pPoseStack.translate(0.5D, yHeight, 1 - zFighting);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-            pPoseStack.scale(-scale, -scale, scale);
+            pPoseStack.scale(-dScale, -dScale, dScale);
             Matrix4f matrix4f = pPoseStack.last().pose();
             font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             pPoseStack.popPose();
@@ -102,7 +101,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         {
             pPoseStack.pushPose();
             pPoseStack.translate(zFighting, yHeight, .5);
-            pPoseStack.scale(-scale, -scale, scale);
+            pPoseStack.scale(-dScale, -dScale, dScale);
             pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270));
             Matrix4f matrix4f = pPoseStack.last().pose();
             font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
