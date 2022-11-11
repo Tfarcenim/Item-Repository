@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import tfar.nabba.block.AntiBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
+import tfar.nabba.block.ControllerBlock;
 import tfar.nabba.util.BarrelFrameTiers;
 
 public class ModBlocks {
@@ -20,4 +21,5 @@ public class ModBlocks {
     public static final Block EMERALD_BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.EMERALD);
     public static final Block NETHERITE_BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.NETHERITE);
     public static final Block CREATIVE_BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.CREATIVE);
+    public static final Block CONTROLLER = new ControllerBlock(BlockBehaviour.Properties.of(Material.METAL));
 }

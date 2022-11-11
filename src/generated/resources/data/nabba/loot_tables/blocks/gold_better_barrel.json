@@ -11,6 +11,17 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "block": "nabba:gold_better_barrel",
+              "function": "minecraft:copy_state",
+              "properties": [
+                "discrete",
+                "void",
+                "locked"
+              ]
+            }
+          ],
           "name": "nabba:gold_better_barrel"
         }
       ],

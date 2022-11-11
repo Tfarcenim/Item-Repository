@@ -31,6 +31,7 @@ public class ModBlockLoot extends BlockLoot {
         dropBarrel(ModBlocks.CREATIVE_BETTER_BARREL);
 
         dropSelf(ModBlocks.ANTI_BARREL);
+        dropSelf(ModBlocks.CONTROLLER);
     }
 
     protected void dropBarrel(Block block) {

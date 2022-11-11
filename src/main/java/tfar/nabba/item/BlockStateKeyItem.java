@@ -20,6 +20,9 @@ public class BlockStateKeyItem extends KeyItem {
 
     @Override
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
+
+        if (!(state.getBlock() instanceof BetterBarrelBlock)) return false;
+
         BlockState newState = state.setValue(property,!state.getValue(property));
 
         if (property == BetterBarrelBlock.LOCKED) {
