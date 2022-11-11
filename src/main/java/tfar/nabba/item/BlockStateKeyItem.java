@@ -21,9 +21,9 @@ public class BlockStateKeyItem extends KeyItem {
     @Override
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
         BlockState newState = state.setValue(property,!state.getValue(property));
-        level.setBlock(pos,newState,3);
 
         if (property == BetterBarrelBlock.LOCKED) {
+            level.setBlock(pos,newState,3);
             if (!newState.getValue(property)) {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
                 if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
@@ -31,10 +31,10 @@ public class BlockStateKeyItem extends KeyItem {
                 }
             }
         } else if (property == BetterBarrelBlock.DISCRETE) {
-            
+            BarrelFrameUpgradeItem.loadAndReplace(state,newState,level,pos);
         }
 
-        level.sendBlockUpdated(pos,state,newState,3);
+       // level.sendBlockUpdated(pos,state,newState,3);
         return true;
     }
 }

@@ -30,22 +30,27 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel 
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
         BetterBarrelBlock oldBarrel = (BetterBarrelBlock) state.getBlock();
         if (oldBarrel.getBarrelTier() != from) return false;
+        //saves the old barrels contents
+        BlockState newState = to.getBarrel().defaultBlockState();
+        loadAndReplace(state,newState,level,pos);
+        if (!player.getAbilities().instabuild) itemstack.shrink(1);
+        return true;
+    }
 
+
+    public static void loadAndReplace(BlockState oldState, BlockState newState, Level level, BlockPos pos) {
         BetterBarrelBlockEntity oldBarrelEntity = (BetterBarrelBlockEntity) level.getBlockEntity(pos);
         //saves the old barrels contents
         CompoundTag tag = oldBarrelEntity.saveWithoutMetadata();
-        BlockState newState = to.getBarrel().defaultBlockState()
-                .setValue(BetterBarrelBlock.DISCRETE, state.getValue(BetterBarrelBlock.DISCRETE))
-                .setValue(BetterBarrelBlock.LOCKED, state.getValue(BetterBarrelBlock.LOCKED))
-                .setValue(BetterBarrelBlock.VOID, state.getValue(BetterBarrelBlock.VOID));
+        newState = newState
+                .setValue(BetterBarrelBlock.LOCKED, oldState.getValue(BetterBarrelBlock.LOCKED))
+                .setValue(BetterBarrelBlock.VOID, oldState.getValue(BetterBarrelBlock.VOID));
 
         level.setBlock(pos, newState, 3);
         //get the blockentity that now exists
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        blockEntity.load(tag);
+        BlockEntity newBlockEntity = level.getBlockEntity(pos);
+        newBlockEntity.load(tag);
         //need to make sure the game saves it!
-        blockEntity.setChanged();
-        if (!player.getAbilities().instabuild) itemstack.shrink(1);
-        return true;
+        newBlockEntity.setChanged();
     }
 }
