@@ -23,7 +23,7 @@ public class Utils {
 
         int existing = betterBarrelBlockEntity.countUpgrade(upgradeData.getData());
         if (existing == 0) {
-            betterBarrelBlockEntity.getUpgrades().add(upgradeData);
+            betterBarrelBlockEntity.getUpgrades().add(upgradeData.copy());//do not use the original
         } else {
             for (UpgradeStack upgradeStack : betterBarrelBlockEntity.getUpgrades()) {
                 if (upgradeStack.getData() == upgradeData.getData()) {

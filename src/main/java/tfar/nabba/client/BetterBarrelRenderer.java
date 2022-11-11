@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
+import tfar.nabba.util.Upgrades;
 
 public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlockEntity> {
 
@@ -47,10 +48,12 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
     protected void renderTextAndItems(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
         ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
 
-        int cap = betterBarrelBlockEntity.getStorage() * 64;
-        String toDraw = stack.getCount()+" / "+ cap;
+        boolean infiniteVend = betterBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
 
-        renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(), -1);
+        int cap = betterBarrelBlockEntity.getStorage() * 64;
+        String toDraw = infiniteVend ? "\u221E" :stack.getCount() + " / "+ cap;
+
+        renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(),.008f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem) {
             String slots = betterBarrelBlockEntity.getUsedSlots() + " / " + betterBarrelBlockEntity.getTotalUpgradeSlots();
             renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d,

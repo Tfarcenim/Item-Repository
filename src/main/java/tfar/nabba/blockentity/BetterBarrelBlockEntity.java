@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -113,11 +114,14 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         if (data == Upgrades.VOID) {
             return isVoid() ? 1 : 0;
         }
-
         for (UpgradeStack dataStack : getUpgrades()) {
             if (dataStack.getData() == data) return dataStack.getCount();
         }
         return 0;
+    }
+
+    public boolean hasUpgrade(Upgrade data) {
+        return countUpgrade(data) > 0;
     }
 
     public void upgrade(UpgradeStack dataStack) {
@@ -272,6 +276,12 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (amount == 0 || stack.isEmpty()) return ItemStack.EMPTY;
+
+            //handling infinite vending is easy
+            if (barrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING)) {
+                return ItemHandlerHelper.copyStackWithSize(this.stack,amount);
+            }
+
             int existing = stack.getCount();
             ItemStack newStack;
             if (amount > existing) {

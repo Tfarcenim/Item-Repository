@@ -19,8 +19,8 @@ public enum Upgrades implements Upgrade {
     DUMMY(0,0,NOTHING,() -> Items.AIR),
     STORAGE(1,BASE_STORAGE,Utils.add_to_internal_upgrades,() -> ModItems.STORAGE_UPGRADE),
     VOID(1,0,Utils.apply_void,() -> ModItems.VOID_UPGRADE,1),
-    PICKUP(8,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_3x3_UPGRADE,9, PICKUP_TICK),
-    INFINITE_VENDING(1000000000,0,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_VENDING_UPGRADE,1);
+    PICKUP(8,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_1x1_UPGRADE,9, PICKUP_TICK),
+    INFINITE_VENDING(2000000000,0,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_VENDING_UPGRADE,1);
 
     private int slotsRequired;
     private final int additionalStorage;
@@ -30,7 +30,7 @@ public enum Upgrades implements Upgrade {
     private final int maxAllowed;
 
     Upgrades(int slotsRequired, int additionalStorage, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier) {
-        this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,32768);
+        this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,64000);
     }
 
     Upgrades(int slotsRequired, int additionalStorage, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier, int maxAllowed) {
