@@ -31,8 +31,6 @@ import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.InteractsWithBarrel;
-import tfar.nabba.item.KeyItem;
-import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.api.BarrelFrameTier;
 
 import javax.annotation.Nullable;
@@ -129,7 +127,19 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return ModBlockEntityTypes.Suppliers.WOOD.create(pPos,pState);
+        return pState.getValue(DISCRETE) ? ModBlockEntityTypes.Suppliers.DISCRETE.create(pPos,pState):ModBlockEntityTypes.Suppliers.REGULAR.create(pPos,pState);
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        boolean shouldRemove = pState.hasBlockEntity() && (!pState.is(pNewState.getBlock()) || !pNewState.hasBlockEntity());
+
+        //they are the same block, check the states
+        if (!shouldRemove) shouldRemove = pState.getValue(DISCRETE) != pNewState.getValue(DISCRETE);
+
+        if (shouldRemove) {
+            pLevel.removeBlockEntity(pPos);
+        }
     }
 
     @Nullable

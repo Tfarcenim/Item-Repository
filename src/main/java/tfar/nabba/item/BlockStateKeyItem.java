@@ -30,6 +30,8 @@ public class BlockStateKeyItem extends KeyItem {
                     barrelBlockEntity.clearGhost();
                 }
             }
+        } else if (property == BetterBarrelBlock.DISCRETE) {
+            
         }
 
         level.sendBlockUpdated(pos,state,newState,3);

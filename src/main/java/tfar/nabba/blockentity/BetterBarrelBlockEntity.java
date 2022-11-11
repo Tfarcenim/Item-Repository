@@ -49,6 +49,10 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return new BetterBarrelBlockEntity(ModBlockEntityTypes.BETTER_BARREL, pos, state);
     }
 
+    public static BetterBarrelBlockEntity createDiscrete(BlockPos pos, BlockState state) {
+        return new BetterBarrelBlockEntity(ModBlockEntityTypes.BETTER_BARREL, pos, state);
+    }
+
     public int getStorage() {
         if (cachedStorage == -1) {//save CPU cycles by not iterating the upgrade map
             cachedStorage = computeStorage();
