@@ -18,6 +18,7 @@ public class Utils {
     public static final int INVALID = -1;
     public static String ID = "id";
     public static final int BASE_STORAGE = 64;
+    public static final int RADIUS = 9;
 
     public static final BiConsumer<BetterBarrelBlockEntity, UpgradeStack> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {
 

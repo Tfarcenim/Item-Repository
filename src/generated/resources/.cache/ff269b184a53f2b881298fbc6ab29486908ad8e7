@@ -1,5 +1,6 @@
-// 1.19.2	2022-11-09T08:34:37.8091004	Block States: nabba
+// 1.19.2	2022-11-11T07:26:37.3244353	Block States: nabba
 78de8fa7ad2179168f98a4e242da62b1d2b78c0b assets/nabba/blockstates/better_barrel.json
+5737936e9ad61416a7920155404c0a9547bce5ad assets/nabba/blockstates/controller.json
 e5afe51faeae6c38c6ef1a350399f08bfdc5c456 assets/nabba/blockstates/copper_better_barrel.json
 0951d230d8c86583757e8e91eef36236a0fb1986 assets/nabba/blockstates/creative_better_barrel.json
 1f89c050880cd6027eac5564e375bc41e7dbcdd6 assets/nabba/blockstates/diamond_better_barrel.json
@@ -10,6 +11,7 @@ fe70ae2728bd1e5d89baa1e5fafb6ec436e9160d assets/nabba/blockstates/gold_better_ba
 4556c3a69736fd3e891a09751a595e4bb352ed1d assets/nabba/blockstates/netherite_better_barrel.json
 655d73d6c23ed953231106b67da92372220d384f assets/nabba/blockstates/stone_better_barrel.json
 4aec7405aad59af4a612c9bcb2f6f195c79fcc89 assets/nabba/models/block/better_barrel.json
+0cd9b904276265eb5958bacd4feea63c3a1c66d8 assets/nabba/models/block/controller.json
 7a421c4746222f11168089c6649d677936057610 assets/nabba/models/block/copper_better_barrel.json
 eae25510910857c8c5bac2ad335994624abb115f assets/nabba/models/block/creative_better_barrel.json
 203d4a6e62022fd72bf0fbf18a5dc000869da265 assets/nabba/models/block/diamond_better_barrel.json

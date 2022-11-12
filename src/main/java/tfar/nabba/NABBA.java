@@ -2,6 +2,7 @@ package tfar.nabba;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -9,8 +10,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.event.InputEvent;
@@ -23,9 +26,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
 import tfar.nabba.block.BetterBarrelBlock;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.client.Client;
 import tfar.nabba.command.RepositoryCommands;
 import tfar.nabba.datagen.ModDatagen;
@@ -108,14 +113,19 @@ public class NABBA {
 
 
     private void leftClick(PlayerInteractEvent.LeftClickBlock e) {
-        BlockState state = e.getEntity().level.getBlockState(e.getPos());
+        Level level = e.getLevel();
+        BlockPos pos = e.getPos();
 
         boolean crouch = e.getEntity().isCrouching();
-        
-        if (state.getBlock() instanceof BetterBarrelBlock && !crouch && e.getEntity().getMainHandItem().getItem() instanceof AxeItem) {
-            e.setCanceled(true);
+
+        //cancel block breaking and vend if not crouching
+        if (!crouch) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+                ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
+                ItemHandlerHelper.giveItemToPlayer(e.getEntity(),stack);
+                e.setCanceled(true);
+            }
         }
     }
-
-
 }

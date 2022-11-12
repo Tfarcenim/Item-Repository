@@ -101,6 +101,9 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     public ItemStack tryAddItem(ItemStack stack) {
         return barrelHandler.insertItem(0, stack, false);
     }
+    public ItemStack tryRemoveItem() {
+        return getBarrelHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
+    }
 
     public boolean canAcceptUpgrade(UpgradeStack data) {
 
@@ -139,7 +142,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return getTotalUpgradeSlots() - getUsedSlots();
     }
     public boolean isDiscrete() {
-        return getBlockState().getValue(BetterBarrelBlock.DISCRETE);
+        return getType() == ModBlockEntityTypes.DISCRETE_BETTER_BARREL;
     }
 
     public int getColor() {
@@ -206,10 +209,6 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
     public BarrelHandler getBarrelHandler() {
         return barrelHandler;
-    }
-
-    public ItemStack tryRemoveItem() {
-        return getBarrelHandler().extractItem(0,64,false);
     }
 
     public void setColor(int color) {

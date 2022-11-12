@@ -31,6 +31,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.INFINITE_VENDING_UPGRADE);
 
         makeOneLayerItem(ModItems.VOID_UPGRADE);
+
+        makeOneLayerItem(ModItems.PICKUP_1x1_UPGRADE);
         makeOneLayerItem(ModItems.PICKUP_3x3_UPGRADE);
         makeOneLayerItem(ModItems.PICKUP_9x9_UPGRADE);
 
@@ -49,6 +51,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeSimpleBlockItem(ModBlocks.EMERALD_BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.NETHERITE_BETTER_BARREL.asItem());
         makeSimpleBlockItem(ModBlocks.CREATIVE_BETTER_BARREL.asItem());
+        makeSimpleBlockItem(ModBlocks.CONTROLLER.asItem());
 
         for (Item item : Registry.ITEM) {
             if (item instanceof BarrelFrameUpgradeItem) {

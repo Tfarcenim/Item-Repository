@@ -7,11 +7,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
+import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.item.KeyItem;
 
-public class ControllerBlock extends Block {
+public class ControllerBlock extends Block implements EntityBlock {
     public ControllerBlock(Properties pProperties) {
         super(pProperties);
     }
@@ -19,17 +23,29 @@ public class ControllerBlock extends Block {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         ItemStack stack = pPlayer.getItemInHand(pHand);
-        if (stack.getItem() instanceof KeyItem keyItem) {
-            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos().set(pPos);
-            for (int z = -15; z < 15;z++) {
-                for (int y = -15; y < 15;y++) {
-                    for (int x = -15; x < 15; x++) {
-                     //   mutableBlockPos.
-                     //   keyItem.handleBarrel(pLevel.getBlockState(pos), stack, pLevel,pos, pPlayer);
-                    }
+        if (!pLevel.isClientSide) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof ControllerBlockEntity controllerBlock) {
+                if (stack.getItem() instanceof KeyItem keyItem) {
+                    controllerBlock.interactWithBarrels(stack);
                 }
+
             }
         }
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return ControllerBlockEntity.create(pPos, pState);
+    }
+
+    @Override
+    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        if (blockEntity instanceof ControllerBlockEntity controllerBlock) {
+            controllerBlock.gatherBarrels();
+        }
     }
 }

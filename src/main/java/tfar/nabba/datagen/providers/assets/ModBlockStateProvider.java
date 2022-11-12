@@ -28,6 +28,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         makeBarrel(ModBlocks.EMERALD_BETTER_BARREL);
         makeBarrel(ModBlocks.NETHERITE_BETTER_BARREL);
         makeBarrel(ModBlocks.CREATIVE_BETTER_BARREL);
+        simpleBlock(ModBlocks.CONTROLLER);
     }
 
     protected void makeBarrel(Block block) {

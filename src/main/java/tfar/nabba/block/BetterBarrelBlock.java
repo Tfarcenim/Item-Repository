@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
@@ -92,16 +91,7 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
     }
 
-    @Override
-    public void attack(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
-        if (!pLevel.isClientSide) {
-            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
-                ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
-                ItemHandlerHelper.giveItemToPlayer(pPlayer,stack);
-            }
-        }
-    }
+    //note,attack is not called if cancelling the left click block event
 
     public static final String info = NABBA.MODID+".better_barrel.info";
     @Override
