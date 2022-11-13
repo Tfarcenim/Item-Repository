@@ -51,7 +51,7 @@ public class ModLangProvider extends LanguageProvider {
         addItem(()-> ModItems.PICKUP_9x9_UPGRADE,"Pickup 9x9 Upgrade");
         addBlock(() -> ModBlocks.CONTROLLER,"Controller");
 
-        add(BetterBarrelBlock.info,"Has %s upgrade slots");
+        add(BetterBarrelBlock.info,"Using %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");
         add(UpgradeItem.info1,"Max of %s allowed per barrel");
         addDesc(ModItems.STORAGE_UPGRADE,"Adds %s stacks of storage");

@@ -30,6 +30,7 @@ import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.item.BetterBarrelBlockItem;
 import tfar.nabba.item.InteractsWithBarrel;
 import tfar.nabba.api.BarrelFrameTier;
 
@@ -97,7 +98,8 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
     public static final String info = NABBA.MODID+".better_barrel.info";
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        pTooltip.add(Component.translatable(info,Component.translatable(barrelTier.getUpgradeSlots()+"").withStyle(ChatFormatting.AQUA)));
+        pTooltip.add(Component.translatable(info,
+                Component.translatable(BetterBarrelBlockItem.getUsedSlotsFromItem(pStack)+"/"+barrelTier.getUpgradeSlots()).withStyle(ChatFormatting.AQUA)));
         if (pStack.hasTag()) {
 
             CompoundTag tag = pStack.getTag().getCompound("BlockStateTag");

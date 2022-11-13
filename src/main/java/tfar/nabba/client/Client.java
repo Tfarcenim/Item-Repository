@@ -2,11 +2,14 @@ package tfar.nabba.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import tfar.nabba.client.screen.AntiBarrelScreen;
@@ -15,6 +18,8 @@ import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.init.ModMenuTypes;
+import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
+import tfar.nabba.inventory.tooltip.ClientBetterBarrelTooltip;
 import tfar.nabba.menu.VanityKeyMenu;
 import tfar.nabba.net.C2SScrollKeyPacket;
 
@@ -35,6 +40,17 @@ public class Client {
         setRenderLayer(ModBlocks.EMERALD_BETTER_BARREL);
         setRenderLayer(ModBlocks.NETHERITE_BETTER_BARREL);
         setRenderLayer(ModBlocks.CREATIVE_BETTER_BARREL);
+    }
+
+    public static void tooltipC(RegisterClientTooltipComponentFactoriesEvent e) {
+        e.register(BetterBarrelTooltip.class, Client::tooltipImage);
+    }
+
+    public static ClientTooltipComponent tooltipImage(TooltipComponent data) {
+        if (data instanceof BetterBarrelTooltip dankTooltip) {
+            return new ClientBetterBarrelTooltip(dankTooltip);
+        }
+        return null;
     }
 
     private static void setRenderLayer(Block block) {

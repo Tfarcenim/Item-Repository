@@ -17,17 +17,17 @@ public class ModItems {
             return new ItemStack(ModItems.ANTI_BARREL);
         }
     };
-    public static final Item ANTI_BARREL = new BlockItem(ModBlocks.ANTI_BARREL,basic());
-    public static final Item BETTER_BARREL = new BlockItem(ModBlocks.BETTER_BARREL,basic());
-    public static final Item STONE_BETTER_BARREL = new BlockItem(ModBlocks.STONE_BETTER_BARREL,basic());
-    public static final Item COPPER_BETTER_BARREL = new BlockItem(ModBlocks.COPPER_BETTER_BARREL,basic());
-    public static final Item IRON_BETTER_BARREL = new BlockItem(ModBlocks.IRON_BETTER_BARREL,basic());
-    public static final Item LAPIS_BETTER_BARREL = new BlockItem(ModBlocks.LAPIS_BETTER_BARREL,basic());
-    public static final Item GOLD_BETTER_BARREL = new BlockItem(ModBlocks.GOLD_BETTER_BARREL,basic());
-    public static final Item DIAMOND_BETTER_BARREL = new BlockItem(ModBlocks.DIAMOND_BETTER_BARREL,basic());
-    public static final Item EMERALD_BETTER_BARREL = new BlockItem(ModBlocks.EMERALD_BETTER_BARREL,basic());
-    public static final Item NETHERITE_BETTER_BARREL = new BlockItem(ModBlocks.NETHERITE_BETTER_BARREL,basic());
-    public static final Item CREATIVE_BETTER_BARREL = new BlockItem(ModBlocks.CREATIVE_BETTER_BARREL,basic());
+    public static final Item ANTI_BARREL = new BetterBarrelBlockItem(ModBlocks.ANTI_BARREL,basic());
+    public static final Item BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.BETTER_BARREL,basic());
+    public static final Item STONE_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.STONE_BETTER_BARREL,basic());
+    public static final Item COPPER_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.COPPER_BETTER_BARREL,basic());
+    public static final Item IRON_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.IRON_BETTER_BARREL,basic());
+    public static final Item LAPIS_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.LAPIS_BETTER_BARREL,basic());
+    public static final Item GOLD_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.GOLD_BETTER_BARREL,basic());
+    public static final Item DIAMOND_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.DIAMOND_BETTER_BARREL,basic());
+    public static final Item EMERALD_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.EMERALD_BETTER_BARREL,basic());
+    public static final Item NETHERITE_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.NETHERITE_BETTER_BARREL,basic());
+    public static final Item CREATIVE_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.CREATIVE_BETTER_BARREL,basic());
 
     public static final Item STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.STORAGE);
     public static final Item x4_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.x4_STORAGE);

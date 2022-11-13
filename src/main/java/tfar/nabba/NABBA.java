@@ -64,6 +64,7 @@ public class NABBA {
         bus.addListener(ModDatagen::start);
         if (FMLEnvironment.dist.isClient()) {
             bus.addListener(Client::setup);
+            bus.addListener(Client::tooltipC);
         }
         addGameEvents();
         instance = this;
