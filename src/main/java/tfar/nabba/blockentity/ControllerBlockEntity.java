@@ -192,7 +192,14 @@ public class ControllerBlockEntity extends BlockEntity {
         }
         @Override
         public int getSlotLimit(int slot) {
-            return 64;
+            if (slot >= getSlots()) return 0;
+            BlockEntity blockEntity = controllerBlockEntity.getBE(slot);
+            if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
+                return barrelBlockEntity.getBarrelHandler().getSlotLimit(0);
+            } else {
+                controllerBlockEntity.clearInvalid();
+            }
+            return 0;
         }
 
         @Override
