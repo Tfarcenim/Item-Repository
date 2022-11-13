@@ -1,4 +1,4 @@
-package tfar.nabba.datagen.providers;
+package tfar.nabba.datagen.providers.data.tags;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;

@@ -8,6 +8,9 @@ import tfar.nabba.datagen.providers.*;
 import tfar.nabba.datagen.providers.assets.ModBlockStateProvider;
 import tfar.nabba.datagen.providers.assets.ModItemModelProvider;
 import tfar.nabba.datagen.providers.assets.ModLangProvider;
+import tfar.nabba.datagen.providers.data.tags.ModBlockEntityTagsProvider;
+import tfar.nabba.datagen.providers.data.tags.ModBlockTagsProvider;
+import tfar.nabba.datagen.providers.data.tags.ModItemTagsProvider;
 
 public class ModDatagen {
     public static void start(GatherDataEvent e) {
@@ -24,5 +27,6 @@ public class ModDatagen {
         BlockTagsProvider blockTagsProvider = new ModBlockTagsProvider(dataGenerator,helper);
         dataGenerator.addProvider(server,blockTagsProvider);
         dataGenerator.addProvider(server,new ModItemTagsProvider(dataGenerator,blockTagsProvider,helper));
+        dataGenerator.addProvider(server,new ModBlockEntityTagsProvider(dataGenerator,helper));
     }
 }

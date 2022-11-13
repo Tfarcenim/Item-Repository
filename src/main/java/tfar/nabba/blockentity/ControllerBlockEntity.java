@@ -2,17 +2,14 @@ package tfar.nabba.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -20,6 +17,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.item.InteractsWithBarrel;
 import tfar.nabba.util.Utils;
@@ -27,7 +25,6 @@ import tfar.nabba.util.Utils;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ControllerBlockEntity extends BlockEntity {
 
@@ -52,25 +49,9 @@ public class ControllerBlockEntity extends BlockEntity {
 
     public void gatherBarrels() {
         BlockPos thisPos = getBlockPos();
-
-        int chunkX = SectionPos.blockToSectionCoord(thisPos.getX());
-        int chunkZ = SectionPos.blockToSectionCoord(thisPos.getZ());
-        for (int z = -1; z <= 1;z++) {
-            for (int x = -1; x <= 1;x++) {
-                LevelChunk chunk = level.getChunk(chunkX + x,chunkZ + z);
-                Map<BlockPos,BlockEntity> blockEntities = chunk.getBlockEntities();
-                for (Map.Entry<BlockPos,BlockEntity> entry: blockEntities.entrySet()) {
-                    BlockEntity blockEntity = entry.getValue();
-                    if (blockEntity instanceof BetterBarrelBlockEntity) {
-                        BlockPos pos = entry.getKey();
-                        if (Math.abs(pos.getX() - thisPos.getX() ) < Utils.RADIUS
-                        && Math.abs(pos.getY() - thisPos.getY() ) < Utils.RADIUS
-                                && Math.abs(pos.getZ() - thisPos.getZ() ) < Utils.RADIUS) {
-                            addBarrel(entry.getKey());
-                        }
-                    }
-                }
-            }
+        List<BlockEntity> betterBarrelBlockEntities = Utils.getNearbyBarrels(level,thisPos);
+        for (BlockEntity betterBarrelBlockEntity : betterBarrelBlockEntities) {
+            addBarrel(betterBarrelBlockEntity.getBlockPos());
         }
     }
 

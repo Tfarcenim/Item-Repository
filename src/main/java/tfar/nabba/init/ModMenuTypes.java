@@ -1,9 +1,7 @@
 package tfar.nabba.init;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.network.NetworkHooks;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.menu.VanityKeyMenu;
 

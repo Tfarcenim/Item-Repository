@@ -39,6 +39,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     private ItemStack ghost = ItemStack.EMPTY;
     private transient int cachedStorage = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
+    private BlockPos controllerPos;
 
     protected BetterBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -67,6 +68,33 @@ public class BetterBarrelBlockEntity extends BlockEntity {
             cachedUsedUpgradeSlots = computeUsedUpgradeSlots();
         }
         return cachedUsedUpgradeSlots;
+    }
+
+    public void setControllerPos(BlockPos controllerPos) {
+        this.controllerPos = controllerPos;
+
+        if (controllerPos != null) {
+            BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
+            if (blockEntity instanceof ControllerBlockEntity controller) {
+                controller.addBarrel(getBlockPos());
+            }
+        }
+        setChanged();
+    }
+
+    public BlockPos getControllerPos() {
+        return controllerPos;
+    }
+
+    public void removeController() {
+        if (controllerPos != null) {
+
+            BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
+            if (blockEntity instanceof ControllerBlockEntity controller) {
+                controller.removeBarrel(getBlockPos());
+            }
+            setControllerPos(null);
+        }
     }
 
     private void invalidateCaches() {
@@ -187,6 +215,9 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         pTag.putInt(NBTKeys.Color.name(), color);
         pTag.putDouble(NBTKeys.Size.name(), size);
         pTag.put(NBTKeys.Ghost.name(), ghost.save(new CompoundTag()));
+        if (controllerPos != null) {
+            pTag.putIntArray("Controller",new int[]{controllerPos.getX(),controllerPos.getY(),controllerPos.getZ()});
+        }
     }
 
     @Override
@@ -204,6 +235,11 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         color = pTag.getInt(NBTKeys.Color.name());
         size = pTag.getDouble(NBTKeys.Size.name());
         ghost = ItemStack.of(pTag.getCompound(NBTKeys.Ghost.name()));
+
+        if (pTag.contains("Controller")) {
+            int[] contr = pTag.getIntArray("Controller");
+            controllerPos = new BlockPos(contr[0],contr[1],contr[2]);
+        }
         invalidateCaches();
     }
 
@@ -219,6 +255,25 @@ public class BetterBarrelBlockEntity extends BlockEntity {
     public void setSize(double size) {
         this.size = size;
         setChanged();
+    }
+
+    public void searchForControllers() {
+        List<BlockEntity> controllers = Utils.getNearbyControllers(level,getBlockPos());
+        if (!controllers.isEmpty()) {
+            BlockPos newController = null;
+            if (controllers.size() == 1) {
+                newController = controllers.get(0).getBlockPos();
+            } else {
+                int dist = Integer.MAX_VALUE;
+                for (BlockEntity blockEntity : controllers) {
+                    if (newController == null || blockEntity.getBlockPos().distManhattan(getBlockPos()) < dist) {
+                        newController = blockEntity.getBlockPos();
+                        dist = blockEntity.getBlockPos().distManhattan(getBlockPos());
+                    }
+                }
+            }
+            setControllerPos(newController);
+        }
     }
 
     public static class BarrelHandler implements IItemHandler {

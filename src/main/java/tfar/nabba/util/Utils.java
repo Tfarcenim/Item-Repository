@@ -1,16 +1,27 @@
 package tfar.nabba.util;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.registries.ForgeRegistries;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.ControllerBlockEntity;
+import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 import static tfar.nabba.block.BetterBarrelBlock.VOID;
 
@@ -75,5 +86,41 @@ public class Utils {
             pItem.setItem(itemstack1);
         }
         return flag;
+    }
+
+    public static List<BlockEntity> getNearbyBarrels(Level level, BlockPos thisPos) {
+        return getNearbyBlockEntities(level,isBarrel,thisPos);
+    }
+
+    public static List<BlockEntity> getNearbyControllers(Level level, BlockPos thisPos) {
+        return getNearbyBlockEntities(level,isController,thisPos);
+    }
+
+    public static final Predicate<BlockEntity> isController = ControllerBlockEntity.class::isInstance;
+    public static final Predicate<BlockEntity> isBarrel = blockEntity -> ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.BETTER_BARRELS).contains(blockEntity.getType());
+    //searches a 3x3 chunk area
+    public static List<BlockEntity> getNearbyBlockEntities(Level level, Predicate<BlockEntity> predicate, BlockPos thisPos) {
+
+        int chunkX = SectionPos.blockToSectionCoord(thisPos.getX());
+        int chunkZ = SectionPos.blockToSectionCoord(thisPos.getZ());
+        List<BlockEntity> blockentities = new ArrayList<>();
+        for (int z = -1; z <= 1;z++) {
+            for (int x = -1; x <= 1;x++) {
+                LevelChunk chunk = level.getChunk(chunkX + x,chunkZ + z);
+                Map<BlockPos,BlockEntity> blockEntities = chunk.getBlockEntities();
+                for (Map.Entry<BlockPos,BlockEntity> entry: blockEntities.entrySet()) {
+                    BlockEntity blockEntity = entry.getValue();
+                    if (predicate.test(blockEntity)) {
+                        BlockPos pos = entry.getKey();
+                        if (Math.abs(pos.getX() - thisPos.getX() ) < Utils.RADIUS
+                                && Math.abs(pos.getY() - thisPos.getY() ) < Utils.RADIUS
+                                && Math.abs(pos.getZ() - thisPos.getZ() ) < Utils.RADIUS) {
+                            blockentities.add(entry.getValue());
+                        }
+                    }
+                }
+            }
+        }
+        return blockentities;
     }
 }

@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.InteractsWithBarrel;
 import tfar.nabba.api.BarrelFrameTier;
@@ -101,14 +102,16 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
             CompoundTag tag = pStack.getTag().getCompound("BlockStateTag");
             if (!tag.isEmpty()) {
+
+//                pTooltip.add(Component.literal("Contents: ").append());
+
                 pTooltip.add(Component.empty());
+                pTooltip.add(Component.literal("Discrete: ").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
                 pTooltip.add(Component.literal("Locked: ").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
                 pTooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
             }
-
-            pTooltip.add(Component.literal(tag.toString()).withStyle(ChatFormatting.GRAY));
+            pTooltip.add(Component.literal(pStack.getTag().toString()).withStyle(ChatFormatting.YELLOW));
         }
-        pTooltip.add(Component.literal(pStack.getOrCreateTag().toString()).withStyle(ChatFormatting.YELLOW));
     }
 
     public RenderShape getRenderShape(BlockState pState) {
@@ -125,11 +128,28 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         boolean shouldRemove = pState.hasBlockEntity() && (!pState.is(pNewState.getBlock()) || !pNewState.hasBlockEntity());
 
+        if (shouldRemove) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlock) {
+                betterBarrelBlock.removeController();
+            }
+        }
+
         //they are the same block, check the states
         if (!shouldRemove) shouldRemove = pState.getValue(DISCRETE) != pNewState.getValue(DISCRETE);
 
         if (shouldRemove) {
             pLevel.removeBlockEntity(pPos);
+        }
+    }
+
+    //caution, this method also gets called when changing blockstates
+    @Override
+    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        //only check for controllers if this is a new block
+        if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlock  && pOldState.getBlock() != pState.getBlock()) {
+            betterBarrelBlock.searchForControllers();
         }
     }
 
