@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:ingots/copper"
+    },
+    "S": {
+      "tag": "forge:ingots/nether_brick"
+    },
+    "b": {
+      "item": "nabba:stone_anti_barrel"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "SbS",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:copper_anti_barrel"
+  }
+}

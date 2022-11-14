@@ -8,7 +8,7 @@
       "tag": "minecraft:wooden_slabs"
     },
     "b": {
-      "item": "minecraft:barrel"
+      "tag": "forge:barrels/wooden"
     }
   },
   "pattern": [

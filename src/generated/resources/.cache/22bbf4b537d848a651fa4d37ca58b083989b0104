@@ -1,6 +1,8 @@
-// 1.19.2	2022-11-11T07:26:37.3264357	Item Models: nabba
+// 1.19.2	2022-11-13T20:23:54.8108271	Item Models: nabba
+5ed323eabef7f71705faf7c1f2b51a2dfba47694 assets/nabba/models/item/anti_barrel.json
 ecf8667a935b50479f8da420dd4994eb6f946cbc assets/nabba/models/item/better_barrel.json
 ad7c533facea542ba39a930293cd870b4520800e assets/nabba/models/item/controller.json
+5f580e4210edfbca2239eb1f89eb05381fce371b assets/nabba/models/item/copper_anti_barrel.json
 7ca0502f50cdcf2ac0b7410c942eefbbce41e56d assets/nabba/models/item/copper_better_barrel.json
 3d5f18a16363c5f1bdbe176ce49ab16ee1f1f4e4 assets/nabba/models/item/copper_to_creative_frame_upgrade.json
 265024a14f337919ec1c6e29e14298ac50ad4a06 assets/nabba/models/item/copper_to_diamond_frame_upgrade.json
@@ -25,6 +27,7 @@ ce07a6fe818ff441dff3dcac424ebf819459a26b assets/nabba/models/item/gold_to_nether
 5c0fc29d7d7ea9f3ffab16a7fe19b97be8ff9a15 assets/nabba/models/item/hide_key.json
 0a5da44a40c1a6ece5cf1b1a7d7a817704acaba7 assets/nabba/models/item/infinite_storage_upgrade.json
 53f5b5643f592baf70f62b93a3363449acc6b615 assets/nabba/models/item/infinite_vending_upgrade.json
+514cc72aceb7385f47d12d2c8ff2fe35cab58405 assets/nabba/models/item/iron_anti_barrel.json
 55ab1ec7308dc9213fa1b846b1053ed6471a2a6e assets/nabba/models/item/iron_better_barrel.json
 471ffd50ead64f2ec1735f53209ff844ab821561 assets/nabba/models/item/iron_to_creative_frame_upgrade.json
 e524e0a92bc29f4175f872432c40de94460b6952 assets/nabba/models/item/iron_to_diamond_frame_upgrade.json
@@ -45,6 +48,7 @@ c00bd0a0ea120c7c83394db0aa1e5d8d0ac33280 assets/nabba/models/item/lapis_to_emera
 0cc0c46ea50391976fae09ab2d9ec848961fc588 assets/nabba/models/item/pickup_1x1_upgrade.json
 4af46d54349937f4c0903850d8f91124390c54e1 assets/nabba/models/item/pickup_3x3_upgrade.json
 9db9d10a1d0b47b5ae4545cc9f1c7c02d3c7dcc8 assets/nabba/models/item/pickup_9x9_upgrade.json
+07138c16555974ee9673e77c53609c75c7552230 assets/nabba/models/item/stone_anti_barrel.json
 f07c8200d2029f39c55195fa17ed12171c27dc79 assets/nabba/models/item/stone_better_barrel.json
 f6b3518053035e4b9e635f03626e39ef51ae895f assets/nabba/models/item/stone_to_copper_frame_upgrade.json
 9703104596f1ea77f64d4a2ea02dd1f6ee339fe1 assets/nabba/models/item/stone_to_creative_frame_upgrade.json

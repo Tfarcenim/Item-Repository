@@ -3,6 +3,7 @@ package tfar.nabba.datagen.providers.data.tags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
@@ -24,6 +25,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).addTag(ModBlockTags.BETTER_BARRELS);
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(ModBlockTags.ANTI_BARRELS);
-
+        this.tag(ModBlockTags.NETHER_BRICKS).add(Blocks.NETHER_BRICKS,Blocks.RED_NETHER_BRICKS,Blocks.CHISELED_NETHER_BRICKS,Blocks.CRACKED_NETHER_BRICKS);
+        this.tag(ModBlockTags.NETHER_BRICK_SLABS).add(Blocks.NETHER_BRICK_SLAB,Blocks.RED_NETHER_BRICK_SLAB);
     }
 }

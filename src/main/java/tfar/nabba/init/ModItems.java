@@ -18,6 +18,10 @@ public class ModItems {
         }
     };
     public static final Item ANTI_BARREL = new BetterBarrelBlockItem(ModBlocks.ANTI_BARREL,basic());
+    public static final Item STONE_ANTI_BARREL = new BetterBarrelBlockItem(ModBlocks.STONE_ANTI_BARREL,basic());
+    public static final Item COPPER_ANTI_BARREL = new BetterBarrelBlockItem(ModBlocks.COPPER_ANTI_BARREL,basic());
+    public static final Item IRON_ANTI_BARREL = new BetterBarrelBlockItem(ModBlocks.IRON_ANTI_BARREL,basic());
+
     public static final Item BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.BETTER_BARREL,basic());
     public static final Item STONE_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.STONE_BETTER_BARREL,basic());
     public static final Item COPPER_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.COPPER_BETTER_BARREL,basic());

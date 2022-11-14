@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:blocks/nether_bricks"
+    },
+    "S": {
+      "tag": "forge:blocks/nether_brick_slabs"
+    },
+    "b": {
+      "tag": "forge:barrels/wooden"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "PbP",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:anti_barrel"
+  }
+}

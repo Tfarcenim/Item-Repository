@@ -101,7 +101,7 @@ public class AntiBarrelBlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("repository");
+        return Component.literal("Anti Barrel");
     }
 
     @Nullable

@@ -5,9 +5,11 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tfar.nabba.NABBA;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.item.BarrelFrameUpgradeItem;
@@ -41,16 +43,12 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.VANITY_KEY);
         makeOneLayerItem(ModItems.KEY_RING);
 
-        makeSimpleBlockItem(ModBlocks.BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.COPPER_BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.STONE_BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.IRON_BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.LAPIS_BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.GOLD_BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.DIAMOND_BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.EMERALD_BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.NETHERITE_BETTER_BARREL.asItem());
-        makeSimpleBlockItem(ModBlocks.CREATIVE_BETTER_BARREL.asItem());
+        for (Block block : Registry.BLOCK) {
+            if (block instanceof AbstractBarrelBlock) {
+                makeSimpleBlockItem(block.asItem());
+            }
+        }
+
         makeSimpleBlockItem(ModBlocks.CONTROLLER.asItem());
 
         for (Item item : Registry.ITEM) {

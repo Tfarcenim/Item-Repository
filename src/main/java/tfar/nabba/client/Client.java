@@ -40,6 +40,11 @@ public class Client {
         setRenderLayer(ModBlocks.EMERALD_BETTER_BARREL);
         setRenderLayer(ModBlocks.NETHERITE_BETTER_BARREL);
         setRenderLayer(ModBlocks.CREATIVE_BETTER_BARREL);
+
+        setRenderLayer(ModBlocks.ANTI_BARREL);
+        setRenderLayer(ModBlocks.STONE_ANTI_BARREL);
+        setRenderLayer(ModBlocks.COPPER_ANTI_BARREL);
+        setRenderLayer(ModBlocks.IRON_ANTI_BARREL);
     }
 
     public static void tooltipC(RegisterClientTooltipComponentFactoriesEvent e) {

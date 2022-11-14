@@ -7,9 +7,12 @@ import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import tfar.nabba.NABBA;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlocks;
+
+import java.util.Locale;
 
 public class ModBlockStateProvider extends BlockStateProvider {
     public ModBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
@@ -18,6 +21,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
+        makeAntiBarrel(ModBlocks.ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.STONE_ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.COPPER_ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.IRON_ANTI_BARREL);
+
         makeBarrel(ModBlocks.BETTER_BARREL);
         makeBarrel(ModBlocks.COPPER_BETTER_BARREL);
         makeBarrel(ModBlocks.STONE_BETTER_BARREL);
@@ -31,14 +39,30 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlock(ModBlocks.CONTROLLER);
     }
 
-    protected void makeBarrel(Block block) {
+    protected void makeAntiBarrel(AbstractBarrelBlock block) {
         String name = Registry.BLOCK.getKey(block).getPath();
+        String barrel = block.getBarrelTier().getName();
 
-        BlockModelBuilder modelBuilder = models().withExistingParent(name,modLoc("block/better_barrel_block"));
+        BlockModelBuilder modelBuilder = models().withExistingParent(name,modLoc("block/"+block.getType().toString().toLowerCase(Locale.ROOT)+"_barrel_block"));
         modelBuilder
-                .texture("frame_side",modLoc("block/"+name+"_frame_side"))
-                .texture("frame_top",modLoc("block/"+name+"_frame_side"))
-                .texture("frame_bottom",modLoc("block/"+name+"_frame_side"));
+                .texture("frame_side",modLoc("block/"+barrel+"_barrel_frame_side"))
+                .texture("frame_top",modLoc("block/"+barrel+"_barrel_frame_side"))
+                .texture("frame_bottom",modLoc("block/"+barrel+"_barrel_frame_side"));
+
+        getMultipartBuilder(block).part().modelFile(modelBuilder).addModel().end()
+                .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_void")))
+                .addModel().condition(BetterBarrelBlock.VOID,true).end();
+    }
+
+    protected void makeBarrel(AbstractBarrelBlock block) {
+        String name = Registry.BLOCK.getKey(block).getPath();
+        String barrel = block.getBarrelTier().getName();
+
+        BlockModelBuilder modelBuilder = models().withExistingParent(name,modLoc("block/"+block.getType().toString().toLowerCase(Locale.ROOT)+"_barrel_block"));
+        modelBuilder
+                .texture("frame_side",modLoc("block/"+barrel+"_barrel_frame_side"))
+                .texture("frame_top",modLoc("block/"+barrel+"_barrel_frame_side"))
+                .texture("frame_bottom",modLoc("block/"+barrel+"_barrel_frame_side"));
 
         getMultipartBuilder(block).part().modelFile(modelBuilder).addModel().end()
                 .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_void")))

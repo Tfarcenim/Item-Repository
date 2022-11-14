@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
 import org.codehaus.plexus.util.StringUtils;
 import tfar.nabba.NABBA;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
@@ -30,12 +31,10 @@ public class ModLangProvider extends LanguageProvider {
         }
 
         for (Block block : Registry.BLOCK) {
-            if (block instanceof BetterBarrelBlock) {
+            if (block instanceof AbstractBarrelBlock) {
                 defaultName(block);
             }
         }
-
-        addBlock(() -> ModBlocks.ANTI_BARREL,"Anti Barrel");
 
         addItem(() -> ModItems.STORAGE_UPGRADE,"Storage Upgrade");
         addItem(() -> ModItems.x4_STORAGE_UPGRADE,"x4 Storage Upgrade");
@@ -51,7 +50,7 @@ public class ModLangProvider extends LanguageProvider {
         addItem(()-> ModItems.PICKUP_9x9_UPGRADE,"Pickup 9x9 Upgrade");
         addBlock(() -> ModBlocks.CONTROLLER,"Controller");
 
-        add(BetterBarrelBlock.info,"Using %s upgrade slots");
+        add(AbstractBarrelBlock.info,"Using %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");
         add(UpgradeItem.info1,"Max of %s allowed per barrel");
         addDesc(ModItems.STORAGE_UPGRADE,"Adds %s stacks of storage");

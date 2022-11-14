@@ -1,0 +1,9 @@
+{
+  "parent": "nabba:block/better_barrel_block",
+  "textures": {
+    "particle": "nabba:block/anti_barrel_bottom",
+    "bottom": "nabba:block/anti_barrel_bottom",
+    "top": "nabba:block/anti_barrel_top",
+    "side": "nabba:block/anti_barrel_side"
+  }
+}

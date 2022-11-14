@@ -1,13 +1,16 @@
-// 1.19.2	2022-11-10T21:54:52.982318	LootTables
+// 1.19.2	2022-11-13T20:20:11.1526509	LootTables
 34bef1415477a80be7880674fe869c14b4c9cea3 data/nabba/loot_tables/blocks/anti_barrel.json
 d66ebf2dde357a51ad94f633d9c640e2cfb50e3a data/nabba/loot_tables/blocks/better_barrel.json
 c61da02692c828aaf11762f072b718d53bbb8b7f data/nabba/loot_tables/blocks/controller.json
+d37e439bf6a6b851982ee18edcba2f97ce3b4233 data/nabba/loot_tables/blocks/copper_anti_barrel.json
 2cdcf0f470f3aca93332bd774ccae760cfe54702 data/nabba/loot_tables/blocks/copper_better_barrel.json
 6249534c7ed73174fb5b4f174e203cabc112d817 data/nabba/loot_tables/blocks/creative_better_barrel.json
 7fe02d1ffabe6e36c87972a60e572e4646361011 data/nabba/loot_tables/blocks/diamond_better_barrel.json
 2b9b73db938c113aa91cf3dd543f80bad016d4da data/nabba/loot_tables/blocks/emerald_better_barrel.json
 6eb32baac62784ff48166c1c0bfc1bc47b9a7eff data/nabba/loot_tables/blocks/gold_better_barrel.json
+1c4ed22a64a1a6ea9a93babd9986e4aaa534f5a0 data/nabba/loot_tables/blocks/iron_anti_barrel.json
 46e82da532e9983b663f6851edfa7bfe8e27821b data/nabba/loot_tables/blocks/iron_better_barrel.json
 d95bae37e99d09483fae0bd6e9bd39d8b465b8ce data/nabba/loot_tables/blocks/lapis_better_barrel.json
 c9b5b98bb05efc8b69d11c0d56144aa609f75708 data/nabba/loot_tables/blocks/netherite_better_barrel.json
+1b6293daa628fa42259744598899fd1c08b25827 data/nabba/loot_tables/blocks/stone_anti_barrel.json
 2249b054e39a0a7284967d534a610ec68b4fd91a data/nabba/loot_tables/blocks/stone_better_barrel.json

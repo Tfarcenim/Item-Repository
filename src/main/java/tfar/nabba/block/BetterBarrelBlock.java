@@ -1,9 +1,7 @@
 package tfar.nabba.block;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,41 +14,28 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
-import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.item.BetterBarrelBlockItem;
 import tfar.nabba.item.InteractsWithBarrel;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.util.BarrelType;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BetterBarrelBlock extends Block implements EntityBlock {
-    private final BarrelFrameTier barrelTier;
-    public static final BooleanProperty VOID = BooleanProperty.create("void");
-    public static final BooleanProperty DISCRETE = BooleanProperty.create("discrete");
-    public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
+public class BetterBarrelBlock extends AbstractBarrelBlock {
+
 
     public BetterBarrelBlock(Properties pProperties, BarrelFrameTier barrelTier) {
-        super(pProperties);
-        registerDefaultState(this.stateDefinition.any().setValue(VOID,false).setValue(LOCKED,false).setValue(DISCRETE,false));
-        this.barrelTier = barrelTier;
-    }
-
-    public BarrelFrameTier getBarrelTier() {
-        return barrelTier;
+        super(pProperties, BarrelType.BETTER,barrelTier);
+        registerDefaultState(this.stateDefinition.any().setValue(LOCKED,false).setValue(DISCRETE,false));
     }
 
     @Override
@@ -95,25 +80,9 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
 
     //note,attack is not called if cancelling the left click block event
 
-    public static final String info = NABBA.MODID+".better_barrel.info";
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        pTooltip.add(Component.translatable(info,
-                Component.translatable(BetterBarrelBlockItem.getUsedSlotsFromItem(pStack)+"/"+barrelTier.getUpgradeSlots()).withStyle(ChatFormatting.AQUA)));
-        if (pStack.hasTag()) {
-
-            CompoundTag tag = pStack.getTag().getCompound("BlockStateTag");
-            if (!tag.isEmpty()) {
-
-//                pTooltip.add(Component.literal("Contents: ").append());
-
-                pTooltip.add(Component.empty());
-                pTooltip.add(Component.literal("Discrete: ").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
-                pTooltip.add(Component.literal("Locked: ").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
-                pTooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
-            }
-            pTooltip.add(Component.literal(pStack.getTag().toString()).withStyle(ChatFormatting.YELLOW));
-        }
+        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
     }
 
     public RenderShape getRenderShape(BlockState pState) {
@@ -163,13 +132,16 @@ public class BetterBarrelBlock extends Block implements EntityBlock {
         return super.getStateForPlacement(pContext);
     }
 
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        super.createBlockStateDefinition(pBuilder);
+        pBuilder.add(LOCKED,DISCRETE);
+    }
+
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? null : (Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) -> BetterBarrelBlockEntity.serverTick(pLevel1, pPos, pState1, (BetterBarrelBlockEntity) pBlockEntity);
     }
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(VOID,LOCKED,DISCRETE);
-    }
+
 }

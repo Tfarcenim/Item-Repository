@@ -1,6 +1,9 @@
 package tfar.nabba.block;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -8,6 +11,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -15,26 +20,45 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
+import tfar.nabba.util.BarrelType;
 
-public class AntiBarrelBlock extends Block implements EntityBlock {
-    public AntiBarrelBlock(Properties pProperties) {
-        super(pProperties);
+import java.util.List;
+
+public class AntiBarrelBlock extends AbstractBarrelBlock {
+    public AntiBarrelBlock(Properties pProperties, BarrelFrameTier barrelFrameTier) {
+        super(pProperties, BarrelType.ANTI, barrelFrameTier);
     }
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos,
                                  Player player, InteractionHand hand, BlockHitResult result) {
         if (!world.isClientSide) {
-            MenuProvider tileEntity = state.getMenuProvider(world, pos);
-            if (tileEntity != null) {
-                player.openMenu(tileEntity);
+            MenuProvider menuProvider = state.getMenuProvider(world, pos);
+            if (menuProvider != null) {
+                player.openMenu(menuProvider);
                 PiglinAi.angerNearbyPiglins(player, true);
             }
             return InteractionResult.CONSUME;
 
         } else {
             return InteractionResult.SUCCESS;
+        }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+    }
+
+    public void appendBlockStateInfo(ItemStack stack, List<Component> tooltip) {
+        if (stack.hasTag()) {
+            CompoundTag tag = stack.getTag().getCompound("BlockStateTag");
+            if (!tag.isEmpty()) {
+                tooltip.add(Component.empty());
+                tooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
+            }
         }
     }
 

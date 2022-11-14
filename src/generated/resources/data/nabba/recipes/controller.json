@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "H": {
+      "item": "minecraft:hopper"
+    },
+    "P": {
+      "item": "minecraft:heavy_weighted_pressure_plate"
+    },
+    "b": {
+      "item": "minecraft:ender_chest"
+    }
+  },
+  "pattern": [
+    "PHP",
+    "HbH",
+    "PHP"
+  ],
+  "result": {
+    "item": "nabba:controller"
+  }
+}

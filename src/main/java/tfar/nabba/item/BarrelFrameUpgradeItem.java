@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
@@ -28,10 +29,10 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel 
 
     @Override
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
-        BetterBarrelBlock oldBarrel = (BetterBarrelBlock) state.getBlock();
+        AbstractBarrelBlock oldBarrel = (AbstractBarrelBlock) state.getBlock();
         if (oldBarrel.getBarrelTier() != from) return false;
         //saves the old barrels contents
-        BlockState newState = to.getBarrel().defaultBlockState();
+        BlockState newState = to.getBarrel(oldBarrel.getType()).defaultBlockState();
         loadAndReplace(state,newState,level,pos);
         if (!player.getAbilities().instabuild) itemstack.shrink(1);
         return true;
@@ -39,7 +40,7 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel 
 
 
     public static void loadAndReplace(BlockState oldState, BlockState newState, Level level, BlockPos pos) {
-        BetterBarrelBlockEntity oldBarrelEntity = (BetterBarrelBlockEntity) level.getBlockEntity(pos);
+        BlockEntity oldBarrelEntity = level.getBlockEntity(pos);
         //saves the old barrels contents
         CompoundTag tag = oldBarrelEntity.saveWithoutMetadata();
         newState = newState

@@ -4,25 +4,27 @@ import net.minecraft.world.level.block.Block;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.init.ModBlocks;
 
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public enum BarrelFrameTiers implements BarrelFrameTier {
-    WOOD(0,() -> ModBlocks.BETTER_BARREL),
-    STONE(1,() -> ModBlocks.STONE_BETTER_BARREL),
-    COPPER(4,() -> ModBlocks.COPPER_BETTER_BARREL),
-    IRON(8,() -> ModBlocks.IRON_BETTER_BARREL),
-    LAPIS(16,() -> ModBlocks.LAPIS_BETTER_BARREL),
-    GOLD(64,() -> ModBlocks.GOLD_BETTER_BARREL),
-    DIAMOND(128,() -> ModBlocks.DIAMOND_BETTER_BARREL),
-    EMERALD(256,() -> ModBlocks.EMERALD_BETTER_BARREL),
-    NETHERITE(2048,() -> ModBlocks.NETHERITE_BETTER_BARREL),
-    CREATIVE(Integer.MAX_VALUE,() -> ModBlocks.CREATIVE_BETTER_BARREL);
+    WOOD(0,Map.of(BarrelType.BETTER,() -> ModBlocks.BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.ANTI_BARREL)),
+    STONE(1,Map.of(BarrelType.BETTER,() -> ModBlocks.STONE_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.STONE_ANTI_BARREL)),
+    COPPER(4,Map.of(BarrelType.BETTER,() -> ModBlocks.COPPER_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.COPPER_ANTI_BARREL)),
+    IRON(8,Map.of(BarrelType.BETTER,() -> ModBlocks.IRON_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.IRON_ANTI_BARREL)),
+    LAPIS(16,Map.of(BarrelType.BETTER,() -> ModBlocks.LAPIS_BETTER_BARREL)),
+    GOLD(64,Map.of(BarrelType.BETTER,() -> ModBlocks.GOLD_BETTER_BARREL)),
+    DIAMOND(128,Map.of(BarrelType.BETTER,() -> ModBlocks.DIAMOND_BETTER_BARREL)),
+    EMERALD(256,Map.of(BarrelType.BETTER,() -> ModBlocks.EMERALD_BETTER_BARREL)),
+    NETHERITE(2048,Map.of(BarrelType.BETTER,() -> ModBlocks.NETHERITE_BETTER_BARREL)),
+    CREATIVE(Integer.MAX_VALUE,Map.of(BarrelType.BETTER,() -> ModBlocks.CREATIVE_BETTER_BARREL));
     private int upgradeSlots;
-    private Supplier<Block> barrel;
+    private Map<BarrelType,Supplier<Block>> barrels;
 
-    BarrelFrameTiers(int upgradeSlots, Supplier<Block> barrel) {
+    BarrelFrameTiers(int upgradeSlots, Map<BarrelType,Supplier<Block>> barrels) {
         this.upgradeSlots = upgradeSlots;
-        this.barrel = barrel;
+        this.barrels = barrels;
     }
 
     static {
@@ -39,8 +41,8 @@ public enum BarrelFrameTiers implements BarrelFrameTier {
     }
 
     @Override
-    public Block getBarrel() {
-        return barrel.get();
+    public Block getBarrel(BarrelType type) {
+        return barrels.get(type).get();
     }
 
     @Override
@@ -51,5 +53,10 @@ public enum BarrelFrameTiers implements BarrelFrameTier {
     @Override
     public void setUpgradeSlots(int upgradeSlots) {
         this.upgradeSlots = upgradeSlots;
+    }
+
+    @Override
+    public String getName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 }
