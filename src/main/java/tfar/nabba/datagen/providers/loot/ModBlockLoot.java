@@ -30,13 +30,12 @@ public class ModBlockLoot extends BlockLoot {
         dropBetterBarrel(ModBlocks.DIAMOND_BETTER_BARREL);
         dropBetterBarrel(ModBlocks.EMERALD_BETTER_BARREL);
         dropBetterBarrel(ModBlocks.NETHERITE_BETTER_BARREL);
-
         dropBetterBarrel(ModBlocks.CREATIVE_BETTER_BARREL);
 
-        dropSelf(ModBlocks.ANTI_BARREL);
-        dropSelf(ModBlocks.STONE_ANTI_BARREL);
-        dropSelf(ModBlocks.COPPER_ANTI_BARREL);
-        dropSelf(ModBlocks.IRON_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.STONE_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.COPPER_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.IRON_ANTI_BARREL);
 
         dropSelf(ModBlocks.CONTROLLER);
     }
@@ -58,8 +57,20 @@ public class ModBlockLoot extends BlockLoot {
                         )
                         )
                 );
+        this.add(block,builder);
+    }
 
-
+    protected void dropAntiBarrel(Block block) {
+        LootTable.Builder builder = LootTable.lootTable()
+                .withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
+                                .add(LootItem.lootTableItem(block)
+                                        .apply(CopyBlockState.copyState(block).copy(BetterBarrelBlock.VOID))
+                                        .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                                                .copy(NBTKeys.Settings.name(),"BlockEntityTag."+NBTKeys.Settings)
+                                        )
+                                )
+                        )
+                );
         this.add(block,builder);
     }
 

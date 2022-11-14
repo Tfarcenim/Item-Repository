@@ -11,6 +11,26 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "block": "nabba:anti_barrel",
+              "function": "minecraft:copy_state",
+              "properties": [
+                "void"
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "Settings",
+                  "target": "BlockEntityTag.Settings"
+                }
+              ],
+              "source": "block_entity"
+            }
+          ],
           "name": "nabba:anti_barrel"
         }
       ],

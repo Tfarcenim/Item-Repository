@@ -20,6 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import tfar.nabba.NABBA;
 import tfar.nabba.menu.AntiBarrelMenu;
+import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Utils;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.inventory.RepositoryInventoryInputWrapper;
@@ -131,7 +132,7 @@ public class AntiBarrelBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public void saveAdditional(CompoundTag tag) {
-        tag.put("settings",settings);
+        tag.put(NBTKeys.Settings.name(), settings);
         if (this.customName != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
@@ -139,7 +140,7 @@ public class AntiBarrelBlockEntity extends BlockEntity implements MenuProvider {
     }
     @Override//read
     public void load(CompoundTag tag) {
-        settings = tag.getCompound("settings");
+        settings = tag.getCompound(NBTKeys.Settings.name());
        // handler.deserializeNBT(settings);
         if (tag.contains("CustomName", 8)) {
             this.customName = Component.Serializer.fromJson(tag.getString("CustomName"));
@@ -152,6 +153,9 @@ public class AntiBarrelBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public void initialize(ItemStack stack) {
-        settings.putInt(Utils.ID,0);
+        if (!settings.contains(Utils.ID)) {
+            settings.putInt(Utils.ID,NABBA.instance.data.getNextID());
+            setChanged();
+        }
     }
 }
