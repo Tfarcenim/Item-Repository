@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
@@ -21,7 +22,7 @@ public class BlockStateKeyItem extends KeyItem {
     @Override
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
 
-        if (!(state.getBlock() instanceof BetterBarrelBlock)) return false;
+        if (!(state.getBlock() instanceof AbstractBarrelBlock) || !state.hasProperty(property)) return false;
 
         BlockState newState = state.setValue(property,!state.getValue(property));
 

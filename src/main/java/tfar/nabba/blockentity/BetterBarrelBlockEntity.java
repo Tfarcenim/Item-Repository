@@ -31,15 +31,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BetterBarrelBlockEntity extends BlockEntity {
+public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
 
-    private List<UpgradeStack> upgrades = new ArrayList<>();
     private int color = 0xff99ff;
     private double size = .5;
     private ItemStack ghost = ItemStack.EMPTY;
-    private transient int cachedStorage = Utils.INVALID;
-    private transient int cachedUsedUpgradeSlots = Utils.INVALID;
-    private BlockPos controllerPos;
+
 
     protected BetterBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -56,74 +53,6 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return new BetterBarrelBlockEntity(ModBlockEntityTypes.BETTER_BARREL, pos, state);
     }
 
-    public int getStorage() {
-        if (cachedStorage == -1) {//save CPU cycles by not iterating the upgrade map
-            cachedStorage = computeStorage();
-        }
-        return cachedStorage;
-    }
-
-    public int getUsedSlots() {
-        if (cachedUsedUpgradeSlots == -1) {//save CPU cycles by not iterating the upgrade map
-            cachedUsedUpgradeSlots = computeUsedUpgradeSlots();
-        }
-        return cachedUsedUpgradeSlots;
-    }
-
-    public void setControllerPos(BlockPos controllerPos) {
-        this.controllerPos = controllerPos;
-
-        if (controllerPos != null) {
-            BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
-            if (blockEntity instanceof ControllerBlockEntity controller) {
-                controller.addBarrel(getBlockPos());
-            }
-        }
-        setChanged();
-    }
-
-    public BlockPos getControllerPos() {
-        return controllerPos;
-    }
-
-    public void removeController() {
-        if (controllerPos != null) {
-
-            BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
-            if (blockEntity instanceof ControllerBlockEntity controller) {
-                controller.removeBarrel(getBlockPos());
-            }
-            setControllerPos(null);
-        }
-    }
-
-    private void invalidateCaches() {
-        cachedUsedUpgradeSlots = cachedStorage = Utils.INVALID;
-    }
-    private int computeUsedUpgradeSlots() {
-        int slots = 0;
-        for (UpgradeStack entry : upgrades) {
-            slots += entry.getUpgradeSlotsRequired();
-        }
-        if (isVoid()) slots++;
-        return slots;
-    }
-
-    private int computeStorage() {
-        int storage = Utils.BASE_STORAGE;
-        for (UpgradeStack upgradeStack : upgrades) {
-            storage += upgradeStack.getStorageStacks();
-        }
-        return storage;
-    }
-
-    public boolean isVoid() {
-        return getBlockState().getValue(BetterBarrelBlock.VOID);
-    }
-
-    public List<UpgradeStack> getUpgrades() {
-        return upgrades;
-    }
 
 
     public ItemStack tryAddItem(ItemStack stack) {
@@ -133,42 +62,6 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         return getBarrelHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
     }
 
-    public boolean canAcceptUpgrade(UpgradeStack data) {
-
-        int existing = countUpgrade(data.getData());
-        int max = data.getData().getMaxStackSize();
-        return existing + data.getCount() <= max && data.getUpgradeSlotsRequired() <= getFreeSlots();
-
-    }
-
-    public int countUpgrade(Upgrade data) {
-        if (data == Upgrades.VOID) {
-            return isVoid() ? 1 : 0;
-        }
-        for (UpgradeStack dataStack : getUpgrades()) {
-            if (dataStack.getData() == data) return dataStack.getCount();
-        }
-        return 0;
-    }
-
-    public boolean hasUpgrade(Upgrade data) {
-        return countUpgrade(data) > 0;
-    }
-
-    public void upgrade(UpgradeStack dataStack) {
-        dataStack.getData().onUpgrade(this,dataStack);
-        invalidateCaches();
-        setChanged();
-    }
-
-    public int getTotalUpgradeSlots() {
-        return ((BetterBarrelBlock)getBlockState().getBlock()).getBarrelTier().getUpgradeSlots();
-    }
-
-
-    public int getFreeSlots() {
-        return getTotalUpgradeSlots() - getUsedSlots();
-    }
     public boolean isDiscrete() {
         return getType() == ModBlockEntityTypes.DISCRETE_BETTER_BARREL;
     }
@@ -193,7 +86,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         setChanged();
     }
 
-    public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, BetterBarrelBlockEntity pBlockEntity) {
+    public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, AbstractBarrelBlockEntity pBlockEntity) {
         for (UpgradeStack upgradeData : pBlockEntity.getUpgrades()) {
             upgradeData.getData().tick(pBlockEntity,upgradeData);
         }
@@ -207,7 +100,7 @@ public class BetterBarrelBlockEntity extends BlockEntity {
 
         ListTag upgradesTag = new ListTag();
 
-        for (UpgradeStack stack : upgrades) {
+        for (UpgradeStack stack : getUpgrades()) {
             CompoundTag tag = stack.save();
             upgradesTag.add(tag);
         }
@@ -215,8 +108,8 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         pTag.putInt(NBTKeys.Color.name(), color);
         pTag.putDouble(NBTKeys.Size.name(), size);
         pTag.put(NBTKeys.Ghost.name(), ghost.save(new CompoundTag()));
-        if (controllerPos != null) {
-            pTag.putIntArray("Controller",new int[]{controllerPos.getX(),controllerPos.getY(),controllerPos.getZ()});
+        if (getControllerPos() != null) {
+            pTag.putIntArray("Controller",new int[]{getControllerPos().getX(),controllerPos.getY(),controllerPos.getZ()});
         }
     }
 
@@ -226,11 +119,11 @@ public class BetterBarrelBlockEntity extends BlockEntity {
         ItemStack stack = ItemStack.of(pTag.getCompound(NBTKeys.Stack.name()));
         stack.setCount(pTag.getInt(NBTKeys.RealCount.name()));
         barrelHandler.setStack(stack);
-        upgrades.clear();
+        getUpgrades().clear();
         ListTag upgradesTag = pTag.getList(NBTKeys.Upgrades.name(), Tag.TAG_COMPOUND);
         for (Tag tag : upgradesTag) {
             CompoundTag compoundTag = (CompoundTag)tag;
-            upgrades.add(UpgradeStack.of(compoundTag));
+            getUpgrades().add(UpgradeStack.of(compoundTag));
         }
         color = pTag.getInt(NBTKeys.Color.name());
         size = pTag.getDouble(NBTKeys.Size.name());

@@ -30,7 +30,7 @@ import tfar.nabba.world.RepositoryInventory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class AntiBarrelBlockEntity extends BlockEntity implements MenuProvider {
+public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider {
 
     public CompoundTag settings = new CompoundTag();
     private Component customName;

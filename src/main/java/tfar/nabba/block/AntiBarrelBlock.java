@@ -10,6 +10,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -22,6 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
+import tfar.nabba.item.InteractsWithBarrel;
 import tfar.nabba.util.BarrelType;
 
 import java.util.List;
@@ -32,19 +34,23 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos,
-                                 Player player, InteractionHand hand, BlockHitResult result) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+        ItemStack stack = player.getItemInHand(hand);
         if (!world.isClientSide) {
-            MenuProvider menuProvider = state.getMenuProvider(world, pos);
-            if (menuProvider != null) {
-                player.openMenu(menuProvider);
-                PiglinAi.angerNearbyPiglins(player, true);
-            }
-            return InteractionResult.CONSUME;
+            Item item = stack.getItem();
+            if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(state, stack, world, pos, player)) {
+                return InteractionResult.CONSUME;
+            } else {
 
-        } else {
-            return InteractionResult.SUCCESS;
+                MenuProvider menuProvider = state.getMenuProvider(world, pos);
+                if (menuProvider != null) {
+                    player.openMenu(menuProvider);
+                    PiglinAi.angerNearbyPiglins(player, true);
+                }
+                return InteractionResult.CONSUME;
+            }
         }
+        return  InteractionResult.PASS;
     }
 
     @Override

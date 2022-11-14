@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.UpgradeStack;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+        if (blockEntity instanceof AbstractBarrelBlockEntity betterBarrelBlockEntity) {
             boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(this.getDataStack());
             if (attempt) {
                 betterBarrelBlockEntity.upgrade(this.getDataStack());

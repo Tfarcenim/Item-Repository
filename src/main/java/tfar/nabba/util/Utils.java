@@ -13,6 +13,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
 import tfar.nabba.api.UpgradeStack;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.tag.ModBlockEntityTypeTags;
@@ -31,7 +32,7 @@ public class Utils {
     public static final int BASE_STORAGE = 64;
     public static final int RADIUS = 9;
 
-    public static final BiConsumer<BetterBarrelBlockEntity, UpgradeStack> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {
+    public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {
 
         int existing = betterBarrelBlockEntity.countUpgrade(upgradeData.getData());
         if (existing == 0) {
@@ -45,15 +46,15 @@ public class Utils {
         }
     };
 
-    public static final BiConsumer<BetterBarrelBlockEntity, UpgradeStack> apply_void = (betterBarrelBlockEntity, upgradeData) -> {
+    public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> apply_void = (betterBarrelBlockEntity, upgradeData) -> {
         BlockState state = betterBarrelBlockEntity.getBlockState();
         betterBarrelBlockEntity.getLevel().setBlock(betterBarrelBlockEntity.getBlockPos(),state.setValue(VOID,true),3);
     };
 
-    public static final BiConsumer<BetterBarrelBlockEntity, UpgradeStack> PICKUP_TICK =
+    public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> PICKUP_TICK =
             (betterBarrelBlockEntity,upgradeDataStack) -> pickupItemsInBox(betterBarrelBlockEntity, upgradeDataStack.getCount(), 3, upgradeDataStack.getCount());
 
-    public static void pickupItemsInBox(BetterBarrelBlockEntity betterBarrelBlockEntity,int x,int y, int z) {
+    public static void pickupItemsInBox(AbstractBarrelBlockEntity betterBarrelBlockEntity,int x,int y, int z) {
         Level level = betterBarrelBlockEntity.getLevel();
         //note, AABBs start at 0,0,0 on the blockEntity, so to get a 3x3x3 cube we need to go from -1,-1,-1 to +2,+2,+2 relative
         List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class,
@@ -75,7 +76,7 @@ public class Utils {
     }
 
 
-    public static boolean addItem(BetterBarrelBlockEntity betterBarrelBlockEntity, ItemEntity pItem) {
+    public static boolean addItem(AbstractBarrelBlockEntity betterBarrelBlockEntity, ItemEntity pItem) {
         boolean flag = false;
         ItemStack itemstack = pItem.getItem().copy();
         ItemStack itemstack1 = betterBarrelBlockEntity.tryAddItem(itemstack);

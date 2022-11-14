@@ -6,6 +6,7 @@ import net.minecraft.world.item.Items;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.api.UpgradeStack;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModItems;
 
@@ -24,21 +25,21 @@ public enum Upgrades implements Upgrade {
 
     private int slotsRequired;
     private final int additionalStorage;
-    private final BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade;
-    private final BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onTick;
+    private final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade;
+    private final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onTick;
     private final Supplier<Item> itemSupplier;
     private final int maxAllowed;
 
-    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier) {
+    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier) {
         this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,64000);
     }
 
-    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier, int maxAllowed) {
+    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier, int maxAllowed) {
         this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,maxAllowed,NOTHING);
     }
 
-    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onUpgrade,
-             Supplier<Item> itemSupplier, int maxAllowed, BiConsumer<BetterBarrelBlockEntity, UpgradeStack> onTick) {
+    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade,
+             Supplier<Item> itemSupplier, int maxAllowed, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onTick) {
         this.slotsRequired = slotsRequired;
         this.additionalStorage = additionalStorage;
         this.onUpgrade = onUpgrade;
@@ -69,7 +70,7 @@ public enum Upgrades implements Upgrade {
     }
 
     @Override
-    public void onUpgrade(BetterBarrelBlockEntity betterBarrelBlockEntity, UpgradeStack stack) {
+    public void onUpgrade(AbstractBarrelBlockEntity betterBarrelBlockEntity, UpgradeStack stack) {
         onUpgrade.accept(betterBarrelBlockEntity,stack);
     }
 
@@ -79,7 +80,7 @@ public enum Upgrades implements Upgrade {
     }
 
     @Override
-    public void tick(BetterBarrelBlockEntity barrelBlockEntity, UpgradeStack upgradeStack) {
+    public void tick(AbstractBarrelBlockEntity barrelBlockEntity, UpgradeStack upgradeStack) {
         onTick.accept(barrelBlockEntity, upgradeStack);
     }
 
