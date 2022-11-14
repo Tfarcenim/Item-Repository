@@ -89,6 +89,7 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
             if (pStack.hasCustomHoverName()) {
                 antiBarrelBlockEntity.setCustomName(pStack.getHoverName());
             }
+            antiBarrelBlockEntity.initialize(pStack);
         }
     }
 }

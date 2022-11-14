@@ -163,6 +163,9 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         customName = hoverName;
     }
 
+    /**
+     * note:this is called AFTER initialize
+     */
     @Override
     public void onLoad() {
         super.onLoad();
@@ -186,5 +189,15 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     public int getClientStored() {
         return clientStored;
+    }
+
+    //make sure a new id is set if there isn't one and create an inventory for it so the game doesn't freak out
+    public void initialize(ItemStack stack) {
+        if (!settings.contains(Utils.ID)) {
+            int newId = NABBA.instance.data.getNextID();
+            settings.putInt(Utils.ID,newId);
+            getOrCreateInventory();
+            setChanged();
+        }
     }
 }
