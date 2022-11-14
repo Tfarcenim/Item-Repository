@@ -98,19 +98,10 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         pTag.put(NBTKeys.Stack.name(), barrelHandler.getStack().save(new CompoundTag()));
         pTag.putInt(NBTKeys.RealCount.name(), barrelHandler.getStack().getCount());
 
-        ListTag upgradesTag = new ListTag();
-
-        for (UpgradeStack stack : getUpgrades()) {
-            CompoundTag tag = stack.save();
-            upgradesTag.add(tag);
-        }
-        pTag.put(NBTKeys.Upgrades.name(), upgradesTag);
         pTag.putInt(NBTKeys.Color.name(), color);
         pTag.putDouble(NBTKeys.Size.name(), size);
         pTag.put(NBTKeys.Ghost.name(), ghost.save(new CompoundTag()));
-        if (getControllerPos() != null) {
-            pTag.putIntArray("Controller",new int[]{getControllerPos().getX(),controllerPos.getY(),controllerPos.getZ()});
-        }
+
     }
 
     @Override
@@ -119,20 +110,12 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         ItemStack stack = ItemStack.of(pTag.getCompound(NBTKeys.Stack.name()));
         stack.setCount(pTag.getInt(NBTKeys.RealCount.name()));
         barrelHandler.setStack(stack);
-        getUpgrades().clear();
-        ListTag upgradesTag = pTag.getList(NBTKeys.Upgrades.name(), Tag.TAG_COMPOUND);
-        for (Tag tag : upgradesTag) {
-            CompoundTag compoundTag = (CompoundTag)tag;
-            getUpgrades().add(UpgradeStack.of(compoundTag));
-        }
+
         color = pTag.getInt(NBTKeys.Color.name());
         size = pTag.getDouble(NBTKeys.Size.name());
         ghost = ItemStack.of(pTag.getCompound(NBTKeys.Ghost.name()));
 
-        if (pTag.contains("Controller")) {
-            int[] contr = pTag.getIntArray("Controller");
-            controllerPos = new BlockPos(contr[0],contr[1],contr[2]);
-        }
+
         invalidateCaches();
     }
 

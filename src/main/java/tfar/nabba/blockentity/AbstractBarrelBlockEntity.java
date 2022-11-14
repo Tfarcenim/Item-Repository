@@ -1,6 +1,9 @@
 package tfar.nabba.blockentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -8,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.AbstractBarrelBlock;
+import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
@@ -137,5 +141,36 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
 
     protected void invalidateCaches() {
         cachedUsedUpgradeSlots = cachedStorage = Utils.INVALID;
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        ListTag upgradesTag = new ListTag();
+
+        for (UpgradeStack stack : getUpgrades()) {
+            CompoundTag tag = stack.save();
+            upgradesTag.add(tag);
+        }
+        pTag.put(NBTKeys.Upgrades.name(), upgradesTag);
+        if (getControllerPos() != null) {
+            pTag.putIntArray("Controller",new int[]{getControllerPos().getX(),controllerPos.getY(),controllerPos.getZ()});
+        }
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        getUpgrades().clear();
+        ListTag upgradesTag = pTag.getList(NBTKeys.Upgrades.name(), Tag.TAG_COMPOUND);
+        for (Tag tag : upgradesTag) {
+            CompoundTag compoundTag = (CompoundTag)tag;
+            getUpgrades().add(UpgradeStack.of(compoundTag));
+        }
+
+        if (pTag.contains("Controller")) {
+            int[] contr = pTag.getIntArray("Controller");
+            controllerPos = new BlockPos(contr[0],contr[1],contr[2]);
+        }
     }
 }

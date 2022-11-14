@@ -141,7 +141,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     @Override//read
     public void load(CompoundTag tag) {
         settings = tag.getCompound(NBTKeys.Settings.name());
-       // handler.deserializeNBT(settings);
         if (tag.contains("CustomName", 8)) {
             this.customName = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
