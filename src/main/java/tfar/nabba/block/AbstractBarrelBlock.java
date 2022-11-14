@@ -1,13 +1,16 @@
 package tfar.nabba.block;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -15,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.item.BetterBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 
@@ -33,7 +37,7 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
         super(pProperties);
         this.type = type;
         this.barrelTier = tier;
-        registerDefaultState(this.stateDefinition.any().setValue(VOID,false));
+        registerDefaultState(this.stateDefinition.any().setValue(VOID,false).setValue(DISCRETE,false));
     }
 
     public BarrelFrameTier getBarrelTier() {
@@ -45,8 +49,9 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
         appendBlockStateInfo(pStack,pTooltip);
         pTooltip.add(Component.translatable(info,
                 Component.translatable(BetterBarrelBlockItem.getUsedSlotsFromItem(pStack)+"/"+barrelTier.getUpgradeSlots()).withStyle(ChatFormatting.AQUA)));
-        if (pStack.hasTag())
-        pTooltip.add(Component.literal(pStack.getTag().toString()).withStyle(ChatFormatting.YELLOW));
+        if (pStack.hasTag()) {
+            pTooltip.add(Component.literal(pStack.getTag().toString()).withStyle(ChatFormatting.YELLOW));
+        }
     }
 
     public void appendBlockStateInfo(ItemStack stack, List<Component> tooltip) {
@@ -55,15 +60,25 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
             if (!tag.isEmpty()) {
                 tooltip.add(Component.empty());
                 tooltip.add(Component.literal("Discrete: ").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
-                tooltip.add(Component.literal("Locked: ").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
                 tooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
             }
         }
     }
 
+    //caution, this method also gets called when changing blockstates
+    @Override
+    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        //only check for controllers if this is a new block
+        if (blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlock  && pOldState.getBlock() != pState.getBlock()) {
+            abstractBarrelBlock.searchForControllers();
+        }
+    }
+
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(VOID);
+        pBuilder.add(VOID,DISCRETE);
     }
 
     public BarrelType getType() {

@@ -24,6 +24,8 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     private transient int cachedStorage = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
     protected BlockPos controllerPos;
+    protected int color = 0xff99ff;
+    protected double size = .5;
     public AbstractBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }
@@ -55,6 +57,14 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     }
     public ItemStack tryRemoveItem() {
         return ItemStack.EMPTY;//getBarrelHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public double getSize() {
+        return size;
     }
 
     public final List<UpgradeStack> getUpgrades() {
@@ -144,6 +154,25 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         }
     }
 
+    public void searchForControllers() {
+        List<BlockEntity> controllers = Utils.getNearbyControllers(level,getBlockPos());
+        if (!controllers.isEmpty()) {
+            BlockPos newController = null;
+            if (controllers.size() == 1) {
+                newController = controllers.get(0).getBlockPos();
+            } else {
+                int dist = Integer.MAX_VALUE;
+                for (BlockEntity blockEntity : controllers) {
+                    if (newController == null || blockEntity.getBlockPos().distManhattan(getBlockPos()) < dist) {
+                        newController = blockEntity.getBlockPos();
+                        dist = blockEntity.getBlockPos().distManhattan(getBlockPos());
+                    }
+                }
+            }
+            setControllerPos(newController);
+        }
+    }
+
     protected void invalidateCaches() {
         cachedUsedUpgradeSlots = cachedStorage = Utils.INVALID;
     }
@@ -161,6 +190,8 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         if (getControllerPos() != null) {
             pTag.putIntArray("Controller",new int[]{getControllerPos().getX(),controllerPos.getY(),controllerPos.getZ()});
         }
+        pTag.putInt(NBTKeys.Color.name(), getColor());
+        pTag.putDouble(NBTKeys.Size.name(), getSize());
     }
 
     @Override
@@ -177,5 +208,7 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
             int[] contr = pTag.getIntArray("Controller");
             controllerPos = new BlockPos(contr[0],contr[1],contr[2]);
         }
+        color = pTag.getInt(NBTKeys.Color.name());
+        size = pTag.getDouble(NBTKeys.Size.name());
     }
 }

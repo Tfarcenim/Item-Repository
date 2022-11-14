@@ -59,11 +59,12 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
     }
 
     public void appendBlockStateInfo(ItemStack stack, List<Component> tooltip) {
+        super.appendBlockStateInfo(stack, tooltip);
         if (stack.hasTag()) {
             CompoundTag tag = stack.getTag().getCompound("BlockStateTag");
             if (!tag.isEmpty()) {
                 tooltip.add(Component.empty());
-                tooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
+                tooltip.add(Component.literal("Locked: ").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
             }
         }
     }
@@ -88,7 +89,6 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
             if (pStack.hasCustomHoverName()) {
                 antiBarrelBlockEntity.setCustomName(pStack.getHoverName());
             }
-            antiBarrelBlockEntity.initialize(pStack);
         }
     }
 }

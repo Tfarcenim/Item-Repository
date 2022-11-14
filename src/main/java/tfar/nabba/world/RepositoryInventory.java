@@ -28,16 +28,12 @@ public class RepositoryInventory implements IItemHandler {
         return isFull() ? stacks.size() : stacks.size() + 1;
     }
 
-    public int getStoredCount() {
+    public int getActualStoredCount() {
         return stacks.size();
     }
 
     public boolean isFull() {
-        return getStoredCount() >= blockEntity.getStorage();
-    }
-
-    public void setClientItemStack(int slot, ItemStack stack) {
-        stacks.set(slot,stack);
+        return getActualStoredCount() >= blockEntity.getStorage();
     }
 
     @Override
@@ -55,15 +51,18 @@ public class RepositoryInventory implements IItemHandler {
             return stack;
 
         else {
-            if (!simulate)
-                addItem(stack.copy());
+            if (!simulate) {
+                ItemStack copy = stack.copy();
+                addItem(copy);
+                blockEntity.setLastStack(copy);
+            }
             return ItemStack.EMPTY;
         }
     }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (amount == 0 || slot >= getStoredCount())
+        if (amount == 0 || slot >= getActualStoredCount())
             return ItemStack.EMPTY;
         ItemStack existing = this.stacks.get(slot);
 

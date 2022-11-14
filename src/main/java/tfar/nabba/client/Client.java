@@ -20,7 +20,6 @@ import tfar.nabba.init.ModItems;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.inventory.tooltip.ClientBetterBarrelTooltip;
-import tfar.nabba.menu.VanityKeyMenu;
 import tfar.nabba.net.C2SScrollKeyPacket;
 
 public class Client {
@@ -30,6 +29,7 @@ public class Client {
         MenuScreens.register(ModMenuTypes.ANTI_BARREL, AntiBarrelScreen::new);
         MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL,BetterBarrelRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntityTypes.ANTI_BARREL, AntiBarrelRenderer::new);
         setRenderLayer(ModBlocks.BETTER_BARREL);
         setRenderLayer(ModBlocks.STONE_BETTER_BARREL);
         setRenderLayer(ModBlocks.COPPER_BETTER_BARREL);

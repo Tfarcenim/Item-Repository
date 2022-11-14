@@ -11,7 +11,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -40,12 +39,13 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     public String search = "";
 
+    private ItemStack last = ItemStack.EMPTY;
+    private int clientStored;
+
     protected final ContainerData dataAccess = new ContainerData() {
         public int get(int pIndex) {
             switch (pIndex) {
                 case 0:
-                    return getInventory().getSlots();
-                case 1:
                     return getInventory().getFullSlots(search);
                 default:
                     return 0;
@@ -59,7 +59,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
 
         public int getCount() {
-            return 2;
+            return 1;
         }
     };
 
@@ -88,9 +88,21 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     };
 
     public RepositoryInventory getInventory() {
-        RepositoryInventory repositoryInventory = NABBA.instance.data.getOrCreateInventory(settings.getInt(Utils.ID));
+        return NABBA.instance.data.getInventory(settings.getInt(Utils.ID));
+    }
 
-        return repositoryInventory;
+    public RepositoryInventory getOrCreateInventory() {
+        return NABBA.instance.data.getOrCreateInventory(settings.getInt(Utils.ID));
+    }
+
+    @Override
+    public ItemStack tryAddItem(ItemStack stack) {
+        RepositoryInventory repositoryInventory = getInventory();
+        if (getInventory().isFull()) {
+            return stack;
+        }
+        //attempt to add the item to the last slot
+        return getInventory().insertItem(repositoryInventory.getSlots() - 1,stack,false);
     }
 
     public AntiBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
@@ -99,7 +111,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     }
 
     public AntiBarrelBlockEntity(BlockPos pos, BlockState state) {
-        this(ModBlockEntityTypes.REPOSITORY,pos,state);
+        this(ModBlockEntityTypes.ANTI_BARREL,pos,state);
     }
 
     @Override
@@ -116,12 +128,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            if (side == Direction.UP) {
-                return inputOptional.cast();
-            }
-            if (side == Direction.DOWN) {
-                return outputOptional.cast();
-            }
             return fullOptional.cast();
         }
         return super.getCapability(cap, side);
@@ -138,6 +144,8 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         if (this.customName != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
+        tag.putInt("Stored", clientStored);
+        tag.put("Last",last.save(new CompoundTag()));
         super.saveAdditional(tag);
     }
     @Override//read
@@ -146,6 +154,8 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         if (tag.contains("CustomName", 8)) {
             this.customName = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
+        clientStored = tag.getInt("Stored");
+        last = ItemStack.of(tag.getCompound("Last"));
         super.load(tag);
     }
 
@@ -153,17 +163,28 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         customName = hoverName;
     }
 
-    public void initialize(ItemStack stack) {
-        if (!settings.contains(Utils.ID)) {
-            settings.putInt(Utils.ID,NABBA.instance.data.getNextID());
-            setChanged();
-        }
-    }
-
     @Override
     public void onLoad() {
         super.onLoad();
-        RepositoryInventory repositoryInventory = getInventory();
+        RepositoryInventory repositoryInventory = getOrCreateInventory();
         repositoryInventory.setBlockEntity(this);
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        clientStored = getInventory().getActualStoredCount();
+    }
+
+    public ItemStack getLastStack() {
+            return last;
+    }
+
+    public void setLastStack(ItemStack stack) {
+        last = stack;
+    }
+
+    public int getClientStored() {
+        return clientStored;
     }
 }

@@ -3,15 +3,12 @@ package tfar.nabba.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -22,19 +19,14 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.api.Upgrade;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
-
-    private int color = 0xff99ff;
-    private double size = .5;
     private ItemStack ghost = ItemStack.EMPTY;
 
 
@@ -50,7 +42,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
     }
 
     public static BetterBarrelBlockEntity createDiscrete(BlockPos pos, BlockState state) {
-        return new BetterBarrelBlockEntity(ModBlockEntityTypes.BETTER_BARREL, pos, state);
+        return new BetterBarrelBlockEntity(ModBlockEntityTypes.DISCRETE_BETTER_BARREL, pos, state);
     }
 
 
@@ -60,18 +52,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
     }
     public ItemStack tryRemoveItem() {
         return getBarrelHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
-    }
-
-    public boolean isDiscrete() {
-        return getType() == ModBlockEntityTypes.DISCRETE_BETTER_BARREL;
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    public double getSize() {
-        return size;
     }
 
     public boolean hasGhost() {
@@ -97,9 +77,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         super.saveAdditional(pTag);
         pTag.put(NBTKeys.Stack.name(), barrelHandler.getStack().save(new CompoundTag()));
         pTag.putInt(NBTKeys.RealCount.name(), barrelHandler.getStack().getCount());
-
-        pTag.putInt(NBTKeys.Color.name(), color);
-        pTag.putDouble(NBTKeys.Size.name(), size);
         pTag.put(NBTKeys.Ghost.name(), ghost.save(new CompoundTag()));
 
     }
@@ -110,12 +87,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         ItemStack stack = ItemStack.of(pTag.getCompound(NBTKeys.Stack.name()));
         stack.setCount(pTag.getInt(NBTKeys.RealCount.name()));
         barrelHandler.setStack(stack);
-
-        color = pTag.getInt(NBTKeys.Color.name());
-        size = pTag.getDouble(NBTKeys.Size.name());
         ghost = ItemStack.of(pTag.getCompound(NBTKeys.Ghost.name()));
-
-
         invalidateCaches();
     }
 
@@ -133,24 +105,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         setChanged();
     }
 
-    public void searchForControllers() {
-        List<BlockEntity> controllers = Utils.getNearbyControllers(level,getBlockPos());
-        if (!controllers.isEmpty()) {
-            BlockPos newController = null;
-            if (controllers.size() == 1) {
-                newController = controllers.get(0).getBlockPos();
-            } else {
-                int dist = Integer.MAX_VALUE;
-                for (BlockEntity blockEntity : controllers) {
-                    if (newController == null || blockEntity.getBlockPos().distManhattan(getBlockPos()) < dist) {
-                        newController = blockEntity.getBlockPos();
-                        dist = blockEntity.getBlockPos().distManhattan(getBlockPos());
-                    }
-                }
-            }
-            setControllerPos(newController);
-        }
-    }
+
 
     public static class BarrelHandler implements IItemHandler {
         private final BetterBarrelBlockEntity barrelBlockEntity;

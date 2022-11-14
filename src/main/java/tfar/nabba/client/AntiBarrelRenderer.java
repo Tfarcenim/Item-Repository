@@ -17,17 +17,18 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.util.Upgrades;
 
-public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlockEntity> {
+public class AntiBarrelRenderer implements BlockEntityRenderer<AntiBarrelBlockEntity> {
 
     private final EntityRenderDispatcher dispatcher;
     private final Font font;
     private final ItemRenderer itemRenderer;
 
-    public BetterBarrelRenderer(BlockEntityRendererProvider.Context pContext) {
+    public AntiBarrelRenderer(BlockEntityRendererProvider.Context pContext) {
         dispatcher = pContext.getEntityRenderer();
         font = pContext.getFont();
         itemRenderer = pContext.getItemRenderer();
@@ -36,26 +37,24 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
     public static final double zFighting = -.0001;
 
     @Override
-    public void render(BetterBarrelBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
+    public void render(AntiBarrelBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
         renderTextAndItems(pBlockEntity, pPoseStack, pBufferSource,pPackedLight,pPackedOverlay);
     }
 
-    protected void renderTextAndItems(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
-        ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
+    protected void renderTextAndItems(AntiBarrelBlockEntity antiBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
+        boolean infiniteVend = antiBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
 
-        boolean infiniteVend = betterBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
+        int cap = antiBarrelBlockEntity.getStorage();
+        String toDraw = infiniteVend ? "\u221E" :antiBarrelBlockEntity.getClientStored() + " / "+ cap;
 
-        int cap = betterBarrelBlockEntity.getStorage() * 64;
-        String toDraw = infiniteVend ? "\u221E" :stack.getCount() + " / "+ cap;
-
-        renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(),.0075f);
+        renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, antiBarrelBlockEntity.getColor(),.0075f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem) {
-            String slots = betterBarrelBlockEntity.getUsedSlots() + " / " + betterBarrelBlockEntity.getTotalUpgradeSlots();
+            String slots = antiBarrelBlockEntity.getUsedSlots() + " / " + antiBarrelBlockEntity.getTotalUpgradeSlots();
             renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d,
-                    betterBarrelBlockEntity.canAcceptUpgrade(upgradeItem.getDataStack()) ? 0x00ffff : 0xff0000, .0075f);
+                    antiBarrelBlockEntity.canAcceptUpgrade(upgradeItem.getDataStack()) ? 0x00ffff : 0xff0000, .0075f);
         }
 
-        renderItem(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay);
+        renderItem(antiBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay);
     }
 
     protected void renderText(PoseStack pPoseStack, MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay, String text, double yHeight,int color,float dScale) {
@@ -104,16 +103,12 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         }
     }
 
-    protected void renderItem(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
+    protected void renderItem(AntiBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
 
         float scale = (float) betterBarrelBlockEntity.getSize();
         if (scale < .01) return;
 
-        ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
-
-        if (stack.isEmpty() && !betterBarrelBlockEntity.hasGhost()) return;
-
-        if (stack.isEmpty())stack = betterBarrelBlockEntity.getGhost();
+        ItemStack stack = betterBarrelBlockEntity.getLastStack();
         if (stack.isEmpty())return;
 
 

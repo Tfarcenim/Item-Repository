@@ -5,6 +5,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -21,6 +22,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.InteractsWithBarrel;
@@ -35,7 +38,7 @@ public class BetterBarrelBlock extends AbstractBarrelBlock {
 
     public BetterBarrelBlock(Properties pProperties, BarrelFrameTier barrelTier) {
         super(pProperties, BarrelType.BETTER,barrelTier);
-        registerDefaultState(this.stateDefinition.any().setValue(LOCKED,false).setValue(DISCRETE,false));
+        registerDefaultState(defaultBlockState().setValue(LOCKED,false));
     }
 
     @Override
@@ -114,16 +117,6 @@ public class BetterBarrelBlock extends AbstractBarrelBlock {
         }
     }
 
-    //caution, this method also gets called when changing blockstates
-    @Override
-    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
-        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-        //only check for controllers if this is a new block
-        if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlock  && pOldState.getBlock() != pState.getBlock()) {
-            betterBarrelBlock.searchForControllers();
-        }
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
@@ -135,7 +128,7 @@ public class BetterBarrelBlock extends AbstractBarrelBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder);
-        pBuilder.add(LOCKED,DISCRETE);
+        pBuilder.add(LOCKED);
     }
 
     @Nullable

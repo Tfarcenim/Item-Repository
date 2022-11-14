@@ -21,13 +21,13 @@ import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.util.Upgrades;
 
-public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlockEntity> {
+public class FluidBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlockEntity> {
 
     private final EntityRenderDispatcher dispatcher;
     private final Font font;
     private final ItemRenderer itemRenderer;
 
-    public BetterBarrelRenderer(BlockEntityRendererProvider.Context pContext) {
+    public FluidBarrelRenderer(BlockEntityRendererProvider.Context pContext) {
         dispatcher = pContext.getEntityRenderer();
         font = pContext.getFont();
         itemRenderer = pContext.getItemRenderer();

@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel {
     private final BarrelFrameTier from;
@@ -33,26 +32,34 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel 
         if (oldBarrel.getBarrelTier() != from) return false;
         //saves the old barrels contents
         BlockState newState = to.getBarrel(oldBarrel.getType()).defaultBlockState();
-        loadAndReplace(state,newState,level,pos);
+
+        newState = copyBlockStates(state,newState);
+
+        loadAndReplace(newState,level,pos);
         if (!player.getAbilities().instabuild) itemstack.shrink(1);
         return true;
     }
 
+    public static BlockState copyBlockStates(BlockState old,BlockState newS) {
+        if (newS.hasProperty(BetterBarrelBlock.DISCRETE)) {
+            newS = newS.setValue(BetterBarrelBlock.DISCRETE,old.getValue(BetterBarrelBlock.DISCRETE));
+        }
 
-    public static void loadAndReplace(BlockState oldState, BlockState newState, Level level, BlockPos pos) {
+        if (newS.hasProperty(BetterBarrelBlock.LOCKED)) {
+            newS = newS.setValue(BetterBarrelBlock.LOCKED,old.getValue(BetterBarrelBlock.LOCKED));
+        }
+
+        if (newS.hasProperty(BetterBarrelBlock.VOID)) {
+            newS = newS.setValue(BetterBarrelBlock.VOID,old.getValue(BetterBarrelBlock.VOID));
+        }
+        return newS;
+    }
+
+    private static void loadAndReplace(BlockState newState, Level level, BlockPos pos) {
         BlockEntity oldBarrelEntity = level.getBlockEntity(pos);
         //saves the old barrels contents
         CompoundTag tag = oldBarrelEntity.saveWithoutMetadata();
-
-        if (newState.hasProperty(BetterBarrelBlock.LOCKED)) {
-            newState = newState.setValue(BetterBarrelBlock.LOCKED, oldState.getValue(BetterBarrelBlock.LOCKED));
-        }
-
-        if (newState.hasProperty(BetterBarrelBlock.VOID)) {
-            newState = newState.setValue(BetterBarrelBlock.VOID, oldState.getValue(BetterBarrelBlock.VOID));
-        }
-
-        level.setBlock(pos, newState, 3);
+        level.setBlockAndUpdate(pos, newState);
         //get the blockentity that now exists
         BlockEntity newBlockEntity = level.getBlockEntity(pos);
         newBlockEntity.load(tag);
