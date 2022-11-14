@@ -13,7 +13,6 @@ import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.item.BarrelFrameUpgradeItem;
-import tfar.nabba.item.KeyItem;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(DataGenerator generator,  ExistingFileHelper existingFileHelper) {
@@ -22,14 +21,14 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        makeOneLayerItem(ModItems.STORAGE_UPGRADE);
-        makeOneLayerItem(ModItems.x4_STORAGE_UPGRADE);
-        makeOneLayerItem(ModItems.x16_STORAGE_UPGRADE);
-        makeOneLayerItem(ModItems.x64_STORAGE_UPGRADE);
-        makeOneLayerItem(ModItems.x256_STORAGE_UPGRADE);
-        makeOneLayerItem(ModItems.x1024_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.BETTER_BARREL_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x4_BETTER_BARREL_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x16_BETTER_BARREL_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x64_BETTER_BARREL_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x256_BETTER_BARREL_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.x1024_BETTER_BARREL_STORAGE_UPGRADE);
 
-        makeOneLayerItem(ModItems.INFINITE_STORAGE_UPGRADE);
+        makeOneLayerItem(ModItems.INFINITE_BETTER_BARREL_STORAGE_UPGRADE);
         makeOneLayerItem(ModItems.INFINITE_VENDING_UPGRADE);
 
         makeOneLayerItem(ModItems.VOID_UPGRADE);

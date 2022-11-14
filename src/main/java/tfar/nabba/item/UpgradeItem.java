@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 import java.util.List;
 
@@ -32,13 +31,7 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getUpgradeSlotsRequired()).withStyle(ChatFormatting.AQUA)));
         pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.getMaxPermitted()).withStyle(ChatFormatting.AQUA)));
-        if (data.getStorageStacks() > 0) {
-            pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc",
-                    Component.literal(data.getStorageStacks()+"").withStyle(ChatFormatting.AQUA)));
-        }
-        else {
-            pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc"));
-        }
+        pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc"));
     }
 
     public UpgradeStack getDataStack() {

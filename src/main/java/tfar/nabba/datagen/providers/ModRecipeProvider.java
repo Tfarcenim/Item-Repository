@@ -6,7 +6,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -14,7 +13,6 @@ import net.minecraftforge.common.Tags;
 import tfar.nabba.NABBA;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
-import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.init.tag.ModItemTags;
 
 import java.util.function.Consumer;
@@ -47,7 +45,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_barrel", has(Blocks.BARREL))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(ModItems.STORAGE_UPGRADE)
+        ShapedRecipeBuilder.shaped(ModItems.BETTER_BARREL_STORAGE_UPGRADE)
                 .define('P',Tags.Items.RODS_WOODEN)
                 .define('b', ModBlocks.BETTER_BARREL)
                 .pattern("P P")
@@ -88,11 +86,23 @@ public class ModRecipeProvider extends RecipeProvider {
         antiBarrelFrameUpgrade(ModBlocks.COPPER_ANTI_BARREL,ModBlocks.STONE_ANTI_BARREL,Tags.Items.INGOTS_COPPER,consumer);
         antiBarrelFrameUpgrade(ModBlocks.IRON_ANTI_BARREL,ModBlocks.COPPER_ANTI_BARREL,Tags.Items.INGOTS_IRON,consumer);
 
-        make2x2AndReverse(ModItems.x4_STORAGE_UPGRADE,ModItems.STORAGE_UPGRADE,consumer);
-        make2x2AndReverse(ModItems.x16_STORAGE_UPGRADE,ModItems.x4_STORAGE_UPGRADE,consumer);
-        make2x2AndReverse(ModItems.x64_STORAGE_UPGRADE,ModItems.x16_STORAGE_UPGRADE,consumer);
-        make2x2AndReverse(ModItems.x256_STORAGE_UPGRADE,ModItems.x64_STORAGE_UPGRADE,consumer);
-        make2x2AndReverse(ModItems.x1024_STORAGE_UPGRADE,ModItems.x256_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x4_BETTER_BARREL_STORAGE_UPGRADE,ModItems.BETTER_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x16_BETTER_BARREL_STORAGE_UPGRADE,ModItems.x4_BETTER_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x64_BETTER_BARREL_STORAGE_UPGRADE,ModItems.x16_BETTER_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x256_BETTER_BARREL_STORAGE_UPGRADE,ModItems.x64_BETTER_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x1024_BETTER_BARREL_STORAGE_UPGRADE,ModItems.x256_BETTER_BARREL_STORAGE_UPGRADE,consumer);
+
+        make2x2AndReverse(ModItems.x4_ANTI_BARREL_STORAGE_UPGRADE,ModItems.ANTI_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x16_ANTI_BARREL_STORAGE_UPGRADE,ModItems.x4_ANTI_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x64_ANTI_BARREL_STORAGE_UPGRADE,ModItems.x16_ANTI_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x256_ANTI_BARREL_STORAGE_UPGRADE,ModItems.x64_ANTI_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x1024_ANTI_BARREL_STORAGE_UPGRADE,ModItems.x256_ANTI_BARREL_STORAGE_UPGRADE,consumer);
+
+        make2x2AndReverse(ModItems.x4_FLUID_BARREL_STORAGE_UPGRADE,ModItems.FLUID_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x16_FLUID_BARREL_STORAGE_UPGRADE,ModItems.x4_FLUID_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x64_FLUID_BARREL_STORAGE_UPGRADE,ModItems.x16_FLUID_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x256_FLUID_BARREL_STORAGE_UPGRADE,ModItems.x64_FLUID_BARREL_STORAGE_UPGRADE,consumer);
+        make2x2AndReverse(ModItems.x1024_FLUID_BARREL_STORAGE_UPGRADE,ModItems.x256_FLUID_BARREL_STORAGE_UPGRADE,consumer);
     }
 
     protected static void make2x2AndReverse(Item compact,Item item, Consumer<FinishedRecipe> consumer) {

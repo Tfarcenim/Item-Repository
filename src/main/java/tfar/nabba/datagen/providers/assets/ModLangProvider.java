@@ -8,11 +8,11 @@ import net.minecraftforge.common.data.LanguageProvider;
 import org.codehaus.plexus.util.StringUtils;
 import tfar.nabba.NABBA;
 import tfar.nabba.block.AbstractBarrelBlock;
-import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.item.BarrelFrameUpgradeItem;
 import tfar.nabba.item.KeyItem;
+import tfar.nabba.item.StorageUpgradeItem;
 import tfar.nabba.item.UpgradeItem;
 
 public class ModLangProvider extends LanguageProvider {
@@ -27,6 +27,9 @@ public class ModLangProvider extends LanguageProvider {
         for (Item item : Registry.ITEM) {
             if (item instanceof BarrelFrameUpgradeItem || item instanceof KeyItem) {
                 defaultName(item);
+            } else if (item instanceof StorageUpgradeItem storageUpgradeItem) {
+                storageUpgradeName(item);
+                addDesc(item,"Adds %s "+storageUpgradeItem.getType().s+" of storage");
             }
         }
 
@@ -36,13 +39,7 @@ public class ModLangProvider extends LanguageProvider {
             }
         }
 
-        addItem(() -> ModItems.STORAGE_UPGRADE,"Storage Upgrade");
-        addItem(() -> ModItems.x4_STORAGE_UPGRADE,"x4 Storage Upgrade");
-        addItem(() -> ModItems.x16_STORAGE_UPGRADE,"x16 Storage Upgrade");
-        addItem(() -> ModItems.x64_STORAGE_UPGRADE,"x64 Storage Upgrade");
-        addItem(() -> ModItems.x256_STORAGE_UPGRADE,"x256 Storage Upgrade");
-        addItem(() -> ModItems.x1024_STORAGE_UPGRADE,"x1024 Storage Upgrade");
-        addItem(() -> ModItems.INFINITE_STORAGE_UPGRADE,"Infinite Storage Upgrade");
+
         addItem(() -> ModItems.INFINITE_VENDING_UPGRADE,"Infinite Vending Upgrade");
         addItem(() -> ModItems.VOID_UPGRADE,"Void Upgrade");
         addItem(() -> ModItems.PICKUP_1x1_UPGRADE,"Pickup 1x1 Upgrade");
@@ -53,19 +50,17 @@ public class ModLangProvider extends LanguageProvider {
         add(AbstractBarrelBlock.info,"Using %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");
         add(UpgradeItem.info1,"Max of %s allowed per barrel");
-        addDesc(ModItems.STORAGE_UPGRADE,"Adds %s stacks of storage");
-        addDesc(ModItems.x4_STORAGE_UPGRADE,"Adds %s stacks of storage");
-        addDesc(ModItems.x16_STORAGE_UPGRADE,"Adds %s stacks of storage");
-        addDesc(ModItems.x64_STORAGE_UPGRADE,"Adds %s stacks of storage");
-        addDesc(ModItems.x256_STORAGE_UPGRADE,"Adds %s stacks of storage");
-        addDesc(ModItems.x1024_STORAGE_UPGRADE,"Adds %s stacks of storage");
-        addDesc(ModItems.INFINITE_STORAGE_UPGRADE,"Adds %s stacks of storage");
+
         addDesc(ModItems.INFINITE_VENDING_UPGRADE,"Items don't deplete when extracted");
         addDesc(ModItems.VOID_UPGRADE,"Barrel voids excess items");
         addDesc(ModItems.PICKUP_3x3_UPGRADE,"Picks up items in a 3x3x3 volume centered on the barrel");
         addDesc(ModItems.PICKUP_9x9_UPGRADE,"Picks up items in a 9x3x9 area centered on the barrel");
 
         add("nabba.key_ring.selected_key","%s (%s)");
+    }
+
+    public void storageUpgradeName(Item item) {
+        addItem(()-> item,getNameFromItem(item).replace("X","x"));
     }
 
     public void defaultName(Item item) {

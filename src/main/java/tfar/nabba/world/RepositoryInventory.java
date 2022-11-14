@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.menu.AntiBarrelMenu;
 
 import java.util.ArrayList;
@@ -18,12 +19,13 @@ import java.util.List;
 
 public class RepositoryInventory implements IItemHandler {
 
+    private AntiBarrelBlockEntity blockEntity;
     public RepositoryInventory() {}
     private List<ItemStack> stacks = new ArrayList<>();
 
     @Override
     public int getSlots() {
-        return stacks.size() + 1;
+        return isFull() ? stacks.size() : stacks.size() + 1;
     }
 
     public int getStoredCount() {
@@ -31,7 +33,7 @@ public class RepositoryInventory implements IItemHandler {
     }
 
     public boolean isFull() {
-        return getStoredCount() >= 1000000000;
+        return getStoredCount() >= blockEntity.getStorage();
     }
 
     public void setClientItemStack(int slot, ItemStack stack) {
@@ -188,5 +190,13 @@ public class RepositoryInventory implements IItemHandler {
 
     public boolean isSlotValid(int slot) {
         return slot < getSlots();
+    }
+
+    public AntiBarrelBlockEntity getBlockEntity() {
+        return blockEntity;
+    }
+
+    public void setBlockEntity(AntiBarrelBlockEntity blockEntity) {
+        this.blockEntity = blockEntity;
     }
 }

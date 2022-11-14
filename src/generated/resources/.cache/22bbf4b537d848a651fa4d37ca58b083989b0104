@@ -1,4 +1,4 @@
-// 1.19.2	2022-11-13T20:23:54.8108271	Item Models: nabba
+// 1.19.2	2022-11-14T08:02:33.4462241	Item Models: nabba
 5ed323eabef7f71705faf7c1f2b51a2dfba47694 assets/nabba/models/item/anti_barrel.json
 ecf8667a935b50479f8da420dd4994eb6f946cbc assets/nabba/models/item/better_barrel.json
 ad7c533facea542ba39a930293cd870b4520800e assets/nabba/models/item/controller.json
@@ -25,7 +25,6 @@ ade862f88f8165f23233374cdcdc26a5113d142a assets/nabba/models/item/gold_to_diamon
 4b6713fa6b6a71b8d1e2d017369eaa532dad7f44 assets/nabba/models/item/gold_to_emerald_frame_upgrade.json
 ce07a6fe818ff441dff3dcac424ebf819459a26b assets/nabba/models/item/gold_to_netherite_frame_upgrade.json
 5c0fc29d7d7ea9f3ffab16a7fe19b97be8ff9a15 assets/nabba/models/item/hide_key.json
-0a5da44a40c1a6ece5cf1b1a7d7a817704acaba7 assets/nabba/models/item/infinite_storage_upgrade.json
 53f5b5643f592baf70f62b93a3363449acc6b615 assets/nabba/models/item/infinite_vending_upgrade.json
 514cc72aceb7385f47d12d2c8ff2fe35cab58405 assets/nabba/models/item/iron_anti_barrel.json
 55ab1ec7308dc9213fa1b846b1053ed6471a2a6e assets/nabba/models/item/iron_better_barrel.json
@@ -58,7 +57,6 @@ ace9d6e1f5723e5c542cf69a2bcab41f9be3e867 assets/nabba/models/item/stone_to_emera
 87220d7b20b57107ad75dc94956a11aa81263dfb assets/nabba/models/item/stone_to_iron_frame_upgrade.json
 b388306f33a25c5129d1ce15ce815e325538bb5e assets/nabba/models/item/stone_to_lapis_frame_upgrade.json
 0a8c8d5fb6a5a1a3b4d78f8ec65367be2ac8b5db assets/nabba/models/item/stone_to_netherite_frame_upgrade.json
-14cd51a02790d309eb1ec15debb8bb6df495e657 assets/nabba/models/item/storage_upgrade.json
 9f8a2fd214c7d0884fafea6711102a36504a72f1 assets/nabba/models/item/vanity_key.json
 9a2cd929e316d876d06a851c20148b1d70f46fdc assets/nabba/models/item/void_upgrade.json
 4bd9173a2ff7de3446ee3250378f79f5396f4376 assets/nabba/models/item/wood_to_copper_frame_upgrade.json
@@ -70,8 +68,3 @@ b388306f33a25c5129d1ce15ce815e325538bb5e assets/nabba/models/item/stone_to_lapis
 0e7a084ca4c82b335a55abcec807cbe1682dfe5d assets/nabba/models/item/wood_to_lapis_frame_upgrade.json
 932b4a3d3797287f2bfa1527d0134f895063ac11 assets/nabba/models/item/wood_to_netherite_frame_upgrade.json
 3b55650ba1d4771e0fc5b531fcebea6c678652cd assets/nabba/models/item/wood_to_stone_frame_upgrade.json
-9ec097a451350ce1693a710fbfc4781120283f83 assets/nabba/models/item/x1024_storage_upgrade.json
-39e92f459d03e5bbdb99a412f08bc69712b21a9c assets/nabba/models/item/x16_storage_upgrade.json
-8f95dc5b08f18f561f88f8e6e6b48d1e9149edbb assets/nabba/models/item/x256_storage_upgrade.json
-a5b92b1e057bd14059a142bd487502ac6710596a assets/nabba/models/item/x4_storage_upgrade.json
-7d1ed3eb2562252dbec721494ebfa4bba015f1ea assets/nabba/models/item/x64_storage_upgrade.json

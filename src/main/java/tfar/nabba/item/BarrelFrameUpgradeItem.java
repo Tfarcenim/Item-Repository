@@ -43,9 +43,14 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel 
         BlockEntity oldBarrelEntity = level.getBlockEntity(pos);
         //saves the old barrels contents
         CompoundTag tag = oldBarrelEntity.saveWithoutMetadata();
-        newState = newState
-                .setValue(BetterBarrelBlock.LOCKED, oldState.getValue(BetterBarrelBlock.LOCKED))
-                .setValue(BetterBarrelBlock.VOID, oldState.getValue(BetterBarrelBlock.VOID));
+
+        if (newState.hasProperty(BetterBarrelBlock.LOCKED)) {
+            newState = newState.setValue(BetterBarrelBlock.LOCKED, oldState.getValue(BetterBarrelBlock.LOCKED));
+        }
+
+        if (newState.hasProperty(BetterBarrelBlock.VOID)) {
+            newState = newState.setValue(BetterBarrelBlock.VOID, oldState.getValue(BetterBarrelBlock.VOID));
+        }
 
         level.setBlock(pos, newState, 3);
         //get the blockentity that now exists

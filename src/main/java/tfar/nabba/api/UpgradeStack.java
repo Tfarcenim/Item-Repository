@@ -3,6 +3,7 @@ package tfar.nabba.api;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 
@@ -89,8 +90,8 @@ public class UpgradeStack {
         return getData().getMaxStackSize() / getCount();
     }
 
-    public int getStorageStacks() {
-        return getCount() * getData().getStorageBonus();
+    public int getStorageUnits(BarrelType type) {
+        return getCount() * getData().getStorageBonus(type);
     }
 
     public UpgradeStack copy() {

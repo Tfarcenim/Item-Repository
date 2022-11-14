@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.AbstractBarrelBlock;
+import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
@@ -90,17 +91,21 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     }
 
 
-    private int computeStorage() {
-        int storage = Utils.BASE_STORAGE;
+    private int computeStorageUnits() {
+        int storage = Utils.BASE_STORAGE.get(getBarrelType());
         for (UpgradeStack upgradeStack : upgrades) {
-            storage += upgradeStack.getStorageStacks();
+            storage += upgradeStack.getStorageUnits(getBarrelType());
         }
         return storage;
     }
 
+    BarrelType getBarrelType() {
+        return ((AbstractBarrelBlock)getBlockState().getBlock()).getType();
+    }
+
     public int getStorage() {
         if (cachedStorage == -1) {//save CPU cycles by not iterating the upgrade map
-            cachedStorage = computeStorage();
+            cachedStorage = computeStorageUnits();
         }
         return cachedStorage;
     }

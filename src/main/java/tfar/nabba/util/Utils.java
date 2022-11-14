@@ -19,6 +19,7 @@ import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -29,7 +30,13 @@ import static tfar.nabba.block.BetterBarrelBlock.VOID;
 public class Utils {
     public static final int INVALID = -1;
     public static String ID = "id";
-    public static final int BASE_STORAGE = 64;
+    public static final Map<BarrelType,Integer> BASE_STORAGE = new EnumMap<>(BarrelType.class);
+
+    static {
+        BASE_STORAGE.put(BarrelType.BETTER,64);//stacks
+        BASE_STORAGE.put(BarrelType.ANTI,256);//unstackables
+        BASE_STORAGE.put(BarrelType.FLUID,16);//buckets
+    }
     public static final int RADIUS = 9;
 
     public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {

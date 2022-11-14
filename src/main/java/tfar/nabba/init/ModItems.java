@@ -33,13 +33,34 @@ public class ModItems {
     public static final Item NETHERITE_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.NETHERITE_BETTER_BARREL,basic());
     public static final Item CREATIVE_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.CREATIVE_BETTER_BARREL,basic());
 
-    public static final Item STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.STORAGE);
-    public static final Item x4_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.x4_STORAGE);
-    public static final Item x16_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.x16_STORAGE);
-    public static final Item x64_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.x64_STORAGE);
-    public static final Item x256_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.x256_STORAGE);
-    public static final Item x1024_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.x1024_STORAGE);
-    public static final Item INFINITE_STORAGE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.INFINITE_STORAGE);
+    public static final Item BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.STORAGE);
+    public static final Item x4_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x4_STORAGE);
+    public static final Item x16_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x16_STORAGE);
+    public static final Item x64_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x64_STORAGE);
+    public static final Item x256_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x256_STORAGE);
+    public static final Item x1024_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x1024_STORAGE);
+    public static final Item INFINITE_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.INFINITE_STORAGE);
+
+
+    public static final Item ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.STORAGE);
+    public static final Item x4_ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.x4_STORAGE);
+    public static final Item x16_ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.x16_STORAGE);
+    public static final Item x64_ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.x64_STORAGE);
+    public static final Item x256_ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.x256_STORAGE);
+    public static final Item x1024_ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.x1024_STORAGE);
+    public static final Item INFINITE_ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.INFINITE_STORAGE);
+
+
+
+    public static final Item FLUID_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.fluid(basic(), UpgradeStack.STORAGE);
+    public static final Item x4_FLUID_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.fluid(basic(), UpgradeStack.x4_STORAGE);
+    public static final Item x16_FLUID_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.fluid(basic(), UpgradeStack.x16_STORAGE);
+    public static final Item x64_FLUID_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.fluid(basic(), UpgradeStack.x64_STORAGE);
+    public static final Item x256_FLUID_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.fluid(basic(), UpgradeStack.x256_STORAGE);
+    public static final Item x1024_FLUID_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.fluid(basic(), UpgradeStack.x1024_STORAGE);
+    public static final Item INFINITE_FLUID_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.fluid(basic(), UpgradeStack.INFINITE_STORAGE);
+
+
     public static final Item INFINITE_VENDING_UPGRADE = new UpgradeItem(basic(), UpgradeStack.INFINITE_VENDING);
     public static final Item VOID_UPGRADE = new UpgradeItem(basic(), UpgradeStack.VOID);
     public static final Item PICKUP_1x1_UPGRADE = new UpgradeItem(basic(), UpgradeStack.PICKUP_1x1);

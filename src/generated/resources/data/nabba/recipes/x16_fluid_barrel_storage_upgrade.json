@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": {
+      "item": "nabba:x4_fluid_barrel_storage_upgrade"
+    }
+  },
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "result": {
+    "item": "nabba:x16_fluid_barrel_storage_upgrade"
+  }
+}

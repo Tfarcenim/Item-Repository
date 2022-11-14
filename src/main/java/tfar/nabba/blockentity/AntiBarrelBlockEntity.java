@@ -88,7 +88,9 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     };
 
     public RepositoryInventory getInventory() {
-        return NABBA.instance.data.getOrCreateInventory(settings.getInt(Utils.ID));
+        RepositoryInventory repositoryInventory = NABBA.instance.data.getOrCreateInventory(settings.getInt(Utils.ID));
+
+        return repositoryInventory;
     }
 
     public AntiBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
@@ -156,5 +158,12 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             settings.putInt(Utils.ID,NABBA.instance.data.getNextID());
             setChanged();
         }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        RepositoryInventory repositoryInventory = getInventory();
+        repositoryInventory.setBlockEntity(this);
     }
 }

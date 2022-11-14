@@ -7,38 +7,41 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModItems;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import static tfar.nabba.util.Utils.*;
 
 public enum Upgrades implements Upgrade {
-    DUMMY(0,0,NOTHING,() -> Items.AIR),
-    STORAGE(1,BASE_STORAGE,Utils.add_to_internal_upgrades,() -> ModItems.STORAGE_UPGRADE),
-    VOID(1,0,Utils.apply_void,() -> ModItems.VOID_UPGRADE,1),
-    PICKUP(8,0,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_1x1_UPGRADE,9, PICKUP_TICK),
-    INFINITE_VENDING(2000000000,0,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_VENDING_UPGRADE,1);
+    DUMMY(0,NOTHING,() -> Items.AIR),
+    STORAGE(1, Utils.add_to_internal_upgrades,BASE_STORAGE,() -> ModItems.BETTER_BARREL_STORAGE_UPGRADE,64000,NOTHING),
+    VOID(1,Utils.apply_void,() -> ModItems.VOID_UPGRADE,1),
+    PICKUP(8,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_1x1_UPGRADE,9, PICKUP_TICK),
+    INFINITE_VENDING(2000000000,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_VENDING_UPGRADE,1);
 
     private int slotsRequired;
-    private final int additionalStorage;
+    private final Map<BarrelType,Integer> additionalStorage;
     private final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade;
     private final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onTick;
     private final Supplier<Item> itemSupplier;
     private final int maxAllowed;
 
-    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier) {
-        this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,64000);
+    Upgrades(int slotsRequired, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier) {
+        this(slotsRequired,onUpgrade,itemSupplier,64000);
     }
 
-    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier, int maxAllowed) {
-        this(slotsRequired,additionalStorage,onUpgrade,itemSupplier,maxAllowed,NOTHING);
+    Upgrades(int slotsRequired,  BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier, int maxAllowed) {
+        this(slotsRequired,onUpgrade,itemSupplier,maxAllowed,NOTHING);
+    }
+    Upgrades(int slotsRequired, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade, Supplier<Item> itemSupplier, int maxAllowed,BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onTick) {
+        this(slotsRequired,onUpgrade,NO_STORAGE,itemSupplier,maxAllowed,onTick);
     }
 
-    Upgrades(int slotsRequired, int additionalStorage, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade,
+    Upgrades(int slotsRequired, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onUpgrade, Map<BarrelType,Integer> additionalStorage,
              Supplier<Item> itemSupplier, int maxAllowed, BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> onTick) {
         this.slotsRequired = slotsRequired;
         this.additionalStorage = additionalStorage;
@@ -65,8 +68,8 @@ public enum Upgrades implements Upgrade {
     }
 
     @Override
-    public int getStorageBonus() {
-        return additionalStorage;
+    public int getStorageBonus(BarrelType type) {
+        return additionalStorage.get(type);
     }
 
     @Override
