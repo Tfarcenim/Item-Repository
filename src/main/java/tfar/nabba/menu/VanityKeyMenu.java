@@ -9,7 +9,9 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 
@@ -45,14 +47,22 @@ public class VanityKeyMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        return stillValid(pPlayer, ModBlockTags.BETTER_BARRELS);
+        return true;//stillValid(pPlayer, ModBlockTags.BETTER_BARRELS);
     }
 
     public void receiveVanity(int color,double size) {
             BlockEntity blockEntity= player.level.getBlockEntity(pos);
-            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+            if (blockEntity instanceof AbstractBarrelBlockEntity betterBarrelBlockEntity) {
                 betterBarrelBlockEntity.setColor(color);
                 betterBarrelBlockEntity.setSize(size);
+            } else if (blockEntity instanceof ControllerBlockEntity controllerBlock) {
+                for (BlockPos pos1 : controllerBlock.getBarrels()) {
+                    BlockEntity blockEntity1 = player.level.getBlockEntity(pos1);
+                    if (blockEntity1 instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
+                        abstractBarrelBlockEntity.setColor(color);
+                        abstractBarrelBlockEntity.setSize(size);
+                    }
+                }
             }
     }
 

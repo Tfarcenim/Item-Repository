@@ -92,18 +92,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         return barrelHandler;
     }
 
-    public void setColor(int color) {
-        this.color = color;
-        setChanged();
-    }
-
-    public void setSize(double size) {
-        this.size = size;
-        setChanged();
-    }
-
-
-
     public static class BarrelHandler implements IItemHandler {
         private final BetterBarrelBlockEntity barrelBlockEntity;
 
@@ -202,9 +190,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
             barrelBlockEntity.setChanged();
         }
     }
-
-
-
     private LazyOptional<IItemHandler> optional = LazyOptional.of(this::getItemHandler);
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {

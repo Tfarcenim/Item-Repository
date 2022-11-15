@@ -11,7 +11,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.menu.VanityKeyMenuProvider;
 
 public class VanityKeyItem extends KeyItem {
@@ -22,7 +24,7 @@ public class VanityKeyItem extends KeyItem {
     @Override
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof BetterBarrelBlockEntity) {
+        if (blockEntity instanceof AbstractBarrelBlockEntity || blockEntity instanceof ControllerBlockEntity) {
             NetworkHooks.openScreen((ServerPlayer) pPlayer,new VanityKeyMenuProvider(pos),pos);
         }
         return true;

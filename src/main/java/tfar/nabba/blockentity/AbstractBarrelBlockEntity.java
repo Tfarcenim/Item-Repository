@@ -33,8 +33,8 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     private transient int cachedStorage = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
     protected BlockPos controllerPos;
-    protected int color = 0xff99ff;
-    protected double size = .5;
+    protected int color = Utils.COLOR;
+    protected double size = Utils.SIZE;
     public AbstractBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }
@@ -73,7 +73,15 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     public ItemStack tryRemoveItem() {
         return ItemStack.EMPTY;//getBarrelHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
     }
+    public void setColor(int color) {
+        this.color = color;
+        setChanged();
+    }
 
+    public void setSize(double size) {
+        this.size = size;
+        setChanged();
+    }
     public int getColor() {
         return color;
     }

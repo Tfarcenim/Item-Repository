@@ -2,21 +2,21 @@ package tfar.nabba.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.client.gui.widget.ForgeSlider;
 import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.inventory.BackgroundEditBox;
 import tfar.nabba.menu.VanityKeyMenu;
-import tfar.nabba.net.C2SSearchPacket;
 import tfar.nabba.net.C2SVanityPacket;
 import tfar.nabba.net.PacketHandler;
+import tfar.nabba.util.Utils;
 
 public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
 
@@ -48,10 +48,13 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        BetterBarrelBlockEntity betterBarrelBlockEntity = (BetterBarrelBlockEntity) player.level.getBlockEntity(menu.getPos());
-
-        int initialColor = betterBarrelBlockEntity.getColor();
-        double initialSize = betterBarrelBlockEntity.getSize();
+        BlockEntity blockEntity =  player.level.getBlockEntity(menu.getPos());
+        int initialColor = Utils.COLOR;
+        double initialSize = Utils.SIZE;
+        if (blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
+            initialColor = abstractBarrelBlockEntity.getColor();
+            initialSize = abstractBarrelBlockEntity.getSize();
+        }
 
         slider = new ForgeSlider(i + 38,j + 46,100,20,Component.empty(),Component.empty(),
                 0,1,initialSize,.01,0,true){

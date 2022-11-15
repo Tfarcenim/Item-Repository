@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.item.InteractsWithBarrel;
+import tfar.nabba.item.VanityKeyItem;
 import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
@@ -118,12 +120,12 @@ public class ControllerBlockEntity extends BlockEntity {
         return controllerHandler;
     }
 
-    public void interactWithBarrels(ItemStack stack) {
+    public void interactWithBarrels(ItemStack stack, Player player) {
         InteractsWithBarrel interactsWithBarrel = (InteractsWithBarrel) stack.getItem();
         for (BlockPos pos : getBarrels()) {
             BlockState state = level.getBlockState(pos);
             if (state.is(ModBlockTags.BETTER_BARRELS)) {
-                interactsWithBarrel.handleBarrel(state,stack,level,pos,null);
+                interactsWithBarrel.handleBarrel(state,stack,level,pos,player);
             } else {
                 invalid.add(pos);
             }

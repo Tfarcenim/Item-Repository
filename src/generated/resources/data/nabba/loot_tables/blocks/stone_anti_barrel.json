@@ -27,6 +27,31 @@
                   "op": "replace",
                   "source": "Uuid",
                   "target": "Uuid"
+                },
+                {
+                  "op": "replace",
+                  "source": "Last",
+                  "target": "BlockEntityTag.Last"
+                },
+                {
+                  "op": "replace",
+                  "source": "Stored",
+                  "target": "BlockEntityTag.Stored"
+                },
+                {
+                  "op": "replace",
+                  "source": "Color",
+                  "target": "BlockEntityTag.Color"
+                },
+                {
+                  "op": "replace",
+                  "source": "Upgrades",
+                  "target": "BlockEntityTag.Upgrades"
+                },
+                {
+                  "op": "replace",
+                  "source": "Size",
+                  "target": "BlockEntityTag.Size"
                 }
               ],
               "source": "block_entity"

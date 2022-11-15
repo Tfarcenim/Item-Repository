@@ -36,6 +36,9 @@ public class Utils {
     }
     public static final int RADIUS = 9;
 
+    public static final double SIZE = .5;
+    public static final int COLOR = 0xff88ff;
+
     public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> add_to_internal_upgrades = (betterBarrelBlockEntity, upgradeData) -> {
 
         int existing = betterBarrelBlockEntity.countUpgrade(upgradeData.getData());

@@ -39,7 +39,7 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
         if (!world.isClientSide) {
             Item item = stack.getItem();
             if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(state, stack, world, pos, player)) {
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             } else {
 
                 MenuProvider menuProvider = state.getMenuProvider(world, pos);
@@ -47,10 +47,10 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
                     player.openMenu(menuProvider);
                     PiglinAi.angerNearbyPiglins(player, true);
                 }
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             }
         }
-        return  InteractionResult.PASS;
+        return  InteractionResult.SUCCESS;
     }
 
     @Override
