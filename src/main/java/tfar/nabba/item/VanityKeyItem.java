@@ -16,7 +16,7 @@ import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.menu.VanityKeyMenuProvider;
 
-public class VanityKeyItem extends KeyItem {
+public class VanityKeyItem extends KeyItem implements InteractsWithBarrel,InteractsWithController{
     public VanityKeyItem(Properties pProperties) {
         super(pProperties);
     }
@@ -28,5 +28,10 @@ public class VanityKeyItem extends KeyItem {
             NetworkHooks.openScreen((ServerPlayer) pPlayer,new VanityKeyMenuProvider(pos),pos);
         }
         return true;
+    }
+
+    @Override
+    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
+        return handleBarrel(state, itemstack, level, pos, pPlayer);
     }
 }

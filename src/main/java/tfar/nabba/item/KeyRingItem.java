@@ -25,7 +25,7 @@ import tfar.nabba.init.tag.ModItemTags;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KeyRingItem extends KeyItem {
+public class KeyRingItem extends KeyItem implements InteractsWithBarrel,InteractsWithController{
     public KeyRingItem(Properties pProperties) {
         super(pProperties);
     }
@@ -33,7 +33,7 @@ public class KeyRingItem extends KeyItem {
     @Override
     public boolean handleBarrel(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player pPlayer) {
         Item key = getSelectedKey(keyRing);
-        if (key instanceof KeyItem keyItem) {//nbt shouldn't be important
+        if (key instanceof InteractsWithBarrel keyItem) {//nbt shouldn't be important
             return keyItem.handleBarrel(state, keyRing, level, pos, pPlayer);
         }
         return true;
@@ -141,5 +141,14 @@ public class KeyRingItem extends KeyItem {
             selected = 0;
         }
         return keys.get(selected);
+    }
+
+    @Override
+    public boolean handleController(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player pPlayer) {
+        Item key = getSelectedKey(keyRing);
+        if (key instanceof InteractsWithController interactsWithController) {//nbt shouldn't be important
+            return interactsWithController.handleController(state, keyRing, level, pos, pPlayer);
+        }
+        return false;
     }
 }

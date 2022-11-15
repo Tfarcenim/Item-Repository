@@ -13,7 +13,7 @@ import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
-public class BlockStateKeyItem extends KeyItem {
+public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel,InteractsWithController {
     private final BooleanProperty property;
 
     public BlockStateKeyItem(Properties pProperties, BooleanProperty property) {
@@ -58,5 +58,11 @@ public class BlockStateKeyItem extends KeyItem {
         newBlockEntity.load(tag);
         //need to make sure the game saves it!
         newBlockEntity.setChanged();
+    }
+
+    @Override
+    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
+        interactWithBarrels(state,itemstack,level,pos,player);
+        return true;
     }
 }

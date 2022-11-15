@@ -17,6 +17,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.item.InteractsWithBarrel;
+import tfar.nabba.item.InteractsWithController;
 import tfar.nabba.item.KeyItem;
 import tfar.nabba.item.VanityKeyItem;
 import tfar.nabba.util.Utils;
@@ -34,13 +35,9 @@ public class ControllerBlock extends Block implements EntityBlock {
         if (!pLevel.isClientSide) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof ControllerBlockEntity controllerBlock) {
-                //special case the vanity key
-                if (stack.getItem() instanceof VanityKeyItem) {
-                    ((VanityKeyItem) stack.getItem()).handleBarrel(pState,stack,pLevel,pPos,pPlayer);
-                } else if (stack.getItem() instanceof KeyItem keyItem) {
-                    controllerBlock.interactWithBarrels(stack,pPlayer);
+                if (stack.getItem() instanceof InteractsWithController) {
+                    ((InteractsWithController) stack.getItem()).handleController(pState, stack, pLevel, pPos, pPlayer);
                 }
-
             }
         }
         return InteractionResult.sidedSuccess(pLevel.isClientSide);
