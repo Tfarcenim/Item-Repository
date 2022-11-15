@@ -70,7 +70,7 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
 
-            if (!antiBarrelInventory.isItemValid(0,itemstack1)) {
+            if (!antiBarrelInventory.isItemValid(0,itemstack1)|| antiBarrelInventory.isFull()) {
                 return ItemStack.EMPTY;
             }
 
@@ -163,9 +163,11 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
     }
 
     public void handleInsert(ServerPlayer player) {
-        antiBarrelInventory.addItem(getCarried().copy());
-        setCarried(ItemStack.EMPTY);
-        refreshDisplay(player);
+        if (!antiBarrelInventory.isFull()) {
+            antiBarrelInventory.addItem(getCarried().copy());
+            setCarried(ItemStack.EMPTY);
+            refreshDisplay(player);
+        }
     }
 
     public void handleSearch(ServerPlayer player, String search) {
