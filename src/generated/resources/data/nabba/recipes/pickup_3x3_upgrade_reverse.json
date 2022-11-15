@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:pickup_9x9_upgrade"
+    }
+  ],
+  "result": {
+    "count": 3,
+    "item": "nabba:pickup_3x3_upgrade"
+  }
+}

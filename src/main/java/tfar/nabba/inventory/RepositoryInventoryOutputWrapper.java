@@ -7,9 +7,9 @@ import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 
 public class RepositoryInventoryOutputWrapper implements IItemHandler {
 
-    private AntiBarrelBlockEntity.RepositoryInventory internal;
+    private AntiBarrelBlockEntity.AntiBarrelInventory internal;
 
-    public RepositoryInventoryOutputWrapper(AntiBarrelBlockEntity.RepositoryInventory internal) {
+    public RepositoryInventoryOutputWrapper(AntiBarrelBlockEntity.AntiBarrelInventory internal) {
         this.internal = internal;
     }
 

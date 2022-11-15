@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "P": {
-      "tag": "minecraft:stone_crafting_materials"
+      "tag": "forge:gems/diamond"
     },
     "S": {
       "tag": "forge:rods/wooden"
     },
     "b": {
-      "item": "nabba:anti_barrel"
+      "item": "nabba:gold_anti_barrel"
     }
   },
   "pattern": [
@@ -17,6 +17,6 @@
     "PSP"
   ],
   "result": {
-    "item": "nabba:stone_anti_barrel"
+    "item": "nabba:diamond_anti_barrel"
   }
 }

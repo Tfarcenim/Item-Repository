@@ -18,7 +18,7 @@ import java.util.List;
 
 public class AntiBarrelMenu extends AbstractContainerMenu {
 
-    public final AntiBarrelBlockEntity.RepositoryInventory repositoryInventory;
+    public final AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory;
 
     private final ContainerLevelAccess access;
     private final ContainerData data;
@@ -26,21 +26,21 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
 
     private final DataSlot row = DataSlot.standalone();
 
-    public AntiBarrelMenu(int pContainerId, Inventory inventory, ContainerLevelAccess pAccess, AntiBarrelBlockEntity.RepositoryInventory repositoryInventory, ContainerData data, ContainerData syncSlots) {
-        this(ModMenuTypes.ANTI_BARREL, pContainerId, inventory,pAccess, repositoryInventory,data,syncSlots);
+    public AntiBarrelMenu(int pContainerId, Inventory inventory, ContainerLevelAccess pAccess, AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory, ContainerData data, ContainerData syncSlots) {
+        this(ModMenuTypes.ANTI_BARREL, pContainerId, inventory,pAccess, antiBarrelInventory,data,syncSlots);
     }
 
     public AntiBarrelMenu(int i, Inventory inventory) {
         this(ModMenuTypes.ANTI_BARREL, i, inventory,ContainerLevelAccess.NULL, null,new SimpleContainerData(2),new SimpleContainerData(54));
     }
 
-    protected AntiBarrelMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, AntiBarrelBlockEntity.RepositoryInventory repositoryInventory, ContainerData
+    protected AntiBarrelMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory, ContainerData
                              data, ContainerData syncSlots) {
         super(pMenuType, pContainerId);
         this.access = access;
         this.data = data;
         this.syncSlots = syncSlots;
-        this.repositoryInventory = repositoryInventory;
+        this.antiBarrelInventory = antiBarrelInventory;
 
         int playerX = 8;
         int playerY = 140;
@@ -70,11 +70,11 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
 
-            if (!repositoryInventory.isItemValid(0,itemstack1)) {
+            if (!antiBarrelInventory.isItemValid(0,itemstack1)) {
                 return ItemStack.EMPTY;
             }
 
-            repositoryInventory.addItem(itemstack1);
+            antiBarrelInventory.addItem(itemstack1);
             ItemStack stack = ItemStack.EMPTY;
             slot.set(stack);
             broadcastChanges();
@@ -128,24 +128,24 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
 
     public void handleRequest(ServerPlayer player, int slot, int amount, boolean shift) {
 
-        if (!repositoryInventory.isSlotValid(slot)) {
+        if (!antiBarrelInventory.isSlotValid(slot)) {
             return;
         }
 
         if (shift) {
-            ItemHandlerHelper.giveItemToPlayer(player,repositoryInventory.getStackInSlot(slot).copy());
+            ItemHandlerHelper.giveItemToPlayer(player, antiBarrelInventory.getStackInSlot(slot).copy());
         } else {
-            setCarried(repositoryInventory.getStackInSlot(slot).copy());
+            setCarried(antiBarrelInventory.getStackInSlot(slot).copy());
         }
 
-        repositoryInventory.extractItem(slot,amount,false);
+        antiBarrelInventory.extractItem(slot,amount,false);
 
         refreshDisplay(player);
     }
 
     public void refreshDisplay(ServerPlayer player) {
         List<ItemStack> list = new ArrayList<>();
-        List<Integer> syncSlots = repositoryInventory.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
+        List<Integer> syncSlots = antiBarrelInventory.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof AntiBarrelBlockEntity repositoryBlock) {
                 return repositoryBlock.search;
@@ -153,7 +153,7 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
             return "";
         },""));
         for (int i = 0; i < syncSlots.size();i++) {
-            list.add(repositoryInventory.getStackInSlot(syncSlots.get(i)));
+            list.add(antiBarrelInventory.getStackInSlot(syncSlots.get(i)));
         }
         PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list,syncSlots), player);
     }
@@ -163,7 +163,7 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
     }
 
     public void handleInsert(ServerPlayer player) {
-        repositoryInventory.addItem(getCarried().copy());
+        antiBarrelInventory.addItem(getCarried().copy());
         setCarried(ItemStack.EMPTY);
         refreshDisplay(player);
     }

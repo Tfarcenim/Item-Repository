@@ -1,4 +1,4 @@
-// 1.19.2	2022-11-15T07:48:29.3876084	Block States: nabba
+// 1.19.2	2022-11-15T08:12:08.9676546	Block States: nabba
 44905e17e490e76e14d672194abfc94825794f53 assets/nabba/blockstates/anti_barrel.json
 78de8fa7ad2179168f98a4e242da62b1d2b78c0b assets/nabba/blockstates/better_barrel.json
 5737936e9ad61416a7920155404c0a9547bce5ad assets/nabba/blockstates/controller.json
@@ -25,19 +25,19 @@ a9344a3c55baa1709cc2673c24fd5d86984faf27 assets/nabba/models/block/better_barrel
 0cd9b904276265eb5958bacd4feea63c3a1c66d8 assets/nabba/models/block/controller.json
 f5896d80fd3a587a27a1803f62909ba94b9ddb93 assets/nabba/models/block/copper_anti_barrel.json
 9d72ed20d4e686ee5e5e2c4306fcdf995e8a539f assets/nabba/models/block/copper_better_barrel.json
-b4a4ac0e3c9ee40fca9e2f36c8eb339b9e06420e assets/nabba/models/block/creative_anti_barrel.json
+063df875183a94ce16902adf3e99e72a591c344b assets/nabba/models/block/creative_anti_barrel.json
 b4a4ac0e3c9ee40fca9e2f36c8eb339b9e06420e assets/nabba/models/block/creative_better_barrel.json
-0a75a499cdb4901055415c805881cf9a388a5e9e assets/nabba/models/block/diamond_anti_barrel.json
+0c1f5198f6e37313afe829bdb75c6841bb719dc0 assets/nabba/models/block/diamond_anti_barrel.json
 0a75a499cdb4901055415c805881cf9a388a5e9e assets/nabba/models/block/diamond_better_barrel.json
-ddc336c229fdc7ad61543ea47903ba510cf6cf18 assets/nabba/models/block/emerald_anti_barrel.json
+47052ff7d1c30f8a4744c03d1fcc2c2c8d4dd449 assets/nabba/models/block/emerald_anti_barrel.json
 ddc336c229fdc7ad61543ea47903ba510cf6cf18 assets/nabba/models/block/emerald_better_barrel.json
-faa0bef42293edb470313ebdac70ead85287e987 assets/nabba/models/block/gold_anti_barrel.json
+2f6462d92b6a88e3de9890622acedc7bf2682359 assets/nabba/models/block/gold_anti_barrel.json
 faa0bef42293edb470313ebdac70ead85287e987 assets/nabba/models/block/gold_better_barrel.json
 67f6261cc13d2f5684fcfefb27fe6e5f227002ba assets/nabba/models/block/iron_anti_barrel.json
 6605a60d930777770b96b784e07168f6f08b9ff8 assets/nabba/models/block/iron_better_barrel.json
-6ed9e624d04d9375482c51a2313ac7c92f6a5df5 assets/nabba/models/block/lapis_anti_barrel.json
+304f3e62c736e0f9494b8178928bbcc01b7dc94a assets/nabba/models/block/lapis_anti_barrel.json
 6ed9e624d04d9375482c51a2313ac7c92f6a5df5 assets/nabba/models/block/lapis_better_barrel.json
-b1040ef34f8cf6671dba480c71880c1af6ab3974 assets/nabba/models/block/netherite_anti_barrel.json
+efaa64d4d5f761faa9b82aa2c6139d74ba7358d4 assets/nabba/models/block/netherite_anti_barrel.json
 b1040ef34f8cf6671dba480c71880c1af6ab3974 assets/nabba/models/block/netherite_better_barrel.json
 5c1543beba087c59e690c1fbb6e604ac6d65c3ac assets/nabba/models/block/stone_anti_barrel.json
 c517713208af5378552d4fbe08264043146c5e21 assets/nabba/models/block/stone_better_barrel.json

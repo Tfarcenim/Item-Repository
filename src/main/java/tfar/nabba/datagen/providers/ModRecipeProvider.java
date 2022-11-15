@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -45,23 +46,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_barrel", has(Blocks.BARREL))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(ModItems.BETTER_BARREL_STORAGE_UPGRADE)
-                .define('P',Tags.Items.RODS_WOODEN)
-                .define('b', ModBlocks.BETTER_BARREL)
-                .pattern("P P")
-                .pattern(" b ")
-                .pattern("P P")
-                .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
-                .save(consumer);
 
-        ShapedRecipeBuilder.shaped(ModItems.VOID_UPGRADE)
-                .define('P',Tags.Items.RODS_WOODEN)
-                .define('b', Tags.Items.OBSIDIAN)
-                .pattern("P P")
-                .pattern(" b ")
-                .pattern("P P")
-                .unlockedBy("has_obsidian", has(Tags.Items.OBSIDIAN))
-                .save(consumer);
 
         ShapedRecipeBuilder.shaped(ModItems.CONTROLLER)
                 .define('P',Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
@@ -82,10 +67,90 @@ public class ModRecipeProvider extends RecipeProvider {
         betterBarrelFrameUpgrade(ModBlocks.EMERALD_BETTER_BARREL,ModBlocks.DIAMOND_BETTER_BARREL,Tags.Items.GEMS_EMERALD,consumer);
         betterBarrelFrameUpgrade(ModBlocks.NETHERITE_BETTER_BARREL,ModBlocks.EMERALD_BETTER_BARREL,Tags.Items.INGOTS_NETHERITE,consumer);
 
-        antiBarrelFrameUpgrade(ModBlocks.STONE_ANTI_BARREL,ModBlocks.ANTI_BARREL,ItemTags.STONE_CRAFTING_MATERIALS,consumer);
-        antiBarrelFrameUpgrade(ModBlocks.COPPER_ANTI_BARREL,ModBlocks.STONE_ANTI_BARREL,Tags.Items.INGOTS_COPPER,consumer);
-        antiBarrelFrameUpgrade(ModBlocks.IRON_ANTI_BARREL,ModBlocks.COPPER_ANTI_BARREL,Tags.Items.INGOTS_IRON,consumer);
+        betterBarrelFrameUpgrade(ModBlocks.STONE_ANTI_BARREL,ModBlocks.ANTI_BARREL,ItemTags.STONE_CRAFTING_MATERIALS,consumer);
+        betterBarrelFrameUpgrade(ModBlocks.COPPER_ANTI_BARREL,ModBlocks.STONE_ANTI_BARREL,Tags.Items.INGOTS_COPPER,consumer);
+        betterBarrelFrameUpgrade(ModBlocks.IRON_ANTI_BARREL,ModBlocks.COPPER_ANTI_BARREL,Tags.Items.INGOTS_IRON,consumer);
+        betterBarrelFrameUpgrade(ModBlocks.LAPIS_ANTI_BARREL,ModBlocks.IRON_ANTI_BARREL,Tags.Items.GEMS_LAPIS,consumer);
+        betterBarrelFrameUpgrade(ModBlocks.GOLD_ANTI_BARREL,ModBlocks.LAPIS_ANTI_BARREL,Tags.Items.INGOTS_GOLD,consumer);
+        betterBarrelFrameUpgrade(ModBlocks.DIAMOND_ANTI_BARREL,ModBlocks.GOLD_ANTI_BARREL,Tags.Items.GEMS_DIAMOND,consumer);
+        betterBarrelFrameUpgrade(ModBlocks.EMERALD_ANTI_BARREL,ModBlocks.DIAMOND_ANTI_BARREL,Tags.Items.GEMS_EMERALD,consumer);
+        betterBarrelFrameUpgrade(ModBlocks.NETHERITE_ANTI_BARREL,ModBlocks.EMERALD_ANTI_BARREL,Tags.Items.INGOTS_NETHERITE,consumer);
 
+        itemUpgrades(consumer);
+        compressionRecipes(consumer);
+    }
+
+    protected void itemUpgrades(Consumer<FinishedRecipe>consumer) {
+        ShapedRecipeBuilder.shaped(ModItems.BETTER_BARREL_STORAGE_UPGRADE)
+                .define('P',Tags.Items.RODS_WOODEN)
+                .define('b', ModBlocks.BETTER_BARREL)
+                .pattern("P P")
+                .pattern(" b ")
+                .pattern("P P")
+                .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.ANTI_BARREL_STORAGE_UPGRADE)
+                .define('P', Items.NETHER_BRICK)
+                .define('b', ModBlocks.ANTI_BARREL)
+                .pattern("P P")
+                .pattern(" b ")
+                .pattern("P P")
+                .unlockedBy("has_anti_barrel", has(ModBlocks.ANTI_BARREL))
+                .save(consumer);
+
+
+      /*  ShapedRecipeBuilder.shaped(ModItems.ANTI_BARREL_STORAGE_UPGRADE)
+                .define('P',Tags.Items.RODS_WOODEN)
+                .define('b', ModBlocks.BETTER_BARREL)
+                .pattern("P P")
+                .pattern(" b ")
+                .pattern("P P")
+                .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
+                .save(consumer);*/
+
+
+        ShapedRecipeBuilder.shaped(ModItems.VOID_UPGRADE)
+                .define('P',Tags.Items.RODS_WOODEN)
+                .define('b', Tags.Items.OBSIDIAN)
+                .pattern("P P")
+                .pattern(" b ")
+                .pattern("P P")
+                .unlockedBy("has_obsidian", has(Tags.Items.OBSIDIAN))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.PICKUP_1x1_UPGRADE)
+                .define('P',Tags.Items.RODS_WOODEN)
+                .define('b', Blocks.HOPPER)
+                .pattern("P P")
+                .pattern(" b ")
+                .pattern("P P")
+                .unlockedBy("has_hopper", has(Blocks.HOPPER))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(ModItems.PICKUP_3x3_UPGRADE)
+                .requires(ModItems.PICKUP_1x1_UPGRADE,3)
+                .unlockedBy("has_upgrade", has(ModItems.PICKUP_1x1_UPGRADE))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(ModItems.PICKUP_9x9_UPGRADE)
+                .requires(ModItems.PICKUP_3x3_UPGRADE,3)
+                .unlockedBy("has_upgrade", has(ModItems.PICKUP_3x3_UPGRADE))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(ModItems.PICKUP_1x1_UPGRADE,3)
+                .requires(ModItems.PICKUP_3x3_UPGRADE)
+                .unlockedBy("has_upgrade", has(ModItems.PICKUP_3x3_UPGRADE))
+                .save(consumer,new ResourceLocation(NABBA.MODID,RecipeBuilder.getDefaultRecipeId(ModItems.PICKUP_1x1_UPGRADE).getPath()+"_reverse"));
+
+        ShapelessRecipeBuilder.shapeless(ModItems.PICKUP_3x3_UPGRADE,3)
+                .requires(ModItems.PICKUP_9x9_UPGRADE)
+                .unlockedBy("has_upgrade", has(ModItems.PICKUP_9x9_UPGRADE))
+                .save(consumer,new ResourceLocation(NABBA.MODID,RecipeBuilder.getDefaultRecipeId(ModItems.PICKUP_3x3_UPGRADE).getPath()+"_reverse"));
+
+    }
+
+    protected void compressionRecipes(Consumer<FinishedRecipe> consumer) {
         make2x2AndReverse(ModItems.x4_BETTER_BARREL_STORAGE_UPGRADE,ModItems.BETTER_BARREL_STORAGE_UPGRADE,consumer);
         make2x2AndReverse(ModItems.x16_BETTER_BARREL_STORAGE_UPGRADE,ModItems.x4_BETTER_BARREL_STORAGE_UPGRADE,consumer);
         make2x2AndReverse(ModItems.x64_BETTER_BARREL_STORAGE_UPGRADE,ModItems.x16_BETTER_BARREL_STORAGE_UPGRADE,consumer);
@@ -105,7 +170,8 @@ public class ModRecipeProvider extends RecipeProvider {
         make2x2AndReverse(ModItems.x1024_FLUID_BARREL_STORAGE_UPGRADE,ModItems.x256_FLUID_BARREL_STORAGE_UPGRADE,consumer);
     }
 
-    protected static void make2x2AndReverse(Item compact,Item item, Consumer<FinishedRecipe> consumer) {
+
+        protected static void make2x2AndReverse(Item compact,Item item, Consumer<FinishedRecipe> consumer) {
         ShapedRecipeBuilder.shaped(compact).define('#', item)
                 .pattern("##").pattern("##").unlockedBy("has_storage_upgrade", has(item)).save(consumer);
 

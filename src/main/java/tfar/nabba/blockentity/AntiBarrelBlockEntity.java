@@ -30,8 +30,6 @@ import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.inventory.RepositoryInventoryInputWrapper;
-import tfar.nabba.inventory.RepositoryInventoryOutputWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -94,18 +92,18 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
     };
 
-    public RepositoryInventory getInventory() {
+    public AntiBarrelInventory getInventory() {
         return NABBA.instance.data.getInventory(this);
     }
 
     @Override
     public ItemStack tryAddItem(ItemStack stack) {
-        RepositoryInventory repositoryInventory = getInventory();
+        AntiBarrelInventory antiBarrelInventory = getInventory();
         if (getInventory().isFull()) {
             return stack;
         }
         //attempt to add the item to the last slot
-        return getInventory().insertItem(repositoryInventory.getSlots() - 1,stack,false);
+        return getInventory().insertItem(antiBarrelInventory.getSlots() - 1,stack,false);
     }
 
     public static AntiBarrelBlockEntity create(BlockPos pos, BlockState state) {
@@ -216,10 +214,10 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         this.uuid = uuid;
     }
 
-    public static class RepositoryInventory implements IItemHandler, ResizableIItemHandler {
+    public static class AntiBarrelInventory implements IItemHandler, ResizableIItemHandler {
 
         private final AntiBarrelBlockEntity blockEntity;
-        public RepositoryInventory(AntiBarrelBlockEntity blockEntity) {
+        public AntiBarrelInventory(AntiBarrelBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
         }
 
@@ -373,7 +371,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
                 blockEntity.setClientCountAndLast(getLastItem(),getActualStoredCount());
             }
             for (ServerPlayer player : NABBA.instance.server.getPlayerList().getPlayers()) {
-                if (player.containerMenu instanceof AntiBarrelMenu antiBarrelMenu && antiBarrelMenu.repositoryInventory == this) {
+                if (player.containerMenu instanceof AntiBarrelMenu antiBarrelMenu && antiBarrelMenu.antiBarrelInventory == this) {
                     antiBarrelMenu.refreshDisplay(player);
                 }
             }

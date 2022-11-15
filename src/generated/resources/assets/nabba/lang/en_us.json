@@ -66,6 +66,7 @@
   "item.nabba.lock_key": "Lock Key",
   "item.nabba.netherite_to_creative_frame_upgrade": "Netherite To Creative Frame Upgrade",
   "item.nabba.pickup_1x1_upgrade": "Pickup 1x1 Upgrade",
+  "item.nabba.pickup_1x1_upgrade.desc": "Picks up items in a 1x3x1 volume centered on the barrel",
   "item.nabba.pickup_3x3_upgrade": "Pickup 3x3 Upgrade",
   "item.nabba.pickup_3x3_upgrade.desc": "Picks up items in a 3x3x3 volume centered on the barrel",
   "item.nabba.pickup_9x9_upgrade": "Pickup 9x9 Upgrade",

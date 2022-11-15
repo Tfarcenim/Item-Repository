@@ -3,12 +3,9 @@ package tfar.nabba.world;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
-import tfar.nabba.util.Utils;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
@@ -23,7 +20,7 @@ public class RepositorySavedData extends SavedData {
         return storage;
     }
 
-    public AntiBarrelBlockEntity.RepositoryInventory getInventory(AntiBarrelBlockEntity antiBarrelBlockEntity) {
+    public AntiBarrelBlockEntity.AntiBarrelInventory getInventory(AntiBarrelBlockEntity antiBarrelBlockEntity) {
         UUID uuid = antiBarrelBlockEntity.getUuid();
         if (!storage.containsKey(uuid)) {
             storage.put(uuid,new ListTag());
@@ -32,10 +29,10 @@ public class RepositorySavedData extends SavedData {
         return createFromTag(antiBarrelBlockEntity,tag);
     }
 
-    public AntiBarrelBlockEntity.RepositoryInventory createFromTag(AntiBarrelBlockEntity antiBarrelBlockEntity, ListTag tag) {
-        AntiBarrelBlockEntity.RepositoryInventory repositoryInventory = new AntiBarrelBlockEntity.RepositoryInventory(antiBarrelBlockEntity);
-        repositoryInventory.loadItems(tag);
-        return repositoryInventory;
+    public AntiBarrelBlockEntity.AntiBarrelInventory createFromTag(AntiBarrelBlockEntity antiBarrelBlockEntity, ListTag tag) {
+        AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory = new AntiBarrelBlockEntity.AntiBarrelInventory(antiBarrelBlockEntity);
+        antiBarrelInventory.loadItems(tag);
+        return antiBarrelInventory;
     }
 
 
@@ -66,8 +63,8 @@ public class RepositorySavedData extends SavedData {
         }
     }
 
-    public void writeInvData(AntiBarrelBlockEntity.RepositoryInventory repositoryInventory) {
-        storage.put(repositoryInventory.getBlockEntity().getUuid(),repositoryInventory.save());
+    public void writeInvData(AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory) {
+        storage.put(antiBarrelInventory.getBlockEntity().getUuid(), antiBarrelInventory.save());
         setDirty();
     }
 

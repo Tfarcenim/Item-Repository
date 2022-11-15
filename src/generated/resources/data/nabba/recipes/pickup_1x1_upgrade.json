@@ -2,21 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "P": {
-      "tag": "forge:ingots/copper"
-    },
-    "S": {
       "tag": "forge:rods/wooden"
     },
     "b": {
-      "item": "nabba:stone_anti_barrel"
+      "item": "minecraft:hopper"
     }
   },
   "pattern": [
-    "PSP",
-    "SbS",
-    "PSP"
+    "P P",
+    " b ",
+    "P P"
   ],
   "result": {
-    "item": "nabba:copper_anti_barrel"
+    "item": "nabba:pickup_1x1_upgrade"
   }
 }
