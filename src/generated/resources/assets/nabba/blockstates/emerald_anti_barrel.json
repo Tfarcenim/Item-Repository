@@ -1,0 +1,17 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "nabba:block/emerald_anti_barrel"
+      }
+    },
+    {
+      "apply": {
+        "model": "nabba:block/better_barrel_void"
+      },
+      "when": {
+        "void": "true"
+      }
+    }
+  ]
+}

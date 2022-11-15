@@ -31,16 +31,6 @@
                 },
                 {
                   "op": "replace",
-                  "source": "Stack",
-                  "target": "BlockEntityTag.Stack"
-                },
-                {
-                  "op": "replace",
-                  "source": "RealCount",
-                  "target": "BlockEntityTag.RealCount"
-                },
-                {
-                  "op": "replace",
                   "source": "Upgrades",
                   "target": "BlockEntityTag.Upgrades"
                 },
@@ -48,6 +38,16 @@
                   "op": "replace",
                   "source": "Size",
                   "target": "BlockEntityTag.Size"
+                },
+                {
+                  "op": "replace",
+                  "source": "Stack",
+                  "target": "BlockEntityTag.Stack"
+                },
+                {
+                  "op": "replace",
+                  "source": "RealCount",
+                  "target": "BlockEntityTag.RealCount"
                 },
                 {
                   "op": "replace",

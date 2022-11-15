@@ -1,6 +1,6 @@
-// 1.19.2	2022-11-13T21:05:11.5291024	Tags for minecraft:item
+// 1.19.2	2022-11-15T07:48:29.3866081	Tags for minecraft:item
 fd0967f6cd5c9a52da6b860985c4f449d649d5d8 data/forge/tags/items/blocks/nether_bricks.json
 466a3f2f73a11eb50fe958e8c57b56b2133d494f data/forge/tags/items/blocks/nether_brick_slabs.json
-24543d4ccd88d85012244fc4fe444490fcdc527d data/nabba/tags/items/anti_barrels.json
+86015206b0deb7be67db58c5babcf30e070f07a0 data/nabba/tags/items/anti_barrels.json
 64a9d344579ab0bc311d8798074cfba9f6217a00 data/nabba/tags/items/better_barrels.json
 c3ea926e45204b2bd61bc4befe35ae792a421164 data/nabba/tags/items/keys.json

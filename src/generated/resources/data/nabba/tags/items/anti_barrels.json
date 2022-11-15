@@ -1,5 +1,14 @@
 {
   "values": [
-    "nabba:anti_barrel"
+    "nabba:anti_barrel",
+    "nabba:stone_anti_barrel",
+    "nabba:copper_anti_barrel",
+    "nabba:iron_anti_barrel",
+    "nabba:lapis_anti_barrel",
+    "nabba:gold_anti_barrel",
+    "nabba:diamond_anti_barrel",
+    "nabba:emerald_anti_barrel",
+    "nabba:netherite_anti_barrel",
+    "nabba:creative_anti_barrel"
   ]
 }

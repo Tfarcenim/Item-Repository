@@ -13,12 +13,11 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "block": "nabba:better_barrel",
+              "block": "nabba:netherite_anti_barrel",
               "function": "minecraft:copy_state",
               "properties": [
                 "discrete",
-                "void",
-                "locked"
+                "void"
               ]
             },
             {
@@ -41,24 +40,24 @@
                 },
                 {
                   "op": "replace",
-                  "source": "Stack",
-                  "target": "BlockEntityTag.Stack"
+                  "source": "Uuid",
+                  "target": "Uuid"
                 },
                 {
                   "op": "replace",
-                  "source": "RealCount",
-                  "target": "BlockEntityTag.RealCount"
+                  "source": "Last",
+                  "target": "BlockEntityTag.Last"
                 },
                 {
                   "op": "replace",
-                  "source": "Ghost",
-                  "target": "BlockEntityTag.Ghost"
+                  "source": "Stored",
+                  "target": "BlockEntityTag.Stored"
                 }
               ],
               "source": "block_entity"
             }
           ],
-          "name": "nabba:better_barrel"
+          "name": "nabba:netherite_anti_barrel"
         }
       ],
       "rolls": 1.0

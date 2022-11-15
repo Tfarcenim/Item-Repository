@@ -43,9 +43,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     private UUID uuid = Util.NIL_UUID;
     private Component customName;
-    public LazyOptional<IItemHandler> fullOptional = LazyOptional.of(this::getInventory);
-    public LazyOptional<IItemHandler> inputOptional = LazyOptional.of(() -> new RepositoryInventoryInputWrapper(getInventory()));
-    public LazyOptional<IItemHandler> outputOptional = LazyOptional.of(() -> new RepositoryInventoryOutputWrapper(getInventory()));
 
     public String search = "";
 
@@ -111,6 +108,14 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         return getInventory().insertItem(repositoryInventory.getSlots() - 1,stack,false);
     }
 
+    public static AntiBarrelBlockEntity create(BlockPos pos, BlockState state) {
+        return new AntiBarrelBlockEntity(ModBlockEntityTypes.ANTI_BARREL, pos, state);
+    }
+
+    public static AntiBarrelBlockEntity createDiscrete(BlockPos pos, BlockState state) {
+        return new AntiBarrelBlockEntity(ModBlockEntityTypes.DISCRETE_ANTI_BARREL, pos, state);
+    }
+
     public AntiBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         defaultDisplaySlots(syncSlots);
@@ -137,12 +142,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             return LazyOptional.of(this::getInventory).cast();
         }
         return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        fullOptional.invalidate();
     }
 
     @Override

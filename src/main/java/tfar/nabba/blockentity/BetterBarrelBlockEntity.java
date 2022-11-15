@@ -3,7 +3,6 @@ package tfar.nabba.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,8 +19,6 @@ import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
-
-import javax.annotation.Nonnull;
 
 public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
     private ItemStack ghost = ItemStack.EMPTY;
@@ -41,8 +38,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
     public static BetterBarrelBlockEntity createDiscrete(BlockPos pos, BlockState state) {
         return new BetterBarrelBlockEntity(ModBlockEntityTypes.DISCRETE_BETTER_BARREL, pos, state);
     }
-
-
 
     public ItemStack tryAddItem(ItemStack stack) {
         return barrelHandler.insertItem(0, stack, false);

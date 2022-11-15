@@ -23,6 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
+import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.InteractsWithBarrel;
 import tfar.nabba.util.BarrelType;
 
@@ -76,10 +77,10 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
         return blockentity instanceof MenuProvider ? (MenuProvider) blockentity : null;
     }
 
-    @Nullable
+    @javax.annotation.Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new AntiBarrelBlockEntity(pPos, pState);
+        return pState.getValue(DISCRETE) ? ModBlockEntityTypes.Suppliers.DISCRETE_AB.create(pPos,pState):ModBlockEntityTypes.Suppliers.REGULAR_AB.create(pPos,pState);
     }
 
     @Override

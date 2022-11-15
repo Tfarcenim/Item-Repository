@@ -36,6 +36,12 @@ public class ModBlockLoot extends BlockLoot {
         dropAntiBarrel(ModBlocks.STONE_ANTI_BARREL);
         dropAntiBarrel(ModBlocks.COPPER_ANTI_BARREL);
         dropAntiBarrel(ModBlocks.IRON_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.LAPIS_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.GOLD_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.DIAMOND_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.EMERALD_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.NETHERITE_ANTI_BARREL);
+        dropAntiBarrel(ModBlocks.CREATIVE_ANTI_BARREL);
 
         dropSelf(ModBlocks.CONTROLLER);
     }
@@ -44,20 +50,17 @@ public class ModBlockLoot extends BlockLoot {
 
         LootTable.Builder builder = LootTable.lootTable()
                 .withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
-                        .add(LootItem.lootTableItem(block)
-                                .apply(CopyBlockState.copyState(block).copy(BetterBarrelBlock.DISCRETE).copy(BetterBarrelBlock.LOCKED).copy(BetterBarrelBlock.VOID))
-                                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                        .copy(NBTKeys.Color.name(),"BlockEntityTag."+NBTKeys.Color)
-                                        .copy(NBTKeys.Stack.name(),"BlockEntityTag."+NBTKeys.Stack)
-                                        .copy(NBTKeys.RealCount.name(),"BlockEntityTag."+NBTKeys.RealCount)
-                                        .copy(NBTKeys.Upgrades.name(),"BlockEntityTag."+NBTKeys.Upgrades)
-                                        .copy(NBTKeys.Size.name(),"BlockEntityTag."+NBTKeys.Size)
-                                        .copy(NBTKeys.Ghost.name(),"BlockEntityTag."+NBTKeys.Ghost)
+                                .add(LootItem.lootTableItem(block)
+                                        .apply(CopyBlockState.copyState(block).copy(BetterBarrelBlock.DISCRETE).copy(BetterBarrelBlock.LOCKED).copy(BetterBarrelBlock.VOID))
+                                        .apply(copySharedNBTInfo()
+                                                .copy(NBTKeys.Stack.name(), "BlockEntityTag." + NBTKeys.Stack)
+                                                .copy(NBTKeys.RealCount.name(), "BlockEntityTag." + NBTKeys.RealCount)
+                                                .copy(NBTKeys.Ghost.name(), "BlockEntityTag." + NBTKeys.Ghost)
+                                        )
                                 )
                         )
-                        )
                 );
-        this.add(block,builder);
+        this.add(block, builder);
     }
 
     protected void dropAntiBarrel(Block block) {
@@ -65,18 +68,22 @@ public class ModBlockLoot extends BlockLoot {
                 .withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                                 .add(LootItem.lootTableItem(block)
                                         .apply(CopyBlockState.copyState(block).copy(BetterBarrelBlock.DISCRETE).copy(BetterBarrelBlock.VOID))
-                                        .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
-                                                .copy(NBTKeys.Uuid.name(),NBTKeys.Uuid.name())
-                                                .copy("Last","BlockEntityTag.Last")
-                                                .copy("Stored","BlockEntityTag.Stored")
-                                                .copy(NBTKeys.Color.name(),"BlockEntityTag."+NBTKeys.Color)
-                                                .copy(NBTKeys.Upgrades.name(),"BlockEntityTag."+NBTKeys.Upgrades)
-                                                .copy(NBTKeys.Size.name(),"BlockEntityTag."+NBTKeys.Size)
+                                        .apply(copySharedNBTInfo()
+                                                .copy(NBTKeys.Uuid.name(), NBTKeys.Uuid.name())
+                                                .copy("Last", "BlockEntityTag.Last")
+                                                .copy("Stored", "BlockEntityTag.Stored")
                                         )
                                 )
                         )
                 );
-        this.add(block,builder);
+        this.add(block, builder);
+    }
+
+    public CopyNbtFunction.Builder copySharedNBTInfo() {
+        return CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                .copy(NBTKeys.Color.name(), "BlockEntityTag." + NBTKeys.Color)
+                .copy(NBTKeys.Upgrades.name(), "BlockEntityTag." + NBTKeys.Upgrades)
+                .copy(NBTKeys.Size.name(), "BlockEntityTag." + NBTKeys.Size);
     }
 
     @Override

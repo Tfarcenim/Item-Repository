@@ -25,6 +25,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
         makeAntiBarrel(ModBlocks.STONE_ANTI_BARREL);
         makeAntiBarrel(ModBlocks.COPPER_ANTI_BARREL);
         makeAntiBarrel(ModBlocks.IRON_ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.LAPIS_ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.GOLD_ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.DIAMOND_ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.EMERALD_ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.NETHERITE_ANTI_BARREL);
+        makeAntiBarrel(ModBlocks.CREATIVE_ANTI_BARREL);
 
         makeBarrel(ModBlocks.BETTER_BARREL);
         makeBarrel(ModBlocks.COPPER_BETTER_BARREL);

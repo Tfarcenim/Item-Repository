@@ -21,7 +21,9 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 ModBlocks.IRON_BETTER_BARREL,ModBlocks.LAPIS_BETTER_BARREL,ModBlocks.GOLD_BETTER_BARREL,ModBlocks.DIAMOND_BETTER_BARREL,
                 ModBlocks.EMERALD_BETTER_BARREL,ModBlocks.NETHERITE_BETTER_BARREL,ModBlocks.CREATIVE_BETTER_BARREL);
 
-        this.tag(ModBlockTags.ANTI_BARRELS).add(ModBlocks.ANTI_BARREL);
+        this.tag(ModBlockTags.ANTI_BARRELS).add(ModBlocks.ANTI_BARREL,ModBlocks.STONE_ANTI_BARREL,ModBlocks.COPPER_ANTI_BARREL,
+                ModBlocks.IRON_ANTI_BARREL,ModBlocks.LAPIS_ANTI_BARREL,ModBlocks.GOLD_ANTI_BARREL,ModBlocks.DIAMOND_ANTI_BARREL,
+                ModBlocks.EMERALD_ANTI_BARREL,ModBlocks.NETHERITE_ANTI_BARREL,ModBlocks.CREATIVE_ANTI_BARREL);
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).addTag(ModBlockTags.BETTER_BARRELS);
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(ModBlockTags.ANTI_BARRELS);
