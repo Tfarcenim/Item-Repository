@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.item.InteractsWithBarrel;
+import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.util.BarrelType;
 

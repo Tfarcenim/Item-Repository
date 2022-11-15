@@ -16,10 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.blockentity.ControllerBlockEntity;
-import tfar.nabba.item.InteractsWithBarrel;
-import tfar.nabba.item.InteractsWithController;
-import tfar.nabba.item.KeyItem;
-import tfar.nabba.item.VanityKeyItem;
+import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.util.Utils;
 
 import java.util.List;

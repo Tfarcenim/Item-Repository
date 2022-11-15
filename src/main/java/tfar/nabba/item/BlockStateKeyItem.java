@@ -5,15 +5,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import tfar.nabba.api.InteractsWithBarrel;
+import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
-public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel,InteractsWithController {
+public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel, InteractsWithController {
     private final BooleanProperty property;
 
     public BlockStateKeyItem(Properties pProperties, BooleanProperty property) {

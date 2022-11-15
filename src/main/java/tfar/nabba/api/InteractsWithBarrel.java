@@ -1,4 +1,4 @@
-package tfar.nabba.item;
+package tfar.nabba.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;

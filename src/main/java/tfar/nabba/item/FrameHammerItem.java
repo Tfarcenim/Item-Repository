@@ -6,8 +6,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import tfar.nabba.api.InteractsWithBarrel;
 
-public class FrameHammerItem extends Item implements InteractsWithBarrel{
+public class FrameHammerItem extends Item implements InteractsWithBarrel {
     public FrameHammerItem(Properties pProperties) {
         super(pProperties);
     }

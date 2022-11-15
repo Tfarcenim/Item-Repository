@@ -19,8 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
-import tfar.nabba.item.InteractsWithBarrel;
-import tfar.nabba.item.VanityKeyItem;
+import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;

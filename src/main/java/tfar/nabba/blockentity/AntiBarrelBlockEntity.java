@@ -160,7 +160,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     }
     @Override//read
     public void load(CompoundTag tag) {
-        if (tag.hasUUID(NBTKeys.Uuid.name())) {
+        if (tag.hasUUID(NBTKeys.Uuid.name()) && tag.getUUID(NBTKeys.Uuid.name()) != Util.NIL_UUID) {
             setUuid(tag.getUUID(NBTKeys.Uuid.name()));
         }
         if (tag.contains("CustomName", 8)) {
@@ -197,7 +197,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     //make sure a new id is set if there isn't one and create an inventory for it so the game doesn't freak out
     public void initialize(ItemStack stack) {
         if (uuid == Util.NIL_UUID) {
-            if (stack.hasTag() && stack.getTag().hasUUID(NBTKeys.Uuid.name())) {
+            if (stack.hasTag() && stack.getTag().hasUUID(NBTKeys.Uuid.name()) && !stack.getTag().getUUID(NBTKeys.Uuid.name()).equals(Util.NIL_UUID)) {
                 setUuid(stack.getTag().getUUID(NBTKeys.Uuid.name()));
             } else {
                 setUuid(UUID.randomUUID());

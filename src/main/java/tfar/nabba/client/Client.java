@@ -12,6 +12,8 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import tfar.nabba.client.renderer.AntiBarrelRenderer;
+import tfar.nabba.client.renderer.BetterBarrelRenderer;
 import tfar.nabba.client.screen.AntiBarrelScreen;
 import tfar.nabba.client.screen.VanityKeyScreen;
 import tfar.nabba.init.ModBlockEntityTypes;
@@ -28,7 +30,7 @@ public class Client {
         MinecraftForge.EVENT_BUS.addListener(Client::scroll);
         MenuScreens.register(ModMenuTypes.ANTI_BARREL, AntiBarrelScreen::new);
         MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
-        BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL,BetterBarrelRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL, BetterBarrelRenderer::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.ANTI_BARREL, AntiBarrelRenderer::new);
         setRenderLayer(ModBlocks.BETTER_BARREL);
         setRenderLayer(ModBlocks.STONE_BETTER_BARREL);

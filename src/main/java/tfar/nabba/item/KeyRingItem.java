@@ -20,12 +20,14 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.InteractsWithBarrel;
+import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.init.tag.ModItemTags;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class KeyRingItem extends KeyItem implements InteractsWithBarrel,InteractsWithController{
+public class KeyRingItem extends KeyItem implements InteractsWithBarrel, InteractsWithController {
     public KeyRingItem(Properties pProperties) {
         super(pProperties);
     }

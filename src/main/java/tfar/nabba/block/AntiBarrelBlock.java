@@ -15,8 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -24,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.item.InteractsWithBarrel;
+import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.util.BarrelType;
 
 import java.util.List;
