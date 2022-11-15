@@ -43,7 +43,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
         public int get(int pIndex) {
             switch (pIndex) {
                 case 0:
-                    return 1;//getInventory().getActualStoredCount();
+                    return barrels.size();
                 case 1:
                     return 1;//getInventory().getFullSlots(search);
                 default:

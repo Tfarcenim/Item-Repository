@@ -107,7 +107,7 @@ public class ControllerKeyScreen extends AbstractContainerScreen<ControllerKeyMe
     @Override
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        this.font.draw(pPoseStack, menu.getSearchSlotCount()+"/"+(menu.getTotalSlotCount()-1), (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
+        this.font.draw(pPoseStack, menu.getSearchSlotCount()+"/"+(menu.getTotalSlotCount()), (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
     }
 
     public void setGuiStacks(List<ItemStack> stacks, List<Integer> ints) {
