@@ -51,6 +51,8 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         public int get(int pIndex) {
             switch (pIndex) {
                 case 0:
+                    return getInventory().getActualStoredCount();
+                case 1:
                     return getInventory().getFullSlots(search);
                 default:
                     return 0;
@@ -64,7 +66,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
 
         public int getCount() {
-            return 1;
+            return 2;
         }
     };
 
