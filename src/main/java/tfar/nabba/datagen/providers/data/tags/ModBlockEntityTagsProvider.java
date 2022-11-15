@@ -19,5 +19,7 @@ public class ModBlockEntityTagsProvider extends TagsProvider<BlockEntityType<?>>
     @Override
     protected void addTags() {
         this.tag(ModBlockEntityTypeTags.BETTER_BARRELS).add(ModBlockEntityTypes.BETTER_BARREL,ModBlockEntityTypes.DISCRETE_BETTER_BARREL);
+        this.tag(ModBlockEntityTypeTags.ANTI_BARRELS).add(ModBlockEntityTypes.ANTI_BARREL);
+        this.tag(ModBlockEntityTypeTags.BARRELS).addTags(ModBlockEntityTypeTags.BETTER_BARRELS,ModBlockEntityTypeTags.ANTI_BARRELS/*,ModBlockEntityTypeTags.FLUID_BARRELS*/);
     }
 }

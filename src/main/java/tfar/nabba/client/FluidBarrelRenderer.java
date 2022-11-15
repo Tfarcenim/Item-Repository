@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.util.Upgrades;
@@ -41,7 +40,7 @@ public class FluidBarrelRenderer implements BlockEntityRenderer<BetterBarrelBloc
     }
 
     protected void renderTextAndItems(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
-        ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
+        ItemStack stack = betterBarrelBlockEntity.getItemHandler().getStack();
 
         boolean infiniteVend = betterBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
 
@@ -109,7 +108,7 @@ public class FluidBarrelRenderer implements BlockEntityRenderer<BetterBarrelBloc
         float scale = (float) betterBarrelBlockEntity.getSize();
         if (scale < .01) return;
 
-        ItemStack stack = betterBarrelBlockEntity.getBarrelHandler().getStack();
+        ItemStack stack = betterBarrelBlockEntity.getItemHandler().getStack();
 
         if (stack.isEmpty() && !betterBarrelBlockEntity.hasGhost()) return;
 

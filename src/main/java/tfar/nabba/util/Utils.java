@@ -2,19 +2,16 @@ package tfar.nabba.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.registries.ForgeRegistries;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 
@@ -97,7 +94,7 @@ public class Utils {
     }
 
     public static List<BlockEntity> getNearbyBarrels(Level level, BlockPos thisPos) {
-        return getNearbyBlockEntities(level,isBarrel,thisPos);
+        return getNearbyBlockEntities(level, isBetterBarrel,thisPos);
     }
 
     public static List<BlockEntity> getNearbyControllers(Level level, BlockPos thisPos) {
@@ -105,7 +102,7 @@ public class Utils {
     }
 
     public static final Predicate<BlockEntity> isController = ControllerBlockEntity.class::isInstance;
-    public static final Predicate<BlockEntity> isBarrel = blockEntity -> ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.BETTER_BARRELS).contains(blockEntity.getType());
+    public static final Predicate<BlockEntity> isBetterBarrel = blockEntity -> ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.BETTER_BARRELS).contains(blockEntity.getType());
     //searches a 3x3 chunk area
     public static List<BlockEntity> getNearbyBlockEntities(Level level, Predicate<BlockEntity> predicate, BlockPos thisPos) {
 

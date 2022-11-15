@@ -17,7 +17,6 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.item.InteractsWithBarrel;
 import tfar.nabba.util.Utils;
@@ -42,16 +41,11 @@ public class ControllerBlockEntity extends BlockEntity {
         return new ControllerBlockEntity(ModBlockEntityTypes.CONTROLLER, pos, state);
     }
 
-    private void invalidateCaches() {
-    }
-
-
-
     public void gatherBarrels() {
         BlockPos thisPos = getBlockPos();
         List<BlockEntity> betterBarrelBlockEntities = Utils.getNearbyBarrels(level,thisPos);
-        for (BlockEntity betterBarrelBlockEntity : betterBarrelBlockEntities) {
-            addBarrel(betterBarrelBlockEntity.getBlockPos());
+        for (BlockEntity abstractBarrelBlockEntity : betterBarrelBlockEntities) {
+            addBarrel(abstractBarrelBlockEntity.getBlockPos());
         }
     }
 
@@ -144,6 +138,7 @@ public class ControllerBlockEntity extends BlockEntity {
 
     public static class ControllerHandler implements IItemHandler {
         private final ControllerBlockEntity controllerBlockEntity;
+        private int totalSlots;
 
         ControllerHandler(ControllerBlockEntity controllerBlockEntity) {
             this.controllerBlockEntity = controllerBlockEntity;
@@ -151,7 +146,18 @@ public class ControllerBlockEntity extends BlockEntity {
 
         @Override
         public int getSlots() {
-            return controllerBlockEntity.barrels.size();
+            return totalSlots;
+        }
+
+        public void computeSlots() {
+            int i = 0;
+            for (BlockPos pos : controllerBlockEntity.barrels) {
+                BlockEntity blockEntity = controllerBlockEntity.getBE(pos);
+                if (blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
+                    i+= abstractBarrelBlockEntity.getItemHandler().getSlots();
+                }
+            }
+            totalSlots = i;
         }
 
         @Override
@@ -159,9 +165,10 @@ public class ControllerBlockEntity extends BlockEntity {
             if (slot >= getSlots()) return ItemStack.EMPTY;
             BlockEntity blockEntity = controllerBlockEntity.getBE(slot);
             if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
-                return barrelBlockEntity.getBarrelHandler().getStackInSlot(0);
+                return barrelBlockEntity.getItemHandler().getStackInSlot(0);
+            } else {
+                controllerBlockEntity.clearInvalid();
             }
-            controllerBlockEntity.clearInvalid();
             return ItemStack.EMPTY;
         }
 
@@ -171,7 +178,7 @@ public class ControllerBlockEntity extends BlockEntity {
 
             BlockEntity blockEntity = controllerBlockEntity.getBE(slot);
             if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
-                return barrelBlockEntity.getBarrelHandler().insertItem(0,stack,simulate);
+                return barrelBlockEntity.getItemHandler().insertItem(0,stack,simulate);
             } else {
                 controllerBlockEntity.clearInvalid();
             }
@@ -184,7 +191,7 @@ public class ControllerBlockEntity extends BlockEntity {
 
             BlockEntity blockEntity = controllerBlockEntity.getBE(slot);
             if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
-                return barrelBlockEntity.getBarrelHandler().extractItem(0,amount,simulate);
+                return barrelBlockEntity.getItemHandler().extractItem(0,amount,simulate);
             } else {
                 controllerBlockEntity.clearInvalid();
             }
@@ -195,7 +202,7 @@ public class ControllerBlockEntity extends BlockEntity {
             if (slot >= getSlots()) return 0;
             BlockEntity blockEntity = controllerBlockEntity.getBE(slot);
             if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
-                return barrelBlockEntity.getBarrelHandler().getSlotLimit(0);
+                return barrelBlockEntity.getItemHandler().getSlotLimit(0);
             } else {
                 controllerBlockEntity.clearInvalid();
             }
@@ -206,7 +213,7 @@ public class ControllerBlockEntity extends BlockEntity {
         public boolean isItemValid(int slot, @NotNull ItemStack incoming) {
             if (slot < getSlots()) {
                 if (controllerBlockEntity.getBE(slot) instanceof BetterBarrelBlockEntity barrelBlockEntity) {
-                    return barrelBlockEntity.getBarrelHandler().isItemValid(0, incoming);
+                    return barrelBlockEntity.getItemHandler().isItemValid(0, incoming);
                 } else {
                     controllerBlockEntity.clearInvalid();
                 }

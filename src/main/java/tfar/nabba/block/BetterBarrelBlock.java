@@ -5,7 +5,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -22,8 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
-import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
-import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.InteractsWithBarrel;
@@ -55,7 +52,7 @@ public class BetterBarrelBlock extends AbstractBarrelBlock {
 
                 } else {
 
-                    ItemStack existing = betterBarrelBlockEntity.getBarrelHandler().getStack();
+                    ItemStack existing = betterBarrelBlockEntity.getItemHandler().getStack();
                     //there is no items in the barrel OR the item that the player is holding is the same as the item in the barrel
                     if (existing.isEmpty() || ItemStack.isSameItemSameTags(handStack,existing)) {
                         ItemStack stack = betterBarrelBlockEntity.tryAddItem(handStack);

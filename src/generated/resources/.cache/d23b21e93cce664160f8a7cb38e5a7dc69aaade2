@@ -1,2 +1,4 @@
-// 1.19.2	2022-11-13T14:04:06.9993522	Tags for minecraft:block_entity_type
-17681ae3c82146da7ce32ad5dd23f03fcd56e916 data/minecraft/tags/block_entity_type/better_barrels.json
+// 1.19.2	2022-11-14T18:19:23.3815962	Tags for minecraft:block_entity_type
+24543d4ccd88d85012244fc4fe444490fcdc527d data/nabba/tags/block_entity_type/anti_barrels.json
+fbe6d03b109bceca190cb5201cedd39cfbb5b71e data/nabba/tags/block_entity_type/barrels.json
+17681ae3c82146da7ce32ad5dd23f03fcd56e916 data/nabba/tags/block_entity_type/better_barrels.json

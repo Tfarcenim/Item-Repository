@@ -12,12 +12,13 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
+import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepositoryInventory implements IItemHandler {
+public class RepositoryInventory implements IItemHandler, ResizableIItemHandler {
 
     private AntiBarrelBlockEntity blockEntity;
     public RepositoryInventory() {}

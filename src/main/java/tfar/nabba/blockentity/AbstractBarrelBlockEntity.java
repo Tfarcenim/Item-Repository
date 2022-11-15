@@ -8,6 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.AbstractBarrelBlock;
@@ -107,6 +109,10 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
             storage += upgradeStack.getStorageUnits(getBarrelType());
         }
         return storage;
+    }
+
+    public IItemHandler getItemHandler() {
+        return EmptyHandler.INSTANCE;
     }
 
     BarrelType getBarrelType() {

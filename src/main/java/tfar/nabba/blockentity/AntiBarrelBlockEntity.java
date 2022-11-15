@@ -139,6 +139,11 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         fullOptional.invalidate();
     }
 
+    @Override
+    public IItemHandler getItemHandler() {
+        return getInventory();
+    }
+
     public void saveAdditional(CompoundTag tag) {
         tag.put(NBTKeys.Settings.name(), settings);
         if (this.customName != null) {

@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -21,10 +20,8 @@ import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
-import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
     private ItemStack ghost = ItemStack.EMPTY;
@@ -51,7 +48,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         return barrelHandler.insertItem(0, stack, false);
     }
     public ItemStack tryRemoveItem() {
-        return getBarrelHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
+        return getItemHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
     }
 
     public boolean hasGhost() {
@@ -91,7 +88,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         invalidateCaches();
     }
 
-    public BarrelHandler getBarrelHandler() {
+    public BarrelHandler getItemHandler() {
         return barrelHandler;
     }
 
@@ -224,7 +221,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    private LazyOptional<IItemHandler> optional = LazyOptional.of(this::getBarrelHandler);
+    private LazyOptional<IItemHandler> optional = LazyOptional.of(this::getItemHandler);
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return cap == ForgeCapabilities.ITEM_HANDLER ? optional.cast() : super.getCapability(cap, side);
@@ -239,6 +236,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
     @Override
     public void reviveCaps() {
         super.reviveCaps();
-        optional = LazyOptional.of(this::getBarrelHandler);
+        optional = LazyOptional.of(this::getItemHandler);
     }
 }
