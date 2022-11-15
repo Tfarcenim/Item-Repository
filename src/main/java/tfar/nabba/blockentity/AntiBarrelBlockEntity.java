@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -180,16 +182,16 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     @Override
     public void setChanged() {
-        super.setChanged();
+        last = getInventory().getStacks().isEmpty() ? ItemStack.EMPTY :
+                getInventory().getStacks().get(getInventory().getActualStoredCount()-1);
         clientStored = getInventory().getActualStoredCount();
+
+        super.setChanged();
+
     }
 
     public ItemStack getLastStack() {
             return last;
-    }
-
-    public void setLastStack(ItemStack stack) {
-        last = stack;
     }
 
     public int getClientStored() {

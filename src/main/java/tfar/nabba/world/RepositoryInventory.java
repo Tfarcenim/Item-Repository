@@ -55,7 +55,6 @@ public class RepositoryInventory implements IItemHandler, ResizableIItemHandler 
             if (!simulate) {
                 ItemStack copy = stack.copy();
                 addItem(copy);
-                blockEntity.setLastStack(copy);
             }
             return ItemStack.EMPTY;
         }
@@ -69,14 +68,12 @@ public class RepositoryInventory implements IItemHandler, ResizableIItemHandler 
 
         if (existing.isEmpty())
             return ItemStack.EMPTY;
-
+        ItemStack copy = existing.copy();
         if (!simulate) {
             this.stacks.remove(slot);
             setChanged();
-            return existing;
-        } else {
-            return existing.copy();
         }
+            return copy;
     }
 
     public void addItem(ItemStack stack) {
@@ -169,6 +166,7 @@ public class RepositoryInventory implements IItemHandler, ResizableIItemHandler 
                 antiBarrelMenu.refreshDisplay(player);
             }
         }
+        blockEntity.setChanged();
     }
 
     public ListTag save() {

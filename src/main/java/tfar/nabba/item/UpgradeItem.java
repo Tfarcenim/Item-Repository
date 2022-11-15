@@ -18,7 +18,7 @@ import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import java.util.List;
 
 public class UpgradeItem extends Item implements InteractsWithBarrel {
-    private final UpgradeStack data;
+    protected final UpgradeStack data;
     public UpgradeItem(Properties pProperties, UpgradeStack data) {
         super(pProperties);
         this.data = data;

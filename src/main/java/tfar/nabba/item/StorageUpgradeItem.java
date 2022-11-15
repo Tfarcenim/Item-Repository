@@ -18,8 +18,7 @@ import tfar.nabba.util.BarrelType;
 
 import java.util.List;
 
-public class StorageUpgradeItem extends Item implements InteractsWithBarrel {
-    private final UpgradeStack data;
+public class StorageUpgradeItem extends UpgradeItem {
     private final BarrelType type;
 
     public static StorageUpgradeItem better(Properties properties,UpgradeStack stack) {
@@ -34,8 +33,7 @@ public class StorageUpgradeItem extends Item implements InteractsWithBarrel {
         return new StorageUpgradeItem(properties,stack,BarrelType.FLUID);
     }
     public StorageUpgradeItem(Properties pProperties, UpgradeStack data, BarrelType type) {
-        super(pProperties);
-        this.data = data;
+        super(pProperties,data);
         this.type = type;
     }
 
@@ -48,10 +46,6 @@ public class StorageUpgradeItem extends Item implements InteractsWithBarrel {
         pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.getMaxPermitted()).withStyle(ChatFormatting.AQUA)));
         pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc",
                 Component.literal(data.getStorageUnits(type)+"").withStyle(ChatFormatting.AQUA)));
-    }
-
-    public UpgradeStack getDataStack() {
-        return data;
     }
 
     public BarrelType getType() {

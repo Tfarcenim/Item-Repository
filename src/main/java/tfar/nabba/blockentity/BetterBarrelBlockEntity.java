@@ -203,23 +203,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         }
     }
 
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        //let the client know the block changed
-        level.sendBlockUpdated(getBlockPos(),getBlockState(),getBlockState(),3);
-    }
 
-    @Nonnull
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
 
     private LazyOptional<IItemHandler> optional = LazyOptional.of(this::getItemHandler);
     @Override
