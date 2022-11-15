@@ -1,9 +1,10 @@
-// 1.19.2	2022-11-15T13:43:02.2016327	Item Models: nabba
+// 1.19.2	2022-11-15T16:05:38.4828571	Item Models: nabba
 5ed323eabef7f71705faf7c1f2b51a2dfba47694 assets/nabba/models/item/anti_barrel.json
 d2e611657839162166132a783ae8fc230cafa876 assets/nabba/models/item/anti_barrel_storage_upgrade.json
 ecf8667a935b50479f8da420dd4994eb6f946cbc assets/nabba/models/item/better_barrel.json
 c8334dc545aed16ad2e5894e094c28169c53d5a2 assets/nabba/models/item/better_barrel_storage_upgrade.json
 ad7c533facea542ba39a930293cd870b4520800e assets/nabba/models/item/controller.json
+cdcd4747cecda85cb64e647bbcfcd979cdf167c3 assets/nabba/models/item/controller_key.json
 5f580e4210edfbca2239eb1f89eb05381fce371b assets/nabba/models/item/copper_anti_barrel.json
 7ca0502f50cdcf2ac0b7410c942eefbbce41e56d assets/nabba/models/item/copper_better_barrel.json
 3d5f18a16363c5f1bdbe176ce49ab16ee1f1f4e4 assets/nabba/models/item/copper_to_creative_frame_upgrade.json

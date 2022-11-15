@@ -4,6 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import tfar.nabba.menu.AntiBarrelMenu;
+import tfar.nabba.menu.ControllerKeyMenu;
 import tfar.nabba.net.util.C2SPacketHelper;
 
 public class C2SRequestPacket implements C2SPacketHelper {
@@ -35,6 +36,8 @@ public class C2SRequestPacket implements C2SPacketHelper {
         AbstractContainerMenu container = player.containerMenu;
         if (container instanceof AntiBarrelMenu antiBarrelMenu) {
             antiBarrelMenu.handleRequest(player, slot, amount, shift);
+        } else if (container instanceof ControllerKeyMenu controllerKeyMenu) {
+            controllerKeyMenu.handleRequest(player,slot,amount,shift);
         }
     }
 }

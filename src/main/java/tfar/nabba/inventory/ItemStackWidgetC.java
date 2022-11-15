@@ -9,17 +9,18 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.client.screen.AntiBarrelScreen;
+import tfar.nabba.client.screen.ControllerKeyScreen;
 import tfar.nabba.net.C2SInsertPacket;
 import tfar.nabba.net.C2SRequestPacket;
 import tfar.nabba.net.PacketHandler;
 
-public class ItemStackWidget extends AbstractWidget {
+public class ItemStackWidgetC extends AbstractWidget {
 
     protected ItemStack stack = ItemStack.EMPTY;
-    private final AntiBarrelScreen screen;
+    private final ControllerKeyScreen screen;
     private int index;
 
-    public ItemStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, AntiBarrelScreen screen, int index) {
+    public ItemStackWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, ControllerKeyScreen screen, int index) {
         super(pX, pY, pWidth, pHeight, pMessage);
         this.screen = screen;
         this.index = index;
@@ -35,7 +36,7 @@ public class ItemStackWidget extends AbstractWidget {
         boolean shift = Screen.hasShiftDown();
 
         if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {//try to take item
-            PacketHandler.sendToServer(new C2SRequestPacket(index, 1, shift));
+            PacketHandler.sendToServer(new C2SRequestPacket(index, stack.getMaxStackSize(), shift));
         } else {//try to insert item
             PacketHandler.sendToServer(new C2SInsertPacket());
         }

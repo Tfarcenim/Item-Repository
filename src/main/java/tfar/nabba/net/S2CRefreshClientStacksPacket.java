@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.client.screen.AntiBarrelScreen;
+import tfar.nabba.client.screen.ControllerKeyScreen;
 import tfar.nabba.net.util.S2CPacketHelper;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
       Minecraft mc = Minecraft.getInstance();
       if (mc.screen instanceof AntiBarrelScreen antiBarrelScreen) {
         antiBarrelScreen.setGuiStacks(stacks,ints);
+      } else if (mc.screen instanceof ControllerKeyScreen controllerKeyScreen) {
+        controllerKeyScreen.setGuiStacks(stacks,ints);
       }
   }
 

@@ -11,7 +11,7 @@ import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.item.BarrelFrameUpgradeItem;
-import tfar.nabba.item.KeyItem;
+import tfar.nabba.item.keys.KeyItem;
 import tfar.nabba.item.StorageUpgradeItem;
 import tfar.nabba.item.UpgradeItem;
 

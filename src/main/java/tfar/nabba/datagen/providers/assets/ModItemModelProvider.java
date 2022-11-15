@@ -58,6 +58,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.LOCK_KEY);
         makeOneLayerItem(ModItems.VANITY_KEY);
         makeOneLayerItem(ModItems.KEY_RING);
+        makeOneLayerItem(ModItems.CONTROLLER_KEY);
 
         for (Block block : Registry.BLOCK) {
             if (block instanceof AbstractBarrelBlock) {

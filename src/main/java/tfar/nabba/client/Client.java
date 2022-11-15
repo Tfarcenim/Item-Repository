@@ -15,6 +15,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import tfar.nabba.client.renderer.AntiBarrelRenderer;
 import tfar.nabba.client.renderer.BetterBarrelRenderer;
 import tfar.nabba.client.screen.AntiBarrelScreen;
+import tfar.nabba.client.screen.ControllerKeyScreen;
 import tfar.nabba.client.screen.VanityKeyScreen;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.ModBlocks;
@@ -30,6 +31,7 @@ public class Client {
         MinecraftForge.EVENT_BUS.addListener(Client::scroll);
         MenuScreens.register(ModMenuTypes.ANTI_BARREL, AntiBarrelScreen::new);
         MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
+        MenuScreens.register(ModMenuTypes.CONTROLLER_KEY, ControllerKeyScreen::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL, BetterBarrelRenderer::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.ANTI_BARREL, AntiBarrelRenderer::new);
 

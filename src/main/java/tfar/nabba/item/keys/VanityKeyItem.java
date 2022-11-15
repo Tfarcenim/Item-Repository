@@ -1,4 +1,4 @@
-package tfar.nabba.item;
+package tfar.nabba.item.keys;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
