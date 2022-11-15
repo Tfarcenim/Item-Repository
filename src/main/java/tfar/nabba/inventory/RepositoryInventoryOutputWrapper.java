@@ -3,13 +3,13 @@ package tfar.nabba.inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
-import tfar.nabba.world.RepositoryInventory;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 
 public class RepositoryInventoryOutputWrapper implements IItemHandler {
 
-    private RepositoryInventory internal;
+    private AntiBarrelBlockEntity.RepositoryInventory internal;
 
-    public RepositoryInventoryOutputWrapper(RepositoryInventory internal) {
+    public RepositoryInventoryOutputWrapper(AntiBarrelBlockEntity.RepositoryInventory internal) {
         this.internal = internal;
     }
 

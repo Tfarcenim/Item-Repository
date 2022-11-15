@@ -48,7 +48,7 @@ public class BetterBarrelRenderer implements BlockEntityRenderer<BetterBarrelBlo
         String toDraw = infiniteVend ? "\u221E" :stack.getCount() + " / "+ cap;
 
         renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(),.0075f);
-        if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem) {
+        if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem&& betterBarrelBlockEntity.isValid(upgradeItem)) {
             String slots = betterBarrelBlockEntity.getUsedSlots() + " / " + betterBarrelBlockEntity.getTotalUpgradeSlots();
             renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d,
                     betterBarrelBlockEntity.canAcceptUpgrade(upgradeItem.getDataStack()) ? 0x00ffff : 0xff0000, .0075f);

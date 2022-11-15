@@ -7,10 +7,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.NABBA;
+
+import java.util.UUID;
 
 public class RepositoryCommands {
 
@@ -21,7 +24,7 @@ public class RepositoryCommands {
                         .then(Commands.literal("all")
                                 .executes(RepositoryCommands::clearAll))
 
-                        .then(Commands.argument("id", IntegerArgumentType.integer(0))
+                        .then(Commands.argument("id", UuidArgument.uuid())
                                 .executes(RepositoryCommands::clearID))
                 )
                 .then(Commands.literal("reset_frequency")
@@ -36,7 +39,7 @@ public class RepositoryCommands {
     }
 
     private static int clearID(CommandContext<CommandSourceStack> context) {
-        int id = IntegerArgumentType.getInteger(context, "id");
+        UUID id = UuidArgument.getUuid(context, "id");
         boolean success = NABBA.instance.data.clearId(id);
         if (!success) {
             throw new CommandRuntimeException(Component.translatable("dankstorage.command.clear_id.invalid_id"));

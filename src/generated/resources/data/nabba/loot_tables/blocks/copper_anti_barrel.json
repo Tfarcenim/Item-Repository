@@ -16,6 +16,7 @@
               "block": "nabba:copper_anti_barrel",
               "function": "minecraft:copy_state",
               "properties": [
+                "discrete",
                 "void"
               ]
             },
@@ -24,8 +25,8 @@
               "ops": [
                 {
                   "op": "replace",
-                  "source": "Settings",
-                  "target": "BlockEntityTag.Settings"
+                  "source": "Uuid",
+                  "target": "Uuid"
                 }
               ],
               "source": "block_entity"

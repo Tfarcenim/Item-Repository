@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.AbstractBarrelBlock;
+import tfar.nabba.item.StorageUpgradeItem;
+import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
@@ -51,6 +53,12 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         return getBlockState().getValue(AbstractBarrelBlock.VOID);
     }
 
+    public boolean isValid(UpgradeItem item) {
+        if (item instanceof StorageUpgradeItem storageUpgradeItem) {
+            return storageUpgradeItem.getType() == this.getBarrelType();
+        }
+        return true;
+    }
     public boolean canAcceptUpgrade(UpgradeStack data) {
 
         int existing = countUpgrade(data.getData());

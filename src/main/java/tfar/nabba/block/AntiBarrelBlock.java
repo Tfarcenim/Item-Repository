@@ -82,6 +82,7 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
         return new AntiBarrelBlockEntity(pPos, pState);
     }
 
+    @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
         if (pLevel.isClientSide) return;
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);

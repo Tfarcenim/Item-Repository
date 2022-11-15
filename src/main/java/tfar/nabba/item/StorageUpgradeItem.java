@@ -57,7 +57,7 @@ public class StorageUpgradeItem extends UpgradeItem {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof AbstractBarrelBlockEntity betterBarrelBlockEntity) {
-            boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(this.getDataStack());
+            boolean attempt = betterBarrelBlockEntity.isValid(this) && betterBarrelBlockEntity.canAcceptUpgrade(this.getDataStack());
             if (attempt) {
                 betterBarrelBlockEntity.upgrade(this.getDataStack());
                 itemstack.shrink(1);
