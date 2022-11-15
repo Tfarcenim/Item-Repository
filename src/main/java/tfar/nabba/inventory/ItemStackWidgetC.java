@@ -38,7 +38,7 @@ public class ItemStackWidgetC extends AbstractWidget {
         if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {//try to take item
             PacketHandler.sendToServer(new C2SRequestPacket(index, stack.getMaxStackSize(), shift));
         } else {//try to insert item
-            PacketHandler.sendToServer(new C2SInsertPacket());
+            PacketHandler.sendToServer(new C2SInsertPacket(index));
         }
         super.onClick(pMouseX, pMouseY);
     }

@@ -8,14 +8,19 @@ import tfar.nabba.menu.ControllerKeyMenu;
 import tfar.nabba.net.util.C2SPacketHelper;
 
 public class C2SInsertPacket implements C2SPacketHelper {
-    public C2SInsertPacket() {
+
+    int slot;
+    public C2SInsertPacket(int slot) {
+        this.slot = slot;
     }
 
     //decode
     public C2SInsertPacket(FriendlyByteBuf buf) {
+        slot =  buf.readInt();
     }
 
     public void encode(FriendlyByteBuf buf) {
+        buf.writeInt(slot);
     }
 
     public void handleServer(ServerPlayer player) {
@@ -23,7 +28,7 @@ public class C2SInsertPacket implements C2SPacketHelper {
         if (container instanceof AntiBarrelMenu antiBarrelMenu) {
             antiBarrelMenu.handleInsert(player);
         } else if (container instanceof ControllerKeyMenu controllerKeyMenu) {
-            controllerKeyMenu.handleInsert(player);
+            controllerKeyMenu.handleInsert(player,slot);
         }
     }
 }

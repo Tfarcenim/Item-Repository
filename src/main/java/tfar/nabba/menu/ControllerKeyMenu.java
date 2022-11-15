@@ -13,13 +13,14 @@ import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.S2CRefreshClientStacksPacket;
+import tfar.nabba.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ControllerKeyMenu extends AbstractContainerMenu {
 
-    public final ControllerBlockEntity.ControllerHandler antiBarrelInventory;
+    public final ControllerBlockEntity.ControllerHandler controllerHandler;
 
     private final ContainerLevelAccess access;
     private final ContainerData data;
@@ -27,21 +28,21 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
 
     private final DataSlot row = DataSlot.standalone();
 
-    public ControllerKeyMenu(int pContainerId, Inventory inventory, ContainerLevelAccess pAccess, ControllerBlockEntity.ControllerHandler antiBarrelInventory, ContainerData data, ContainerData syncSlots) {
-        this(ModMenuTypes.CONTROLLER_KEY, pContainerId, inventory,pAccess, antiBarrelInventory,data,syncSlots);
+    public ControllerKeyMenu(int pContainerId, Inventory inventory, ContainerLevelAccess pAccess, ControllerBlockEntity.ControllerHandler controllerHandler, ContainerData data, ContainerData syncSlots) {
+        this(ModMenuTypes.CONTROLLER_KEY, pContainerId, inventory,pAccess, controllerHandler,data,syncSlots);
     }
 
     public ControllerKeyMenu(int i, Inventory inventory) {
         this(ModMenuTypes.CONTROLLER_KEY, i, inventory,ContainerLevelAccess.NULL, null,new SimpleContainerData(2),new SimpleContainerData(54));
     }
 
-    protected ControllerKeyMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, ControllerBlockEntity.ControllerHandler antiBarrelInventory, ContainerData
+    protected ControllerKeyMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, ControllerBlockEntity.ControllerHandler controllerHandler, ContainerData
                              data, ContainerData syncSlots) {
         super(pMenuType, pContainerId);
         this.access = access;
         this.data = data;
         this.syncSlots = syncSlots;
-        this.antiBarrelInventory = antiBarrelInventory;
+        this.controllerHandler = controllerHandler;
 
         int playerX = 8;
         int playerY = 140;
@@ -66,29 +67,19 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
         if (playerIn.level.isClientSide) {
             return ItemStack.EMPTY;
         }
-        ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotIndex);
         if (slot != null && slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
+            ItemStack stack = slot.getItem();
 
-            if (!antiBarrelInventory.isItemValid(slotIndex,itemstack1)) {
-                return ItemStack.EMPTY;
-            }
-
-            //antiBarrelInventory.addItem(itemstack1);
-            ItemStack stack = ItemStack.EMPTY;
-            slot.set(stack);
+            ItemStack rejected = controllerHandler.universalAddItem(stack);
+            slot.set(rejected);
+            slot.onTake(playerIn,stack);
             broadcastChanges();
             if (playerIn instanceof ServerPlayer sp) {
                 refreshDisplay(sp);
             }
-            if (stack.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-            slot.onTake(playerIn, itemstack1);
-            return ItemStack.EMPTY;
         }
-        return itemstack;
+        return ItemStack.EMPTY;
     }
 
     public int getTotalRows() {
@@ -133,7 +124,7 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
          //   return;
       //  }
 
-        ItemStack stack = antiBarrelInventory.extractItem(slot,amount,false);
+        ItemStack stack = controllerHandler.extractItem(slot,amount,false);
 
         if (shift) {
             ItemHandlerHelper.giveItemToPlayer(player,stack);
@@ -147,7 +138,7 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
 
     public void refreshDisplay(ServerPlayer player) {
         List<ItemStack> list = new ArrayList<>();
-        List<Integer> syncSlots = antiBarrelInventory.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
+        List<Integer> syncSlots = controllerHandler.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof ControllerBlockEntity repositoryBlock) {
                 return repositoryBlock.search;
@@ -155,7 +146,7 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
             return "";
         },""));
         for (int i = 0; i < syncSlots.size();i++) {
-            list.add(antiBarrelInventory.getStackInSlot(syncSlots.get(i)));
+            list.add(controllerHandler.getStackInSlot(syncSlots.get(i)));
         }
         PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list,syncSlots), player);
     }
@@ -164,10 +155,17 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
         return syncSlots.get(slot);
     }
 
-    public void handleInsert(ServerPlayer player) {
-          //  antiBarrelInventory.addItem(getCarried().copy());
-            setCarried(ItemStack.EMPTY);
-            refreshDisplay(player);
+    public void handleInsert(ServerPlayer player, int slot) {
+        ItemStack carried = getCarried();
+
+        if (slot == Utils.INVALID || slot >= controllerHandler.getSlots()) {
+            ItemStack reject = controllerHandler.universalAddItem(carried);
+            setCarried(reject);
+        } else {
+            ItemStack reject = controllerHandler.insertItem(slot,carried,false);
+            setCarried(reject);
+        }
+        refreshDisplay(player);
     }
 
     public void handleSearch(ServerPlayer player, String search) {

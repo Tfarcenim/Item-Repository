@@ -210,7 +210,6 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
 
     public static class ControllerHandler implements IItemHandler {
         private final ControllerBlockEntity controllerBlockEntity;
-        private int totalSlots = Utils.INVALID;
 
         ControllerHandler(ControllerBlockEntity controllerBlockEntity) {
             this.controllerBlockEntity = controllerBlockEntity;
@@ -221,6 +220,17 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
             return controllerBlockEntity.barrels.size();
         }
 
+        public ItemStack universalAddItem(ItemStack stack) {
+            ItemStack remainder = stack;
+
+            for (int i = 0; i < getSlots();i++) {
+                remainder = insertItem(i,remainder,false);
+                if (remainder.isEmpty()) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            return remainder;
+        }
 
         public List<Integer> getDisplaySlots(int row,String search) {
             List<Integer> disp = new ArrayList<>();
@@ -270,7 +280,6 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
                     i+= abstractBarrelBlockEntity.getItemHandler().getSlots();
                 }
             }
-            totalSlots = i;
         }
 
         @Override
