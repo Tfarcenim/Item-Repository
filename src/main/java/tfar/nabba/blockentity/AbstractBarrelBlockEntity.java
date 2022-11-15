@@ -254,5 +254,6 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         }
         color = pTag.getInt(NBTKeys.Color.name());
         size = pTag.getDouble(NBTKeys.Size.name());
+        invalidateCaches();
     }
 }

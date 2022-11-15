@@ -32,6 +32,7 @@ public class Client {
         MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL, BetterBarrelRenderer::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.ANTI_BARREL, AntiBarrelRenderer::new);
+
         setRenderLayer(ModBlocks.BETTER_BARREL);
         setRenderLayer(ModBlocks.STONE_BETTER_BARREL);
         setRenderLayer(ModBlocks.COPPER_BETTER_BARREL);
@@ -47,6 +48,12 @@ public class Client {
         setRenderLayer(ModBlocks.STONE_ANTI_BARREL);
         setRenderLayer(ModBlocks.COPPER_ANTI_BARREL);
         setRenderLayer(ModBlocks.IRON_ANTI_BARREL);
+        setRenderLayer(ModBlocks.LAPIS_ANTI_BARREL);
+        setRenderLayer(ModBlocks.GOLD_ANTI_BARREL);
+        setRenderLayer(ModBlocks.DIAMOND_ANTI_BARREL);
+        setRenderLayer(ModBlocks.EMERALD_ANTI_BARREL);
+        setRenderLayer(ModBlocks.NETHERITE_ANTI_BARREL);
+        setRenderLayer(ModBlocks.CREATIVE_ANTI_BARREL);
     }
 
     public static void tooltipC(RegisterClientTooltipComponentFactoriesEvent e) {

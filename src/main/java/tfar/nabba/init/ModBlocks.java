@@ -12,16 +12,16 @@ import tfar.nabba.block.ControllerBlock;
 import tfar.nabba.util.BarrelFrameTiers;
 
 public class ModBlocks {
-    public static final AbstractBarrelBlock ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.of(Material.METAL), BarrelFrameTiers.WOOD);
-    public static final AbstractBarrelBlock STONE_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.of(Material.METAL), BarrelFrameTiers.STONE);
-    public static final AbstractBarrelBlock COPPER_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.of(Material.METAL), BarrelFrameTiers.COPPER);
-    public static final AbstractBarrelBlock IRON_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.of(Material.METAL), BarrelFrameTiers.IRON);
-    public static final AbstractBarrelBlock LAPIS_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.LAPIS);
-    public static final AbstractBarrelBlock GOLD_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.GOLD);
-    public static final AbstractBarrelBlock DIAMOND_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.DIAMOND);
-    public static final AbstractBarrelBlock EMERALD_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.EMERALD);
-    public static final AbstractBarrelBlock NETHERITE_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.NETHERITE);
-    public static final AbstractBarrelBlock CREATIVE_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.CREATIVE);
+    public static final AbstractBarrelBlock ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.WOOD);
+    public static final AbstractBarrelBlock STONE_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.STONE);
+    public static final AbstractBarrelBlock COPPER_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.COPPER);
+    public static final AbstractBarrelBlock IRON_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.IRON);
+    public static final AbstractBarrelBlock LAPIS_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.LAPIS);
+    public static final AbstractBarrelBlock GOLD_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.GOLD);
+    public static final AbstractBarrelBlock DIAMOND_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.DIAMOND);
+    public static final AbstractBarrelBlock EMERALD_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.EMERALD);
+    public static final AbstractBarrelBlock NETHERITE_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.NETHERITE);
+    public static final AbstractBarrelBlock CREATIVE_ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.CREATIVE);
 
 
     public static final AbstractBarrelBlock BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.WOOD);

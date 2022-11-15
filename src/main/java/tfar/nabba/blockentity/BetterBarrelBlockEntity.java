@@ -70,7 +70,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         pTag.put(NBTKeys.Stack.name(), barrelHandler.getStack().save(new CompoundTag()));
         pTag.putInt(NBTKeys.RealCount.name(), barrelHandler.getStack().getCount());
         pTag.put(NBTKeys.Ghost.name(), ghost.save(new CompoundTag()));
-
     }
 
     @Override
@@ -80,7 +79,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         stack.setCount(pTag.getInt(NBTKeys.RealCount.name()));
         barrelHandler.setStack(stack);
         ghost = ItemStack.of(pTag.getCompound(NBTKeys.Ghost.name()));
-        invalidateCaches();
     }
 
     public BarrelHandler getItemHandler() {
