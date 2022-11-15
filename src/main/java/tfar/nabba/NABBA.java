@@ -49,7 +49,7 @@ import java.util.Locale;
 @Mod(NABBA.MODID)
 public class NABBA {
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final String MODID = "nabba";
 
     public static NABBA instance;
