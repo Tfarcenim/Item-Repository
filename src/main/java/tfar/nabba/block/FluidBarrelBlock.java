@@ -23,10 +23,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.api.InteractsWithBarrel;
+import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
@@ -55,29 +61,10 @@ public class FluidBarrelBlock extends AbstractBarrelBlock {
                 if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(pState,handStack,pLevel,pPos,pPlayer)) {
 
                 } else {
-
-                    //FluidUtil.tryEmptyContainerAndStow()
-                    FluidStack existing = betterBarrelBlockEntity.getFluidHandler().getFluid();
-                    //there is no items in the barrel OR the item that the player is holding is the same as the item in the barrel
-                    if (existing.isEmpty()) {
-                     //   ItemStack stack = betterBarrelBlockEntity.tryAddItem(handStack);
-                      //  pPlayer.setItemInHand(pHand, stack);
-                    } else {
-                        //search the entire inventory for item stacks
-
-                      /*
-                        Inventory inventory = pPlayer.getInventory();
-                        NonNullList<ItemStack> main = inventory.items;
-                        for (int i = 0; i < main.size();i++) {
-                            ItemStack fromPlayer = main.get(i);
-                            if (!fromPlayer.isEmpty()) {
-                                ItemStack insert = betterBarrelBlockEntity.tryAddItem(fromPlayer);
-                                //if the item changed, something happened
-                                if (insert != fromPlayer) {
-                                    main.set(i, insert);
-                                }
-                            }
-                        }*/
+                    FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(handStack, betterBarrelBlockEntity.getFluidHandler(),
+                            new InvWrapper(pPlayer.getInventory()), Integer.MAX_VALUE, pPlayer, true);
+                    if (fluidActionResult.isSuccess()) {
+                        pPlayer.setItemInHand(pHand,fluidActionResult.getResult());
                     }
                 }
             }
@@ -111,8 +98,8 @@ public class FluidBarrelBlock extends AbstractBarrelBlock {
 
         if (shouldRemove) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlock) {
-                betterBarrelBlock.removeController();
+            if (blockEntity instanceof BetterBarrelBlockEntity || blockEntity instanceof FluidBarrelBlockEntity) {
+                ((AbstractBarrelBlockEntity)blockEntity).removeController();
             }
         }
 

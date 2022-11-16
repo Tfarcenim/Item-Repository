@@ -53,12 +53,10 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         if (pStack.hasTag()) {
             appendBlockStateInfo(pStack.getTag().getCompound("BlockStateTag"), pTooltip);
+            pTooltip.add(Component.literal(pStack.getTag().toString()).withStyle(ChatFormatting.YELLOW));
         }
         pTooltip.add(Component.translatable(info,
                 Component.translatable(BetterBarrelBlockItem.getUsedSlotsFromItem(pStack)+"/"+barrelTier.getUpgradeSlots()).withStyle(ChatFormatting.AQUA)));
-        if (pStack.hasTag()) {
-            pTooltip.add(Component.literal(pStack.getTag().toString()).withStyle(ChatFormatting.YELLOW));
-        }
     }
 
     public void appendBlockStateInfo(CompoundTag tag, List<Component> tooltip) {

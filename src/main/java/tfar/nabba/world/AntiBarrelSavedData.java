@@ -9,11 +9,11 @@ import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import java.io.File;
 import java.util.*;
 
-public class RepositorySavedData extends SavedData {
+public class AntiBarrelSavedData extends SavedData {
 
     private final Map<UUID,ListTag> storage = new HashMap<>();
 
-    public RepositorySavedData() {
+    public AntiBarrelSavedData() {
     }
 
     public Map<UUID,ListTag> getStorage() {
@@ -49,10 +49,10 @@ public class RepositorySavedData extends SavedData {
         return compoundTag;
     }
 
-    public static RepositorySavedData loadStatic(CompoundTag compoundTag) {
-        RepositorySavedData repositorySavedData = new RepositorySavedData();
-        repositorySavedData.load(compoundTag);
-        return repositorySavedData;
+    public static AntiBarrelSavedData loadStatic(CompoundTag compoundTag) {
+        AntiBarrelSavedData antiBarrelSavedData = new AntiBarrelSavedData();
+        antiBarrelSavedData.load(compoundTag);
+        return antiBarrelSavedData;
     }
 
     protected void load(CompoundTag compoundTag) {

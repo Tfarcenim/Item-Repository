@@ -89,7 +89,7 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
         return barrelHandler;
     }
 
-    public static class FluidBarrelHandler implements IFluidTank, IFluidHandler {
+    public static class FluidBarrelHandler implements IFluidHandler {
         private final FluidBarrelBlockEntity barrelBlockEntity;
 
         FluidBarrelHandler(FluidBarrelBlockEntity barrelBlockEntity) {
@@ -117,37 +117,35 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
         }
 
         @Override
-        public int getFluidAmount() {
-            return stack.getAmount();
-        }
-
-        @Override
         public int fill(@NotNull FluidStack stack,FluidAction action) {
             if (stack.isEmpty() || !isFluidValid(stack)) return 0;
 
-            //reverse the "trick" we did earlier
-
-            int limit = getTankCapacity(0) - (barrelBlockEntity.isVoid() ? 1 : 0);
-            int count = stack.getAmount();
+            int limit = getTankCapacity(0);
             int existing = this.stack.isEmpty() ? 0 : this.stack.getAmount();
-            if (count + existing > limit) {
+            int count = stack.getAmount();
+            if (existing >= limit) return 0;
+
+            else if (count + existing > limit) {
                 if (action.execute()) {
                     this.stack = Utils.copyFluidWithSize(stack, limit);
                     markDirty();
                 }
-                return barrelBlockEntity.isVoid() ? 0 : count + existing - limit;
+                return barrelBlockEntity.isVoid() ? count : limit - existing;
             } else {
                 if (action.execute()) {
                     this.stack = Utils.copyFluidWithSize(stack, existing + count);
                     markDirty();
                 }
-                return 0;
+                return count;
             }
         }
 
         @Override
         public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-            return null;
+            if (isFluidValid(resource)) {
+                return drain(resource.getAmount(),action);
+            }
+            return FluidStack.EMPTY;
         }
 
         @Override
@@ -184,21 +182,15 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
         }
 
         @Override
-        public int getCapacity() {
-            return getTankCapacity(0);
-        }
-
-        @Override
         public int getTankCapacity(int slot) {//have to trick the vanilla hopper into inserting so voiding work
             return barrelBlockEntity.getStorage() * 1000 + (barrelBlockEntity.isVoid() ? 1 : 0);
         }
 
         @Override
         public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-            return true;
+            return isFluidValid(stack);
         }
 
-        @Override
         public boolean isFluidValid(@NotNull FluidStack incoming) {
             return (!barrelBlockEntity.hasGhost() || incoming.isFluidEqual(barrelBlockEntity.getGhost()))
                     && (this.stack.isEmpty() || this.stack.isFluidEqual(incoming));
