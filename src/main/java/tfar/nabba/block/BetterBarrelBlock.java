@@ -1,7 +1,9 @@
 package tfar.nabba.block;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -79,13 +81,13 @@ public class BetterBarrelBlock extends AbstractBarrelBlock {
     }
 
     //note,attack is not called if cancelling the left click block event
-
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+    public void appendBlockStateInfo(CompoundTag tag, List<Component> tooltip) {
+        if (!tag.isEmpty()) {
+            super.appendBlockStateInfo(tag, tooltip);
+            tooltip.add(Component.literal("Locked: ").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
+        }
     }
-
-
 
     @Nullable
     @Override

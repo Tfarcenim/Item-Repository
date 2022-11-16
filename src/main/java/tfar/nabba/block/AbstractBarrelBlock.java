@@ -51,7 +51,9 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        appendBlockStateInfo(pStack,pTooltip);
+        if (pStack.hasTag()) {
+            appendBlockStateInfo(pStack.getTag().getCompound("BlockStateTag"), pTooltip);
+        }
         pTooltip.add(Component.translatable(info,
                 Component.translatable(BetterBarrelBlockItem.getUsedSlotsFromItem(pStack)+"/"+barrelTier.getUpgradeSlots()).withStyle(ChatFormatting.AQUA)));
         if (pStack.hasTag()) {
@@ -59,14 +61,11 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
         }
     }
 
-    public void appendBlockStateInfo(ItemStack stack, List<Component> tooltip) {
-        if (stack.hasTag()) {
-            CompoundTag tag = stack.getTag().getCompound("BlockStateTag");
-            if (!tag.isEmpty()) {
-                tooltip.add(Component.empty());
-                tooltip.add(Component.literal("Discrete: ").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
-                tooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
-            }
+    public void appendBlockStateInfo(CompoundTag tag, List<Component> tooltip) {
+        if (!tag.isEmpty()) {
+            tooltip.add(Component.empty());
+            tooltip.add(Component.literal("Discrete: ").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
         }
     }
 
