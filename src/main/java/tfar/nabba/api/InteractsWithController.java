@@ -15,10 +15,12 @@ public interface InteractsWithController {
     //note, cannot use onUse because the block's method is called BEFORE the item's method, so we have the controller call here instead
     boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer);
 
-    default void interactWithBarrels(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player){
+    default boolean interactWithBarrels(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player){
         BlockEntity blockEntity = level.getBlockEntity(pos);
+        boolean didAnything = false;
         if (blockEntity instanceof ControllerBlockEntity controller) {
-            controller.interactWithBarrels(itemstack,player);
+            didAnything = controller.interactWithBarrels(itemstack,player);
         }
+        return didAnything;
     }
 }

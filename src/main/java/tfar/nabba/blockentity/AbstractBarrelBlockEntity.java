@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,12 +68,6 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
 
     }
 
-    public ItemStack tryAddItem(ItemStack stack) {
-        return stack;//barrelHandler.insertItem(0, stack, false);
-    }
-    public ItemStack tryRemoveItem() {
-        return ItemStack.EMPTY;//getBarrelHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
-    }
     public void setColor(int color) {
         this.color = color;
         setChanged();
@@ -117,7 +112,11 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     public final int getTotalUpgradeSlots() {
         return ((AbstractBarrelBlock)getBlockState().getBlock()).getBarrelTier().getUpgradeSlots();
     }
-
+    public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, AbstractBarrelBlockEntity pBlockEntity) {
+        for (UpgradeStack upgradeData : pBlockEntity.getUpgrades()) {
+            upgradeData.getData().tick(pBlockEntity,upgradeData);
+        }
+    }
 
     public int getFreeSlots() {
         return getTotalUpgradeSlots() - getUsedSlots();
@@ -153,7 +152,7 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         return saveWithoutMetadata();
     }
 
-    BarrelType getBarrelType() {
+    public BarrelType getBarrelType() {
         return ((AbstractBarrelBlock)getBlockState().getBlock()).getType();
     }
 

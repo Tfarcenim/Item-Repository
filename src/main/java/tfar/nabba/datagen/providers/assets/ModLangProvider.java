@@ -14,6 +14,7 @@ import tfar.nabba.item.BarrelFrameUpgradeItem;
 import tfar.nabba.item.keys.KeyItem;
 import tfar.nabba.item.StorageUpgradeItem;
 import tfar.nabba.item.UpgradeItem;
+import tfar.nabba.util.Utils;
 
 public class ModLangProvider extends LanguageProvider {
     public ModLangProvider(DataGenerator gen) {
@@ -29,7 +30,7 @@ public class ModLangProvider extends LanguageProvider {
                 defaultName(item);
             } else if (item instanceof StorageUpgradeItem storageUpgradeItem) {
                 storageUpgradeName(item);
-                addDesc(item,"Adds %s "+storageUpgradeItem.getType().s+" of storage");
+                addTooltip(item,"Adds %s "+storageUpgradeItem.getType().s+" of storage");
             }
         }
 
@@ -51,11 +52,13 @@ public class ModLangProvider extends LanguageProvider {
         add(UpgradeItem.info,"Requires %s upgrade slots");
         add(UpgradeItem.info1,"Max of %s allowed per barrel");
 
-        addDesc(ModItems.INFINITE_VENDING_UPGRADE,"Items don't deplete when extracted");
-        addDesc(ModItems.VOID_UPGRADE,"Barrel voids excess items");
-        addDesc(ModItems.PICKUP_1x1_UPGRADE,"Picks up items in a 1x3x1 volume centered on the barrel");
-        addDesc(ModItems.PICKUP_3x3_UPGRADE,"Picks up items in a 3x3x3 volume centered on the barrel");
-        addDesc(ModItems.PICKUP_9x9_UPGRADE,"Picks up items in a 9x3x9 area centered on the barrel");
+        addTooltip(ModItems.INFINITE_VENDING_UPGRADE,"Items don't deplete when extracted");
+        addTooltip(ModItems.VOID_UPGRADE,"Barrel voids excess items");
+        addTooltip(ModItems.PICKUP_1x1_UPGRADE,"Picks up items in a 1x3x1 volume centered on the barrel");
+        addTooltip(ModItems.PICKUP_3x3_UPGRADE,"Picks up items in a 3x3x3 volume centered on the barrel");
+        addTooltip(ModItems.PICKUP_9x9_UPGRADE,"Picks up items in a 9x3x9 area centered on the barrel");
+        addTooltip(ModBlocks.CONTROLLER, "Connects to all barrels and tanks from this mod within a "
+                +(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+" volume");
 
         add("nabba.key_ring.selected_key","%s (%s)");
     }
@@ -80,7 +83,10 @@ public class ModLangProvider extends LanguageProvider {
         return StringUtils.capitaliseAllWords(block.getDescriptionId().split("\\.")[2].replace("_", " "));
     }
 
-    protected void addDesc(Item item,String s) {
-        add(item.getDescriptionId()+".desc",s);
+    protected void addTooltip(Block item, String s) {
+        add(item.getDescriptionId()+".tooltip",s);
+    }
+    protected void addTooltip(Item item, String s) {
+        add(item.getDescriptionId()+".tooltip",s);
     }
 }

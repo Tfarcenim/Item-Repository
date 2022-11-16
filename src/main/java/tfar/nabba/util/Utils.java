@@ -9,7 +9,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
@@ -62,13 +64,16 @@ public class Utils {
             (betterBarrelBlockEntity,upgradeDataStack) -> pickupItemsInBox(betterBarrelBlockEntity, upgradeDataStack.getCount(), 3, upgradeDataStack.getCount());
 
     public static void pickupItemsInBox(AbstractBarrelBlockEntity betterBarrelBlockEntity,int x,int y, int z) {
-        Level level = betterBarrelBlockEntity.getLevel();
-        //note, AABBs start at 0,0,0 on the blockEntity, so to get a 3x3x3 cube we need to go from -1,-1,-1 to +2,+2,+2 relative
-        List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class,
-                getBoxCenteredOn(betterBarrelBlockEntity.getBlockPos(),x,y,z)
-        );
-        for (ItemEntity itemEntity : itemEntities) {
-            addItem(betterBarrelBlockEntity,itemEntity);
+        if (betterBarrelBlockEntity.getBarrelType() != BarrelType.FLUID) {
+
+            Level level = betterBarrelBlockEntity.getLevel();
+            //note, AABBs start at 0,0,0 on the blockEntity, so to get a 3x3x3 cube we need to go from -1,-1,-1 to +2,+2,+2 relative
+            List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class,
+                    getBoxCenteredOn(betterBarrelBlockEntity.getBlockPos(), x, y, z)
+            );
+            for (ItemEntity itemEntity : itemEntities) {
+                addItem(betterBarrelBlockEntity, itemEntity);
+            }
         }
     }
 
@@ -86,7 +91,7 @@ public class Utils {
     public static boolean addItem(AbstractBarrelBlockEntity betterBarrelBlockEntity, ItemEntity pItem) {
         boolean flag = false;
         ItemStack itemstack = pItem.getItem().copy();
-        ItemStack itemstack1 = betterBarrelBlockEntity.tryAddItem(itemstack);
+        ItemStack itemstack1 = ItemStack.EMPTY;//betterBarrelBlockEntity.tryAddItem(itemstack);
         if (itemstack1.isEmpty()) {
             flag = true;
             pItem.discard();
@@ -130,5 +135,11 @@ public class Utils {
             }
         }
         return blockentities;
+    }
+
+    @NotNull
+    public static FluidStack copyFluidWithSize(@NotNull FluidStack itemStack, int size) {
+        if (size == 0) return FluidStack.EMPTY;
+        return new FluidStack(itemStack,size);
     }
 }

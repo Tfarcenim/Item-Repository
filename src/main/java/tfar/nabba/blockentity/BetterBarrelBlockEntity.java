@@ -58,12 +58,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         setChanged();
     }
 
-    public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, AbstractBarrelBlockEntity pBlockEntity) {
-        for (UpgradeStack upgradeData : pBlockEntity.getUpgrades()) {
-            upgradeData.getData().tick(pBlockEntity,upgradeData);
-        }
-    }
-
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);

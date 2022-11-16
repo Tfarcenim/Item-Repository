@@ -98,16 +98,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         return NABBA.instance.data.getInventory(this);
     }
 
-    @Override
-    public ItemStack tryAddItem(ItemStack stack) {
-        AntiBarrelInventory antiBarrelInventory = getInventory();
-        if (getInventory().isFull()) {
-            return stack;
-        }
-        //attempt to add the item to the last slot
-        return getInventory().insertItem(antiBarrelInventory.getSlots() - 1,stack,false);
-    }
-
     public static AntiBarrelBlockEntity create(BlockPos pos, BlockState state) {
         return new AntiBarrelBlockEntity(ModBlockEntityTypes.ANTI_BARREL, pos, state);
     }

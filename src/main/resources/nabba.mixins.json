@@ -5,7 +5,8 @@
   "refmap": "nabba.refmap.json",
   "mixins": [
   ],
-  "client":[
+  "client": [
+    "ItemBlockRenderTypesAccess",
     "LevelChunkMixin"
   ],
   "injectors": {

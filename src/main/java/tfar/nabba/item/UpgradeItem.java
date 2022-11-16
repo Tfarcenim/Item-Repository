@@ -13,12 +13,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.InteractsWithBarrel;
+import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 
 import java.util.List;
 
-public class UpgradeItem extends Item implements InteractsWithBarrel {
+public class UpgradeItem extends Item implements InteractsWithBarrel, InteractsWithController {
     protected final UpgradeStack data;
     public UpgradeItem(Properties pProperties, UpgradeStack data) {
         super(pProperties);
@@ -32,7 +33,7 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getUpgradeSlotsRequired()).withStyle(ChatFormatting.AQUA)));
         pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.getMaxPermitted()).withStyle(ChatFormatting.AQUA)));
-        pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc"));
+        pTooltipComponents.add(Component.translatable(getDescriptionId() + ".tooltip"));
     }
 
     public UpgradeStack getDataStack() {
@@ -41,7 +42,7 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
 
     @Override
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
-
+        if (itemstack.isEmpty()) return false;
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof AbstractBarrelBlockEntity betterBarrelBlockEntity) {
             boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(this.getDataStack());
@@ -52,5 +53,10 @@ public class UpgradeItem extends Item implements InteractsWithBarrel {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
+        return interactWithBarrels(state, itemstack, level, pos, pPlayer);
     }
 }

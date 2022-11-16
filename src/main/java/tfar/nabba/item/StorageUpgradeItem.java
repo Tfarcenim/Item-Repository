@@ -44,7 +44,7 @@ public class StorageUpgradeItem extends UpgradeItem {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getUpgradeSlotsRequired()).withStyle(ChatFormatting.AQUA)));
         pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.getMaxPermitted()).withStyle(ChatFormatting.AQUA)));
-        pTooltipComponents.add(Component.translatable(getDescriptionId() + ".desc",
+        pTooltipComponents.add(Component.translatable(getDescriptionId() + ".tooltip",
                 Component.literal(data.getStorageUnits(type)+"").withStyle(ChatFormatting.AQUA)));
     }
 

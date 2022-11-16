@@ -10,10 +10,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.api.InteractsWithBarrel;
+import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
 
-public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel {
+public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel, InteractsWithController {
     private final BarrelFrameTier from;
     private final BarrelFrameTier to;
 
@@ -30,7 +31,7 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel 
     @Override
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
         AbstractBarrelBlock oldBarrel = (AbstractBarrelBlock) state.getBlock();
-        if (oldBarrel.getBarrelTier() != from) return false;
+        if (oldBarrel.getBarrelTier() != from || itemstack.isEmpty()) return false;
         //saves the old barrels contents
         BlockState newState = to.getBarrel(oldBarrel.getType()).defaultBlockState();
 
@@ -66,5 +67,10 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel 
         newBlockEntity.load(tag);
         //need to make sure the game saves it!
         newBlockEntity.setChanged();
+    }
+
+    @Override
+    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
+        return interactWithBarrels(state, itemstack, level, pos, pPlayer);
     }
 }

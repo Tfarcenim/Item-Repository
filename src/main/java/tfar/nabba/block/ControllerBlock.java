@@ -18,6 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.api.InteractsWithController;
+import tfar.nabba.init.ModBlocks;
 import tfar.nabba.util.Utils;
 
 import java.util.List;
@@ -47,10 +48,10 @@ public class ControllerBlock extends Block implements EntityBlock {
         return blockentity instanceof MenuProvider ? (MenuProvider) blockentity : null;
     }
 
+    final Component TOOLTIP = Component.translatable(getDescriptionId() +".tooltip");
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        pTooltip.add(Component.literal("Connects to all barrels and tanks from this mod within a "
-                +(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+" volume"));
+        pTooltip.add(TOOLTIP);
     }
 
     @Nullable

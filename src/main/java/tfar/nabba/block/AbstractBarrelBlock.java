@@ -10,18 +10,22 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.item.BetterBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
@@ -74,8 +78,14 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
             abstractBarrelBlock.searchForControllers();
         }
     }
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        return pLevel.isClientSide ? null : (Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) -> BetterBarrelBlockEntity.serverTick(pLevel1, pPos, pState1, (BetterBarrelBlockEntity) pBlockEntity);
+    }
 
-
+    public RenderShape getRenderShape(BlockState pState) {
+        return RenderShape.MODEL;
+    }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(VOID,DISCRETE);

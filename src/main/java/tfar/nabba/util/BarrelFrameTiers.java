@@ -13,12 +13,12 @@ public enum BarrelFrameTiers implements BarrelFrameTier {
     STONE(1,Map.of(BarrelType.BETTER,() -> ModBlocks.STONE_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.STONE_ANTI_BARREL)),
     COPPER(4,Map.of(BarrelType.BETTER,() -> ModBlocks.COPPER_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.COPPER_ANTI_BARREL)),
     IRON(8,Map.of(BarrelType.BETTER,() -> ModBlocks.IRON_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.IRON_ANTI_BARREL)),
-    LAPIS(16,Map.of(BarrelType.BETTER,() -> ModBlocks.LAPIS_BETTER_BARREL)),
-    GOLD(64,Map.of(BarrelType.BETTER,() -> ModBlocks.GOLD_BETTER_BARREL)),
-    DIAMOND(128,Map.of(BarrelType.BETTER,() -> ModBlocks.DIAMOND_BETTER_BARREL)),
-    EMERALD(256,Map.of(BarrelType.BETTER,() -> ModBlocks.EMERALD_BETTER_BARREL)),
-    NETHERITE(2048,Map.of(BarrelType.BETTER,() -> ModBlocks.NETHERITE_BETTER_BARREL)),
-    CREATIVE(Integer.MAX_VALUE,Map.of(BarrelType.BETTER,() -> ModBlocks.CREATIVE_BETTER_BARREL));
+    LAPIS(16,Map.of(BarrelType.BETTER,() -> ModBlocks.LAPIS_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.LAPIS_ANTI_BARREL)),
+    GOLD(64,Map.of(BarrelType.BETTER,() -> ModBlocks.GOLD_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.GOLD_ANTI_BARREL)),
+    DIAMOND(128,Map.of(BarrelType.BETTER,() -> ModBlocks.DIAMOND_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.DIAMOND_ANTI_BARREL)),
+    EMERALD(256,Map.of(BarrelType.BETTER,() -> ModBlocks.EMERALD_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.EMERALD_ANTI_BARREL)),
+    NETHERITE(2048,Map.of(BarrelType.BETTER,() -> ModBlocks.NETHERITE_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.NETHERITE_ANTI_BARREL)),
+    CREATIVE(Integer.MAX_VALUE,Map.of(BarrelType.BETTER,() -> ModBlocks.CREATIVE_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.CREATIVE_ANTI_BARREL));
     private int upgradeSlots;
     private Map<BarrelType,Supplier<Block>> barrels;
 

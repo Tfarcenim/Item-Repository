@@ -64,6 +64,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
 
     private final List<BlockPos> barrels = new ArrayList<>();
     private final List<BlockPos> invalid = new ArrayList<>();
+    private final List<BlockPos> pending = new ArrayList<>();
 
     protected ControllerBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -111,13 +112,11 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public void addBarrel(BlockPos pos) {
-        barrels.add(pos);
-        setChanged();
+        pending.add(pos);
     }
 
     public void removeBarrel(BlockPos pos) {
-        barrels.remove(pos);
-        setChanged();
+        invalid.add(pos);
     }
 
     @Nullable
@@ -134,7 +133,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
         if (blockEntity instanceof BetterBarrelBlockEntity) {
             return blockEntity;
         }
-        invalid.add(pos);
+        removeBarrel(pos);
         return null;
     }
 
@@ -179,22 +178,30 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
         return controllerHandler;
     }
 
-    public void interactWithBarrels(ItemStack stack, Player player) {
+    public boolean interactWithBarrels(ItemStack stack, Player player) {
+        boolean didAnything = false;
         InteractsWithBarrel interactsWithBarrel = (InteractsWithBarrel) stack.getItem();
         for (BlockPos pos : getBarrels()) {
             BlockState state = level.getBlockState(pos);
             if (state.is(ModBlockTags.BETTER_BARRELS)) {
-                interactsWithBarrel.handleBarrel(state,stack,level,pos,player);
+                didAnything |= interactsWithBarrel.handleBarrel(state,stack,level,pos,player);
             } else {
-                invalid.add(pos);
+                removeBarrel(pos);
             }
         }
-        clearInvalid();
+        synchronize();
+        return didAnything;
     }
 
-    private void clearInvalid() {
+    private void synchronize() {
+        boolean markDirty = !pending.isEmpty() || !invalid.isEmpty();
         invalid.forEach(barrels::remove);
         invalid.clear();
+        barrels.addAll(pending);
+        pending.clear();
+        if (markDirty) {
+            setChanged();
+        }
     }
 
     @Override
@@ -289,7 +296,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
             if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
                 return barrelBlockEntity.getItemHandler().getStackInSlot(0);
             } else {
-                controllerBlockEntity.clearInvalid();
+                controllerBlockEntity.synchronize();
             }
             return ItemStack.EMPTY;
         }
@@ -302,7 +309,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
             if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
                 return barrelBlockEntity.getItemHandler().insertItem(0,stack,simulate);
             } else {
-                controllerBlockEntity.clearInvalid();
+                controllerBlockEntity.synchronize();
             }
             return ItemStack.EMPTY;
         }
@@ -315,7 +322,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
             if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
                 return barrelBlockEntity.getItemHandler().extractItem(0,amount,simulate);
             } else {
-                controllerBlockEntity.clearInvalid();
+                controllerBlockEntity.synchronize();
             }
             return ItemStack.EMPTY;
         }
@@ -326,7 +333,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
             if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
                 return barrelBlockEntity.getItemHandler().getSlotLimit(0);
             } else {
-                controllerBlockEntity.clearInvalid();
+                controllerBlockEntity.synchronize();
             }
             return 0;
         }
@@ -337,7 +344,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
                 if (controllerBlockEntity.getBE(slot) instanceof BetterBarrelBlockEntity barrelBlockEntity) {
                     return barrelBlockEntity.getItemHandler().isItemValid(0, incoming);
                 } else {
-                    controllerBlockEntity.clearInvalid();
+                    controllerBlockEntity.synchronize();
                 }
             }
             return false;

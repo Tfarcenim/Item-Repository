@@ -21,20 +21,23 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
-import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.api.InteractsWithBarrel;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.api.InteractsWithBarrel;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.FluidBarrelBlockEntity;
+import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.BarrelType;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BetterBarrelBlock extends AbstractBarrelBlock {
+public class FluidBarrelBlock extends AbstractBarrelBlock {
 
 
-    public BetterBarrelBlock(Properties pProperties, BarrelFrameTier barrelTier) {
-        super(pProperties, BarrelType.BETTER,barrelTier);
+    public FluidBarrelBlock(Properties pProperties, BarrelFrameTier barrelTier) {
+        super(pProperties, BarrelType.FLUID,barrelTier);
         registerDefaultState(defaultBlockState().setValue(LOCKED,false));
     }
 
@@ -44,21 +47,23 @@ public class BetterBarrelBlock extends AbstractBarrelBlock {
 
         if (!pLevel.isClientSide) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+            if (blockEntity instanceof FluidBarrelBlockEntity betterBarrelBlockEntity) {
                 Item item = handStack.getItem();
-
                 //remember, this gets called before the item's onUse method
                 if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(pState,handStack,pLevel,pPos,pPlayer)) {
 
                 } else {
 
-                    ItemStack existing = betterBarrelBlockEntity.getItemHandler().getStack();
+                    //FluidUtil.tryEmptyContainerAndStow()
+                    FluidStack existing = betterBarrelBlockEntity.getFluidHandler().getFluid();
                     //there is no items in the barrel OR the item that the player is holding is the same as the item in the barrel
-                    if (existing.isEmpty() || ItemStack.isSameItemSameTags(handStack,existing)) {
-                        ItemStack stack = betterBarrelBlockEntity.tryAddItem(handStack);
-                        pPlayer.setItemInHand(pHand, stack);
+                    if (existing.isEmpty()) {
+                     //   ItemStack stack = betterBarrelBlockEntity.tryAddItem(handStack);
+                      //  pPlayer.setItemInHand(pHand, stack);
                     } else {
                         //search the entire inventory for item stacks
+
+                      /*
                         Inventory inventory = pPlayer.getInventory();
                         NonNullList<ItemStack> main = inventory.items;
                         for (int i = 0; i < main.size();i++) {
@@ -70,7 +75,7 @@ public class BetterBarrelBlock extends AbstractBarrelBlock {
                                     main.set(i, insert);
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -84,8 +89,6 @@ public class BetterBarrelBlock extends AbstractBarrelBlock {
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
     }
-
-
 
     @Nullable
     @Override
