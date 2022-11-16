@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.block.FluidBarrelBlock;
@@ -25,7 +26,7 @@ import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
-public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity {
+public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements HasFluidHandler {
     private FluidStack ghost = FluidStack.EMPTY;
 
 
@@ -210,7 +211,7 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity {
     private LazyOptional<IFluidHandler> optional = LazyOptional.of(this::getFluidHandler);
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap == ForgeCapabilities.ITEM_HANDLER ? optional.cast() : super.getCapability(cap, side);
+        return cap == ForgeCapabilities.FLUID_HANDLER ? optional.cast() : super.getCapability(cap, side);
     }
 
     @Override

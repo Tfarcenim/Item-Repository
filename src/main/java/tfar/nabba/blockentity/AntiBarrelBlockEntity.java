@@ -26,6 +26,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
+import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.util.NBTKeys;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider {
+public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider, HasItemHandler {
 
     private UUID uuid = Util.NIL_UUID;
     private Component customName;

@@ -14,13 +14,14 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 
-public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
+public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity implements HasItemHandler {
     private ItemStack ghost = ItemStack.EMPTY;
 
 
@@ -39,9 +40,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity {
         return new BetterBarrelBlockEntity(ModBlockEntityTypes.DISCRETE_BETTER_BARREL, pos, state);
     }
 
-    public ItemStack tryAddItem(ItemStack stack) {
-        return barrelHandler.insertItem(0, stack, false);
-    }
     public ItemStack tryRemoveItem() {
         return getItemHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
     }

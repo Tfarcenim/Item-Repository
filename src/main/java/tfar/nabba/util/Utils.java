@@ -12,6 +12,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
@@ -61,10 +62,10 @@ public class Utils {
     };
 
     public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> PICKUP_TICK =
-            (betterBarrelBlockEntity,upgradeDataStack) -> pickupItemsInBox(betterBarrelBlockEntity, upgradeDataStack.getCount(), 3, upgradeDataStack.getCount());
+            (betterBarrelBlockEntity,upgradeDataStack) -> pickupInABox(betterBarrelBlockEntity, upgradeDataStack.getCount(), 3, upgradeDataStack.getCount());
 
-    public static void pickupItemsInBox(AbstractBarrelBlockEntity betterBarrelBlockEntity,int x,int y, int z) {
-        if (betterBarrelBlockEntity.getBarrelType() != BarrelType.FLUID) {
+    public static void pickupInABox(AbstractBarrelBlockEntity betterBarrelBlockEntity, int x, int y, int z) {
+        if (betterBarrelBlockEntity instanceof HasItemHandler) {
 
             Level level = betterBarrelBlockEntity.getLevel();
             //note, AABBs start at 0,0,0 on the blockEntity, so to get a 3x3x3 cube we need to go from -1,-1,-1 to +2,+2,+2 relative
@@ -72,7 +73,7 @@ public class Utils {
                     getBoxCenteredOn(betterBarrelBlockEntity.getBlockPos(), x, y, z)
             );
             for (ItemEntity itemEntity : itemEntities) {
-                addItem(betterBarrelBlockEntity, itemEntity);
+                addItem((HasItemHandler) betterBarrelBlockEntity, itemEntity);
             }
         }
     }
@@ -88,10 +89,10 @@ public class Utils {
     }
 
 
-    public static boolean addItem(AbstractBarrelBlockEntity betterBarrelBlockEntity, ItemEntity pItem) {
+    public static boolean addItem(HasItemHandler betterBarrelBlockEntity, ItemEntity pItem) {
         boolean flag = false;
         ItemStack itemstack = pItem.getItem().copy();
-        ItemStack itemstack1 = ItemStack.EMPTY;//betterBarrelBlockEntity.tryAddItem(itemstack);
+        ItemStack itemstack1 = betterBarrelBlockEntity.tryAddItem(itemstack);
         if (itemstack1.isEmpty()) {
             flag = true;
             pItem.discard();
