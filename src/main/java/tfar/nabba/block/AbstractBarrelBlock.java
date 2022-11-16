@@ -22,6 +22,7 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.item.BetterBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 
@@ -74,13 +75,13 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         //only check for controllers if this is a new block
-        if (blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlock  && pOldState.getBlock() != pState.getBlock()) {
-            abstractBarrelBlock.searchForControllers();
+        if ((blockEntity instanceof BetterBarrelBlockEntity  || blockEntity instanceof FluidBarrelBlockEntity)  && pOldState.getBlock() != pState.getBlock()) {
+            ((AbstractBarrelBlockEntity)blockEntity).searchForControllers();
         }
     }
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return pLevel.isClientSide ? null : (Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) -> BetterBarrelBlockEntity.serverTick(pLevel1, pPos, pState1, (BetterBarrelBlockEntity) pBlockEntity);
+        return pLevel.isClientSide ? null : (Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) -> AbstractBarrelBlockEntity.serverTick(pLevel1, pPos, pState1, (AbstractBarrelBlockEntity) pBlockEntity);
     }
 
     public RenderShape getRenderShape(BlockState pState) {
