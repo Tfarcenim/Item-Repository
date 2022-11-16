@@ -1,0 +1,22 @@
+{
+  "type": "nabba:copy_nbt_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:ingots/iron"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    },
+    "b": {
+      "item": "nabba:copper_fluid_barrel"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "SbS",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:iron_fluid_barrel"
+  }
+}

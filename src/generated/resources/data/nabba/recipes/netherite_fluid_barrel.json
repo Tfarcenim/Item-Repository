@@ -1,0 +1,22 @@
+{
+  "type": "nabba:copy_nbt_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:ingots/netherite"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    },
+    "b": {
+      "item": "nabba:emerald_fluid_barrel"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "SbS",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:netherite_fluid_barrel"
+  }
+}

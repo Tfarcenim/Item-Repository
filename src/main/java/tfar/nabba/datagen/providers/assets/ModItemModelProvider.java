@@ -37,14 +37,14 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.x256_ANTI_BARREL_STORAGE_UPGRADE,modLoc("anti/x256_storage_upgrade"));
         makeOneLayerItem(ModItems.x1024_ANTI_BARREL_STORAGE_UPGRADE,modLoc("anti/x1024_storage_upgrade"));
         makeOneLayerItem(ModItems.INFINITE_ANTI_BARREL_STORAGE_UPGRADE,modLoc("anti/infinite_storage_upgrade"));
-/*
-        makeOneLayerItem(ModItems.BETTER_BARREL_STORAGE_UPGRADE,modLoc("better/storage_upgrade"));
-        makeOneLayerItem(ModItems.x4_BETTER_BARREL_STORAGE_UPGRADE,modLoc("better/x4_storage_upgrade"));
-        makeOneLayerItem(ModItems.x16_BETTER_BARREL_STORAGE_UPGRADE,modLoc("better/x16_storage_upgrade"));
-        makeOneLayerItem(ModItems.x64_BETTER_BARREL_STORAGE_UPGRADE,modLoc("better/x64_storage_upgrade"));
-        makeOneLayerItem(ModItems.x256_BETTER_BARREL_STORAGE_UPGRADE,modLoc("better/x256_storage_upgrade"));
-        makeOneLayerItem(ModItems.x1024_BETTER_BARREL_STORAGE_UPGRADE,modLoc("better/x1024_storage_upgrade"));
-        makeOneLayerItem(ModItems.INFINITE_BETTER_BARREL_STORAGE_UPGRADE,modLoc("better/infinite_storage_upgrade"));*/
+
+        makeOneLayerItem(ModItems.FLUID_BARREL_STORAGE_UPGRADE,modLoc("fluid/storage_upgrade"));
+        makeOneLayerItem(ModItems.x4_FLUID_BARREL_STORAGE_UPGRADE,modLoc("fluid/x4_storage_upgrade"));
+        makeOneLayerItem(ModItems.x16_FLUID_BARREL_STORAGE_UPGRADE,modLoc("fluid/x16_storage_upgrade"));
+        makeOneLayerItem(ModItems.x64_FLUID_BARREL_STORAGE_UPGRADE,modLoc("fluid/x64_storage_upgrade"));
+        makeOneLayerItem(ModItems.x256_FLUID_BARREL_STORAGE_UPGRADE,modLoc("fluid/x256_storage_upgrade"));
+        makeOneLayerItem(ModItems.x1024_FLUID_BARREL_STORAGE_UPGRADE,modLoc("fluid/x1024_storage_upgrade"));
+        makeOneLayerItem(ModItems.INFINITE_FLUID_BARREL_STORAGE_UPGRADE,modLoc("fluid/infinite_storage_upgrade"));
 
         makeOneLayerItem(ModItems.INFINITE_VENDING_UPGRADE);
 

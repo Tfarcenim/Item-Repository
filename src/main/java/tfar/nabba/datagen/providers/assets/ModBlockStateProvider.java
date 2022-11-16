@@ -42,6 +42,18 @@ public class ModBlockStateProvider extends BlockStateProvider {
         makeBarrel(ModBlocks.EMERALD_BETTER_BARREL);
         makeBarrel(ModBlocks.NETHERITE_BETTER_BARREL);
         makeBarrel(ModBlocks.CREATIVE_BETTER_BARREL);
+
+        makeBarrel(ModBlocks.FLUID_BARREL);
+        makeBarrel(ModBlocks.COPPER_FLUID_BARREL);
+        makeBarrel(ModBlocks.STONE_FLUID_BARREL);
+        makeBarrel(ModBlocks.IRON_FLUID_BARREL);
+        makeBarrel(ModBlocks.LAPIS_FLUID_BARREL);
+        makeBarrel(ModBlocks.GOLD_FLUID_BARREL);
+        makeBarrel(ModBlocks.DIAMOND_FLUID_BARREL);
+        makeBarrel(ModBlocks.EMERALD_FLUID_BARREL);
+        makeBarrel(ModBlocks.NETHERITE_FLUID_BARREL);
+        makeBarrel(ModBlocks.CREATIVE_FLUID_BARREL);
+
         simpleBlock(ModBlocks.CONTROLLER);
     }
 
@@ -56,7 +68,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .texture("frame_bottom",modLoc("block/"+barrel+"_barrel_frame_side"));
 
         getMultipartBuilder(block).part().modelFile(modelBuilder).addModel().end()
-                .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_void")))
+                .part().modelFile(models().getExistingFile(modLoc("block/barrel_void")))
                 .addModel().condition(BetterBarrelBlock.VOID,true).end();
     }
 
@@ -71,9 +83,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .texture("frame_bottom",modLoc("block/"+barrel+"_barrel_frame_side"));
 
         getMultipartBuilder(block).part().modelFile(modelBuilder).addModel().end()
-                .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_void")))
+                .part().modelFile(models().getExistingFile(modLoc("block/barrel_void")))
                 .addModel().condition(BetterBarrelBlock.VOID,true).end()
-                .part().modelFile(models().getExistingFile(modLoc("block/better_barrel_lock")))
+                .part().modelFile(models().getExistingFile(modLoc("block/barrel_lock")))
                 .addModel().condition(BetterBarrelBlock.LOCKED,true).end();
     }
 }

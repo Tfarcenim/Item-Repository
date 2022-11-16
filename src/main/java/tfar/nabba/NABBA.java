@@ -11,6 +11,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,10 +35,7 @@ import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.client.Client;
 import tfar.nabba.command.RepositoryCommands;
 import tfar.nabba.datagen.ModDatagen;
-import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.init.ModBlocks;
-import tfar.nabba.init.ModItems;
-import tfar.nabba.init.ModMenuTypes;
+import tfar.nabba.init.*;
 import tfar.nabba.net.C2SScrollKeyPacket;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.world.RepositorySavedData;
@@ -96,7 +94,7 @@ public class NABBA {
         superRegister(e, ModItems.class,Registry.ITEM_REGISTRY, Item.class);
         superRegister(e, ModBlockEntityTypes.class,Registry.BLOCK_ENTITY_TYPE_REGISTRY, BlockEntityType.class);
         superRegister(e, ModMenuTypes.class,Registry.MENU_REGISTRY, MenuType.class);
-//        superRegister(e, ModSoundEvents.class,Registry.SOUND_EVENT_REGISTRY, SoundEvent.class);
+        superRegister(e, ModRecipeSerializers.class,Registry.RECIPE_SERIALIZER_REGISTRY, RecipeSerializer.class);
     }
 
     public static <T> void superRegister(RegisterEvent e, Class<?> clazz, ResourceKey<? extends  Registry<T>> resourceKey, Class<?> filter) {

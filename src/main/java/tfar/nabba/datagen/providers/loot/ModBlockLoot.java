@@ -21,16 +21,27 @@ public class ModBlockLoot extends BlockLoot {
 
     @Override
     protected void addTables() {
-        dropBetterBarrel(ModBlocks.BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.STONE_BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.COPPER_BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.IRON_BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.LAPIS_BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.GOLD_BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.DIAMOND_BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.EMERALD_BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.NETHERITE_BETTER_BARREL);
-        dropBetterBarrel(ModBlocks.CREATIVE_BETTER_BARREL);
+        dropBarrel(ModBlocks.BETTER_BARREL);
+        dropBarrel(ModBlocks.STONE_BETTER_BARREL);
+        dropBarrel(ModBlocks.COPPER_BETTER_BARREL);
+        dropBarrel(ModBlocks.IRON_BETTER_BARREL);
+        dropBarrel(ModBlocks.LAPIS_BETTER_BARREL);
+        dropBarrel(ModBlocks.GOLD_BETTER_BARREL);
+        dropBarrel(ModBlocks.DIAMOND_BETTER_BARREL);
+        dropBarrel(ModBlocks.EMERALD_BETTER_BARREL);
+        dropBarrel(ModBlocks.NETHERITE_BETTER_BARREL);
+        dropBarrel(ModBlocks.CREATIVE_BETTER_BARREL);
+
+        dropBarrel(ModBlocks.FLUID_BARREL);
+        dropBarrel(ModBlocks.STONE_FLUID_BARREL);
+        dropBarrel(ModBlocks.COPPER_FLUID_BARREL);
+        dropBarrel(ModBlocks.IRON_FLUID_BARREL);
+        dropBarrel(ModBlocks.LAPIS_FLUID_BARREL);
+        dropBarrel(ModBlocks.GOLD_FLUID_BARREL);
+        dropBarrel(ModBlocks.DIAMOND_FLUID_BARREL);
+        dropBarrel(ModBlocks.EMERALD_FLUID_BARREL);
+        dropBarrel(ModBlocks.NETHERITE_FLUID_BARREL);
+        dropBarrel(ModBlocks.CREATIVE_FLUID_BARREL);
 
         dropAntiBarrel(ModBlocks.ANTI_BARREL);
         dropAntiBarrel(ModBlocks.STONE_ANTI_BARREL);
@@ -46,7 +57,7 @@ public class ModBlockLoot extends BlockLoot {
         dropSelf(ModBlocks.CONTROLLER);
     }
 
-    protected void dropBetterBarrel(Block block) {
+    protected void dropBarrel(Block block) {
 
         LootTable.Builder builder = LootTable.lootTable()
                 .withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))

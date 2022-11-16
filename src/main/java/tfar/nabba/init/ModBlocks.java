@@ -1,15 +1,18 @@
 package tfar.nabba.init;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import tfar.nabba.api.BarrelFrameTier;
-import tfar.nabba.block.AbstractBarrelBlock;
-import tfar.nabba.block.AntiBarrelBlock;
-import tfar.nabba.block.BetterBarrelBlock;
-import tfar.nabba.block.ControllerBlock;
+import tfar.nabba.block.*;
 import tfar.nabba.util.BarrelFrameTiers;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class ModBlocks {
     public static final AbstractBarrelBlock ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.WOOD);
@@ -34,5 +37,32 @@ public class ModBlocks {
     public static final AbstractBarrelBlock EMERALD_BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.EMERALD);
     public static final AbstractBarrelBlock NETHERITE_BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.NETHERITE);
     public static final AbstractBarrelBlock CREATIVE_BETTER_BARREL = new BetterBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL), BarrelFrameTiers.CREATIVE);
+
+    public static final AbstractBarrelBlock FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.WOOD);
+    public static final AbstractBarrelBlock STONE_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.STONE);
+    public static final AbstractBarrelBlock COPPER_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.COPPER);
+    public static final AbstractBarrelBlock IRON_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.IRON);
+    public static final AbstractBarrelBlock LAPIS_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.LAPIS);
+    public static final AbstractBarrelBlock GOLD_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.GOLD);
+    public static final AbstractBarrelBlock DIAMOND_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.DIAMOND);
+    public static final AbstractBarrelBlock EMERALD_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.EMERALD);
+    public static final AbstractBarrelBlock NETHERITE_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.NETHERITE);
+    public static final AbstractBarrelBlock CREATIVE_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.CREATIVE);
+
     public static final Block CONTROLLER = new ControllerBlock(BlockBehaviour.Properties.of(Material.METAL));
+
+    private static final List<Block> BLOCKS = new ArrayList<>();
+    public static List<Block> getBlocks() {
+        if (BLOCKS.isEmpty()) {
+            for (Field field : ModBlocks.class.getFields()) {
+                try {
+                    Object o = field.get(null);
+                    if (o instanceof Block block) BLOCKS.add(block);
+                } catch (IllegalAccessException illegalAccessException) {
+                    illegalAccessException.printStackTrace();
+                }
+            }
+        }
+        return BLOCKS;
+    }
 }

@@ -21,6 +21,8 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     protected void addTags() {
         copy(ModBlockTags.BETTER_BARRELS, ModItemTags.BETTER_BARRELS);
         copy(ModBlockTags.ANTI_BARRELS, ModItemTags.ANTI_BARRELS);
+        copy(ModBlockTags.FLUID_BARRELS,ModItemTags.FLUID_BARRELS);
+        copy(ModBlockTags.BARRELS,ModItemTags.BARRELS);
         copy(ModBlockTags.NETHER_BRICKS,ModItemTags.NETHER_BRICKS);
         copy(ModBlockTags.NETHER_BRICK_SLABS,ModItemTags.NETHER_BRICK_SLABS);
         tag(ModItemTags.KEYS).add(ModItems.HIDE_KEY,ModItems.LOCK_KEY,ModItems.VANITY_KEY,ModItems.CONTROLLER_KEY);

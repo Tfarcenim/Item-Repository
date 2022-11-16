@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "tag": "forge:nuggets/iron"
+    },
+    "b": {
+      "item": "nabba:fluid_barrel"
+    }
+  },
+  "pattern": [
+    "P P",
+    " b ",
+    "P P"
+  ],
+  "result": {
+    "item": "nabba:fluid_barrel_storage_upgrade"
+  }
+}

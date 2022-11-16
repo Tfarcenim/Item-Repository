@@ -1,0 +1,67 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "block": "nabba:copper_fluid_barrel",
+              "function": "minecraft:copy_state",
+              "properties": [
+                "discrete",
+                "void",
+                "locked"
+              ]
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "Color",
+                  "target": "BlockEntityTag.Color"
+                },
+                {
+                  "op": "replace",
+                  "source": "Upgrades",
+                  "target": "BlockEntityTag.Upgrades"
+                },
+                {
+                  "op": "replace",
+                  "source": "Size",
+                  "target": "BlockEntityTag.Size"
+                },
+                {
+                  "op": "replace",
+                  "source": "Stack",
+                  "target": "BlockEntityTag.Stack"
+                },
+                {
+                  "op": "replace",
+                  "source": "RealCount",
+                  "target": "BlockEntityTag.RealCount"
+                },
+                {
+                  "op": "replace",
+                  "source": "Ghost",
+                  "target": "BlockEntityTag.Ghost"
+                }
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "nabba:copper_fluid_barrel"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

@@ -7,7 +7,7 @@
     },
     {
       "apply": {
-        "model": "nabba:block/better_barrel_void"
+        "model": "nabba:block/barrel_void"
       },
       "when": {
         "void": "true"
@@ -15,7 +15,7 @@
     },
     {
       "apply": {
-        "model": "nabba:block/better_barrel_lock"
+        "model": "nabba:block/barrel_lock"
       },
       "when": {
         "locked": "true"

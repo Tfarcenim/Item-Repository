@@ -93,7 +93,7 @@ public class FluidBarrelBlock extends AbstractBarrelBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return pState.getValue(DISCRETE) ? ModBlockEntityTypes.Suppliers.DISCRETE.create(pPos,pState):ModBlockEntityTypes.Suppliers.REGULAR.create(pPos,pState);
+        return pState.getValue(DISCRETE) ? ModBlockEntityTypes.Suppliers.DISCRETE_FB.create(pPos,pState):ModBlockEntityTypes.Suppliers.REGULAR_FB.create(pPos,pState);
     }
 
     @Override

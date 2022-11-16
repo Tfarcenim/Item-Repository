@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.client.renderer.AntiBarrelRenderer;
 import tfar.nabba.client.renderer.BetterBarrelRenderer;
 import tfar.nabba.client.screen.AntiBarrelScreen;
@@ -35,27 +36,11 @@ public class Client {
         BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL, BetterBarrelRenderer::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.ANTI_BARREL, AntiBarrelRenderer::new);
 
-        setRenderLayer(ModBlocks.BETTER_BARREL);
-        setRenderLayer(ModBlocks.STONE_BETTER_BARREL);
-        setRenderLayer(ModBlocks.COPPER_BETTER_BARREL);
-        setRenderLayer(ModBlocks.IRON_BETTER_BARREL);
-        setRenderLayer(ModBlocks.LAPIS_BETTER_BARREL);
-        setRenderLayer(ModBlocks.GOLD_BETTER_BARREL);
-        setRenderLayer(ModBlocks.DIAMOND_BETTER_BARREL);
-        setRenderLayer(ModBlocks.EMERALD_BETTER_BARREL);
-        setRenderLayer(ModBlocks.NETHERITE_BETTER_BARREL);
-        setRenderLayer(ModBlocks.CREATIVE_BETTER_BARREL);
-
-        setRenderLayer(ModBlocks.ANTI_BARREL);
-        setRenderLayer(ModBlocks.STONE_ANTI_BARREL);
-        setRenderLayer(ModBlocks.COPPER_ANTI_BARREL);
-        setRenderLayer(ModBlocks.IRON_ANTI_BARREL);
-        setRenderLayer(ModBlocks.LAPIS_ANTI_BARREL);
-        setRenderLayer(ModBlocks.GOLD_ANTI_BARREL);
-        setRenderLayer(ModBlocks.DIAMOND_ANTI_BARREL);
-        setRenderLayer(ModBlocks.EMERALD_ANTI_BARREL);
-        setRenderLayer(ModBlocks.NETHERITE_ANTI_BARREL);
-        setRenderLayer(ModBlocks.CREATIVE_ANTI_BARREL);
+        for (Block block : ModBlocks.getBlocks()) {
+            if (block instanceof AbstractBarrelBlock) {
+                setCutOutRenderLayer(block);
+            }
+        }
     }
 
     public static void tooltipC(RegisterClientTooltipComponentFactoriesEvent e) {
@@ -69,7 +54,7 @@ public class Client {
         return null;
     }
 
-    private static void setRenderLayer(Block block) {
+    private static void setCutOutRenderLayer(Block block) {
         ItemBlockRenderTypes.setRenderLayer(block, RenderType.cutoutMipped());
     }
 

@@ -1,0 +1,25 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "nabba:block/creative_fluid_barrel"
+      }
+    },
+    {
+      "apply": {
+        "model": "nabba:block/barrel_void"
+      },
+      "when": {
+        "void": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "nabba:block/barrel_lock"
+      },
+      "when": {
+        "locked": "true"
+      }
+    }
+  ]
+}

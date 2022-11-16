@@ -7,7 +7,7 @@
     },
     {
       "apply": {
-        "model": "nabba:block/better_barrel_void"
+        "model": "nabba:block/barrel_void"
       },
       "when": {
         "void": "true"

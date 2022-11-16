@@ -25,8 +25,13 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 ModBlocks.IRON_ANTI_BARREL,ModBlocks.LAPIS_ANTI_BARREL,ModBlocks.GOLD_ANTI_BARREL,ModBlocks.DIAMOND_ANTI_BARREL,
                 ModBlocks.EMERALD_ANTI_BARREL,ModBlocks.NETHERITE_ANTI_BARREL,ModBlocks.CREATIVE_ANTI_BARREL);
 
+        this.tag(ModBlockTags.FLUID_BARRELS).add(ModBlocks.FLUID_BARREL,ModBlocks.STONE_FLUID_BARREL,ModBlocks.COPPER_FLUID_BARREL,
+                ModBlocks.IRON_FLUID_BARREL,ModBlocks.LAPIS_FLUID_BARREL,ModBlocks.GOLD_FLUID_BARREL,ModBlocks.DIAMOND_FLUID_BARREL,
+                ModBlocks.EMERALD_FLUID_BARREL,ModBlocks.NETHERITE_FLUID_BARREL,ModBlocks.CREATIVE_FLUID_BARREL);
+
         this.tag(BlockTags.MINEABLE_WITH_AXE).addTag(ModBlockTags.BETTER_BARRELS);
-        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addTag(ModBlockTags.ANTI_BARRELS);
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addTags(ModBlockTags.ANTI_BARRELS,ModBlockTags.FLUID_BARRELS);
+        this.tag(ModBlockTags.BARRELS).addTags(ModBlockTags.ANTI_BARRELS,ModBlockTags.BETTER_BARRELS,ModBlockTags.FLUID_BARRELS);
         this.tag(ModBlockTags.NETHER_BRICKS).add(Blocks.NETHER_BRICKS,Blocks.RED_NETHER_BRICKS,Blocks.CHISELED_NETHER_BRICKS,Blocks.CRACKED_NETHER_BRICKS);
         this.tag(ModBlockTags.NETHER_BRICK_SLABS).add(Blocks.NETHER_BRICK_SLAB,Blocks.RED_NETHER_BRICK_SLAB);
     }

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "nabba:copy_nbt_shaped",
   "key": {
     "P": {
       "tag": "minecraft:stone_crafting_materials"

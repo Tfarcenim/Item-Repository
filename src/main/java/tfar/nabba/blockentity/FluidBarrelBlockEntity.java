@@ -37,11 +37,11 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity {
     private final FluidBarrelHandler barrelHandler;
 
     public static FluidBarrelBlockEntity create(BlockPos pos, BlockState state) {
-        return new FluidBarrelBlockEntity(ModBlockEntityTypes.BETTER_BARREL, pos, state);
+        return new FluidBarrelBlockEntity(ModBlockEntityTypes.FLUID_BARREL, pos, state);
     }
 
     public static FluidBarrelBlockEntity createDiscrete(BlockPos pos, BlockState state) {
-        return new FluidBarrelBlockEntity(ModBlockEntityTypes.DISCRETE_BETTER_BARREL, pos, state);
+        return new FluidBarrelBlockEntity(ModBlockEntityTypes.DISCRETE_FLUID_BARREL, pos, state);
     }
 
     public int tryAddFluid(FluidStack stack) {
