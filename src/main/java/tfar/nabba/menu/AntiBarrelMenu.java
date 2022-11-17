@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
-import tfar.nabba.api.HasSearchBarMenu;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.net.PacketHandler;
@@ -18,32 +17,19 @@ import tfar.nabba.net.S2CRefreshClientStacksPacket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AntiBarrelMenu extends AbstractContainerMenu implements HasSearchBarMenu {
-
-    public final AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory;
-
-    private final ContainerLevelAccess access;
-    private final ContainerData data;
-    private final ContainerData syncSlots;
-
-    private final DataSlot row = DataSlot.standalone();
+public class AntiBarrelMenu extends SearchableMenu<AntiBarrelBlockEntity.AntiBarrelInventory> {
 
     public AntiBarrelMenu(int pContainerId, Inventory inventory, ContainerLevelAccess pAccess, AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory, ContainerData data, ContainerData syncSlots) {
-        this(ModMenuTypes.ANTI_BARREL, pContainerId, inventory,pAccess, antiBarrelInventory,data,syncSlots);
+        this(ModMenuTypes.ANTI_BARREL, pContainerId, inventory, pAccess, antiBarrelInventory, data, syncSlots);
     }
 
     public AntiBarrelMenu(int i, Inventory inventory) {
-        this(ModMenuTypes.ANTI_BARREL, i, inventory,ContainerLevelAccess.NULL, null,new SimpleContainerData(2),new SimpleContainerData(54));
+        this(ModMenuTypes.ANTI_BARREL, i, inventory, ContainerLevelAccess.NULL, null, new SimpleContainerData(2), new SimpleContainerData(54));
     }
 
     protected AntiBarrelMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory, ContainerData
-                             data, ContainerData syncSlots) {
-        super(pMenuType, pContainerId);
-        this.access = access;
-        this.data = data;
-        this.syncSlots = syncSlots;
-        this.antiBarrelInventory = antiBarrelInventory;
-
+            data, ContainerData syncSlots) {
+        super(pMenuType, pContainerId, access, antiBarrelInventory, data, syncSlots);
         int playerX = 8;
         int playerY = 140;
 
@@ -57,9 +43,6 @@ public class AntiBarrelMenu extends AbstractContainerMenu implements HasSearchBa
             this.addSlot(new Slot(inventory, i, i * 18 + playerX, playerY + 58));
         }
         addDataSlots(data);
-        addDataSlots(syncSlots);
-
-        addDataSlot(row);
     }
 
     @Override
@@ -72,11 +55,11 @@ public class AntiBarrelMenu extends AbstractContainerMenu implements HasSearchBa
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
 
-            if (!antiBarrelInventory.isItemValid(0,itemstack1)|| antiBarrelInventory.isFull()) {
+            if (!itemHandler.isItemValid(0, itemstack1) || itemHandler.isFull()) {
                 return ItemStack.EMPTY;
             }
 
-            antiBarrelInventory.addItem(itemstack1);
+            itemHandler.universalAddItem(itemstack1, false);
             ItemStack stack = ItemStack.EMPTY;
             slot.set(stack);
             broadcastChanges();
@@ -90,105 +73,5 @@ public class AntiBarrelMenu extends AbstractContainerMenu implements HasSearchBa
             return ItemStack.EMPTY;
         }
         return itemstack;
-    }
-
-    public int getTotalRows() {
-        return (int) Math.ceil((double) getTotalSlotCount() / 9);
-    }
-    public int getSearchRows() {
-        return (int) Math.ceil((double) getSearchSlotCount() / 9);
-    }
-
-    public int getCurrentRow() {
-        return row.get();
-    }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return true;
-    }
-
-    public int getTotalSlotCount() {
-        return data.get(0);
-    }
-
-    public int getSearchSlotCount() {
-        return data.get(1);
-    }
-
-    public void handleScroll(ServerPlayer player,int scroll_amount) {
-        int rows = getSearchRows();
-        if (rows > 6) {
-            if (scroll_amount < 0 && row.get() < rows - 6) {
-                row.set(row.get() + 1);
-            } else if (scroll_amount > 0 && row.get() > 0) {
-                row.set(row.get() - 1);
-            }
-        }
-        refreshDisplay(player);
-    }
-
-    public void handleRequest(ServerPlayer player, int slot, int amount, boolean shift) {
-
-        if (!antiBarrelInventory.isSlotValid(slot)) {
-            return;
-        }
-
-        if (shift) {
-            ItemHandlerHelper.giveItemToPlayer(player, antiBarrelInventory.getStackInSlot(slot).copy());
-        } else {
-            setCarried(antiBarrelInventory.getStackInSlot(slot).copy());
-        }
-
-        antiBarrelInventory.extractItem(slot,amount,false);
-
-        refreshDisplay(player);
-    }
-
-    public void refreshDisplay(ServerPlayer player) {
-        List<ItemStack> list = new ArrayList<>();
-        List<Integer> syncSlots = antiBarrelInventory.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof HasSearchBar repositoryBlock) {
-                return repositoryBlock.getSearchString();
-            }
-            return "";
-        },""));
-        for (int i = 0; i < syncSlots.size();i++) {
-            list.add(antiBarrelInventory.getStackInSlot(syncSlots.get(i)));
-        }
-        PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list,syncSlots), player);
-    }
-
-    @Override
-    public DataSlot getRowSlot() {
-        return row;
-    }
-
-    @Override
-    public ContainerLevelAccess getAccess() {
-        return access;
-    }
-
-    public int getDisplaySlot(int slot) {
-        return syncSlots.get(slot);
-    }
-
-    public void handleInsert(ServerPlayer player) {
-        if (!antiBarrelInventory.isFull()) {
-            antiBarrelInventory.addItem(getCarried().copy());
-            setCarried(ItemStack.EMPTY);
-            refreshDisplay(player);
-        }
-    }
-
-    public void handleSearch(ServerPlayer player, String search) {
-        access.execute((level, pos) -> {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof HasSearchBar repositoryBlock) {
-                repositoryBlock.setSearchString(search);
-            }
-        });
-        refreshDisplay(player);
     }
 }

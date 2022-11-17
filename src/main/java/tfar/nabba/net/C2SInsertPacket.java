@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.menu.ControllerKeyMenu;
+import tfar.nabba.menu.SearchableMenu;
 import tfar.nabba.net.util.C2SPacketHelper;
 
 public class C2SInsertPacket implements C2SPacketHelper {
@@ -25,10 +26,8 @@ public class C2SInsertPacket implements C2SPacketHelper {
 
     public void handleServer(ServerPlayer player) {
         AbstractContainerMenu container = player.containerMenu;
-        if (container instanceof AntiBarrelMenu antiBarrelMenu) {
-            antiBarrelMenu.handleInsert(player);
-        } else if (container instanceof ControllerKeyMenu controllerKeyMenu) {
-            controllerKeyMenu.handleInsert(player,slot);
+        if (container instanceof SearchableMenu<?> searchableMenu) {
+            searchableMenu.handleInsert(player,slot);
         }
     }
 }

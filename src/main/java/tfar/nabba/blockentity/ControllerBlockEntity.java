@@ -31,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.HasSearchBar;
+import tfar.nabba.api.ItemHandler;
+import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.api.InteractsWithBarrel;
@@ -294,7 +296,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
         return search;
     }
 
-    public static class ControllerHandler implements IItemHandler {
+    public static class ControllerHandler implements SearchableItemHandler {
         private final ControllerBlockEntity controllerBlockEntity;
 
         ControllerHandler(ControllerBlockEntity controllerBlockEntity) {
@@ -306,57 +308,6 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
             return controllerBlockEntity.barrels.get(BarrelType.BETTER).size();
         }
 
-        public ItemStack universalAddItem(ItemStack stack) {
-            ItemStack remainder = stack;
-
-            for (int i = 0; i < getSlots();i++) {
-                remainder = insertItem(i,remainder,false);
-                if (remainder.isEmpty()) {
-                    return ItemStack.EMPTY;
-                }
-            }
-            return remainder;
-        }
-
-        public List<Integer> getDisplaySlots(int row,String search) {
-            List<Integer> disp = new ArrayList<>();
-            int countForDisplay = 0;
-            int index = 0;
-            int startPos = 9 * row;
-            while (countForDisplay < 54) {
-                ItemStack stack = getStackInSlot(startPos + index);
-                if (matches(stack,search)) {
-                    disp.add(startPos + index);
-                    countForDisplay++;
-                } else if (stack.isEmpty()) {
-                    break;
-                }
-                index++;
-            }
-            return disp;
-        }
-
-        public boolean matches(ItemStack stack,String search) {
-            if (search.isEmpty()) {
-                return true;
-            } else {
-                Item item = stack.getItem();
-                if (search.startsWith("#")) {
-                    String sub = search.substring(1);
-
-                    List<TagKey<Item>> tags = item.builtInRegistryHolder().tags().toList();
-                    for (TagKey<Item> tag : tags) {
-                        if (tag.location().getPath().startsWith(sub)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                } else if (Registry.ITEM.getKey(item).getPath().startsWith(search)) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
@@ -421,6 +372,11 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
 
         public void markDirty() {
             controllerBlockEntity.setChanged();
+        }
+
+        @Override
+        public boolean isFull() {
+            return false;
         }
     }
 

@@ -29,6 +29,7 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.ItemHandler;
+import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.util.NBTKeys;
@@ -219,7 +220,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         return search;
     }
 
-    public static class AntiBarrelInventory implements ItemHandler, ResizableIItemHandler {
+    public static class AntiBarrelInventory implements SearchableItemHandler, ResizableIItemHandler {
 
         private final AntiBarrelBlockEntity blockEntity;
         public AntiBarrelInventory(AntiBarrelBlockEntity blockEntity) {
@@ -321,24 +322,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             return i;
         }
 
-        public List<Integer> getDisplaySlots(int row,String search) {
-            List<Integer> disp = new ArrayList<>();
-            int countForDisplay = 0;
-            int index = 0;
-            int startPos = 9 * row;
-            while (countForDisplay < 54) {
-                ItemStack stack = getStackInSlot(startPos + index);
-                if (matches(stack,search)) {
-                    disp.add(startPos + index);
-                    countForDisplay++;
-                } else if (stack.isEmpty()) {
-                    break;
-                }
-                index++;
-            }
-            return disp;
-        }
-
         public boolean matches(ItemStack stack,String search) {
             if (search.isEmpty()) {
                 return true;
@@ -376,7 +359,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
                 blockEntity.setClientCountAndLast(getLastItem(),getActualStoredCount());
             }
             for (ServerPlayer player : NABBA.instance.server.getPlayerList().getPlayers()) {
-                if (player.containerMenu instanceof AntiBarrelMenu antiBarrelMenu && antiBarrelMenu.antiBarrelInventory == this) {
+                if (player.containerMenu instanceof AntiBarrelMenu antiBarrelMenu && antiBarrelMenu.getItemHandler() == this) {
                     antiBarrelMenu.refreshDisplay(player);
                 }
             }

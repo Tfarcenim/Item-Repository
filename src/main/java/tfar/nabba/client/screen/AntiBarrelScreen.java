@@ -114,7 +114,7 @@ public class AntiBarrelScreen extends AbstractContainerScreen<AntiBarrelMenu> {
     @Override
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        this.font.draw(pPoseStack, menu.getSearchSlotCount()+"/"+(menu.getTotalSlotCount()-1), (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
+        this.font.draw(pPoseStack, menu.getSearchSlotCount()+"/"+(menu.getFilledSlotCount()-1), (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
     }
 
     public void setGuiStacks(List<ItemStack> stacks, List<Integer> ints) {
@@ -129,7 +129,7 @@ public class AntiBarrelScreen extends AbstractContainerScreen<AntiBarrelMenu> {
     }
 
     public boolean canScroll() {
-        return menu.getTotalSlotCount() > 54;
+        return menu.getFilledSlotCount() > 54;
     }
 
     @Override
