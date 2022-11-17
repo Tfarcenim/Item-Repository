@@ -57,7 +57,7 @@ public abstract class SearchableMenu<T extends SearchableItemHandler> extends Ab
         List<ItemStack> list = new ArrayList<>();
         List<Integer> syncSlots = itemHandler.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof ControllerBlockEntity repositoryBlock) {
+            if (blockEntity instanceof HasSearchBar repositoryBlock) {
                 return repositoryBlock.getSearchString();
             }
             return "";

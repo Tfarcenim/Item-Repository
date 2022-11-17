@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -31,11 +30,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.HasSearchBar;
-import tfar.nabba.api.ItemHandler;
+import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
-import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.menu.ControllerKeyMenu;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.Utils;
@@ -51,7 +49,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
         public int get(int pIndex) {
             switch (pIndex) {
                 case 0:
-                    return barrels.size();
+                    return barrels.get(BarrelType.BETTER).size();
                 case 1:
                     return 1;//getInventory().getFullSlots(search);
                 default:

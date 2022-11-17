@@ -9,8 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import tfar.nabba.client.screen.AntiBarrelScreen;
-import tfar.nabba.client.screen.ControllerKeyScreen;
+import tfar.nabba.client.screen.SearchableScreen;
 import tfar.nabba.net.C2SInsertPacket;
 import tfar.nabba.net.C2SRequestPacket;
 import tfar.nabba.net.PacketHandler;
@@ -18,10 +17,10 @@ import tfar.nabba.net.PacketHandler;
 public class ItemStackWidgetC extends AbstractWidget {
 
     protected ItemStack stack = ItemStack.EMPTY;
-    private final AbstractContainerScreen<?> screen;
+    private final SearchableScreen<?> screen;
     private int index;
 
-    public ItemStackWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, AbstractContainerScreen<?> screen, int index) {
+    public ItemStackWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<?> screen, int index) {
         super(pX, pY, pWidth, pHeight, pMessage);
         this.screen = screen;
         this.index = index;

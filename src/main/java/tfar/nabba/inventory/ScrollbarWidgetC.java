@@ -6,13 +6,13 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import tfar.nabba.client.screen.AntiBarrelScreen;
-import tfar.nabba.client.screen.ControllerKeyScreen;
+import tfar.nabba.api.SearchableItemHandler;
+import tfar.nabba.client.screen.SearchableScreen;
 
-public class ScrollbarWidgetC extends AbstractWidget {
-    private final ControllerKeyScreen screen;
+public class ScrollbarWidgetC<T extends SearchableItemHandler> extends AbstractWidget {
+    private final SearchableScreen<T> screen;
 
-    public ScrollbarWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, ControllerKeyScreen screen) {
+    public ScrollbarWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<T> screen) {
         super(pX, pY, pWidth, pHeight, pMessage);
         this.screen = screen;
     }
@@ -20,7 +20,7 @@ public class ScrollbarWidgetC extends AbstractWidget {
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, AntiBarrelScreen.TEXTURE);
+        RenderSystem.setShaderTexture(0, SearchableScreen.TEXTURE);
         int rows = screen.getMenu().getSearchRows();
 
         if (rows > 6) {
