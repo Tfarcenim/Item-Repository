@@ -279,16 +279,6 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
             return false;
         }
 
-        public void computeSlots() {
-            int i = 0;
-            for (BlockPos pos : controllerBlockEntity.barrels) {
-                BlockEntity blockEntity = controllerBlockEntity.getBE(pos);
-                if (blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
-                    i+= abstractBarrelBlockEntity.getItemHandler().getSlots();
-                }
-            }
-        }
-
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
             if (slot >= getSlots()) return ItemStack.EMPTY;

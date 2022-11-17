@@ -131,10 +131,6 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         return storage;
     }
 
-    public IItemHandler getItemHandler() {
-        return EmptyHandler.INSTANCE;
-    }
-
     @Nullable
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
