@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface SearchableItemHandler extends ItemHandler{
+public interface SearchableItemHandler extends ItemHandler {
     default List<Integer> getDisplaySlots(int row, String search) {
         List<Integer> disp = new ArrayList<>();
         int countForDisplay = 0;
@@ -19,7 +19,7 @@ public interface SearchableItemHandler extends ItemHandler{
             if (matches(stack,search)) {
                 disp.add(startPos + index);
                 countForDisplay++;
-            } else if (stack.isEmpty()) {
+            } else if (startPos+index >= getSlots()) {
                 break;
             }
             index++;
@@ -28,6 +28,7 @@ public interface SearchableItemHandler extends ItemHandler{
     }
 
     default boolean matches(ItemStack stack, String search) {
+        if (stack.isEmpty())return false;
         if (search.isEmpty()) {
             return true;
         } else {

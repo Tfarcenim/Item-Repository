@@ -19,6 +19,7 @@ import tfar.nabba.net.C2SGetDisplayPacket;
 import tfar.nabba.net.C2SScrollPacket;
 import tfar.nabba.net.C2SSearchPacket;
 import tfar.nabba.net.PacketHandler;
+import tfar.nabba.util.Utils;
 
 import java.util.List;
 
@@ -115,6 +116,7 @@ public class SearchableScreen<T extends SearchableItemHandler> extends AbstractC
                 widgets[i].setIndex(ints.get(i));
             } else {
                 widgets[i].setStack(ItemStack.EMPTY);
+                widgets[i].setIndex(Utils.INVALID);
             }
         }
     }
