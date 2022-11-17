@@ -8,6 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.HasSearchBar;
+import tfar.nabba.api.HasSearchBarMenu;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
@@ -18,7 +20,7 @@ import tfar.nabba.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControllerKeyMenu extends AbstractContainerMenu {
+public class ControllerKeyMenu extends AbstractContainerMenu implements HasSearchBarMenu {
 
     public final ControllerBlockEntity.ControllerHandler controllerHandler;
 
@@ -141,7 +143,7 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
         List<Integer> syncSlots = controllerHandler.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof ControllerBlockEntity repositoryBlock) {
-                return repositoryBlock.search;
+                return repositoryBlock.getSearchString();
             }
             return "";
         },""));
@@ -149,6 +151,11 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
             list.add(controllerHandler.getStackInSlot(syncSlots.get(i)));
         }
         PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list,syncSlots), player);
+    }
+
+    @Override
+    public DataSlot getRowSlot() {
+        return row;
     }
 
     public int getDisplaySlot(int slot) {
@@ -168,13 +175,8 @@ public class ControllerKeyMenu extends AbstractContainerMenu {
         refreshDisplay(player);
     }
 
-    public void handleSearch(ServerPlayer player, String search) {
-        access.execute((level, pos) -> {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof AntiBarrelBlockEntity repositoryBlock) {
-                repositoryBlock.search = search;
-            }
-        });
-        refreshDisplay(player);
+    @Override
+    public ContainerLevelAccess getAccess() {
+        return access;
     }
 }

@@ -27,6 +27,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.HasItemHandler;
+import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.ItemHandler;
 import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
@@ -39,12 +40,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider, HasItemHandler {
+public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider, HasItemHandler, HasSearchBar {
 
     private UUID uuid = Util.NIL_UUID;
     private Component customName;
 
-    public String search = "";
+    private String search = "";
 
     private ItemStack last = ItemStack.EMPTY;
     private int clientStored;
@@ -206,6 +207,16 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public void setSearchString(String search) {
+        this.search = search;
+    }
+
+    @Override
+    public String getSearchString() {
+        return search;
     }
 
     public static class AntiBarrelInventory implements ItemHandler, ResizableIItemHandler {

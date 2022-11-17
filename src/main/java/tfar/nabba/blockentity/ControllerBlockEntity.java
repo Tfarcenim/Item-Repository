@@ -30,6 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
+import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.api.InteractsWithBarrel;
@@ -41,8 +42,8 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
-    public String search = "";
+public class ControllerBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar {
+    private String search = "";
 
     protected final ContainerData dataAccess = new ContainerData() {
         public int get(int pIndex) {
@@ -281,6 +282,16 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         return new ControllerKeyMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),controllerHandler,dataAccess,syncSlotsAccess);
+    }
+
+    @Override
+    public void setSearchString(String search) {
+        this.search = search;
+    }
+
+    @Override
+    public String getSearchString() {
+        return search;
     }
 
     public static class ControllerHandler implements IItemHandler {

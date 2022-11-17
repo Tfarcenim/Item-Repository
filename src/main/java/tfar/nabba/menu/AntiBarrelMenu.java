@@ -8,6 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.HasSearchBar;
+import tfar.nabba.api.HasSearchBarMenu;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.net.PacketHandler;
@@ -16,7 +18,7 @@ import tfar.nabba.net.S2CRefreshClientStacksPacket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AntiBarrelMenu extends AbstractContainerMenu {
+public class AntiBarrelMenu extends AbstractContainerMenu implements HasSearchBarMenu {
 
     public final AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory;
 
@@ -147,8 +149,8 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
         List<ItemStack> list = new ArrayList<>();
         List<Integer> syncSlots = antiBarrelInventory.getDisplaySlots(row.get(),access.evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof AntiBarrelBlockEntity repositoryBlock) {
-                return repositoryBlock.search;
+            if (blockEntity instanceof HasSearchBar repositoryBlock) {
+                return repositoryBlock.getSearchString();
             }
             return "";
         },""));
@@ -156,6 +158,16 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
             list.add(antiBarrelInventory.getStackInSlot(syncSlots.get(i)));
         }
         PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list,syncSlots), player);
+    }
+
+    @Override
+    public DataSlot getRowSlot() {
+        return row;
+    }
+
+    @Override
+    public ContainerLevelAccess getAccess() {
+        return access;
     }
 
     public int getDisplaySlot(int slot) {
@@ -173,8 +185,8 @@ public class AntiBarrelMenu extends AbstractContainerMenu {
     public void handleSearch(ServerPlayer player, String search) {
         access.execute((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof AntiBarrelBlockEntity repositoryBlock) {
-                repositoryBlock.search = search;
+            if (blockEntity instanceof HasSearchBar repositoryBlock) {
+                repositoryBlock.setSearchString(search);
             }
         });
         refreshDisplay(player);
