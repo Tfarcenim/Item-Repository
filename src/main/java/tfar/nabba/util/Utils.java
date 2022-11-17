@@ -4,24 +4,35 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.wrappers.BucketPickupHandlerWrapper;
+import net.minecraftforge.fluids.capability.wrappers.FluidBlockWrapper;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -65,9 +76,9 @@ public class Utils {
             (betterBarrelBlockEntity,upgradeDataStack) -> pickupInABox(betterBarrelBlockEntity, upgradeDataStack.getCount(), 3, upgradeDataStack.getCount());
 
     public static void pickupInABox(AbstractBarrelBlockEntity betterBarrelBlockEntity, int x, int y, int z) {
+        Level level = betterBarrelBlockEntity.getLevel();
         if (betterBarrelBlockEntity instanceof HasItemHandler) {
 
-            Level level = betterBarrelBlockEntity.getLevel();
             //note, AABBs start at 0,0,0 on the blockEntity, so to get a 3x3x3 cube we need to go from -1,-1,-1 to +2,+2,+2 relative
             List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class,
                     getBoxCenteredOn(betterBarrelBlockEntity.getBlockPos(), x, y, z)
@@ -75,6 +86,19 @@ public class Utils {
             for (ItemEntity itemEntity : itemEntities) {
                 addItem((HasItemHandler) betterBarrelBlockEntity, itemEntity);
             }
+        } else if (betterBarrelBlockEntity instanceof HasFluidHandler hasFluidHandler) {
+            BlockPos.betweenClosedStream(getBoxCenteredOn(betterBarrelBlockEntity.getBlockPos(), x, y, z)).forEachOrdered(pos -> {
+                FluidState fluidState = level.getFluidState(pos);
+                if (fluidState.getType().canConvertToSource(fluidState,level,pos)) {
+                    hasFluidHandler.getFluidHandler().fill(new FluidStack(fluidState.getType(),1000), IFluidHandler.FluidAction.EXECUTE);
+                } else {
+                    FluidActionResult fluidActionResult = FluidUtil.tryPickUpFluid(new ItemStack(Items.BUCKET), null, level, pos, null);
+                    if (fluidActionResult.isSuccess()) {
+                        ItemStack stack = fluidActionResult.getResult();
+                        FluidUtil.tryEmptyContainer(stack, hasFluidHandler.getFluidHandler(), Integer.MAX_VALUE, null, true);
+                    }
+                }
+            });
         }
     }
 
