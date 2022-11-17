@@ -120,15 +120,20 @@ public class NABBA {
         if (!crouch) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+                if (!level.isClientSide) {
                 ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
-                ItemHandlerHelper.giveItemToPlayer(e.getEntity(),stack);
+                ItemHandlerHelper.giveItemToPlayer(e.getEntity(), stack);
+            }
                 e.setCanceled(true);
             } else if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
-                FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(e.getItemStack(), fluidBarrelBlockEntity.getFluidHandler(),
-                        new InvWrapper(player.getInventory()), Integer.MAX_VALUE, player, true);
-                if (fluidActionResult.isSuccess()) {
-                    player.setItemInHand(e.getHand(),fluidActionResult.getResult());
+                if (!level.isClientSide) {
+                    FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(e.getItemStack(), fluidBarrelBlockEntity.getFluidHandler(),
+                            new InvWrapper(player.getInventory()), Integer.MAX_VALUE, player, true);
+                    if (fluidActionResult.isSuccess()) {
+                        player.setItemInHand(e.getHand(), fluidActionResult.getResult());
+                    }
                 }
+                e.setCanceled(true);
             }
         }
     }

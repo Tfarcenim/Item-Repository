@@ -162,7 +162,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity implement
         }
         @Override
         public int getSlotLimit(int slot) {//have to trick the vanilla hopper into inserting so voiding work
-            return barrelBlockEntity.getStorage() * 64 + (barrelBlockEntity.isVoid() ? 1 : 0);
+            return barrelBlockEntity.getStorage() * stack.getMaxStackSize() + (barrelBlockEntity.isVoid() ? 1 : 0);
         }
 
         @Override
