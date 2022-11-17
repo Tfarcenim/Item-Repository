@@ -27,6 +27,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.HasItemHandler;
+import tfar.nabba.api.ItemHandler;
 import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.util.NBTKeys;
@@ -136,7 +137,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     }
 
     @Override
-    public IItemHandler getItemHandler() {
+    public ItemHandler getItemHandler() {
         return getInventory();
     }
 
@@ -207,7 +208,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         this.uuid = uuid;
     }
 
-    public static class AntiBarrelInventory implements IItemHandler, ResizableIItemHandler {
+    public static class AntiBarrelInventory implements ItemHandler, ResizableIItemHandler {
 
         private final AntiBarrelBlockEntity blockEntity;
         public AntiBarrelInventory(AntiBarrelBlockEntity blockEntity) {

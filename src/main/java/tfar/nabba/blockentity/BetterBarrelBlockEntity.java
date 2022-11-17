@@ -15,6 +15,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasItemHandler;
+import tfar.nabba.api.ItemHandler;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
@@ -77,7 +78,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity implement
         return barrelHandler;
     }
 
-    public static class BarrelHandler implements IItemHandler {
+    public static class BarrelHandler implements ItemHandler {
         private final BetterBarrelBlockEntity barrelBlockEntity;
 
         BarrelHandler(BetterBarrelBlockEntity barrelBlockEntity) {
@@ -102,6 +103,11 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity implement
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
             return stack;
+        }
+
+        @Override
+        public boolean isFull() {
+            return getSlotLimit(0) <= getStackInSlot(0).getCount();
         }
 
         @Override
