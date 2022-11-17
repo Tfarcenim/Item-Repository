@@ -87,8 +87,6 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
         final float MAX_WH = (scale + 1)/2f; //Width/height of cutout
 
 
-
-
         TextureAtlasSprite sprite = FluidSpriteCache.getStillTexture(fluid);
 
         IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluid.getFluid());

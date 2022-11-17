@@ -172,7 +172,8 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         if (controllerPos != null) {
             BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
             if (blockEntity instanceof ControllerBlockEntity controller) {
-                controller.addBarrel(getBlockPos());
+                controller.addBarrel(this);
+                controller.synchronize();
             }
         }
         setChanged();
@@ -187,7 +188,8 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
 
             BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
             if (blockEntity instanceof ControllerBlockEntity controller) {
-                controller.removeBarrel(getBlockPos());
+                controller.removeBarrel(getBlockPos(),getBarrelType());
+                controller.synchronize();
             }
             setControllerPos(null);
         }

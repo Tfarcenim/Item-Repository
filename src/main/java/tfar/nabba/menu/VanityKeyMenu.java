@@ -10,10 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
-import tfar.nabba.init.tag.ModBlockTags;
 
 public class VanityKeyMenu extends AbstractContainerMenu {
     private final BlockPos pos;
@@ -56,7 +54,7 @@ public class VanityKeyMenu extends AbstractContainerMenu {
                 betterBarrelBlockEntity.setColor(color);
                 betterBarrelBlockEntity.setSize(size);
             } else if (blockEntity instanceof ControllerBlockEntity controllerBlock) {
-                for (BlockPos pos1 : controllerBlock.getBarrels()) {
+                for (BlockPos pos1 : controllerBlock.getAllBarrels()) {
                     BlockEntity blockEntity1 = player.level.getBlockEntity(pos1);
                     if (blockEntity1 instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
                         abstractBarrelBlockEntity.setColor(color);
