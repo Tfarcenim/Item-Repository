@@ -2,14 +2,11 @@ package tfar.nabba.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,7 +20,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -31,10 +30,13 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.InteractsWithBarrel;
+import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
-import tfar.nabba.menu.ControllerKeyMenu;
+import tfar.nabba.inventory.SingleFluidSlotWrapper;
+import tfar.nabba.menu.ControllerKeyFluidMenu;
+import tfar.nabba.menu.ControllerKeyItemMenu;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.Utils;
 
@@ -42,16 +44,16 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ControllerBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar {
+public class ControllerBlockEntity extends BlockEntity implements HasSearchBar {
     private String search = "";
 
-    protected final ContainerData dataAccess = new ContainerData() {
+    protected final ContainerData itemDataAccess = new ContainerData() {
         public int get(int pIndex) {
             switch (pIndex) {
                 case 0:
                     return barrels.get(BarrelType.BETTER).size();
                 case 1:
-                    return 1;//getInventory().getFullSlots(search);
+                    return getItemHandler().getFullSlots(search);
                 default:
                     return 0;
             }
@@ -67,6 +69,31 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
             return 2;
         }
     };
+
+
+    protected final ContainerData fluidDataAccess = new ContainerData() {
+        public int get(int pIndex) {
+            switch (pIndex) {
+                case 0:
+                    return barrels.get(BarrelType.FLUID).size();
+                case 1:
+                    return getItemHandler().getFullSlots(search);
+                default:
+                    return 0;
+            }
+        }
+
+        public void set(int pIndex, int pValue) {
+            switch (pIndex) {
+                case 0:
+            }
+        }
+
+        public int getCount() {
+            return 2;
+        }
+    };
+
 
     private final Map<BarrelType,List<BlockPos>> barrels = new HashMap<>();
     private final Map<BarrelType,List<BlockPos>> invalid = new HashMap<>();
@@ -273,15 +300,19 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
         }
     }
 
-    @Override
+
     public Component getDisplayName() {
         return Component.literal("controller");
     }
 
     @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new ControllerKeyMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),controllerHandler,dataAccess,syncSlotsAccess);
+    public AbstractContainerMenu createItemMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new ControllerKeyItemMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),controllerHandler, itemDataAccess,syncSlotsAccess);
+    }
+
+    @Nullable
+    public AbstractContainerMenu createFluidMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new ControllerKeyFluidMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),controllerFluidHandler, fluidDataAccess,syncSlotsAccess);
     }
 
     @Override
@@ -378,7 +409,7 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
         }
     }
 
-    public static class ControllerFluidHandler implements IFluidHandler {
+    public static class ControllerFluidHandler implements SearchableFluidHandler {
         private final ControllerBlockEntity controllerBlockEntity;
 
         ControllerFluidHandler(ControllerBlockEntity controllerBlockEntity) {
@@ -456,28 +487,6 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
             return disp;
         }
 
-        public boolean matches(FluidStack stack,String search) {
-            if (search.isEmpty()) {
-                return true;
-            } else {
-                Fluid item = stack.getFluid();
-                if (search.startsWith("#")) {
-                    String sub = search.substring(1);
-
-                    List<TagKey<Fluid>> tags = item.builtInRegistryHolder().tags().toList();
-                    for (TagKey<Fluid> tag : tags) {
-                        if (tag.location().getPath().startsWith(sub)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                } else if (Registry.FLUID.getKey(item).getPath().startsWith(search)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         @Override
         public @NotNull FluidStack getFluidInTank(int slot) {
             if (slot >= getTanks()) return FluidStack.EMPTY;
@@ -531,8 +540,42 @@ public class ControllerBlockEntity extends BlockEntity implements MenuProvider, 
             return false;
         }
 
-        public void markDirty() {
-            controllerBlockEntity.setChanged();
+        @Override
+        public int fill(int tank, int amount, FluidAction action) {
+            return 0;
+        }
+
+        @Override
+        public int fill(int tank, FluidStack stack, FluidAction action) {
+            return 0;
+        }
+
+        @Override
+        public @NotNull FluidStack drain(int tank, FluidStack resource, FluidAction action) {
+            FluidStack fluidStack = getFluidInTank(tank);
+            if (resource.isEmpty() || !resource.isFluidEqual(fluidStack)) {
+                return FluidStack.EMPTY;
+            }
+            return drain(tank,resource.getAmount(), action);        }
+
+        @Override
+        public @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action) {
+            if (tank >= getTanks())return FluidStack.EMPTY;
+
+            BlockEntity be = controllerBlockEntity.getBE(tank,BarrelType.FLUID);
+
+            if (be instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
+               return fluidBarrelBlockEntity.getFluidHandler().drain(maxDrain,action);
+            }
+            return FluidStack.EMPTY;
+        }
+
+        @Override
+        public FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, boolean b) {
+            FluidActionResult result = FluidUtil.tryFillContainer(container, new SingleFluidSlotWrapper(this, tank), Integer.MAX_VALUE, null, true);
+
+
+            return result;
         }
     }
 

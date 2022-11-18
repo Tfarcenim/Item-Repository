@@ -6,12 +6,14 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import tfar.nabba.block.AbstractBarrelBlock;
@@ -20,7 +22,8 @@ import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.client.renderer.AntiBarrelRenderer;
 import tfar.nabba.client.renderer.BetterBarrelRenderer;
 import tfar.nabba.client.renderer.FluidBarrelRenderer;
-import tfar.nabba.client.screen.SearchableScreen;
+import tfar.nabba.client.screen.SearchableFluidScreen;
+import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.client.screen.VanityKeyScreen;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.ModBlocks;
@@ -28,16 +31,19 @@ import tfar.nabba.init.ModItems;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.inventory.tooltip.ClientBetterBarrelTooltip;
-import tfar.nabba.menu.SearchableMenu;
+import tfar.nabba.menu.SearchableFluidMenu;
+import tfar.nabba.menu.SearchableItemMenu;
 import tfar.nabba.net.C2SScrollKeyPacket;
 
 public class Client {
 
     public static void setup(FMLClientSetupEvent e) {
         MinecraftForge.EVENT_BUS.addListener(Client::scroll);
-        MenuScreens.register(ModMenuTypes.ANTI_BARREL, (SearchableMenu<AntiBarrelBlockEntity.AntiBarrelInventory> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableScreen<>(pMenu, pPlayerInventory, pTitle));
+        MinecraftForge.EVENT_BUS.addListener(Client::onTexturePostStitch);
+        MenuScreens.register(ModMenuTypes.ANTI_BARREL, (SearchableItemMenu<AntiBarrelBlockEntity.AntiBarrelInventory> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
         MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
-        MenuScreens.register(ModMenuTypes.CONTROLLER_KEY, (SearchableMenu<ControllerBlockEntity.ControllerHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableScreen<>(pMenu, pPlayerInventory, pTitle));
+        MenuScreens.register(ModMenuTypes.ITEM_CONTROLLER_KEY, (SearchableItemMenu<ControllerBlockEntity.ControllerHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
+        MenuScreens.register(ModMenuTypes.FLUID_CONTROLLER_KEY, (SearchableFluidMenu<ControllerBlockEntity.ControllerFluidHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableFluidScreen<>(pMenu, pPlayerInventory, pTitle));
         BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL, BetterBarrelRenderer::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.ANTI_BARREL, AntiBarrelRenderer::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.FLUID_BARREL, FluidBarrelRenderer::new);
@@ -46,6 +52,14 @@ public class Client {
             if (block instanceof AbstractBarrelBlock) {
                 setCutOutRenderLayer(block);
             }
+        }
+    }
+
+    public static void onTexturePostStitch(final TextureStitchEvent.Post event) {
+        //noinspection deprecation
+        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS))
+        {
+            FluidSpriteCache.invalidateSpriteCache();
         }
     }
 

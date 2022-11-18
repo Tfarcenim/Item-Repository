@@ -6,21 +6,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import tfar.nabba.client.screen.SearchableScreen;
+import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.net.C2SInsertPacket;
-import tfar.nabba.net.C2SRequestPacket;
+import tfar.nabba.net.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;
 
-public class ItemStackWidgetC extends AbstractWidget {
+public class ItemStackWidget extends AbstractWidget {
 
     protected ItemStack stack = ItemStack.EMPTY;
-    private final SearchableScreen<?> screen;
+    private final SearchableItemScreen<?,?> screen;
     private int index;
 
-    public ItemStackWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<?> screen, int index) {
+    public ItemStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableItemScreen<?,?> screen, int index) {
         super(pX, pY, pWidth, pHeight, pMessage);
         this.screen = screen;
         this.index = index;
@@ -36,7 +35,7 @@ public class ItemStackWidgetC extends AbstractWidget {
         boolean shift = Screen.hasShiftDown();
 
         if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {//try to take item
-            PacketHandler.sendToServer(new C2SRequestPacket(index, stack.getMaxStackSize(), shift));
+            PacketHandler.sendToServer(new C2SExtractItemPacket(index, stack.getMaxStackSize(), shift));
         } else {//try to insert item
             PacketHandler.sendToServer(new C2SInsertPacket(index));
         }

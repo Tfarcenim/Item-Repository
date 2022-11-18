@@ -4,22 +4,25 @@ import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface SearchableItemHandler extends ItemHandler {
+public interface SearchableFluidHandler extends FluidHandler {
     default List<Integer> getDisplaySlots(int row, String search) {
         List<Integer> disp = new ArrayList<>();
         int countForDisplay = 0;
         int index = 0;
         int startPos = 9 * row;
         while (countForDisplay < 54) {
-            ItemStack stack = getStackInSlot(startPos + index);
+            FluidStack stack = getFluidInTank(startPos + index);
             if (matches(stack,search)) {
                 disp.add(startPos + index);
                 countForDisplay++;
-            } else if (startPos+index >= getSlots()) {
+            } else if (startPos+index >= getTanks()) {
                 break;
             }
             index++;
@@ -27,23 +30,22 @@ public interface SearchableItemHandler extends ItemHandler {
         return disp;
     }
 
-    default boolean matches(ItemStack stack, String search) {
-        if (stack.isEmpty())return false;
+    default boolean matches(FluidStack stack, String search) {
         if (search.isEmpty()) {
             return true;
         } else {
-            Item item = stack.getItem();
+            Fluid item = stack.getFluid();
             if (search.startsWith("#")) {
                 String sub = search.substring(1);
 
-                List<TagKey<Item>> tags = item.builtInRegistryHolder().tags().toList();
-                for (TagKey<Item> tag : tags) {
+                List<TagKey<Fluid>> tags = item.builtInRegistryHolder().tags().toList();
+                for (TagKey<Fluid> tag : tags) {
                     if (tag.location().getPath().startsWith(sub)) {
                         return true;
                     }
                 }
                 return false;
-            } else if (Registry.ITEM.getKey(item).getPath().startsWith(search)) {
+            } else if (Registry.FLUID.getKey(item).getPath().startsWith(search)) {
                 return true;
             }
         }
@@ -52,12 +54,14 @@ public interface SearchableItemHandler extends ItemHandler {
 
     default int getFullSlots(String search) {
         int j = 0;
-        for (int i = 0 ; i< getSlots();i++) {
-            ItemStack stack = getStackInSlot(i);
+        for (int i = 0 ; i< getTanks();i++) {
+            FluidStack stack = getFluidInTank(i);
             if (matches(stack,search)){
                 i++;
             }
         }
         return j;
     }
+
+
 }

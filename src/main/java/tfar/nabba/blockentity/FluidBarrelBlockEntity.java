@@ -3,7 +3,6 @@ package tfar.nabba.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,17 +10,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
-import tfar.nabba.block.FluidBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.inventory.ImmutableFluidStack;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
@@ -113,7 +109,7 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
 
         @Override
         public @NotNull FluidStack getFluidInTank(int slot) {
-            return stack.copy();//do not allow modification
+            return ImmutableFluidStack.of(stack);//do not allow modification
         }
 
         @Override

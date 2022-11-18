@@ -13,20 +13,19 @@ import net.minecraftforge.fluids.FluidStack;
 public class FluidSpriteCache {
     private static final LoadingCache<ResourceLocation, TextureAtlasSprite> SPRITE_CACHE = buildCache();
 
-    public static TextureAtlasSprite getStillTexture(FluidStack fluid)
-    {
+    public static TextureAtlasSprite getStillTexture(FluidStack fluid) {
         return SPRITE_CACHE.getUnchecked(IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(fluid));
     }
 
-    public static TextureAtlasSprite getFlowingTexture(FluidStack fluid)
-    {
+    public static TextureAtlasSprite getFlowingTexture(FluidStack fluid) {
         return SPRITE_CACHE.getUnchecked(IClientFluidTypeExtensions.of(fluid.getFluid()).getFlowingTexture(fluid));
     }
 
-    public static void invalidateSpriteCache() { SPRITE_CACHE.invalidateAll(); }
+    public static void invalidateSpriteCache() {
+        SPRITE_CACHE.invalidateAll();
+    }
 
-    private static LoadingCache<ResourceLocation, TextureAtlasSprite> buildCache()
-    {
+    private static LoadingCache<ResourceLocation, TextureAtlasSprite> buildCache() {
         //noinspection deprecation
         return CacheBuilder.newBuilder()
                 .maximumSize(100)

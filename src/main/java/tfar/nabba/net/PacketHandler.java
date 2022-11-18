@@ -35,10 +35,15 @@ public class PacketHandler {
                 C2SVanityPacket::new,
                 C2SVanityPacket::handle);
 
-        INSTANCE.registerMessage(id++, C2SRequestPacket.class,
-                C2SRequestPacket::encode,
-                C2SRequestPacket::new,
-                C2SRequestPacket::handle);
+        INSTANCE.registerMessage(id++, C2SExtractItemPacket.class,
+                C2SExtractItemPacket::encode,
+                C2SExtractItemPacket::new,
+                C2SExtractItemPacket::handle);
+
+        INSTANCE.registerMessage(id++, C2SExtractFluidPacket.class,
+                C2SExtractFluidPacket::encode,
+                C2SExtractFluidPacket::new,
+                C2SExtractFluidPacket::handle);
 
         INSTANCE.registerMessage(id++, C2SInsertPacket.class,
                 C2SInsertPacket::encode,
@@ -54,6 +59,11 @@ public class PacketHandler {
                 S2CRefreshClientStacksPacket::encode,
                 S2CRefreshClientStacksPacket::decode,
                 S2CRefreshClientStacksPacket::handle);
+
+        INSTANCE.registerMessage(id++, S2CRefreshClientFluidStacksPacket.class,
+                S2CRefreshClientFluidStacksPacket::encode,
+                S2CRefreshClientFluidStacksPacket::decode,
+                S2CRefreshClientFluidStacksPacket::handle);
     }
 
     public static <MSG> void sendToClient(MSG packet, ServerPlayer player) {

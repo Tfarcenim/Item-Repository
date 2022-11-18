@@ -10,30 +10,23 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
-import tfar.nabba.api.SearchableItemHandler;
-import tfar.nabba.inventory.ItemStackWidgetC;
 import tfar.nabba.inventory.ScrollbarWidgetC;
-import tfar.nabba.menu.ControllerKeyMenu;
 import tfar.nabba.menu.SearchableMenu;
 import tfar.nabba.net.C2SGetDisplayPacket;
 import tfar.nabba.net.C2SScrollPacket;
 import tfar.nabba.net.C2SSearchPacket;
 import tfar.nabba.net.PacketHandler;
-import tfar.nabba.util.Utils;
 
-import java.util.List;
+public class SearchableScreen<T extends SearchableMenu> extends AbstractContainerScreen<T> {
 
-public class SearchableScreen<T extends SearchableItemHandler> extends AbstractContainerScreen<SearchableMenu<T>> {
-
-    private final ItemStackWidgetC[] widgets = new ItemStackWidgetC[54];
     private EditBox editBox;
-    public SearchableScreen(SearchableMenu<T> pMenu, Inventory pPlayerInventory, Component pTitle) {
+
+    public SearchableScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         imageHeight += 56;
         imageWidth+=18;
         this.inventoryLabelY = this.imageHeight - 94;
     }
-    public static final ResourceLocation TEXTURE = new ResourceLocation(NABBA.MODID,"textures/gui/container/anti_barrel.png");
 
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
@@ -41,30 +34,16 @@ public class SearchableScreen<T extends SearchableItemHandler> extends AbstractC
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         editBox.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pPoseStack, pMouseX, pMouseY);
-    }
 
-    @Override
-    public void renderTooltip(PoseStack pPoseStack, ItemStack pItemStack, int pMouseX, int pMouseY) {
-        super.renderTooltip(pPoseStack, pItemStack, pMouseX, pMouseY);
+
     }
 
     @Override
     protected void init() {
         super.init();
-        int xPos = leftPos + 8;
-        int yPos = topPos + 18;
-        for (int y = 0; y < 6;y++) {
-            for (int x = 0; x < 9;x++) {
-                int index = x + 9 * y;
-                ItemStackWidgetC widget = new ItemStackWidgetC(xPos+ 18 * x,yPos + 18 * y, 18, 18, Component.literal("test"),
-                        this,menu.getDisplaySlot(index));
-                widgets[index] = widget;
-                addRenderableWidget(widget);
-            }
-        }
-        initEditBox();
-        addRenderableWidget(new ScrollbarWidgetC(leftPos + 174,topPos + 18,8,18 * 6 - 17,Component.literal("scroll"), this));
+        addRenderableWidget(new ScrollbarWidgetC<>(leftPos + 174,topPos + 18,8,18 * 6 - 17,Component.literal("scroll"), this));
         PacketHandler.sendToServer(new C2SGetDisplayPacket());
+        initEditBox();
     }
 
     protected void initEditBox() {
@@ -84,8 +63,13 @@ public class SearchableScreen<T extends SearchableItemHandler> extends AbstractC
         this.editBox.setEditable(true);
     }
 
+    @Override
+    public void renderTooltip(PoseStack pPoseStack, ItemStack pItemStack, int pMouseX, int pMouseY) {
+        super.renderTooltip(pPoseStack, pItemStack, pMouseX, pMouseY);
+    }
+
     private void onNameChanged(String string) {
-            PacketHandler.sendToServer(new C2SSearchPacket(string));
+        PacketHandler.sendToServer(new C2SSearchPacket(string));
     }
 
     /**
@@ -101,24 +85,6 @@ public class SearchableScreen<T extends SearchableItemHandler> extends AbstractC
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.blit(stack,i, j, 0, 0, this.imageWidth, this.imageHeight);
-    }
-
-    @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        this.font.draw(pPoseStack, menu.getFilledSlotCount()+"", (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
-    }
-
-    public void setGuiStacks(List<ItemStack> stacks, List<Integer> ints) {
-        for (int i = 0; i < 54;i++) {
-            if (i < stacks.size()) {
-                widgets[i].setStack(stacks.get(i));
-                widgets[i].setIndex(ints.get(i));
-            } else {
-                widgets[i].setStack(ItemStack.EMPTY);
-                widgets[i].setIndex(Utils.INVALID);
-            }
-        }
     }
 
     public boolean canScroll() {
@@ -147,4 +113,7 @@ public class SearchableScreen<T extends SearchableItemHandler> extends AbstractC
         super.removed();
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
     }
+
+    public static final ResourceLocation TEXTURE = new ResourceLocation(NABBA.MODID,"textures/gui/container/anti_barrel.png");
+
 }

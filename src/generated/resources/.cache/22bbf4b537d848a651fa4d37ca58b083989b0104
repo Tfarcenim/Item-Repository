@@ -1,4 +1,4 @@
-// 1.19.2	2022-11-16T07:40:49.1243664	Item Models: nabba
+// 1.19.2	2022-11-17T21:01:39.1189524	Item Models: nabba
 5ed323eabef7f71705faf7c1f2b51a2dfba47694 assets/nabba/models/item/anti_barrel.json
 d2e611657839162166132a783ae8fc230cafa876 assets/nabba/models/item/anti_barrel_storage_upgrade.json
 ecf8667a935b50479f8da420dd4994eb6f946cbc assets/nabba/models/item/better_barrel.json
@@ -31,6 +31,7 @@ a79577d1215ffa1657b99bb1510dab8e903e2284 assets/nabba/models/item/emerald_fluid_
 6acbeb54a5714c78a77122625bf2b4a5b0400954 assets/nabba/models/item/emerald_to_netherite_frame_upgrade.json
 708214002a6a66b8306d227bb12ab18b09c87593 assets/nabba/models/item/fluid_barrel.json
 0cf8069a1ee1bf96b80a5529deb62dd80efb54ae assets/nabba/models/item/fluid_barrel_storage_upgrade.json
+8e125781adb96e4e9e1e770017be6ca10c95bde8 assets/nabba/models/item/fluid_controller_key.json
 986e9ba34baed08b79f1954c49662bd7592e37b5 assets/nabba/models/item/gold_anti_barrel.json
 de10ee5e1e749b65346f82699142a4edb783ad70 assets/nabba/models/item/gold_better_barrel.json
 5b7469472983a48972d7396e41d68b051526bd9c assets/nabba/models/item/gold_fluid_barrel.json

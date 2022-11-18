@@ -7,9 +7,11 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import tfar.nabba.api.SearchableItemHandler;
+import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.client.screen.SearchableScreen;
+import tfar.nabba.menu.SearchableMenu;
 
-public class ScrollbarWidgetC<T extends SearchableItemHandler> extends AbstractWidget {
+public class ScrollbarWidgetC<T extends SearchableMenu> extends AbstractWidget {
     private final SearchableScreen<T> screen;
 
     public ScrollbarWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<T> screen) {
@@ -20,7 +22,7 @@ public class ScrollbarWidgetC<T extends SearchableItemHandler> extends AbstractW
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, SearchableScreen.TEXTURE);
+        RenderSystem.setShaderTexture(0, SearchableItemScreen.TEXTURE);
         int rows = screen.getMenu().getSearchRows();
 
         if (rows > 6) {

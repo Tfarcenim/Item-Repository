@@ -1,0 +1,135 @@
+package tfar.nabba.menu;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.HasSearchBar;
+import tfar.nabba.api.SearchableFluidHandler;
+import tfar.nabba.net.PacketHandler;
+import tfar.nabba.net.S2CRefreshClientFluidStacksPacket;
+import tfar.nabba.util.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SearchableFluidMenu<T extends SearchableFluidHandler> extends SearchableMenu {
+
+    public final T fluidHandler;
+
+    protected SearchableFluidMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, T fluidHandler, ContainerData inventoryData, ContainerData syncSlots) {
+        super(pMenuType, pContainerId, access, inventoryData, syncSlots);
+        this.fluidHandler = fluidHandler;
+        addPlayerInv(inventory);
+    }
+
+    @Override
+    public boolean stillValid(Player pPlayer) {
+        return true;
+    }
+
+    public void refreshDisplay(ServerPlayer player) {
+        List<FluidStack> list = new ArrayList<>();
+        List<Integer> syncSlots = fluidHandler.getDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof HasSearchBar repositoryBlock) {
+                return repositoryBlock.getSearchString();
+            }
+            return "";
+        },""));
+        for (int i = 0; i < syncSlots.size();i++) {
+            list.add(fluidHandler.getFluidInTank(syncSlots.get(i)));
+        }
+        PacketHandler.sendToClient(new S2CRefreshClientFluidStacksPacket(list,syncSlots), player);
+    }
+
+
+    @Override
+    public ItemStack quickMoveStack(Player playerIn, int slotIndex) {
+        if (playerIn.level.isClientSide) {
+            return ItemStack.EMPTY;
+        }
+        Slot slot = this.slots.get(slotIndex);
+        if (slot != null && slot.hasItem()) {
+            ItemStack stack = slot.getItem();
+
+            stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
+                if (!iFluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+                    FluidActionResult result = fluidHandler.fillTanksWithContainer(stack, false);
+                    if (result.isSuccess()) {
+                        slot.set(result.getResult());
+                        slot.onTake(playerIn, stack);
+                        broadcastChanges();
+                        if (playerIn instanceof ServerPlayer sp) {
+                            refreshDisplay(sp);
+                        }
+                    }
+                }
+            });
+        }
+        return ItemStack.EMPTY;
+    }
+
+
+
+    public T getFluidHandler() {
+        return fluidHandler;
+    }
+
+    public void handleInsert(ServerPlayer player, int slot) {
+        ItemStack carried = getCarried();
+
+        if (slot == Utils.INVALID || slot >= fluidHandler.getTanks()) {
+            FluidActionResult result = fluidHandler.fillTanksWithContainer(carried,false);
+
+            if (result.isSuccess()) {
+                setCarried(result.getResult());
+            }
+        } else {
+            FluidActionResult result = fluidHandler.fillTankWithContainer(slot,carried,false);
+            if (result.isSuccess()) {
+                setCarried(result.getResult());
+            }
+        }
+        refreshDisplay(player);
+    }
+
+
+
+
+    public void handleFluidExtract(ServerPlayer player, int slot, boolean shift) {
+
+        //if (!antiBarrelInventory.isSlotValid(slot)) {
+        //   return;
+        //  }
+
+        if (!shift) {
+            ItemStack container = getCarried();
+            FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, container, false);
+
+            if (result.isSuccess()) {
+                setCarried(result.getResult());
+                refreshDisplay(player);
+            }
+
+        } else {
+            for (int i = 0; i < player.getInventory().items.size();i++) {
+                ItemStack stack = player.getInventory().items.get(i);
+                if (!stack.isEmpty()) {
+                    FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, stack, false);
+                    if (result.isSuccess()) {
+                        player.getInventory().items.set(i,result.getResult());
+                    }
+                }
+            }
+            refreshDisplay(player);
+        }
+    }
+}

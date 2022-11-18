@@ -8,10 +8,7 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.item.*;
-import tfar.nabba.item.keys.BlockStateKeyItem;
-import tfar.nabba.item.keys.ControllerKeyItem;
-import tfar.nabba.item.keys.KeyRingItem;
-import tfar.nabba.item.keys.VanityKeyItem;
+import tfar.nabba.item.keys.*;
 import tfar.nabba.util.BarrelFrameTiers;
 
 public class ModItems {
@@ -92,6 +89,8 @@ public class ModItems {
     public static final Item HIDE_KEY = new BlockStateKeyItem(basic(),BetterBarrelBlock.DISCRETE);
     public static final Item LOCK_KEY = new BlockStateKeyItem(basic(), BetterBarrelBlock.LOCKED);
     public static final Item CONTROLLER_KEY = new ControllerKeyItem(basic());
+    public static final Item FLUID_CONTROLLER_KEY = new FluidControllerKeyItem(basic());
+
     public static final Item VANITY_KEY = new VanityKeyItem(basic());
     public static final Item WOOD_TO_STONE_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.WOOD,BarrelFrameTiers.STONE);
     public static final Item STONE_TO_COPPER_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.STONE,BarrelFrameTiers.COPPER);

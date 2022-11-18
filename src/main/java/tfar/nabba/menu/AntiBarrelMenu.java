@@ -5,19 +5,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
-import tfar.nabba.net.PacketHandler;
-import tfar.nabba.net.S2CRefreshClientStacksPacket;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class AntiBarrelMenu extends SearchableMenu<AntiBarrelBlockEntity.AntiBarrelInventory> {
+public class AntiBarrelMenu extends SearchableItemMenu<AntiBarrelBlockEntity.AntiBarrelInventory> {
 
     public AntiBarrelMenu(int pContainerId, Inventory inventory, ContainerLevelAccess pAccess, AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory, ContainerData data, ContainerData syncSlots) {
         this(ModMenuTypes.ANTI_BARREL, pContainerId, inventory, pAccess, antiBarrelInventory, data, syncSlots);
@@ -29,20 +21,7 @@ public class AntiBarrelMenu extends SearchableMenu<AntiBarrelBlockEntity.AntiBar
 
     protected AntiBarrelMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, AntiBarrelBlockEntity.AntiBarrelInventory antiBarrelInventory, ContainerData
             data, ContainerData syncSlots) {
-        super(pMenuType, pContainerId, access, antiBarrelInventory, data, syncSlots);
-        int playerX = 8;
-        int playerY = 140;
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                this.addSlot(new Slot(inventory, j + i * 9 + 9, j * 18 + playerX, i * 18 + playerY));
-            }
-        }
-
-        for (int i = 0; i < 9; i++) {
-            this.addSlot(new Slot(inventory, i, i * 18 + playerX, playerY + 58));
-        }
-        addDataSlots(data);
+        super(pMenuType, pContainerId,inventory, access, antiBarrelInventory, data, syncSlots);
     }
 
     @Override
