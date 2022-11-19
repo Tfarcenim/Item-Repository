@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "H": {
+      "tag": "forge:ingots/netherite"
+    },
+    "P": {
+      "tag": "forge:gems/diamond"
+    },
+    "b": {
+      "item": "nabba:controller"
+    }
+  },
+  "pattern": [
+    "PHP",
+    "HbH",
+    "PHP"
+  ],
+  "result": {
+    "item": "nabba:barrel_interface"
+  }
+}

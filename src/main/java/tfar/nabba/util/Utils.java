@@ -193,4 +193,9 @@ public class Utils {
         if (size == 0) return FluidStack.EMPTY;
         return new FluidStack(itemStack, size);
     }
+
+    public static boolean isItemValid(ItemStack existing, @NotNull ItemStack incoming,ItemStack ghost) {
+        return (ghost.isEmpty() || ItemStack.isSameItemSameTags(incoming, ghost))
+                && (existing.isEmpty() || ItemStack.isSameItemSameTags(existing, incoming));
+    }
 }

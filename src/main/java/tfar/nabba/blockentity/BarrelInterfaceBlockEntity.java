@@ -1,6 +1,7 @@
 package tfar.nabba.blockentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -15,12 +16,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
+import tfar.nabba.capability.BetterBarrelItemStackItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
@@ -31,6 +37,7 @@ import java.util.List;
 public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar {
 
     private BarrelInterfaceItemHandler handler = new BarrelInterfaceItemHandler(this);
+    private BarrelWrapper wrapper = new BarrelWrapper(this);
     private String search= "";
 
     public BarrelInterfaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -126,14 +133,96 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         getHandler().deserializeNBT(pTag.getList("Items",Tag.TAG_COMPOUND));
     }
 
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        return cap == ForgeCapabilities.ITEM_HANDLER ? LazyOptional.of(() -> wrapper).cast() : super.getCapability(cap, side);
+    }
+
+    public static class BarrelWrapper implements IItemHandler {
+
+        private BarrelInterfaceBlockEntity blockEntity;
+
+        public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
+
+            this.blockEntity = blockEntity;
+        }
+
+        public BarrelInterfaceItemHandler getBarrelInt() {
+            return blockEntity.getHandler();
+        }
+
+        @Override
+        public int getSlots() {
+            BarrelInterfaceItemHandler barrelInterfaceItemHandler = getBarrelInt();
+            int j = 0;
+            for (int i = 0; i < barrelInterfaceItemHandler.getSlots();i++) {
+                ItemStack barrel = barrelInterfaceItemHandler.getStackInSlot(i);
+                j += barrel.getCapability(ForgeCapabilities.ITEM_HANDLER).map(IItemHandler::getSlots).orElse(0);
+            }
+            return j;
+        }
+
+        @Override
+        public @NotNull ItemStack getStackInSlot(int slot) {
+            return getBarrelInt().getStackInSlot(slot)
+                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> iItemHandler.getStackInSlot(slot)).orElse(ItemStack.EMPTY);
+        }
+
+        @Override
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack incoming, boolean simulate) {
+            return getBarrelInt().getStackInSlot(slot)
+                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> {
+                        ItemStack stack1 = iItemHandler.insertItem(slot, incoming, simulate);
+                        if (!simulate) {
+                            getBarrelInt().clientNeedsUpdate = true;
+                            getBarrelInt().markDirty();
+                        }
+                        return stack1;
+                    }).orElse(incoming);
+        }
+
+        @Override
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+            return getBarrelInt().getStackInSlot(slot)
+                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> {
+                        ItemStack stack = iItemHandler.extractItem(slot, amount, simulate);
+                        if (!simulate && !stack.isEmpty()) {
+                            getBarrelInt().clientNeedsUpdate = true;
+                            getBarrelInt().markDirty();
+                        }
+                        return stack;
+                    })
+                    .orElse(ItemStack.EMPTY);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return getBarrelInt().getStackInSlot(slot)
+                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> iItemHandler.getSlotLimit(slot)).orElse(0);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return getBarrelInt().getStackInSlot(slot)
+                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> iItemHandler.isItemValid(slot, stack)).orElse(false);
+        }
+    }
+
     public static class BarrelInterfaceItemHandler implements SearchableItemHandler, INBTSerializable<ListTag> {
 
         private BarrelInterfaceBlockEntity blockEntity;
+
+        public boolean clientNeedsUpdate;
 
         BarrelInterfaceItemHandler(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
         }
         final List<ItemStack> barrels = new ArrayList<>();
+
+        @Override
+        public List<Integer> getDisplaySlots(int row, String search) {
+            return SearchableItemHandler.super.getDisplaySlots(row, search);
+        }
 
         @Override
         public boolean isFull() {
@@ -244,6 +333,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         }
         public void markDirty() {
             blockEntity.setChanged();
+            clientNeedsUpdate = true;
         }
     }
 }

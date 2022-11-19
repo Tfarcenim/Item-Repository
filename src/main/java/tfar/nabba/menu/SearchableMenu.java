@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 
 public abstract class SearchableMenu extends AbstractContainerMenu {
+    protected final Inventory inventory;
     private ContainerLevelAccess access;
     private final DataSlot row = DataSlot.standalone();
     private final ContainerData syncSlots;
@@ -16,6 +17,7 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
 
     protected SearchableMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, ContainerData inventoryData, ContainerData syncSlots) {
         super(pMenuType, pContainerId);
+        this.inventory = inventory;
         this.access = access;
         this.inventoryData = inventoryData;
         this.syncSlots = syncSlots;

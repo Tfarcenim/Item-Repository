@@ -68,6 +68,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_ender_chest", has(Blocks.ENDER_CHEST))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(ModItems.BARREL_INTERFACE)
+                .define('P', Tags.Items.GEMS_DIAMOND)
+                .define('H', Tags.Items.INGOTS_NETHERITE)
+                .define('b', ModBlocks.CONTROLLER)
+                .pattern("PHP")
+                .pattern("HbH")
+                .pattern("PHP")
+                .unlockedBy("has_controller", has(ModBlocks.CONTROLLER))
+                .save(consumer);
+
         barrelFrames(consumer);
         itemUpgrades(consumer);
         compressionRecipes(consumer);

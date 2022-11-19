@@ -1,5 +1,6 @@
 package tfar.nabba.menu;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
@@ -27,6 +28,15 @@ public class BarrelInterfaceMenu extends SearchableItemMenu<BarrelInterfaceBlock
                                ContainerData inventoryData,ContainerData syncSlots) {
         this(ModMenuTypes.BARREL_INTERFACE,containerId,inventory,access,handler,inventoryData,syncSlots);
     }
+
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        if (itemHandler.clientNeedsUpdate) {
+            refreshDisplay((ServerPlayer) inventory.player);
+            itemHandler.clientNeedsUpdate = false;
+        }
+     }
 
     @Override
     public boolean stillValid(Player pPlayer) {

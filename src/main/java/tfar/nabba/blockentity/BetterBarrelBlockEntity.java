@@ -21,6 +21,7 @@ import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
+import tfar.nabba.util.Utils;
 
 public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity implements HasItemHandler {
     private ItemStack ghost = ItemStack.EMPTY;
@@ -173,8 +174,7 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity implement
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack incoming) {
-            return (!barrelBlockEntity.hasGhost() || ItemStack.isSameItemSameTags(incoming, barrelBlockEntity.getGhost()))
-                    && (this.stack.isEmpty() || ItemStack.isSameItemSameTags(this.stack, incoming));
+            return Utils.isItemValid(this.stack,incoming,barrelBlockEntity.ghost);
         }
 
         public void markDirty() {

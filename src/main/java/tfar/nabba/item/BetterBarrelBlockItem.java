@@ -7,9 +7,15 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.UpgradeStack;
+import tfar.nabba.capability.BetterBarrelItemStackItemHandler;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
+import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
+import tfar.nabba.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +24,14 @@ import java.util.Optional;
 public class BetterBarrelBlockItem extends BlockItem {
     public BetterBarrelBlockItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
+    }
+
+    public static void setStack(ItemStack container, ItemStack copyStackWithSize) {
+        CompoundTag tag = copyStackWithSize.save(new CompoundTag());
+        container.getOrCreateTagElement("BlockEntityTag").put(NBTKeys.Stack.name(), tag);
+        container.getTagElement("BlockEntityTag").putInt(NBTKeys.RealCount.name(), copyStackWithSize.getCount());
+
+        System.out.println(container.getTag());
     }
 
     @Override
@@ -55,4 +69,40 @@ public class BetterBarrelBlockItem extends BlockItem {
         return i;
     }
 
+    public static int getStorageUnits(ItemStack barrel,BarrelType type) {
+        int storage = Utils.BASE_STORAGE.get(type);
+        List<UpgradeStack> upgrades = getUpgrades(barrel);
+        for (UpgradeStack upgradeStack : upgrades) {
+            storage += upgradeStack.getStorageUnits(type);
+        }
+        return storage;
+    }
+
+    public static boolean isVoid(ItemStack barrel) {
+        if (!barrel.hasTag())return false;
+        if (barrel.getTag().contains("BlockStateTag")) {
+            return barrel.getTag().getCompound("BlockStateTag").getBoolean("void");
+        }
+        return false;
+    }
+
+    public static boolean isItemValid(ItemStack barrel,ItemStack stack) {
+        if (!stack.hasTag()) return true;
+        ItemStack existing = getStoredItem(barrel);
+        ItemStack ghost = getStoredItem(barrel);
+        return Utils.isItemValid(existing,stack,ghost);
+    }
+
+    public static ItemStack getGhost(ItemStack barrel) {
+        if (barrel.hasTag() && barrel.getTag().contains("BlockEntityTag")) {
+            return ItemStack.of(barrel.getTag().getCompound("BlockEntityTag").getCompound(NBTKeys.Ghost.name()));
+        }
+        return ItemStack.EMPTY;
+    }
+
+
+    @Override
+    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        return new BetterBarrelItemStackItemHandler(stack);
+    }
 }

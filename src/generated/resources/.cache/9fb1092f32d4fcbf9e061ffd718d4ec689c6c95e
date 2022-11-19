@@ -1,7 +1,8 @@
-// 1.19.2	2022-11-16T09:22:44.9695011	Recipes
+// 1.19.2	2022-11-19T17:22:04.8852263	Recipes
 b19c9655b651548f7d63afb8e12c01539045d927 data/nabba/advancements/recipes/nabba/anti_barrel.json
 707bfcbc1dced27d305c0087b2fe2bfa723c9613 data/nabba/advancements/recipes/nabba/anti_barrel_storage_upgrade.json
 f88e9a379df824abeadd81ba657b1d1a4260d3e8 data/nabba/advancements/recipes/nabba/anti_barrel_storage_upgrade_reverse.json
+311dde3d5ae20a78c6e8750e99c328d55cf3851f data/nabba/advancements/recipes/nabba/barrel_interface.json
 f9159c17a8f2cf7472fa42540c1b14e83d3e15a3 data/nabba/advancements/recipes/nabba/better_barrel.json
 65041c7b77ffd0ad9eb6d09edede88edce167d12 data/nabba/advancements/recipes/nabba/better_barrel_storage_upgrade.json
 704f66ff5fdbca03daad8ace35036d776b52a353 data/nabba/advancements/recipes/nabba/better_barrel_storage_upgrade_reverse.json
@@ -69,6 +70,7 @@ ff07a9b9534fefd4ee790200936e92665c5e90d9 data/nabba/advancements/recipes/nabba/x
 72c2ec9a2ddfe73f7324a40a9f9db32659bf7421 data/nabba/recipes/anti_barrel.json
 381c130cb2b6072e238ad9dfcb14c906a3a79c07 data/nabba/recipes/anti_barrel_storage_upgrade.json
 7dbbc553e7e837e71917102cf95194ea8b1f98b4 data/nabba/recipes/anti_barrel_storage_upgrade_reverse.json
+da384934a62a4ec306886e422b978034a80ce5f2 data/nabba/recipes/barrel_interface.json
 5caa7c2e88ff56239fbf4a10bed1853c04ad4f18 data/nabba/recipes/better_barrel.json
 e6d98e590aeedb20dc9337f52eb4929ac2e53613 data/nabba/recipes/better_barrel_storage_upgrade.json
 c37d17438f0dec4ac06ab7d1b5d34840edcca3e9 data/nabba/recipes/better_barrel_storage_upgrade_reverse.json
