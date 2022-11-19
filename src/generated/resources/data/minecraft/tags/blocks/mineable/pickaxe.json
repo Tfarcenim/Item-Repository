@@ -2,6 +2,7 @@
   "values": [
     "#nabba:anti_barrels",
     "#nabba:fluid_barrels",
-    "nabba:controller"
+    "nabba:controller",
+    "nabba:barrel_interface"
   ]
 }

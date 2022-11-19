@@ -1,5 +1,6 @@
-// 1.19.2	2022-11-16T07:40:49.1200554	LootTables
+// 1.19.2	2022-11-19T11:35:59.7329162	LootTables
 e540e0aff87752bb0be1ee310ef79f99e20dfec3 data/nabba/loot_tables/blocks/anti_barrel.json
+75e341a9624c05b7d34dd55e80f0581d35a26a59 data/nabba/loot_tables/blocks/barrel_interface.json
 2e14672d5150d66cf11238dcd9e4b254832b36d6 data/nabba/loot_tables/blocks/better_barrel.json
 c61da02692c828aaf11762f072b718d53bbb8b7f data/nabba/loot_tables/blocks/controller.json
 73b379bee3a65222725c3ed28a0c6be3813ce92e data/nabba/loot_tables/blocks/copper_anti_barrel.json

@@ -14,7 +14,7 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
     private final ContainerData syncSlots;
     private final ContainerData inventoryData;
 
-    protected SearchableMenu(@Nullable MenuType<?> pMenuType, int pContainerId, ContainerLevelAccess access, ContainerData inventoryData, ContainerData syncSlots) {
+    protected SearchableMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, ContainerData inventoryData, ContainerData syncSlots) {
         super(pMenuType, pContainerId);
         this.access = access;
         this.inventoryData = inventoryData;
@@ -22,6 +22,7 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
         addDataSlot(row);
         addDataSlots(inventoryData);
         addDataSlots(syncSlots);
+        addPlayerInv(inventory);
     }
 
     public void addPlayerInv(Inventory inventory) {

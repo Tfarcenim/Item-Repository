@@ -22,9 +22,8 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
     public final T itemHandler;
 
     protected SearchableItemMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, T itemHandler, ContainerData inventoryData, ContainerData syncSlots) {
-        super(pMenuType, pContainerId,access,inventoryData,syncSlots);
+        super(pMenuType, pContainerId,inventory,access,inventoryData,syncSlots);
         this.itemHandler = itemHandler;
-        addPlayerInv(inventory);
     }
 
     @Override

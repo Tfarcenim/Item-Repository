@@ -1,7 +1,8 @@
 {
-  "block.minecraft.air": "Controller",
+  "block.minecraft.air": "Air",
   "block.minecraft.air.tooltip": "Connects to all barrels and tanks from this mod within a 19x19x19 volume",
   "block.nabba.anti_barrel": "Anti Barrel",
+  "block.nabba.barrel_interface": "Barrel Interface",
   "block.nabba.better_barrel": "Better Barrel",
   "block.nabba.copper_anti_barrel": "Copper Anti Barrel",
   "block.nabba.copper_better_barrel": "Copper Better Barrel",

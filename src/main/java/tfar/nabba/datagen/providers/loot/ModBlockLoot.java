@@ -55,6 +55,7 @@ public class ModBlockLoot extends BlockLoot {
         dropAntiBarrel(ModBlocks.CREATIVE_ANTI_BARREL);
 
         dropSelf(ModBlocks.CONTROLLER);
+        dropSelf(ModBlocks.BARREL_INTERFACE);
     }
 
     protected void dropBarrel(Block block) {

@@ -27,9 +27,8 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
     public final T fluidHandler;
 
     protected SearchableFluidMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, T fluidHandler, ContainerData inventoryData, ContainerData syncSlots) {
-        super(pMenuType, pContainerId, access, inventoryData, syncSlots);
+        super(pMenuType, pContainerId, inventory, access, inventoryData, syncSlots);
         this.fluidHandler = fluidHandler;
-        addPlayerInv(inventory);
     }
 
     @Override

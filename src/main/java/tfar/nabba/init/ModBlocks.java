@@ -51,6 +51,8 @@ public class ModBlocks {
 
     public static final Block CONTROLLER = new ControllerBlock(BlockBehaviour.Properties.of(Material.METAL).requiresCorrectToolForDrops().strength(3.5f));
 
+    public static final Block BARREL_INTERFACE = new BarrelInterfaceBlock(BlockBehaviour.Properties.of(Material.METAL).requiresCorrectToolForDrops().strength(3.5f));
+
     private static final List<Block> BLOCKS = new ArrayList<>();
     public static List<Block> getBlocks() {
         if (BLOCKS.isEmpty()) {

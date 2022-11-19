@@ -155,6 +155,7 @@ public class ModItems {
     public static final Item WOOD_TO_CREATIVE_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.WOOD,BarrelFrameTiers.CREATIVE);
 
     public static final Item CONTROLLER = new BlockItem(ModBlocks.CONTROLLER,basic());
+    public static final Item BARREL_INTERFACE = new BlockItem(ModBlocks.BARREL_INTERFACE,basic());
 
     private static Item.Properties basic() {
         return new Item.Properties().tab(tab);

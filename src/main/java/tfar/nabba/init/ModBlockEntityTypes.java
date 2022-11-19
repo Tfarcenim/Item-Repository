@@ -2,10 +2,7 @@ package tfar.nabba.init;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import tfar.nabba.blockentity.AntiBarrelBlockEntity;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
-import tfar.nabba.blockentity.ControllerBlockEntity;
-import tfar.nabba.blockentity.FluidBarrelBlockEntity;
+import tfar.nabba.blockentity.*;
 
 public class ModBlockEntityTypes {
     public static final Block[] bb_blocks = new Block[]{ModBlocks.BETTER_BARREL,ModBlocks.STONE_BETTER_BARREL
@@ -35,6 +32,9 @@ public class ModBlockEntityTypes {
 
     public static final BlockEntityType<ControllerBlockEntity> CONTROLLER =
             BlockEntityType.Builder.of(ControllerBlockEntity::create,ModBlocks.CONTROLLER).build(null);
+
+    public static final BlockEntityType<BarrelInterfaceBlockEntity> BARREL_INTERFACE =
+            BlockEntityType.Builder.of(BarrelInterfaceBlockEntity::new,ModBlocks.BARREL_INTERFACE).build(null);
 
 
     public static class Suppliers {
