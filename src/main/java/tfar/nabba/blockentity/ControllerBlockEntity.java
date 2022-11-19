@@ -470,24 +470,6 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar {
             return FluidStack.EMPTY;
         }
 
-        public List<Integer> getDisplaySlots(int row,String search) {
-            List<Integer> disp = new ArrayList<>();
-            int countForDisplay = 0;
-            int index = 0;
-            int startPos = 9 * row;
-            while (countForDisplay < 54) {
-                FluidStack stack = getFluidInTank(startPos + index);
-                if (matches(stack,search)) {
-                    disp.add(startPos + index);
-                    countForDisplay++;
-                } else if (stack.isEmpty()) {
-                    break;
-                }
-                index++;
-            }
-            return disp;
-        }
-
         @Override
         public @NotNull FluidStack getFluidInTank(int slot) {
             if (slot >= getTanks()) return FluidStack.EMPTY;

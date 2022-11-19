@@ -59,8 +59,7 @@ public class Client {
 
     public static void onTexturePostStitch(final TextureStitchEvent.Post event) {
         //noinspection deprecation
-        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS))
-        {
+        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
             FluidSpriteCache.invalidateSpriteCache();
         }
     }

@@ -31,6 +31,7 @@ public interface SearchableFluidHandler extends FluidHandler {
     }
 
     default boolean matches(FluidStack stack, String search) {
+        if (stack.isEmpty()) return false;
         if (search.isEmpty()) {
             return true;
         } else {
@@ -62,6 +63,4 @@ public interface SearchableFluidHandler extends FluidHandler {
         }
         return j;
     }
-
-
 }

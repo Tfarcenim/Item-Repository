@@ -3,27 +3,24 @@ package tfar.nabba.blockentity;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.HasItemHandler;
@@ -40,6 +37,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider, HasItemHandler, HasSearchBar {
 
@@ -55,7 +53,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         public int get(int pIndex) {
             switch (pIndex) {
                 case 0:
-                    return getInventory().getActualStoredCount();
+                    return getInventory().getStoredCount();
                 case 1:
                     return getInventory().getFullSlots(search);
                 default:
@@ -121,7 +119,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Anti Barrel");
+        return getBlockState().getBlock().getName();
     }
 
     @Nullable
@@ -239,12 +237,12 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             return isFull() ? stacks.size() : stacks.size() + 1;
         }
 
-        public int getActualStoredCount() {
-            return stacks.size();
+        public int getStoredCount() {
+            return stacks.stream().mapToInt(ItemStack::getCount).sum();
         }
 
         public boolean isFull() {
-            return getActualStoredCount() >= blockEntity.getStorage();
+            return getStoredCount() >= blockEntity.getStorage();
         }
 
         @Override
@@ -252,55 +250,72 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             return slot < stacks.size() ? stacks.get(slot) : ItemStack.EMPTY;
         }
 
-
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (stack.isEmpty())
                 return ItemStack.EMPTY;
 
-            if (!isItemValid(slot, stack) || isFull())
+            if (isFull())
                 return stack;
 
-            else {
+            else if (slot == stacks.size()) {
                 if (!simulate) {
-                    ItemStack copy = stack.copy();
-                    addItem(stack);
-
+                    stacks.add(stack);
+                    setChanged();
                 }
                 return ItemStack.EMPTY;
+            }
+
+            else {
+                ItemStack existing = getStackInSlot(slot);
+                if (existing.isEmpty()) {
+                    if (!simulate) {
+                        stacks.set(slot,stack);
+                        setChanged();
+                    }
+                    return ItemStack.EMPTY;
+                } else {
+                    if (ItemStack.isSameItemSameTags(stack,existing)) {
+                        if (!simulate){
+                            existing.grow(stack.getCount());
+                            setChanged();
+                        }
+                        return ItemStack.EMPTY;
+                    } else {
+                        return stack;
+                    }
+                }
             }
         }
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (amount == 0 || slot >= getActualStoredCount())
+            if (amount == 0 || slot >= getStoredCount())
                 return ItemStack.EMPTY;
             ItemStack existing = this.stacks.get(slot);
 
             if (existing.isEmpty())
                 return ItemStack.EMPTY;
-            ItemStack copy = existing.copy();
-            if (!simulate) {
-                this.stacks.remove(slot);
-                setChanged();
-            }
-                return copy;
-        }
 
-        public void addItem(ItemStack stack) {
-            if (!stack.isEmpty()) {
-                stacks.add(stack);
-                setChanged();
-            }
-        }
+            if (amount >= existing.getCount()) {
 
-        public void removeItem() {
-            setChanged();
+                if (!simulate) {
+                    stacks.remove(slot);
+                    setChanged();
+                }
+                return existing;
+            } else {
+                if (!simulate) {
+                    existing.shrink(amount);
+                    setChanged();
+                }
+                return ItemHandlerHelper.copyStackWithSize(existing,amount);
+            }
         }
 
         @Override
         public int getSlotLimit(int slot) {
-            return 1;
+            return Integer.MAX_VALUE;
         }
 
         @Override
@@ -312,51 +327,19 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             return stacks;
         }
 
-        public int getFullSlots(String search) {
-            int i = 0;
-            for (ItemStack stack : stacks) {
-                if (matches(stack,search)){
-                 i++;
-                }
-            }
-            return i;
-        }
-
-        public boolean matches(ItemStack stack,String search) {
-            if (search.isEmpty()) {
-                return true;
-            } else {
-                Item item = stack.getItem();
-                if (search.startsWith("#")) {
-                    String sub = search.substring(1);
-
-                    List<TagKey<Item>> tags = item.builtInRegistryHolder().tags().toList();
-                    for (TagKey<Item> tag : tags) {
-                        if (tag.location().getPath().startsWith(sub)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                } else if (Registry.ITEM.getKey(item).getPath().startsWith(search)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public void setStacks(List<ItemStack> stacks) {
             this.stacks = stacks;
         }
 
         ItemStack getLastItem() {
-            int stored = getActualStoredCount();
-            return stored > 0 ? getStackInSlot(stored-1) : ItemStack.EMPTY;
+            int stored = getStoredCount();
+            return stored > 0 ? getStackInSlot(getSlots() - 1) : ItemStack.EMPTY;
         }
 
         public void setChanged() {
             if (NABBA.instance.data != null) {
                 NABBA.instance.data.writeInvData(this);
-                blockEntity.setClientCountAndLast(getLastItem(),getActualStoredCount());
+                blockEntity.setClientCountAndLast(getLastItem(), getStoredCount());
             }
             for (ServerPlayer player : NABBA.instance.server.getPlayerList().getPlayers()) {
                 if (player.containerMenu instanceof AntiBarrelMenu antiBarrelMenu && antiBarrelMenu.getItemHandler() == this) {
