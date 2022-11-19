@@ -20,6 +20,7 @@ import tfar.nabba.client.screen.SearchableFluidScreen;
 import tfar.nabba.net.C2SExtractFluidPacket;
 import tfar.nabba.net.C2SInsertPacket;
 import tfar.nabba.net.PacketHandler;
+import tfar.nabba.util.ClientUtils;
 
 public class FluidStackWidget extends AbstractWidget {
 
@@ -90,31 +91,9 @@ public class FluidStackWidget extends AbstractWidget {
     }
 
     public void renderFluid(PoseStack matrices) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(stack.getFluid());
-        int color = renderProperties.getTintColor(stack);
-        TextureAtlasSprite sprite = FluidSpriteCache.getStillTexture(stack);
-        RenderSystem.setShaderColor((color >> 16 & 0xff) / 255f, (color >> 8 & 0xff) / 255f, (color & 0xff) / 255f,1);
-        RenderSystem.enableDepthTest();
-        blit(matrices,x,y, 0, 16, 16, sprite);
-
-        PoseStack viewModelPose = RenderSystem.getModelViewStack();
-        viewModelPose.pushPose();
-        viewModelPose.translate(x - .5, y + 11, 0);
-        float scale = .75f;
-        viewModelPose.scale(scale, scale, scale);
-        viewModelPose.translate(-1 * x, -1 * y, 0);
-        RenderSystem.applyModelViewMatrix();
-        Minecraft.getInstance().font.draw(matrices,abrev(stack.getAmount()),x,y ,0xffffff);
-        viewModelPose.popPose();
-        RenderSystem.applyModelViewMatrix();
-
+        ClientUtils.renderFluid(matrices,x,y,stack);
     }
 
-    private String abrev(int i) {
-        return stack.getAmount()+"";
-    }
 
     public void renderTooltip(PoseStack matrices,int x,int y) {
         screen.renderTooltip(matrices,stack.getDisplayName(),x,y);

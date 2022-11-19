@@ -54,4 +54,5 @@ public class BetterBarrelBlockItem extends BlockItem {
         }
         return i;
     }
+
 }

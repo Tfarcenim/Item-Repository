@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
 import org.codehaus.plexus.util.StringUtils;
 import tfar.nabba.NABBA;
+import tfar.nabba.api.Upgrade;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
@@ -14,6 +15,7 @@ import tfar.nabba.item.BarrelFrameUpgradeItem;
 import tfar.nabba.item.keys.KeyItem;
 import tfar.nabba.item.StorageUpgradeItem;
 import tfar.nabba.item.UpgradeItem;
+import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
 public class ModLangProvider extends LanguageProvider {
@@ -60,6 +62,10 @@ public class ModLangProvider extends LanguageProvider {
         addTooltip(ModBlocks.CONTROLLER, "Connects to all barrels and tanks from this mod within a "
                 +(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+" volume");
 
+        addUpgrade(Upgrades.INFINITE_VENDING,"Infinite Vending");
+        addUpgrade(Upgrades.STORAGE,"Storage Units");
+        addUpgrade(Upgrades.PICKUP,"Pickup Units");
+
         add("nabba.key_ring.selected_key","%s (%s)");
     }
 
@@ -77,6 +83,10 @@ public class ModLangProvider extends LanguageProvider {
 
     public static String getNameFromItem(Item item) {
         return StringUtils.capitaliseAllWords(item.getDescriptionId().split("\\.")[2].replace("_", " "));
+    }
+
+    public void addUpgrade(Upgrade upgrade,String text) {
+        add(upgrade.getDescriptionId(),text);
     }
 
     public static String getNameFromBlock(Block block) {

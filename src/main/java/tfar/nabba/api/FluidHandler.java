@@ -5,6 +5,7 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.inventory.SingleFluidSlotWrapper;
 
@@ -18,12 +19,12 @@ public interface FluidHandler extends IFluidHandler {
 
     @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action);
 
-    FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, boolean b);
-    default FluidActionResult fillTanksWithContainer(ItemStack container, boolean simulate) {
-        return FluidUtil.tryEmptyContainer(container,this,Integer.MAX_VALUE,null,true);
+    FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container,IItemHandler playerInv, boolean b);
+    default FluidActionResult fillTanksWithContainer(ItemStack container, IItemHandler playerInv,boolean simulate) {
+        return FluidUtil.tryEmptyContainerAndStow(container,this,playerInv,Integer.MAX_VALUE,null,true);
     }
 
-    default FluidActionResult fillTankWithContainer(int tank, ItemStack container, boolean simulate) {
-        return FluidUtil.tryEmptyContainer(container,new SingleFluidSlotWrapper(this,tank),Integer.MAX_VALUE,null,true);
+    default FluidActionResult fillTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, boolean simulate) {
+        return FluidUtil.tryEmptyContainerAndStow(container,new SingleFluidSlotWrapper(this,tank),playerInv,Integer.MAX_VALUE,null,true);
     }
 }

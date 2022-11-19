@@ -10,6 +10,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableFluidHandler;
@@ -62,7 +64,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
             stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
                 if (!iFluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-                    FluidActionResult result = fluidHandler.fillTanksWithContainer(stack, false);
+                    FluidActionResult result = fluidHandler.fillTanksWithContainer(stack, new PlayerInvWrapper(playerIn.getInventory()),false);
                     if (result.isSuccess()) {
                         slot.set(result.getResult());
                         slot.onTake(playerIn, stack);
@@ -87,13 +89,13 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         ItemStack carried = getCarried();
 
         if (slot == Utils.INVALID || slot >= fluidHandler.getTanks()) {
-            FluidActionResult result = fluidHandler.fillTanksWithContainer(carried,false);
+            FluidActionResult result = fluidHandler.fillTanksWithContainer(carried,new PlayerInvWrapper(player.getInventory()),false);
 
             if (result.isSuccess()) {
                 setCarried(result.getResult());
             }
         } else {
-            FluidActionResult result = fluidHandler.fillTankWithContainer(slot,carried,false);
+            FluidActionResult result = fluidHandler.fillTankWithContainer(slot,carried,new PlayerInvWrapper(player.getInventory()),false);
             if (result.isSuccess()) {
                 setCarried(result.getResult());
             }
@@ -112,7 +114,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
         if (!shift) {
             ItemStack container = getCarried();
-            FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, container, false);
+            FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, container, new InvWrapper(player.getInventory()),false);
 
             if (result.isSuccess()) {
                 setCarried(result.getResult());
@@ -123,7 +125,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
             for (int i = 0; i < player.getInventory().items.size();i++) {
                 ItemStack stack = player.getInventory().items.get(i);
                 if (!stack.isEmpty()) {
-                    FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, stack, false);
+                    FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, stack,  new InvWrapper(player.getInventory()),false);
                     if (result.isSuccess()) {
                         player.getInventory().items.set(i,result.getResult());
                     }

@@ -31,6 +31,8 @@ import tfar.nabba.init.ModItems;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.inventory.tooltip.ClientBetterBarrelTooltip;
+import tfar.nabba.inventory.tooltip.ClientFluidBarrelTooltip;
+import tfar.nabba.inventory.tooltip.FluidBarrelTooltip;
 import tfar.nabba.menu.SearchableFluidMenu;
 import tfar.nabba.menu.SearchableItemMenu;
 import tfar.nabba.net.C2SScrollKeyPacket;
@@ -65,11 +67,14 @@ public class Client {
 
     public static void tooltipC(RegisterClientTooltipComponentFactoriesEvent e) {
         e.register(BetterBarrelTooltip.class, Client::tooltipImage);
+        e.register(FluidBarrelTooltip.class,Client::tooltipImage);
     }
 
     public static ClientTooltipComponent tooltipImage(TooltipComponent data) {
         if (data instanceof BetterBarrelTooltip dankTooltip) {
             return new ClientBetterBarrelTooltip(dankTooltip);
+        } else if (data instanceof FluidBarrelTooltip fluidBarrelTooltip) {
+            return new ClientFluidBarrelTooltip(fluidBarrelTooltip);
         }
         return null;
     }

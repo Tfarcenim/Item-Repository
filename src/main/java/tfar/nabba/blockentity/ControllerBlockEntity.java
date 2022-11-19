@@ -151,6 +151,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar {
         for (BlockEntity abstractBarrelBlockEntity : betterBarrelBlockEntities) {
             addBarrel(abstractBarrelBlockEntity);
         }
+        synchronize();
     }
 
     public void addBarrel(BlockEntity blockEntity) {
@@ -571,8 +572,8 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar {
         }
 
         @Override
-        public FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, boolean b) {
-            FluidActionResult result = FluidUtil.tryFillContainer(container, new SingleFluidSlotWrapper(this, tank), Integer.MAX_VALUE, null, true);
+        public FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, boolean b) {
+            FluidActionResult result = FluidUtil.tryFillContainerAndStow(container, new SingleFluidSlotWrapper(this, tank), playerInv,Integer.MAX_VALUE, null, true);
 
 
             return result;

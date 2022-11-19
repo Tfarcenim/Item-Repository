@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
@@ -53,7 +55,17 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         if (pStack.hasTag()) {
             appendBlockStateInfo(pStack.getTag().getCompound("BlockStateTag"), pTooltip);
-            pTooltip.add(Component.literal(pStack.getTag().toString()).withStyle(ChatFormatting.YELLOW));
+
+            List<UpgradeStack> upgradeStacks = BetterBarrelBlockItem.getUpgrades(pStack);
+
+            if (!upgradeStacks.isEmpty()) {
+                pTooltip.add(Component.literal("Upgrades"));
+                for (UpgradeStack upgradeStack: upgradeStacks) {
+                    MutableComponent mutablecomponent = upgradeStack.getName();
+                    pTooltip.add(mutablecomponent);
+                }
+            }
+            pTooltip.add(Component.literal(pStack.getTag().toString()).withStyle(ChatFormatting.GOLD));
         }
         pTooltip.add(Component.translatable(info,
                 Component.translatable(BetterBarrelBlockItem.getUsedSlotsFromItem(pStack)+"/"+barrelTier.getUpgradeSlots()).withStyle(ChatFormatting.AQUA)));

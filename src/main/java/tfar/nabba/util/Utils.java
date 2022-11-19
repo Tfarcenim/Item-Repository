@@ -147,7 +147,7 @@ public class Utils {
     }
 
     public static List<BlockEntity> getNearbyBarrels(Level level, BlockPos thisPos) {
-        return getNearbyBlockEntities(level, isBetterBarrel, thisPos);
+        return getNearbyBlockEntities(level, isControllableBarrel, thisPos);
     }
 
     public static List<BlockEntity> getNearbyControllers(Level level, BlockPos thisPos) {
@@ -155,6 +155,11 @@ public class Utils {
     }
 
     public static final Predicate<BlockEntity> isController = ControllerBlockEntity.class::isInstance;
+
+    public static final Predicate<BlockEntity> isControllableBarrel = blockEntity ->
+            ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.BETTER_BARRELS).contains(blockEntity.getType()) ||
+                    ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.FLUID_BARRELS).contains(blockEntity.getType());
+
     public static final Predicate<BlockEntity> isBetterBarrel = blockEntity -> ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.BETTER_BARRELS).contains(blockEntity.getType());
 
     //searches a 3x3 chunk area

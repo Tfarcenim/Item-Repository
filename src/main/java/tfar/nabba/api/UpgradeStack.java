@@ -1,12 +1,17 @@
 package tfar.nabba.api;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class UpgradeStack {
@@ -106,6 +111,7 @@ public class UpgradeStack {
         return this == EMPTY || this.getCount() <= 0 || data == Upgrades.DUMMY;
     }
 
+
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
         tag.putString(NBTKeys.Upgrade.name(), getData().getKey().toString());
@@ -123,5 +129,9 @@ public class UpgradeStack {
     @Override
     public int hashCode() {
         return Objects.hash(getData(), getCount());
+    }
+
+    public MutableComponent getName() {
+        return Component.literal(getCount() +" ").withStyle(ChatFormatting.AQUA).append(Component.translatable(getData().getDescriptionId()));
     }
 }

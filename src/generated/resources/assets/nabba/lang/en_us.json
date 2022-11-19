@@ -137,5 +137,8 @@
   "nabba.barrel.info": "Using %s upgrade slots",
   "nabba.key_ring.selected_key": "%s (%s)",
   "nabba.upgrade.info": "Requires %s upgrade slots",
-  "nabba.upgrade.info1": "Max of %s allowed per barrel"
+  "nabba.upgrade.info1": "Max of %s allowed per barrel",
+  "nabba.upgrade.nabba.infinite_vending": "Infinite Vending",
+  "nabba.upgrade.nabba.pickup": "Pickup Units",
+  "nabba.upgrade.nabba.storage": "Storage Units"
 }

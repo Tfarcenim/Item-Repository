@@ -40,16 +40,16 @@ public class ModItems {
     public static final Item NETHERITE_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.NETHERITE_BETTER_BARREL,basic());
     public static final Item CREATIVE_BETTER_BARREL = new BetterBarrelBlockItem(ModBlocks.CREATIVE_BETTER_BARREL,basic());
 
-    public static final Item FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.FLUID_BARREL,basic());
-    public static final Item STONE_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.STONE_FLUID_BARREL,basic());
-    public static final Item COPPER_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.COPPER_FLUID_BARREL,basic());
-    public static final Item IRON_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.IRON_FLUID_BARREL,basic());
-    public static final Item LAPIS_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.LAPIS_FLUID_BARREL,basic());
-    public static final Item GOLD_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.GOLD_FLUID_BARREL,basic());
-    public static final Item DIAMOND_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.DIAMOND_FLUID_BARREL,basic());
-    public static final Item EMERALD_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.EMERALD_FLUID_BARREL,basic());
-    public static final Item NETHERITE_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.NETHERITE_FLUID_BARREL,basic());
-    public static final Item CREATIVE_FLUID_BARREL = new BetterBarrelBlockItem(ModBlocks.CREATIVE_FLUID_BARREL,basic());
+    public static final Item FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.FLUID_BARREL,basic());
+    public static final Item STONE_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.STONE_FLUID_BARREL,basic());
+    public static final Item COPPER_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.COPPER_FLUID_BARREL,basic());
+    public static final Item IRON_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.IRON_FLUID_BARREL,basic());
+    public static final Item LAPIS_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.LAPIS_FLUID_BARREL,basic());
+    public static final Item GOLD_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.GOLD_FLUID_BARREL,basic());
+    public static final Item DIAMOND_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.DIAMOND_FLUID_BARREL,basic());
+    public static final Item EMERALD_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.EMERALD_FLUID_BARREL,basic());
+    public static final Item NETHERITE_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.NETHERITE_FLUID_BARREL,basic());
+    public static final Item CREATIVE_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.CREATIVE_FLUID_BARREL,basic());
 
     public static final Item BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.STORAGE);
     public static final Item x4_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x4_STORAGE);

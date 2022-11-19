@@ -49,7 +49,7 @@ public class ModBlocks {
     public static final AbstractBarrelBlock NETHERITE_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.NETHERITE);
     public static final AbstractBarrelBlock CREATIVE_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.CREATIVE);
 
-    public static final Block CONTROLLER = new ControllerBlock(BlockBehaviour.Properties.of(Material.METAL));
+    public static final Block CONTROLLER = new ControllerBlock(BlockBehaviour.Properties.of(Material.METAL).requiresCorrectToolForDrops().strength(3.5f));
 
     private static final List<Block> BLOCKS = new ArrayList<>();
     public static List<Block> getBlocks() {

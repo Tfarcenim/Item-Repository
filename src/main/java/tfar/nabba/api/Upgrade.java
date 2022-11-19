@@ -1,11 +1,13 @@
 package tfar.nabba.api;
 
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.util.BarrelType;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -29,5 +31,7 @@ public interface Upgrade {
     void tick(AbstractBarrelBlockEntity barrelBlockEntity, UpgradeStack upgradeStack);
 
     ResourceLocation getKey();
+
+    String getDescriptionId();
 
 }

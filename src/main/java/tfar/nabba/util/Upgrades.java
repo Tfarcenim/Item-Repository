@@ -1,5 +1,7 @@
 package tfar.nabba.util;
 
+import net.minecraft.Util;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -9,6 +11,7 @@ import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.init.ModItems;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -90,5 +93,18 @@ public enum Upgrades implements Upgrade {
     @Override
     public ResourceLocation getKey() {
         return new ResourceLocation(NABBA.MODID,name().toLowerCase(Locale.ROOT));
+    }
+
+    private String descriptionId;
+
+    public String getDescriptionId() {
+        return getOrCreateDescriptionId();
+    }
+
+    private String getOrCreateDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = Util.makeDescriptionId("nabba.upgrade",getKey());
+        }
+        return this.descriptionId;
     }
 }
