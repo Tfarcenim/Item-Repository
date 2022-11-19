@@ -3,8 +3,6 @@ package tfar.nabba.inventory;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -13,21 +11,14 @@ import tfar.nabba.net.C2SInsertPacket;
 import tfar.nabba.net.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;
 
-public class ItemStackWidget extends AbstractWidget {
+public class ItemStackWidget extends RightClickButton<ItemStack> {
 
-    protected ItemStack stack = ItemStack.EMPTY;
     private final SearchableItemScreen<?,?> screen;
-    private int index;
 
     public ItemStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableItemScreen<?,?> screen, int index) {
-        super(pX, pY, pWidth, pHeight, pMessage);
+        super(pX, pY, pWidth, pHeight, pMessage, screen, index);
         this.screen = screen;
-        this.index = index;
-    }
-
-    @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
-
+        stack = ItemStack.EMPTY;
     }
 
     @Override
@@ -37,6 +28,14 @@ public class ItemStackWidget extends AbstractWidget {
         if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {//try to take item
             PacketHandler.sendToServer(new C2SExtractItemPacket(index, stack.getMaxStackSize(), shift));
         } else {//try to insert item
+            PacketHandler.sendToServer(new C2SInsertPacket(index));
+        }
+        super.onClick(pMouseX, pMouseY);
+    }
+
+    @Override
+    public void onRightClick(double pMouseX, double pMouseY) {
+        if (!screen.getMenu().getCarried().isEmpty() && stack.isEmpty()) {//try to add item
             PacketHandler.sendToServer(new C2SInsertPacket(index));
         }
         super.onClick(pMouseX, pMouseY);
@@ -62,21 +61,5 @@ public class ItemStackWidget extends AbstractWidget {
 
     public void renderTooltip(PoseStack matrices,int x,int y) {
         screen.renderTooltip(matrices,stack,x,y);
-    }
-
-    public ItemStack getStack() {
-        return stack;
-    }
-
-    public void setStack(ItemStack stack) {
-        this.stack = stack;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public int getIndex() {
-        return index;
     }
 }
