@@ -3,6 +3,7 @@
     "nabba:hide_key",
     "nabba:lock_key",
     "nabba:vanity_key",
-    "nabba:controller_key"
+    "nabba:controller_key",
+    "nabba:fluid_controller_key"
   ]
 }

@@ -1,5 +1,6 @@
 package tfar.nabba.item.keys;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -8,6 +9,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -64,11 +66,16 @@ public class KeyRingItem extends KeyItem implements InteractsWithBarrel, Interac
 
         List<Item> keys = getKeys(pStack);
         for (Item item : keys) {
-            pTooltipComponents.add(Component.literal(item.toString()));
+            pTooltipComponents.add(((MutableComponent)item.getName(item.getDefaultInstance())).withStyle(ChatFormatting.GRAY));
         }
     }
 
-    protected void addKey(ItemStack keyRing, Item key) {
+    protected boolean addKey(ItemStack keyRing, Item key) {
+        List<Item> keys = getKeys(keyRing);
+        if (keys.contains(key)) {
+            return false;
+        }
+
         CompoundTag tag = keyRing.getOrCreateTag();
         ListTag listTag = tag.getList("Keys",Tag.TAG_STRING);
         if (listTag.isEmpty()) {
@@ -76,6 +83,7 @@ public class KeyRingItem extends KeyItem implements InteractsWithBarrel, Interac
         }
         listTag.add(StringTag.valueOf(Registry.ITEM.getKey(key).toString()));
         tag.put("Keys",listTag);
+        return true;
     }
 
     @Override
@@ -105,8 +113,9 @@ public class KeyRingItem extends KeyItem implements InteractsWithBarrel, Interac
                 for (ItemStack stack : main) {
                     if (stack.is(ModItemTags.KEYS)) {
                         if (!keys.contains(stack.getItem())) {
-                            addKey(keyRing,stack.getItem());
-                            stack.shrink(1);
+                           if(addKey(keyRing,stack.getItem())) {
+                                stack.shrink(1);
+                            }
                         }
                     }
                 }
