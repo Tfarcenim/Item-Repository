@@ -28,10 +28,23 @@ public class BetterBarrelBlockItem extends BlockItem {
 
     public static void setStack(ItemStack container, ItemStack copyStackWithSize) {
         CompoundTag tag = copyStackWithSize.save(new CompoundTag());
-        container.getOrCreateTagElement("BlockEntityTag").put(NBTKeys.Stack.name(), tag);
-        container.getTagElement("BlockEntityTag").putInt(NBTKeys.RealCount.name(), copyStackWithSize.getCount());
+        getOrCreateBlockEntityTag(container).put(NBTKeys.Stack.name(), tag);
+        getBlockEntityTag(container).putInt(NBTKeys.RealCount.name(), copyStackWithSize.getCount());
 
         System.out.println(container.getTag());
+    }
+
+    @Nullable
+    public static CompoundTag getBlockEntityTag(ItemStack barrel) {
+        return barrel.getTagElement(BlockItem.BLOCK_ENTITY_TAG);
+    }
+
+    public static CompoundTag getBlockStateTag(ItemStack barrel) {
+        return barrel.getTagElement(BlockItem.BLOCK_STATE_TAG);
+    }
+
+    public static CompoundTag getOrCreateBlockEntityTag(ItemStack barrel) {
+        return barrel.getOrCreateTagElement(BlockItem.BLOCK_ENTITY_TAG);
     }
 
     @Override
@@ -41,9 +54,9 @@ public class BetterBarrelBlockItem extends BlockItem {
     }
 
     public static ItemStack getStoredItem(ItemStack barrel) {
-        if (barrel.hasTag() && barrel.getTag().contains("BlockEntityTag")) {
-            ItemStack stack = ItemStack.of(barrel.getTag().getCompound("BlockEntityTag").getCompound("Stack"));
-            stack.setCount(barrel.getTag().getCompound("BlockEntityTag").getInt("RealCount"));
+        if (getBlockEntityTag(barrel) != null) {
+            ItemStack stack = ItemStack.of(getBlockEntityTag(barrel).getCompound("Stack"));
+            stack.setCount(getBlockEntityTag(barrel).getInt("RealCount"));
             return stack;
         }
         return ItemStack.EMPTY;
@@ -51,8 +64,8 @@ public class BetterBarrelBlockItem extends BlockItem {
 
     public static List<UpgradeStack> getUpgrades(ItemStack barrel) {
         List<UpgradeStack> upgradeStacks = new ArrayList<>();
-        if (barrel.hasTag() && barrel.getTag().contains("BlockEntityTag")) {
-            CompoundTag blockEntityTag = barrel.getTag().getCompound("BlockEntityTag");
+        if (getBlockEntityTag(barrel)!=null) {
+            CompoundTag blockEntityTag = getBlockEntityTag(barrel);
             ListTag listTag = blockEntityTag.getList(NBTKeys.Upgrades.name(), Tag.TAG_COMPOUND);
             for (Tag tag : listTag) {
                 upgradeStacks.add(UpgradeStack.of((CompoundTag) tag));
@@ -80,8 +93,8 @@ public class BetterBarrelBlockItem extends BlockItem {
 
     public static boolean isVoid(ItemStack barrel) {
         if (!barrel.hasTag())return false;
-        if (barrel.getTag().contains("BlockStateTag")) {
-            return barrel.getTag().getCompound("BlockStateTag").getBoolean("void");
+        if (getBlockStateTag(barrel)!= null) {
+            return getBlockStateTag(barrel).getBoolean("void");
         }
         return false;
     }
@@ -89,13 +102,13 @@ public class BetterBarrelBlockItem extends BlockItem {
     public static boolean isItemValid(ItemStack barrel,ItemStack stack) {
         if (!stack.hasTag()) return true;
         ItemStack existing = getStoredItem(barrel);
-        ItemStack ghost = getStoredItem(barrel);
+        ItemStack ghost = getGhost(barrel);
         return Utils.isItemValid(existing,stack,ghost);
     }
 
     public static ItemStack getGhost(ItemStack barrel) {
-        if (barrel.hasTag() && barrel.getTag().contains("BlockEntityTag")) {
-            return ItemStack.of(barrel.getTag().getCompound("BlockEntityTag").getCompound(NBTKeys.Ghost.name()));
+        if (getBlockEntityTag(barrel)!=null) {
+            return ItemStack.of(getBlockEntityTag(barrel).getCompound(NBTKeys.Ghost.name()));
         }
         return ItemStack.EMPTY;
     }

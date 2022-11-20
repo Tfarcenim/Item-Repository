@@ -20,6 +20,20 @@ public class AntiBarrelSavedData extends SavedData {
         return storage;
     }
 
+    public void addNewTag(UUID uuid) {
+        storage.put(uuid,new ListTag());
+        setDirty();
+    }
+
+    public void saveData(UUID uuid,ListTag tag) {
+        storage.put(uuid, tag);
+        setDirty();
+    }
+
+    public ListTag getTag(UUID uuid) {
+        return storage.get(uuid);
+    }
+
     public AntiBarrelBlockEntity.AntiBarrelInventory getInventory(AntiBarrelBlockEntity antiBarrelBlockEntity) {
         UUID uuid = antiBarrelBlockEntity.getUuid();
         if (!storage.containsKey(uuid)) {

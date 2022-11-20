@@ -8,6 +8,7 @@ public interface ItemHandler extends IItemHandler {
     boolean isFull();
 
     default ItemStack universalAddItem(ItemStack stack,boolean simulate) {
+        if (isFull()) return stack;
         ItemStack remainder = stack;
 
         for (int i = 0; i < getSlots();i++) {

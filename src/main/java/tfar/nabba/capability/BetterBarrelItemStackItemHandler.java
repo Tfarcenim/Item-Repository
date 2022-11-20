@@ -43,7 +43,6 @@ public class BetterBarrelItemStackItemHandler implements IItemHandler, ICapabili
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-
         if (isItemValid(slot,stack)) {
             ItemStack existing = getStackInSlot(slot);
             if (existing.getCount() + stack.getCount() > getSlotLimit(slot)) {

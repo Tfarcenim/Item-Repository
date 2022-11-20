@@ -27,7 +27,7 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
 
         if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {//try to take item
             PacketHandler.sendToServer(new C2SExtractItemPacket(index, stack.getMaxStackSize(), shift));
-        } else {//try to insert item
+        } else if (!screen.getMenu().getCarried().isEmpty()){//try to insert item
             PacketHandler.sendToServer(new C2SInsertPacket(index));
         }
         super.onClick(pMouseX, pMouseY);

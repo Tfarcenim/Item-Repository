@@ -22,11 +22,11 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
-import tfar.nabba.capability.BetterBarrelItemStackItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
@@ -38,7 +38,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
     private BarrelInterfaceItemHandler handler = new BarrelInterfaceItemHandler(this);
     private BarrelWrapper wrapper = new BarrelWrapper(this);
-    private String search= "";
+    private String search = "";
 
     public BarrelInterfaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
         this(ModBlockEntityTypes.BARREL_INTERFACE, pPos, pBlockState);
@@ -124,13 +124,21 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("Items",getHandler().serializeNBT());
+        pTag.put("Items", getHandler().serializeNBT());
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        getHandler().deserializeNBT(pTag.getList("Items",Tag.TAG_COMPOUND));
+        getHandler().deserializeNBT(pTag.getList("Items", Tag.TAG_COMPOUND));
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (!level.isClientSide) {
+            wrapper.recomputeSlots();
+        }
     }
 
     @Override
@@ -138,13 +146,47 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         return cap == ForgeCapabilities.ITEM_HANDLER ? LazyOptional.of(() -> wrapper).cast() : super.getCapability(cap, side);
     }
 
+    public static final int SIZE = 256;
+
     public static class BarrelWrapper implements IItemHandler {
 
         private BarrelInterfaceBlockEntity blockEntity;
 
-        public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
+        protected List<Integer> baseIndices = new ArrayList<>();
+        protected int totalSlotCount;
+        protected List<LazyOptional<IItemHandler>> itemHandlers; // the handlers
 
+        public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
+        }
+
+        public void recomputeSlots() {
+            itemHandlers = itemCaps();
+            baseIndices.clear();
+            int index = 0;
+            for (int i = 0; i < itemHandlers.size(); i++) {
+                index += itemHandlers.get(i).map(IItemHandler::getSlots).orElse(0);
+                baseIndices.add(index);
+            }
+            this.totalSlotCount = index;
+        }
+
+        public List<LazyOptional<IItemHandler>> itemCaps() {
+            return caps(ForgeCapabilities.ITEM_HANDLER);
+        }
+
+        public <T> List<LazyOptional<T>> caps(Capability<T> capability) {
+            List<LazyOptional<T>> list = new ArrayList<>();
+            for (ItemStack stack : getBarrelInt().barrels) {
+                if (stack.getCapability(capability).isPresent()) {
+                    list.add(stack.getCapability(capability));
+                }
+            }
+            return list;
+        }
+
+        public <T> LazyOptional<T> getCapInSlot(int slot, Capability<T> capability) {
+            return getBarrelInt().getStackInSlot(slot).getCapability(capability);
         }
 
         public BarrelInterfaceItemHandler getBarrelInt() {
@@ -153,58 +195,89 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         @Override
         public int getSlots() {
-            BarrelInterfaceItemHandler barrelInterfaceItemHandler = getBarrelInt();
-            int j = 0;
-            for (int i = 0; i < barrelInterfaceItemHandler.getSlots();i++) {
-                ItemStack barrel = barrelInterfaceItemHandler.getStackInSlot(i);
-                j += barrel.getCapability(ForgeCapabilities.ITEM_HANDLER).map(IItemHandler::getSlots).orElse(0);
-            }
-            return j;
+            return totalSlotCount;
         }
+
+
+        // returns the handler index for the slot
+        protected int getIndexForSlot(int slot) {
+            if (slot < 0)
+                return -1;
+
+            for (int i = 0; i < baseIndices.size(); i++) {
+                if (slot - baseIndices.get(i) < 0) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        protected IItemHandler getHandlerFromIndex(int index) {
+            if (index < 0 || index >= itemHandlers.size()) {
+                return EmptyHandler.INSTANCE;
+            }
+            return itemHandlers.get(index).orElse(EmptyHandler.INSTANCE);
+        }
+
+        protected int getSlotFromIndex(int slot, int index) {
+            if (index <= 0 || index >= baseIndices.size()) {
+                return slot;
+            }
+            return slot - baseIndices.get(index - 1);
+        }
+
 
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
-            return getBarrelInt().getStackInSlot(slot)
-                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> iItemHandler.getStackInSlot(slot)).orElse(ItemStack.EMPTY);
+            int index = getIndexForSlot(slot);
+            IItemHandler handler = getHandlerFromIndex(index);
+            slot = getSlotFromIndex(slot, index);
+            return handler.getStackInSlot(slot);
         }
 
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack incoming, boolean simulate) {
-            return getBarrelInt().getStackInSlot(slot)
-                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> {
-                        ItemStack stack1 = iItemHandler.insertItem(slot, incoming, simulate);
-                        if (!simulate) {
-                            getBarrelInt().clientNeedsUpdate = true;
-                            getBarrelInt().markDirty();
-                        }
-                        return stack1;
-                    }).orElse(incoming);
+            int index = getIndexForSlot(slot);
+            IItemHandler handler = getHandlerFromIndex(index);
+            slot = getSlotFromIndex(slot, index);
+            ItemStack stack = handler.insertItem(slot, incoming, simulate);
+            if (!simulate && stack != incoming) {
+                markDirty();
+            }
+            return stack;
         }
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return getBarrelInt().getStackInSlot(slot)
-                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> {
-                        ItemStack stack = iItemHandler.extractItem(slot, amount, simulate);
-                        if (!simulate && !stack.isEmpty()) {
-                            getBarrelInt().clientNeedsUpdate = true;
-                            getBarrelInt().markDirty();
-                        }
-                        return stack;
-                    })
-                    .orElse(ItemStack.EMPTY);
+            int index = getIndexForSlot(slot);
+            IItemHandler handler = getHandlerFromIndex(index);
+            slot = getSlotFromIndex(slot, index);
+            ItemStack stack = handler.extractItem(slot, amount, simulate);
+            if (!simulate && !stack.isEmpty()) {
+                markDirty();
+            }
+            return stack;
         }
 
         @Override
         public int getSlotLimit(int slot) {
-            return getBarrelInt().getStackInSlot(slot)
-                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> iItemHandler.getSlotLimit(slot)).orElse(0);
+            int index = getIndexForSlot(slot);
+            IItemHandler handler = getHandlerFromIndex(index);
+            int localSlot = getSlotFromIndex(slot, index);
+            return handler.getSlotLimit(localSlot);
         }
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return getBarrelInt().getStackInSlot(slot)
-                    .getCapability(ForgeCapabilities.ITEM_HANDLER).map(iItemHandler -> iItemHandler.isItemValid(slot, stack)).orElse(false);
+            int index = getIndexForSlot(slot);
+            IItemHandler handler = getHandlerFromIndex(index);
+            int localSlot = getSlotFromIndex(slot, index);
+            return handler.isItemValid(localSlot, stack);
+        }
+
+        public void markDirty() {
+            getBarrelInt().markDirty();
+            getBarrelInt().clientNeedsUpdate = true;
         }
     }
 
@@ -213,11 +286,11 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         private BarrelInterfaceBlockEntity blockEntity;
 
         public boolean clientNeedsUpdate;
+        final List<ItemStack> barrels = new ArrayList<>();
 
         BarrelInterfaceItemHandler(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
         }
-        final List<ItemStack> barrels = new ArrayList<>();
 
         @Override
         public List<Integer> getDisplaySlots(int row, String search) {
@@ -226,34 +299,30 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         @Override
         public boolean isFull() {
-            return getStoredCount() >= 256;
+            return getStoredCount() >= SIZE;
         }
 
         @Override
         public int getSlots() {
-            return barrels.size();
+            return barrels.size() + 1;
         }
 
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
-            return slot < getSlots() ? barrels.get(slot): ItemStack.EMPTY;
+            return slot < barrels.size() ? barrels.get(slot) : ItemStack.EMPTY;
         }
 
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-            if (stack.isEmpty()) return ItemStack.EMPTY;
-
-            if(slot>= getSlots()) {
+            if (stack.isEmpty()|| !isItemValid(slot,stack)) return ItemStack.EMPTY;
+            if (slot == barrels.size()) {
                 //add one and move to next slot
                 if (!simulate) {
-                    if (stack.getCount() == 1) {
-                        barrels.add(stack);
-                    } else {
-                        barrels.add(ItemHandlerHelper.copyStackWithSize(stack,1));
-                    }
+                    barrels.add(stack);
+                    blockEntity.wrapper.recomputeSlots();
                     markDirty();
                 }
-                return ItemHandlerHelper.copyStackWithSize(stack,stack.getCount() -1);
+                return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
             } else {
 
             }
@@ -273,7 +342,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
                 if (!simulate) {
                     barrels.remove(slot);
                     markDirty();
-
+                    blockEntity.wrapper.recomputeSlots();
                 }
                 return stack.copy();
             }
@@ -321,19 +390,8 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
             }
         }
 
-        public ItemStack universalAddItem(ItemStack stack,boolean simulate) {
-            if (isFull()) {
-                return stack;
-            }
-            if (!simulate) {
-                barrels.add(stack);
-                markDirty();
-            }
-            return ItemStack.EMPTY;
-        }
         public void markDirty() {
             blockEntity.setChanged();
-            clientNeedsUpdate = true;
         }
     }
 }
