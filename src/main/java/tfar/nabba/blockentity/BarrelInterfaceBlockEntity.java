@@ -152,9 +152,11 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         private BarrelInterfaceBlockEntity blockEntity;
 
-        protected List<Integer> baseIndices = new ArrayList<>();
-        protected int totalSlotCount;
+        protected List<Integer> baseItemHandlerIndices = new ArrayList<>();
+        protected int totalItemSlotCount;
         protected List<LazyOptional<IItemHandler>> itemHandlers; // the handlers
+
+
 
         public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
@@ -162,13 +164,13 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         public void recomputeSlots() {
             itemHandlers = itemCaps();
-            baseIndices.clear();
+            baseItemHandlerIndices.clear();
             int index = 0;
             for (int i = 0; i < itemHandlers.size(); i++) {
                 index += itemHandlers.get(i).map(IItemHandler::getSlots).orElse(0);
-                baseIndices.add(index);
+                baseItemHandlerIndices.add(index);
             }
-            this.totalSlotCount = index;
+            this.totalItemSlotCount = index;
         }
 
         public List<LazyOptional<IItemHandler>> itemCaps() {
@@ -195,7 +197,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         @Override
         public int getSlots() {
-            return totalSlotCount;
+            return totalItemSlotCount;
         }
 
 
@@ -204,8 +206,8 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
             if (slot < 0)
                 return -1;
 
-            for (int i = 0; i < baseIndices.size(); i++) {
-                if (slot - baseIndices.get(i) < 0) {
+            for (int i = 0; i < baseItemHandlerIndices.size(); i++) {
+                if (slot - baseItemHandlerIndices.get(i) < 0) {
                     return i;
                 }
             }
@@ -220,10 +222,10 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         }
 
         protected int getSlotFromIndex(int slot, int index) {
-            if (index <= 0 || index >= baseIndices.size()) {
+            if (index <= 0 || index >= baseItemHandlerIndices.size()) {
                 return slot;
             }
-            return slot - baseIndices.get(index - 1);
+            return slot - baseItemHandlerIndices.get(index - 1);
         }
 
 
