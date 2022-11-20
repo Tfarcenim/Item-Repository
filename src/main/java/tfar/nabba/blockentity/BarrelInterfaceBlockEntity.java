@@ -318,7 +318,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
             if (slot == barrels.size()) {
                 //add one and move to next slot
                 if (!simulate) {
-                    barrels.add(stack);
+                    barrels.add(ItemHandlerHelper.copyStackWithSize(stack,1));
                     blockEntity.wrapper.recomputeSlots();
                     markDirty();
                 }

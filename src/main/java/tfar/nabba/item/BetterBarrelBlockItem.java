@@ -30,8 +30,6 @@ public class BetterBarrelBlockItem extends BlockItem {
         CompoundTag tag = copyStackWithSize.save(new CompoundTag());
         getOrCreateBlockEntityTag(container).put(NBTKeys.Stack.name(), tag);
         getBlockEntityTag(container).putInt(NBTKeys.RealCount.name(), copyStackWithSize.getCount());
-
-        System.out.println(container.getTag());
     }
 
     @Nullable

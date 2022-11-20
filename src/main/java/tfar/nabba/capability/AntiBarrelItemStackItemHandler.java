@@ -42,7 +42,6 @@ public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapability
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        initData();
         return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, holder);
     }
 
@@ -71,7 +70,6 @@ public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapability
                 }
                 return ItemStack.EMPTY;
             } else {
-
                 ItemStack existing = getStackInSlot(slot);
                 if (existing.getCount() + stack.getCount() > getSlotLimit(slot)) {
                     if (!simulate) {

@@ -10,6 +10,7 @@ import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.net.C2SInsertPacket;
 import tfar.nabba.net.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;
+import tfar.nabba.util.Utils;
 
 public class ItemStackWidget extends RightClickButton<ItemStack> {
 
@@ -56,7 +57,21 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
 
     public void renderItem(PoseStack matrices) {
         Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack,x,y);
-        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack,x,y);
+
+        PoseStack viewModelPose = RenderSystem.getModelViewStack();
+        viewModelPose.pushPose();
+        viewModelPose.translate(x + 8, y + 8, 0);
+        float scale = .5f;
+
+        viewModelPose.scale(scale, scale, scale);
+        viewModelPose.translate(-1 * x, -1 * y, 1000);
+        RenderSystem.applyModelViewMatrix();
+        if (stack.getCount() > 1) {
+            Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack,x,y, Utils.formatLargeNumber(stack.getCount()));
+        }
+
+        viewModelPose.popPose();
+        RenderSystem.applyModelViewMatrix();
     }
 
     public void renderTooltip(PoseStack matrices,int x,int y) {

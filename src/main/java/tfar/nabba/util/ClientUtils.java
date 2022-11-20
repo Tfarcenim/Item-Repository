@@ -21,43 +21,40 @@ public class ClientUtils {
         TextureAtlasSprite sprite = FluidSpriteCache.getStillTexture(fluidStack);
         RenderSystem.setShaderColor((color >> 16 & 0xff) / 255f, (color >> 8 & 0xff) / 255f, (color & 0xff) / 255f,1);
         RenderSystem.enableDepthTest();
+
         GuiComponent.blit(matrices,x,y, 0, 16, 16, sprite);
 
-        PoseStack viewModelPose = RenderSystem.getModelViewStack();
-        viewModelPose.pushPose();
-        viewModelPose.translate(x - .5, y + 11, 0);
-        float scale = .75f;
-        viewModelPose.scale(scale, scale, scale);
-        viewModelPose.translate(-1 * x, -1 * y, 0);
-        RenderSystem.applyModelViewMatrix();
-        Minecraft.getInstance().font.draw(matrices,abrev(fluidStack.getAmount()),x,y ,0xffffff);
-        viewModelPose.popPose();
-        RenderSystem.applyModelViewMatrix();
+        drawSmallNumbers(matrices,x,y,0,fluidStack);
+
     }
 
-    public static void renderFluid1(PoseStack matrices, int x, int y, FluidStack fluidStack) {
+    public static void renderFluidTooltip(PoseStack matrices, int x, int y, FluidStack fluidStack) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluidStack.getFluid());
         int color = renderProperties.getTintColor(fluidStack);
         TextureAtlasSprite sprite = FluidSpriteCache.getStillTexture(fluidStack);
         RenderSystem.setShaderColor((color >> 16 & 0xff) / 255f, (color >> 8 & 0xff) / 255f, (color & 0xff) / 255f,1);
-        GuiComponent.blit(matrices,x,y, 0, 16, 16, sprite);
 
+        RenderSystem.enableDepthTest();
+
+        GuiComponent.blit(matrices,x,y, 400, 16, 16, sprite);
+
+        drawSmallNumbers(matrices,x,y,500,fluidStack);
+    }
+
+    public static void drawSmallNumbers(PoseStack matrices, int x, int y,int z, FluidStack fluidStack) {
         PoseStack viewModelPose = RenderSystem.getModelViewStack();
         viewModelPose.pushPose();
-        viewModelPose.translate(x - .5, y + 11, 700);
-        float scale = .75f;
+        viewModelPose.translate(x + 16, y + 12, z);
+        float scale = .5f;
         viewModelPose.scale(scale, scale, scale);
         viewModelPose.translate(-1 * x, -1 * y, 0);
         RenderSystem.applyModelViewMatrix();
-        Minecraft.getInstance().font.draw(matrices,abrev(fluidStack.getAmount()),x,y ,0xffffff);
+        String s = Utils.formatLargeNumber(fluidStack.getAmount());
+
+        Minecraft.getInstance().font.drawShadow(matrices,s,x - Minecraft.getInstance().font.width(s),y ,0xffffff);
         viewModelPose.popPose();
         RenderSystem.applyModelViewMatrix();
     }
-
-    private static String abrev(int i) {
-        return i+"";
-    }
-
 }

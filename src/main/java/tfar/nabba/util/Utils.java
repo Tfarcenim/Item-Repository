@@ -33,6 +33,7 @@ import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
@@ -198,4 +199,15 @@ public class Utils {
         return (ghost.isEmpty() || ItemStack.isSameItemSameTags(incoming, ghost))
                 && (existing.isEmpty() || ItemStack.isSameItemSameTags(existing, incoming));
     }
+
+
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.##");
+
+    public static String formatLargeNumber(int number) {
+            if (number >= 1000000000) return decimalFormat.format(number / 1000000000f) + "b";
+            if (number >= 1000000) return decimalFormat.format(number / 1000000f) + "m";
+            if (number >= 1000) return decimalFormat.format(number / 1000f) + "k";
+
+            return Float.toString(number).replaceAll("\\.?0*$", "");
+        }
 }
