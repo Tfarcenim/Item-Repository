@@ -156,8 +156,6 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         protected int totalItemSlotCount;
         protected List<LazyOptional<IItemHandler>> itemHandlers; // the handlers
 
-
-
         public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
         }
@@ -279,7 +277,6 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         public void markDirty() {
             getBarrelInt().markDirty();
-            getBarrelInt().clientNeedsUpdate = true;
         }
     }
 
@@ -287,7 +284,6 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         private BarrelInterfaceBlockEntity blockEntity;
 
-        public boolean clientNeedsUpdate;
         final List<ItemStack> barrels = new ArrayList<>();
 
         BarrelInterfaceItemHandler(BarrelInterfaceBlockEntity blockEntity) {
