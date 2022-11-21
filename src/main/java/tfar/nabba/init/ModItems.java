@@ -89,6 +89,8 @@ public class ModItems {
     public static final Item HIDE_KEY = new BlockStateKeyItem(basic(),BetterBarrelBlock.DISCRETE);
     public static final Item LOCK_KEY = new BlockStateKeyItem(basic(), BetterBarrelBlock.LOCKED);
     public static final Item CONTROLLER_KEY = new ControllerKeyItem(basic());
+
+    public static final Item CONNECT_KEY = new BlockStateKeyItem(basic(),BetterBarrelBlock.CONNECTED);
     public static final Item FLUID_CONTROLLER_KEY = new FluidControllerKeyItem(basic());
 
     public static final Item VANITY_KEY = new VanityKeyItem(basic());

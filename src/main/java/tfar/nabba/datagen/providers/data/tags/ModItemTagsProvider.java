@@ -25,6 +25,6 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         copy(ModBlockTags.BARRELS,ModItemTags.BARRELS);
         copy(ModBlockTags.NETHER_BRICKS,ModItemTags.NETHER_BRICKS);
         copy(ModBlockTags.NETHER_BRICK_SLABS,ModItemTags.NETHER_BRICK_SLABS);
-        tag(ModItemTags.KEYS).add(ModItems.HIDE_KEY,ModItems.LOCK_KEY,ModItems.VANITY_KEY,ModItems.CONTROLLER_KEY,ModItems.FLUID_CONTROLLER_KEY);
+        tag(ModItemTags.KEYS).add(ModItems.HIDE_KEY,ModItems.LOCK_KEY,ModItems.VANITY_KEY,ModItems.CONTROLLER_KEY,ModItems.FLUID_CONTROLLER_KEY,ModItems.CONNECT_KEY);
     }
 }

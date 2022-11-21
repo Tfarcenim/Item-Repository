@@ -59,6 +59,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.VANITY_KEY);
         makeOneLayerItem(ModItems.KEY_RING);
         makeOneLayerItem(ModItems.CONTROLLER_KEY);
+        makeOneLayerItem(ModItems.CONNECT_KEY);
         makeOneLayerItem(ModItems.FLUID_CONTROLLER_KEY);
 
         for (Block block : Registry.BLOCK) {
