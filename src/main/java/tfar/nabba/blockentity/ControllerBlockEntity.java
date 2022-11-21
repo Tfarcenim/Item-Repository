@@ -7,6 +7,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -554,9 +555,8 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar {
         }
 
         @Override
-        public FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, boolean b) {
-            FluidActionResult result = FluidUtil.tryFillContainerAndStow(container, new SingleFluidSlotWrapper(this, tank), playerInv,Integer.MAX_VALUE, null, true);
-
+        public FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean simulate) {
+            FluidActionResult result = FluidUtil.tryFillContainerAndStow(container, new SingleFluidSlotWrapper(this, tank), playerInv,Integer.MAX_VALUE, player, simulate);
 
             return result;
         }

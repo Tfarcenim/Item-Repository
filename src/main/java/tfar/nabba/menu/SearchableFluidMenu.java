@@ -126,7 +126,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
         if (!shift) {
             ItemStack container = getCarried();
-            FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, container, new InvWrapper(player.getInventory()),false);
+            FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, container, new InvWrapper(player.getInventory()), player, false);
 
             if (result.isSuccess()) {
                 setCarried(result.getResult());
@@ -136,7 +136,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
             for (int i = 0; i < player.getInventory().items.size();i++) {
                 ItemStack stack = player.getInventory().items.get(i);
                 if (!stack.isEmpty()) {
-                    FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, stack,  new InvWrapper(player.getInventory()),false);
+                    FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, stack,  new InvWrapper(player.getInventory()), player, false);
                     if (result.isSuccess()) {
                         player.getInventory().items.set(i,result.getResult());
                     }
