@@ -12,7 +12,7 @@ import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
 
 public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel, InteractsWithController {
     private final BooleanProperty property;
@@ -33,7 +33,7 @@ public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel, I
             level.setBlock(pos,newState,3);
             if (!newState.getValue(property)) {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
-                if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
+                if (blockEntity instanceof SingleSlotBarrelBlockEntity<?> barrelBlockEntity) {
                     barrelBlockEntity.clearGhost();
                 }
             }

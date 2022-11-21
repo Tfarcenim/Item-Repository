@@ -13,6 +13,7 @@ import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
+import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
 import tfar.nabba.util.BarrelType;
 
 import java.util.List;
@@ -39,14 +40,24 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
         }
     }
 
+    //caution, this method also gets called when changing blockstates
+    @Override
+    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        //only check for controllers if this is a new block
+        if ((blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity)  && pOldState.getBlock() != pState.getBlock()) {
+            singleSlotBarrelBlockEntity.searchForControllers();
+        }
+    }
+
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         boolean shouldRemove = pState.hasBlockEntity() && (!pState.is(pNewState.getBlock()) || !pNewState.hasBlockEntity());
 
         if (shouldRemove) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof BetterBarrelBlockEntity || blockEntity instanceof FluidBarrelBlockEntity) {
-                ((AbstractBarrelBlockEntity)blockEntity).removeController();
+            if (blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity) {
+                singleSlotBarrelBlockEntity.removeController();
             }
         }
 

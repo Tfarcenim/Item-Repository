@@ -3,7 +3,6 @@ package tfar.nabba.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -14,7 +13,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasFluidHandler;
-import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.inventory.ImmutableFluidStack;
@@ -22,13 +20,12 @@ import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
-public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements HasFluidHandler {
-    private FluidStack ghost = FluidStack.EMPTY;
-
+public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidStack> implements HasFluidHandler {
 
     protected FluidBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         barrelHandler = new FluidBarrelHandler(this);
+        ghost = FluidStack.EMPTY;
     }
 
     private final FluidBarrelHandler barrelHandler;
@@ -41,29 +38,13 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
         return new FluidBarrelBlockEntity(ModBlockEntityTypes.DISCRETE_FLUID_BARREL, pos, state);
     }
 
-    public int tryAddFluid(FluidStack stack) {
-        return barrelHandler.fill(stack, IFluidHandler.FluidAction.EXECUTE);
-    }
-    public FluidStack tryRemoveFluid() {
-        return barrelHandler.drain(1000, IFluidHandler.FluidAction.EXECUTE);
-    }
-
     public boolean hasGhost() {
         return getBlockState().getValue(BetterBarrelBlock.LOCKED) && !ghost.isEmpty();
-    }
-    public FluidStack getGhost() {
-        return ghost;
     }
 
     public void clearGhost() {
         ghost = FluidStack.EMPTY;
         setChanged();
-    }
-
-    public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, AbstractBarrelBlockEntity pBlockEntity) {
-        for (UpgradeStack upgradeData : pBlockEntity.getUpgrades()) {
-            upgradeData.getData().tick(pBlockEntity,upgradeData);
-        }
     }
 
     @Override
@@ -162,7 +143,6 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
                 newStack = Utils.copyFluidWithSize(stack, existing);
                 if (action.execute()) {
                     barrelBlockEntity.ghost = Utils.copyFluidWithSize(stack,1);
-
                     setFluid(FluidStack.EMPTY);
                 }
             } else {
@@ -181,7 +161,7 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
         }
 
         @Override
-        public int getTankCapacity(int slot) {//have to trick the vanilla hopper into inserting so voiding work
+        public int getTankCapacity(int slot) {
             return getActualCapacity(slot) + (barrelBlockEntity.isVoid() ? 1 : 0);
         }
 

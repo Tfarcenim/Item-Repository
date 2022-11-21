@@ -33,7 +33,6 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
 
     private transient int cachedStorage = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
-    protected BlockPos controllerPos;
     protected int color = Utils.COLOR;
     protected double size = Utils.SIZE;
     public AbstractBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
@@ -165,55 +164,6 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         }
         return cachedUsedUpgradeSlots;
     }
-
-    public void setControllerPos(BlockPos controllerPos) {
-        this.controllerPos = controllerPos;
-
-        if (controllerPos != null) {
-            BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
-            if (blockEntity instanceof ControllerBlockEntity controller) {
-                controller.addBarrel(this);
-                controller.synchronize();
-            }
-        }
-        setChanged();
-    }
-
-    public BlockPos getControllerPos() {
-        return controllerPos;
-    }
-
-    public void removeController() {
-        if (controllerPos != null) {
-
-            BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
-            if (blockEntity instanceof ControllerBlockEntity controller) {
-                controller.removeBarrel(getBlockPos(),getBarrelType());
-                controller.synchronize();
-            }
-            setControllerPos(null);
-        }
-    }
-
-    public void searchForControllers() {
-        List<BlockEntity> controllers = Utils.getNearbyControllers(level,getBlockPos());
-        if (!controllers.isEmpty()) {
-            BlockPos newController = null;
-            if (controllers.size() == 1) {
-                newController = controllers.get(0).getBlockPos();
-            } else {
-                int dist = Integer.MAX_VALUE;
-                for (BlockEntity blockEntity : controllers) {
-                    if (newController == null || blockEntity.getBlockPos().distManhattan(getBlockPos()) < dist) {
-                        newController = blockEntity.getBlockPos();
-                        dist = blockEntity.getBlockPos().distManhattan(getBlockPos());
-                    }
-                }
-            }
-            setControllerPos(newController);
-        }
-    }
-
     protected void invalidateCaches() {
         cachedUsedUpgradeSlots = cachedStorage = Utils.INVALID;
     }
@@ -228,9 +178,7 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
             upgradesTag.add(tag);
         }
         pTag.put(NBTKeys.Upgrades.name(), upgradesTag);
-        if (getControllerPos() != null) {
-            pTag.putIntArray("Controller",new int[]{getControllerPos().getX(),controllerPos.getY(),controllerPos.getZ()});
-        }
+
         pTag.putInt(NBTKeys.Color.name(), getColor());
         pTag.putDouble(NBTKeys.Size.name(), getSize());
     }
@@ -243,11 +191,6 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         for (Tag tag : upgradesTag) {
             CompoundTag compoundTag = (CompoundTag)tag;
             getUpgrades().add(UpgradeStack.of(compoundTag));
-        }
-
-        if (pTag.contains("Controller")) {
-            int[] contr = pTag.getIntArray("Controller");
-            controllerPos = new BlockPos(contr[0],contr[1],contr[2]);
         }
         color = pTag.getInt(NBTKeys.Color.name());
         size = pTag.getDouble(NBTKeys.Size.name());

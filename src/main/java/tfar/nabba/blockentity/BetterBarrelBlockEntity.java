@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -16,20 +15,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.ItemHandler;
-import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
-public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity implements HasItemHandler {
-    private ItemStack ghost = ItemStack.EMPTY;
+public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemStack> implements HasItemHandler {
 
 
     protected BetterBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         barrelHandler = new BarrelHandler(this);
+        ghost = ItemStack.EMPTY;
     }
 
     private final BarrelHandler barrelHandler;
@@ -48,9 +46,6 @@ public class BetterBarrelBlockEntity extends AbstractBarrelBlockEntity implement
 
     public boolean hasGhost() {
         return getBlockState().getValue(BetterBarrelBlock.LOCKED) && !ghost.isEmpty();
-    }
-    public ItemStack getGhost() {
-        return ghost;
     }
 
     public void clearGhost() {
