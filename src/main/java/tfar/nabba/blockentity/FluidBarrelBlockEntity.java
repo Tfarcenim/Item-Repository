@@ -113,23 +113,26 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
         }
 
         @Override
-        public int fill(@NotNull FluidStack stack,FluidAction action) {
-            if (stack.isEmpty() || !isFluidValid(stack)) return 0;
+        public int fill(@NotNull FluidStack incoming,FluidAction action) {
+            if (incoming.isEmpty() || !isFluidValid(incoming)) return 0;
 
-            int limit = getTankCapacity(0);
-            int existing = this.stack.isEmpty() ? 0 : this.stack.getAmount();
-            int count = stack.getAmount();
-            if (existing >= limit) return 0;
+            int limit = getActualCapacity(0);
+            int existing = this.stack.getAmount();
+            int count = incoming.getAmount();
+            boolean isVoid = barrelBlockEntity.isVoid();
+            if (existing >= limit) {
+                return isVoid ? count : 0;
+            }
 
             else if (count + existing > limit) {
                 if (action.execute()) {
-                    this.stack = Utils.copyFluidWithSize(stack, limit);
+                    this.stack = Utils.copyFluidWithSize(incoming, limit);
                     markDirty();
                 }
-                return barrelBlockEntity.isVoid() ? count : limit - existing;
+                return isVoid ? count : limit - existing;
             } else {
                 if (action.execute()) {
-                    this.stack = Utils.copyFluidWithSize(stack, existing + count);
+                    this.stack = Utils.copyFluidWithSize(incoming, existing + count);
                     markDirty();
                 }
                 return count;
@@ -179,7 +182,11 @@ public class FluidBarrelBlockEntity extends AbstractBarrelBlockEntity implements
 
         @Override
         public int getTankCapacity(int slot) {//have to trick the vanilla hopper into inserting so voiding work
-            return barrelBlockEntity.getStorage() * 1000 + (barrelBlockEntity.isVoid() ? 1 : 0);
+            return getActualCapacity(slot) + (barrelBlockEntity.isVoid() ? 1 : 0);
+        }
+
+        public int getActualCapacity(int tank) {
+            return barrelBlockEntity.getStorage() * 1000;
         }
 
         @Override

@@ -20,11 +20,16 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.FluidHandler;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
@@ -143,24 +148,33 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap == ForgeCapabilities.ITEM_HANDLER ? LazyOptional.of(() -> wrapper).cast() : super.getCapability(cap, side);
+        return cap == ForgeCapabilities.ITEM_HANDLER || cap == ForgeCapabilities.FLUID_HANDLER ? LazyOptional.of(() -> wrapper).cast() : super.getCapability(cap, side);
     }
 
     public static final int SIZE = 256;
 
-    public static class BarrelWrapper implements IItemHandler {
+    public static class BarrelWrapper<T> implements IItemHandler,IFluidHandler {
 
         private BarrelInterfaceBlockEntity blockEntity;
 
         protected List<Integer> baseItemHandlerIndices = new ArrayList<>();
+        protected List<Integer> baseFluidHandlerIndices = new ArrayList<>();
         protected int totalItemSlotCount;
+        protected int totalFluidSlotCount;
         protected List<LazyOptional<IItemHandler>> itemHandlers; // the handlers
+        protected List<LazyOptional<IFluidHandler>> fluidHandlers; // the handlers
 
         public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
+
         }
 
         public void recomputeSlots() {
+            recomputeItemSlots();
+            recomputeFluidSlots();
+        }
+
+        public void recomputeItemSlots() {
             itemHandlers = itemCaps();
             baseItemHandlerIndices.clear();
             int index = 0;
@@ -171,8 +185,23 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
             this.totalItemSlotCount = index;
         }
 
+        public void recomputeFluidSlots() {
+            fluidHandlers = fluidCaps();
+            baseFluidHandlerIndices.clear();
+            int index = 0;
+            for (int i = 0; i < fluidHandlers.size(); i++) {
+                index += fluidHandlers.get(i).map(IFluidHandler::getTanks).orElse(0);
+                baseFluidHandlerIndices.add(index);
+            }
+            this.totalFluidSlotCount = index;
+        }
+
         public List<LazyOptional<IItemHandler>> itemCaps() {
             return caps(ForgeCapabilities.ITEM_HANDLER);
+        }
+
+        public List<LazyOptional<IFluidHandler>> fluidCaps() {
+            return caps(ForgeCapabilities.FLUID_HANDLER);
         }
 
         public <T> List<LazyOptional<T>> caps(Capability<T> capability) {
@@ -200,7 +229,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
 
         // returns the handler index for the slot
-        protected int getIndexForSlot(int slot) {
+        protected int getIndexForItemSlot(int slot) {
             if (slot < 0)
                 return -1;
 
@@ -212,14 +241,14 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
             return -1;
         }
 
-        protected IItemHandler getHandlerFromIndex(int index) {
+        protected IItemHandler getItemHandlerFromIndex(int index) {
             if (index < 0 || index >= itemHandlers.size()) {
                 return EmptyHandler.INSTANCE;
             }
             return itemHandlers.get(index).orElse(EmptyHandler.INSTANCE);
         }
 
-        protected int getSlotFromIndex(int slot, int index) {
+        protected int getItemSlotFromIndex(int slot, int index) {
             if (index <= 0 || index >= baseItemHandlerIndices.size()) {
                 return slot;
             }
@@ -227,19 +256,47 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         }
 
 
+        // returns the handler index for the slot
+        protected int getIndexForFluidSlot(int slot) {
+            if (slot < 0)
+                return -1;
+
+            for (int i = 0; i < baseFluidHandlerIndices.size(); i++) {
+                if (slot - baseFluidHandlerIndices.get(i) < 0) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        protected IFluidHandler getFluidHandlerFromIndex(int index) {
+            if (index < 0 || index >= fluidHandlers.size()) {
+                return EmptyFluidHandler.INSTANCE;
+            }
+            return fluidHandlers.get(index).orElse(EmptyFluidHandler.INSTANCE);
+        }
+
+        protected int getFluidSlotFromIndex(int slot, int index) {
+            if (index <= 0 || index >= baseFluidHandlerIndices.size()) {
+                return slot;
+            }
+            return slot - baseFluidHandlerIndices.get(index - 1);
+        }
+
+
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
-            int index = getIndexForSlot(slot);
-            IItemHandler handler = getHandlerFromIndex(index);
-            slot = getSlotFromIndex(slot, index);
+            int index = getIndexForItemSlot(slot);
+            IItemHandler handler = getItemHandlerFromIndex(index);
+            slot = getItemSlotFromIndex(slot, index);
             return handler.getStackInSlot(slot);
         }
 
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack incoming, boolean simulate) {
-            int index = getIndexForSlot(slot);
-            IItemHandler handler = getHandlerFromIndex(index);
-            slot = getSlotFromIndex(slot, index);
+            int index = getIndexForItemSlot(slot);
+            IItemHandler handler = getItemHandlerFromIndex(index);
+            slot = getItemSlotFromIndex(slot, index);
             ItemStack stack = handler.insertItem(slot, incoming, simulate);
             if (!simulate && stack != incoming) {
                 markDirty();
@@ -249,9 +306,9 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            int index = getIndexForSlot(slot);
-            IItemHandler handler = getHandlerFromIndex(index);
-            slot = getSlotFromIndex(slot, index);
+            int index = getIndexForItemSlot(slot);
+            IItemHandler handler = getItemHandlerFromIndex(index);
+            slot = getItemSlotFromIndex(slot, index);
             ItemStack stack = handler.extractItem(slot, amount, simulate);
             if (!simulate && !stack.isEmpty()) {
                 markDirty();
@@ -261,22 +318,117 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         @Override
         public int getSlotLimit(int slot) {
-            int index = getIndexForSlot(slot);
-            IItemHandler handler = getHandlerFromIndex(index);
-            int localSlot = getSlotFromIndex(slot, index);
+            int index = getIndexForItemSlot(slot);
+            IItemHandler handler = getItemHandlerFromIndex(index);
+            int localSlot = getItemSlotFromIndex(slot, index);
             return handler.getSlotLimit(localSlot);
         }
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            int index = getIndexForSlot(slot);
-            IItemHandler handler = getHandlerFromIndex(index);
-            int localSlot = getSlotFromIndex(slot, index);
+            int index = getIndexForItemSlot(slot);
+            IItemHandler handler = getItemHandlerFromIndex(index);
+            int localSlot = getItemSlotFromIndex(slot, index);
             return handler.isItemValid(localSlot, stack);
         }
 
         public void markDirty() {
             getBarrelInt().markDirty();
+        }
+
+        @Override
+        public int getTanks() {
+            return totalFluidSlotCount;
+        }
+
+        @Override
+        public @NotNull FluidStack getFluidInTank(int tank) {
+            int index = getIndexForFluidSlot(tank);
+            IFluidHandler handler = getFluidHandlerFromIndex(index);
+            tank = getFluidSlotFromIndex(tank, index);
+            return handler.getFluidInTank(tank);
+        }
+
+        @Override
+        public int getTankCapacity(int tank) {
+            int index = getIndexForFluidSlot(tank);
+            IFluidHandler handler = getFluidHandlerFromIndex(index);
+            int localSlot = getFluidSlotFromIndex(tank, index);
+            return handler.getTankCapacity(localSlot);
+        }
+
+        @Override
+        public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+            int index = getIndexForFluidSlot(tank);
+            IFluidHandler handler = getFluidHandlerFromIndex(index);
+            int localSlot = getFluidSlotFromIndex(tank, index);
+            return handler.isFluidValid(localSlot, stack);
+        }
+
+        @Override
+        public int fill(FluidStack resource, FluidAction action) {
+            int filled = 0;
+            FluidStack remaining = resource.copy();
+            for (LazyOptional<IFluidHandler> handlerLazyOptional : fluidHandlers) {
+                int fill = handlerLazyOptional.map(fl -> fl.fill(remaining, action)).orElse(0);
+                if (fill > 0) {
+                    remaining.shrink(fill);
+                    filled += fill;
+                }
+            }
+            return filled;
+        }
+
+        @Override
+        public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+
+            FluidStack drained = FluidStack.EMPTY;
+            FluidStack remaining = resource.copy();
+            for (LazyOptional<IFluidHandler> handlerLazyOptional : fluidHandlers) {
+                FluidStack drain = handlerLazyOptional.map(fl -> fl.drain(remaining, action)).orElse(FluidStack.EMPTY);
+
+                if (!drain.isEmpty()) {
+                    if (drained.isEmpty()) {
+                        drained = drain;
+                        remaining.shrink(drain.getAmount());
+                    } else {
+                        if (drain.isFluidEqual(drained)) {
+                            drained.grow(drain.getAmount());
+                            remaining.shrink(drain.getAmount());
+                        } else {
+
+                        }
+                    }
+                }
+            }
+
+            return drained;
+        }
+
+        @Override
+        public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+
+            FluidStack drained = FluidStack.EMPTY;
+            final int[] remaining = new int[1];
+            remaining[0] = maxDrain;
+            for (LazyOptional<IFluidHandler> handlerLazyOptional : fluidHandlers) {
+                FluidStack drain = handlerLazyOptional.map(fl -> fl.drain(remaining[0], action)).orElse(FluidStack.EMPTY);
+
+                if (!drain.isEmpty()) {
+                    if (drained.isEmpty()) {
+                        drained = drain;
+                        remaining[0] -=drain.getAmount();
+                    } else {
+                        if (drain.isFluidEqual(drained)) {
+                            drained.grow(drain.getAmount());
+                            remaining[0] -=drain.getAmount();
+                        } else {
+
+                        }
+                    }
+                }
+            }
+            return drained;
         }
     }
 

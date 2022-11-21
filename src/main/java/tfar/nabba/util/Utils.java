@@ -200,6 +200,11 @@ public class Utils {
                 && (existing.isEmpty() || ItemStack.isSameItemSameTags(existing, incoming));
     }
 
+    public static boolean isFluidValid(FluidStack existing, @NotNull FluidStack incoming,FluidStack ghost) {
+        return (ghost.isEmpty() || incoming.isFluidEqual( ghost))
+                && (existing.isEmpty() || existing.isFluidEqual(incoming));
+    }
+
 
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.##");
 
