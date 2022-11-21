@@ -31,26 +31,25 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         this.fluidHandler = fluidHandler;
     }
 
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return true;
-    }
-
     public void refreshDisplay(ServerPlayer player) {
         List<FluidStack> list = new ArrayList<>();
-        List<Integer> syncSlots = fluidHandler.getDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof HasSearchBar repositoryBlock) {
-                return repositoryBlock.getSearchString();
-            }
-            return "";
-        },""));
+        List<Integer> syncSlots = getDisplaySlots();
         for (int i = 0; i < syncSlots.size();i++) {
             list.add(fluidHandler.getFluidInTank(syncSlots.get(i)));
         }
         PacketHandler.sendToClient(new S2CRefreshClientFluidStacksPacket(list,syncSlots), player);
     }
 
+    @Override
+    public List<Integer> getDisplaySlots() {
+        return fluidHandler.getDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof HasSearchBar repositoryBlock) {
+                return repositoryBlock.getSearchString();
+            }
+            return "";
+        },""));
+    }
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int slotIndex) {

@@ -8,6 +8,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 
+import java.util.List;
+
 public abstract class SearchableMenu extends AbstractContainerMenu {
     protected final Inventory inventory;
     private ContainerLevelAccess access;
@@ -82,6 +84,8 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
         }
         refreshDisplay(player);
     }
+
+    public abstract List<Integer> getDisplaySlots();
 
     public int getFilledSlotCount() {
         return inventoryData.get(0);

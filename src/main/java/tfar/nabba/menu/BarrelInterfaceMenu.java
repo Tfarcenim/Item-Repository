@@ -37,9 +37,4 @@ public class BarrelInterfaceMenu extends SearchableItemMenu<BarrelInterfaceBlock
             itemHandler.clientNeedsUpdate = false;
         }
      }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return true;
-    }
 }

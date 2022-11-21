@@ -26,13 +26,6 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         this.itemHandler = itemHandler;
     }
 
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return true;
-    }
-
-
-
     public void refreshDisplay(ServerPlayer player) {
         List<ItemStack> list = new ArrayList<>();
         List<Integer> syncSlots = itemHandler.getDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
