@@ -31,6 +31,7 @@ import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
+import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
 import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 
 import java.text.DecimalFormat;
@@ -44,6 +45,7 @@ import static tfar.nabba.block.BetterBarrelBlock.VOID;
 public class Utils {
     public static final int INVALID = -1;
     public static String ID = "id";
+    public static final String INFINITY = "\u221E";
     public static final Map<BarrelType, Integer> BASE_STORAGE = new EnumMap<>(BarrelType.class);
 
     static {
@@ -157,11 +159,7 @@ public class Utils {
 
     public static final Predicate<BlockEntity> isController = ControllerBlockEntity.class::isInstance;
 
-    public static final Predicate<BlockEntity> isControllableBarrel = blockEntity ->
-            ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.BETTER_BARRELS).contains(blockEntity.getType()) ||
-                    ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.FLUID_BARRELS).contains(blockEntity.getType());
-
-    public static final Predicate<BlockEntity> isBetterBarrel = blockEntity -> ForgeRegistries.BLOCK_ENTITY_TYPES.tags().getTag(ModBlockEntityTypeTags.BETTER_BARRELS).contains(blockEntity.getType());
+    public static final Predicate<BlockEntity> isControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect();
 
     //searches a 3x3 chunk area
     public static List<BlockEntity> getNearbyBlockEntities(Level level, Predicate<BlockEntity> predicate, BlockPos thisPos) {

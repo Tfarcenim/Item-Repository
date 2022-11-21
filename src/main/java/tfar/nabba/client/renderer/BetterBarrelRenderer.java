@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.util.Upgrades;
+import tfar.nabba.util.Utils;
 
 public class BetterBarrelRenderer extends AbstractBarrelRenderer<BetterBarrelBlockEntity> {
 
@@ -27,7 +28,7 @@ public class BetterBarrelRenderer extends AbstractBarrelRenderer<BetterBarrelBlo
         boolean infiniteVend = betterBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
 
         int cap = betterBarrelBlockEntity.getItemHandler().getSlotLimit(0);
-        String toDraw = infiniteVend ? "\u221E" :stack.getCount() + " / "+ cap;
+        String toDraw = infiniteVend ? Utils.INFINITY :stack.getCount() + " / "+ cap;
 
         renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(),.0075f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem&& betterBarrelBlockEntity.isValid(upgradeItem)) {

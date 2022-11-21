@@ -9,13 +9,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import tfar.nabba.api.InteractsWithBarrel;
-import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
+import tfar.nabba.block.SingleSlotBarrelBlock;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
 
-public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel, InteractsWithController {
-    private final BooleanProperty property;
+public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel {
+    protected final BooleanProperty property;
 
     public BlockStateKeyItem(Properties pProperties, BooleanProperty property) {
         super(pProperties);
@@ -39,6 +40,8 @@ public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel, I
             }
         } else if (property == BetterBarrelBlock.DISCRETE) {
             loadAndReplace(newState,level,pos);
+        } else if (property == SingleSlotBarrelBlock.CONNECTED) {
+            level.setBlock(pos,newState,3);
         }
 
        // level.sendBlockUpdated(pos,state,newState,3);
@@ -49,9 +52,6 @@ public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel, I
         BlockEntity oldBarrelEntity = level.getBlockEntity(pos);
         //saves the old barrels contents
         CompoundTag tag = oldBarrelEntity.saveWithoutMetadata();
-
-
-
         level.setBlockAndUpdate(pos, newState);
 
         //get the blockentity that now exists
@@ -59,11 +59,5 @@ public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel, I
         newBlockEntity.load(tag);
         //need to make sure the game saves it!
         newBlockEntity.setChanged();
-    }
-
-    @Override
-    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
-        interactWithBarrels(state,itemstack,level,pos,player);
-        return true;
     }
 }

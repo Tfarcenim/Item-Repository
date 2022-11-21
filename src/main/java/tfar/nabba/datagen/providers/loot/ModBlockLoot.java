@@ -63,7 +63,7 @@ public class ModBlockLoot extends BlockLoot {
         LootTable.Builder builder = LootTable.lootTable()
                 .withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                                 .add(LootItem.lootTableItem(block)
-                                        .apply(CopyBlockState.copyState(block).copy(BetterBarrelBlock.DISCRETE).copy(BetterBarrelBlock.LOCKED).copy(BetterBarrelBlock.VOID))
+                                        .apply(copySharedBlockStates(block).copy(BetterBarrelBlock.LOCKED).copy(BetterBarrelBlock.CONNECTED))
                                         .apply(copySharedNBTInfo()
                                                 .copy(NBTKeys.Stack.name(), "BlockEntityTag." + NBTKeys.Stack)
                                                 .copy(NBTKeys.RealCount.name(), "BlockEntityTag." + NBTKeys.RealCount)
@@ -79,7 +79,7 @@ public class ModBlockLoot extends BlockLoot {
         LootTable.Builder builder = LootTable.lootTable()
                 .withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                                 .add(LootItem.lootTableItem(block)
-                                        .apply(CopyBlockState.copyState(block).copy(BetterBarrelBlock.DISCRETE).copy(BetterBarrelBlock.VOID))
+                                        .apply(copySharedBlockStates(block))
                                         .apply(copySharedNBTInfo()
                                                 .copy(NBTKeys.Uuid.name(), NBTKeys.Uuid.name())
                                                 .copy("Last", "BlockEntityTag.Last")
@@ -96,6 +96,10 @@ public class ModBlockLoot extends BlockLoot {
                 .copy(NBTKeys.Color.name(), "BlockEntityTag." + NBTKeys.Color)
                 .copy(NBTKeys.Upgrades.name(), "BlockEntityTag." + NBTKeys.Upgrades)
                 .copy(NBTKeys.Size.name(), "BlockEntityTag." + NBTKeys.Size);
+    }
+
+    public CopyBlockState.Builder copySharedBlockStates(Block block) {
+        return CopyBlockState.copyState(block).copy(BetterBarrelBlock.DISCRETE).copy(BetterBarrelBlock.VOID);
     }
 
     @Override

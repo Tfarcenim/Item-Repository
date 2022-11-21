@@ -38,8 +38,6 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     protected final BarrelFrameTier barrelTier;
     public static final BooleanProperty VOID = BooleanProperty.create("void");
     public static final BooleanProperty DISCRETE = BooleanProperty.create("discrete");
-    public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
-    public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
     private final BarrelType type;
 
     public AbstractBarrelBlock(Properties pProperties, BarrelType type,BarrelFrameTier tier) {

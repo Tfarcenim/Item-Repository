@@ -27,6 +27,7 @@ import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.client.FluidSpriteCache;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.util.Upgrades;
+import tfar.nabba.util.Utils;
 
 public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlockEntity> {
 
@@ -46,7 +47,7 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
         boolean infiniteVend = betterBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
 
         int cap = betterBarrelBlockEntity.getStorage() * 1000;
-        String toDraw = infiniteVend ? "\u221E" :stack.getAmount() + " / "+ cap;
+        String toDraw = infiniteVend ? Utils.INFINITY :stack.getAmount() + " / "+ cap;
 
         renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, betterBarrelBlockEntity.getColor(),.0075f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem&& betterBarrelBlockEntity.isValid(upgradeItem)) {

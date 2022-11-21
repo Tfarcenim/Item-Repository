@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.util.Utils;
 
 import java.util.List;
@@ -32,7 +33,6 @@ public abstract class SingleSlotBarrelBlockEntity<T> extends AbstractBarrelBlock
 
     public void removeController() {
         if (controllerPos != null) {
-
             BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
             if (blockEntity instanceof ControllerBlockEntity controller) {
                 controller.removeBarrel(getBlockPos(), getBarrelType());
@@ -40,6 +40,10 @@ public abstract class SingleSlotBarrelBlockEntity<T> extends AbstractBarrelBlock
             }
             setControllerPos(null);
         }
+    }
+
+    public boolean canConnect() {
+        return getBlockState().getValue(SingleSlotBarrelBlock.CONNECTED);
     }
 
     public void searchForControllers() {

@@ -18,7 +18,8 @@
               "properties": [
                 "discrete",
                 "void",
-                "locked"
+                "locked",
+                "connected"
               ]
             },
             {
