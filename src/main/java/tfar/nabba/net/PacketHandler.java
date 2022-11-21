@@ -50,11 +50,6 @@ public class PacketHandler {
                 C2SInsertPacket::new,
                 C2SInsertPacket::handle);
 
-        INSTANCE.registerMessage(id++, C2SGetDisplayPacket.class,
-                C2SGetDisplayPacket::encode,
-                C2SGetDisplayPacket::new,
-                C2SGetDisplayPacket::handle);
-
         INSTANCE.registerMessage(id++, S2CRefreshClientStacksPacket.class,
                 S2CRefreshClientStacksPacket::encode,
                 S2CRefreshClientStacksPacket::decode,

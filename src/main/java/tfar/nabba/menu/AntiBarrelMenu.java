@@ -41,10 +41,7 @@ public class AntiBarrelMenu extends SearchableItemMenu<AntiBarrelBlockEntity.Ant
             itemHandler.universalAddItem(itemstack1, false);
             ItemStack stack = ItemStack.EMPTY;
             slot.set(stack);
-            broadcastChanges();
-            if (playerIn instanceof ServerPlayer sp) {
-                refreshDisplay(sp);
-            }
+
             if (stack.isEmpty()) {
                 return ItemStack.EMPTY;
             }

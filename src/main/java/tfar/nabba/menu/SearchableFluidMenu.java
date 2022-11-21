@@ -17,6 +17,7 @@ import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.S2CRefreshClientFluidStacksPacket;
+import tfar.nabba.net.S2CRefreshClientStacksPacket;
 import tfar.nabba.util.Utils;
 
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ import java.util.List;
 public class SearchableFluidMenu<T extends SearchableFluidHandler> extends SearchableMenu {
 
     public final T fluidHandler;
+
+    protected List<FluidStack> remoteFluidStacks = new ArrayList<>();
+
 
     protected SearchableFluidMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, T fluidHandler, ContainerData inventoryData, ContainerData syncSlots) {
         super(pMenuType, pContainerId, inventory, access, inventoryData, syncSlots);
@@ -37,7 +41,23 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         for (int i = 0; i < syncSlots.size();i++) {
             list.add(fluidHandler.getFluidInTank(syncSlots.get(i)));
         }
-        PacketHandler.sendToClient(new S2CRefreshClientFluidStacksPacket(list,syncSlots), player);
+
+        boolean changed = list.size() != remoteFluidStacks.size();
+
+        if (!changed) {
+            for (int i = 0; i < list.size(); i++) {
+                if (!remoteFluidStacks.get(i).isFluidStackIdentical(list.get(i))) {
+                    changed = true;
+                    break;
+                }
+            }
+        }
+
+        if (changed) {
+            remoteFluidStacks.clear();
+            remoteFluidStacks.addAll(list);
+            PacketHandler.sendToClient(new S2CRefreshClientFluidStacksPacket(list, syncSlots), player);
+        }
     }
 
     @Override
@@ -66,10 +86,6 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
                     if (result.isSuccess()) {
                         slot.set(result.getResult());
                         slot.onTake(playerIn, stack);
-                        broadcastChanges();
-                        if (playerIn instanceof ServerPlayer sp) {
-                            refreshDisplay(sp);
-                        }
                     }
                 }
             });
@@ -98,7 +114,6 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
                 setCarried(result.getResult());
             }
         }
-        refreshDisplay(player);
     }
 
 
@@ -116,7 +131,6 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
             if (result.isSuccess()) {
                 setCarried(result.getResult());
-                refreshDisplay(player);
             }
 
         } else {
@@ -129,7 +143,6 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
                     }
                 }
             }
-            refreshDisplay(player);
         }
     }
 }

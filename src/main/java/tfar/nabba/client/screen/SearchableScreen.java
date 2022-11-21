@@ -12,7 +12,6 @@ import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
 import tfar.nabba.inventory.ScrollbarWidgetC;
 import tfar.nabba.menu.SearchableMenu;
-import tfar.nabba.net.C2SGetDisplayPacket;
 import tfar.nabba.net.C2SScrollPacket;
 import tfar.nabba.net.C2SSearchPacket;
 import tfar.nabba.net.PacketHandler;
@@ -42,7 +41,6 @@ public class SearchableScreen<T extends SearchableMenu> extends AbstractContaine
     protected void init() {
         super.init();
         addRenderableWidget(new ScrollbarWidgetC<>(leftPos + 174,topPos + 18,8,18 * 6 - 17,Component.literal("scroll"), this));
-        PacketHandler.sendToServer(new C2SGetDisplayPacket());
         initEditBox();
     }
 

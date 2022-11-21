@@ -341,11 +341,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
                 NABBA.instance.data.writeInvData(this);
                 blockEntity.setClientCountAndLast(getLastItem(), getStoredCount());
             }
-            for (ServerPlayer player : NABBA.instance.server.getPlayerList().getPlayers()) {
-                if (player.containerMenu instanceof AntiBarrelMenu antiBarrelMenu && antiBarrelMenu.getItemHandler() == this) {
-                    antiBarrelMenu.refreshDisplay(player);
-                }
-            }
         }
 
         public ListTag save() {

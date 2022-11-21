@@ -6,7 +6,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidActionResult;
@@ -36,6 +39,9 @@ import tfar.nabba.client.Client;
 import tfar.nabba.command.RepositoryCommands;
 import tfar.nabba.datagen.ModDatagen;
 import tfar.nabba.init.*;
+import tfar.nabba.inventory.FakeSlotSynchronizer;
+import tfar.nabba.menu.SearchableItemMenu;
+import tfar.nabba.menu.SearchableMenu;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.world.AntiBarrelSavedData;
 
@@ -71,6 +77,7 @@ public class NABBA {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
         MinecraftForge.EVENT_BUS.addListener(this::commands);
         MinecraftForge.EVENT_BUS.addListener(this::leftClick);
+        MinecraftForge.EVENT_BUS.addListener(this::setupSync);
     }
 
     public void onServerStarted(ServerStartingEvent event) {
@@ -135,6 +142,13 @@ public class NABBA {
                 }
                 e.setCanceled(true);
             }
+        }
+    }
+
+    private void setupSync(PlayerContainerEvent.Open e) {
+        AbstractContainerMenu menu = e.getContainer();
+        if (menu instanceof SearchableMenu searchableItemMenu && e.getEntity() instanceof ServerPlayer player) {
+            searchableItemMenu.setFakeSlotSynchronizer(new FakeSlotSynchronizer(player));
         }
     }
 }

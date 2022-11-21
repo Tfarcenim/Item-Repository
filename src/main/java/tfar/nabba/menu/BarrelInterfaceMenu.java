@@ -28,13 +28,4 @@ public class BarrelInterfaceMenu extends SearchableItemMenu<BarrelInterfaceBlock
                                ContainerData inventoryData,ContainerData syncSlots) {
         this(ModMenuTypes.BARREL_INTERFACE,containerId,inventory,access,handler,inventoryData,syncSlots);
     }
-
-    @Override
-    public void broadcastChanges() {
-        super.broadcastChanges();
-        if (itemHandler.clientNeedsUpdate) {
-            refreshDisplay((ServerPlayer) inventory.player);
-            itemHandler.clientNeedsUpdate = false;
-        }
-     }
 }

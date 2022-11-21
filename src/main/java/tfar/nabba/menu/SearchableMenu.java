@@ -7,15 +7,19 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
+import tfar.nabba.inventory.FakeSlotSynchronizer;
 
 import java.util.List;
 
 public abstract class SearchableMenu extends AbstractContainerMenu {
     protected final Inventory inventory;
-    private ContainerLevelAccess access;
+    private final ContainerLevelAccess access;
     private final DataSlot row = DataSlot.standalone();
     private final ContainerData syncSlots;
     private final ContainerData inventoryData;
+
+    private FakeSlotSynchronizer fakeSlotSynchronizer;
+
 
     protected SearchableMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, ContainerData inventoryData, ContainerData syncSlots) {
         super(pMenuType, pContainerId);
@@ -70,7 +74,6 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
                 repositoryBlock.setSearchString(search);
             }
         });
-        refreshDisplay(player);
     }
 
     public void handleScroll(ServerPlayer player,int scroll_amount) {
@@ -82,7 +85,6 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
                 row.set(row.get() - 1);
             }
         }
-        refreshDisplay(player);
     }
 
     public abstract List<Integer> getDisplaySlots();
@@ -106,4 +108,16 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
         return (int) Math.ceil((double) getSearchSlotCount() / 9);
     }
 
+    //the server player calls this method once every tick
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        if (fakeSlotSynchronizer != null) {
+            refreshDisplay(fakeSlotSynchronizer.getPlayer());
+        }
+    }
+
+    public void setFakeSlotSynchronizer(FakeSlotSynchronizer fakeSlotSynchronizer) {
+        this.fakeSlotSynchronizer = fakeSlotSynchronizer;
+    }
 }

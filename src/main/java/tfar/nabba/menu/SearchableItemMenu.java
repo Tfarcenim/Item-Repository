@@ -10,6 +10,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
+import tfar.nabba.inventory.FakeSlotSynchronizer;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.S2CRefreshClientStacksPacket;
 import tfar.nabba.util.Utils;
@@ -20,6 +21,8 @@ import java.util.List;
 public abstract class SearchableItemMenu<T extends SearchableItemHandler> extends SearchableMenu {
 
     public final T itemHandler;
+
+    protected List<ItemStack> remoteItemStacks = new ArrayList<>();
 
     protected SearchableItemMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, T itemHandler, ContainerData inventoryData, ContainerData syncSlots) {
         super(pMenuType, pContainerId,inventory,access,inventoryData,syncSlots);
@@ -32,7 +35,23 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         for (int i = 0; i < syncSlots.size();i++) {
             list.add(itemHandler.getStackInSlot(syncSlots.get(i)));
         }
-        PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list,syncSlots), player);
+
+        boolean changed = list.size() != remoteItemStacks.size();
+
+        if (!changed) {
+            for (int i = 0; i < list.size(); i++) {
+                if (ItemStack.matches(remoteItemStacks.get(i), list.get(i))) {
+                    changed = true;
+                    break;
+                }
+            }
+        }
+
+        if (changed) {
+            remoteItemStacks.clear();
+            remoteItemStacks.addAll(list);
+            PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list, syncSlots), player);
+        }
     }
 
     @Override
@@ -58,10 +77,6 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
             ItemStack rejected = itemHandler.universalAddItem(stack,false);
             slot.set(rejected);
             slot.onTake(playerIn,stack);
-            broadcastChanges();
-            if (playerIn instanceof ServerPlayer sp) {
-                refreshDisplay(sp);
-            }
         }
         return ItemStack.EMPTY;
     }
@@ -79,7 +94,6 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
             ItemStack reject = itemHandler.insertItem(slot,carried,false);
             setCarried(reject);
         }
-        refreshDisplay(player);
     }
 
     public void handleItemExtract(ServerPlayer player, int slot, int amount, boolean shift) {
@@ -88,15 +102,12 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         //   return;
         //  }
 
-        ItemStack stack = itemHandler.extractItem(slot,amount,false);
+        ItemStack stack = itemHandler.extractItem(slot, amount, false);
 
         if (shift) {
-            ItemHandlerHelper.giveItemToPlayer(player,stack);
+            ItemHandlerHelper.giveItemToPlayer(player, stack);
         } else {
             setCarried(stack);
         }
-
-
-        refreshDisplay(player);
     }
 }
