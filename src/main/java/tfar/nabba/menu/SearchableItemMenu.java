@@ -28,19 +28,23 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
 
     public void refreshDisplay(ServerPlayer player) {
         List<ItemStack> list = new ArrayList<>();
-        List<Integer> syncSlots = itemHandler.getDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof HasSearchBar repositoryBlock) {
-                return repositoryBlock.getSearchString();
-            }
-            return "";
-        },""));
+        List<Integer> syncSlots = getDisplaySlots();
         for (int i = 0; i < syncSlots.size();i++) {
             list.add(itemHandler.getStackInSlot(syncSlots.get(i)));
         }
         PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list,syncSlots), player);
     }
 
+    @Override
+    public List<Integer> getDisplaySlots() {
+        return itemHandler.getDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof HasSearchBar repositoryBlock) {
+                return repositoryBlock.getSearchString();
+            }
+            return "";
+        },""));
+    }
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int slotIndex) {
