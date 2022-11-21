@@ -17,7 +17,6 @@ import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.S2CRefreshClientFluidStacksPacket;
-import tfar.nabba.net.S2CRefreshClientStacksPacket;
 import tfar.nabba.util.Utils;
 
 import java.util.ArrayList;
@@ -82,7 +81,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
             stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
                 if (!iFluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-                    FluidActionResult result = fluidHandler.fillTanksWithContainer(stack, new PlayerInvWrapper(playerIn.getInventory()),false);
+                    FluidActionResult result = fluidHandler.fillTanksWithContainer(stack, new PlayerInvWrapper(playerIn.getInventory()),(ServerPlayer) playerIn, false);
                     if (result.isSuccess()) {
                         slot.set(result.getResult());
                         slot.onTake(playerIn, stack);
@@ -103,13 +102,13 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         ItemStack carried = getCarried();
 
         if (slot == Utils.INVALID || slot >= fluidHandler.getTanks()) {
-            FluidActionResult result = fluidHandler.fillTanksWithContainer(carried,new PlayerInvWrapper(player.getInventory()),false);
+            FluidActionResult result = fluidHandler.fillTanksWithContainer(carried,new PlayerInvWrapper(player.getInventory()), player, false);
 
             if (result.isSuccess()) {
                 setCarried(result.getResult());
             }
         } else {
-            FluidActionResult result = fluidHandler.fillTankWithContainer(slot,carried,new PlayerInvWrapper(player.getInventory()),false);
+            FluidActionResult result = fluidHandler.fillTankWithContainer(slot,carried,new PlayerInvWrapper(player.getInventory()), player, false);
             if (result.isSuccess()) {
                 setCarried(result.getResult());
             }

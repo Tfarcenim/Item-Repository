@@ -1,5 +1,6 @@
 package tfar.nabba.api;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,11 +21,11 @@ public interface FluidHandler extends IFluidHandler {
     @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action);
 
     FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container,IItemHandler playerInv, boolean b);
-    default FluidActionResult fillTanksWithContainer(ItemStack container, IItemHandler playerInv,boolean simulate) {
-        return FluidUtil.tryEmptyContainerAndStow(container,this,playerInv,Integer.MAX_VALUE,null,true);
+    default FluidActionResult fillTanksWithContainer(ItemStack container, IItemHandler playerInv,ServerPlayer player,boolean simulate) {
+        return FluidUtil.tryEmptyContainerAndStow(container,this,playerInv,Integer.MAX_VALUE,player,simulate);
     }
 
-    default FluidActionResult fillTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, boolean simulate) {
-        return FluidUtil.tryEmptyContainerAndStow(container,new SingleFluidSlotWrapper(this,tank),playerInv,Integer.MAX_VALUE,null,true);
+    default FluidActionResult fillTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean simulate) {
+        return FluidUtil.tryEmptyContainerAndStow(container,new SingleFluidSlotWrapper(this,tank),playerInv,Integer.MAX_VALUE,player,simulate);
     }
 }
