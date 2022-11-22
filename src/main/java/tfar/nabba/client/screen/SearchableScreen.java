@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
 import tfar.nabba.inventory.ScrollbarWidgetC;
 import tfar.nabba.menu.SearchableMenu;
+import tfar.nabba.net.C2SForceSyncPacket;
 import tfar.nabba.net.C2SScrollPacket;
 import tfar.nabba.net.C2SSearchPacket;
 import tfar.nabba.net.PacketHandler;
@@ -33,8 +34,6 @@ public class SearchableScreen<T extends SearchableMenu> extends AbstractContaine
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         editBox.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pPoseStack, pMouseX, pMouseY);
-
-
     }
 
     @Override
@@ -42,6 +41,7 @@ public class SearchableScreen<T extends SearchableMenu> extends AbstractContaine
         super.init();
         addRenderableWidget(new ScrollbarWidgetC<>(leftPos + 174,topPos + 18,8,18 * 6 - 17,Component.literal("scroll"), this));
         initEditBox();
+        PacketHandler.sendToServer(new C2SForceSyncPacket());
     }
 
     protected void initEditBox() {

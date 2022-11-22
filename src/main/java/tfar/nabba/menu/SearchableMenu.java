@@ -97,7 +97,7 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
         return getRowSlot().get();
     }
 
-    public abstract void refreshDisplay(ServerPlayer player);
+    public abstract void refreshDisplay(ServerPlayer player, boolean forced);
 
     public ContainerLevelAccess getAccess() {
         return access;
@@ -113,7 +113,7 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
     public void broadcastChanges() {
         super.broadcastChanges();
         if (fakeSlotSynchronizer != null) {
-            refreshDisplay(fakeSlotSynchronizer.getPlayer());
+            refreshDisplay(fakeSlotSynchronizer.getPlayer(),false);
         }
     }
 

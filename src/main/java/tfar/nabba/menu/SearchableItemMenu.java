@@ -28,14 +28,14 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         this.itemHandler = itemHandler;
     }
 
-    public void refreshDisplay(ServerPlayer player) {
+    public void refreshDisplay(ServerPlayer player, boolean forced) {
         List<ItemStack> list = new ArrayList<>();
         List<Integer> syncSlots = getDisplaySlots();
         for (int i = 0; i < syncSlots.size();i++) {
             list.add(itemHandler.getStackInSlot(syncSlots.get(i)));
         }
 
-        boolean changed = list.size() != remoteItemStacks.size();
+        boolean changed = forced || list.size() != remoteItemStacks.size();
 
         if (!changed) {
             for (int i = 0; i < list.size(); i++) {

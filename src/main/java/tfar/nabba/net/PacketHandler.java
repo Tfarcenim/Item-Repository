@@ -45,6 +45,11 @@ public class PacketHandler {
                 C2SExtractFluidPacket::new,
                 C2SExtractFluidPacket::handle);
 
+        INSTANCE.registerMessage(id++, C2SForceSyncPacket.class,
+                C2SForceSyncPacket::encode,
+                C2SForceSyncPacket::new,
+                C2SForceSyncPacket::handle);
+
         INSTANCE.registerMessage(id++, C2SInsertPacket.class,
                 C2SInsertPacket::encode,
                 C2SInsertPacket::new,

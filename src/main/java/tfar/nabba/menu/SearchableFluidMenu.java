@@ -34,14 +34,14 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         this.fluidHandler = fluidHandler;
     }
 
-    public void refreshDisplay(ServerPlayer player) {
+    public void refreshDisplay(ServerPlayer player, boolean forced) {
         List<FluidStack> list = new ArrayList<>();
         List<Integer> syncSlots = getDisplaySlots();
         for (int i = 0; i < syncSlots.size();i++) {
             list.add(fluidHandler.getFluidInTank(syncSlots.get(i)));
         }
 
-        boolean changed = list.size() != remoteFluidStacks.size();
+        boolean changed = forced || list.size() != remoteFluidStacks.size();
 
         if (!changed) {
             for (int i = 0; i < list.size(); i++) {
