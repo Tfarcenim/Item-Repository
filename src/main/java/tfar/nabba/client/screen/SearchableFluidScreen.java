@@ -40,11 +40,6 @@ public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends Se
         this.font.draw(pPoseStack, menu.getFilledSlotCount()+"", (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
     }
 
-    @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-    }
-
     public void setGuiFluids(List<FluidStack> stacks, List<Integer> ints) {
         for (int i = 0; i < 54;i++) {
             if (i < stacks.size()) {

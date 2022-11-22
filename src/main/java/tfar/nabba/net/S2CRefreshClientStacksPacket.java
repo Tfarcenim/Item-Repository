@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.client.screen.SearchableItemScreen;
+import tfar.nabba.net.util.ItemStackUtil;
 import tfar.nabba.net.util.S2CPacketHelper;
 
 import java.util.ArrayList;
@@ -32,8 +33,8 @@ public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
   public void encode(FriendlyByteBuf buf) {
     buf.writeInt(size);
     for (ItemStack stack : stacks) {
-      buf.writeNbt(stack.serializeNBT());
-      buf.writeInt(stack.getCount());
+      //these stacks can be large
+      ItemStackUtil.writeExtendedItemStack(buf,stack);
     }
     for (int i = 0; i < ints.size();i++) {
       buf.writeInt(ints.get(i));
@@ -44,9 +45,8 @@ public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
     int size = buf.readInt();
     List<ItemStack> stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
-      CompoundTag stacktag = buf.readNbt();
-      ItemStack stack = ItemStack.of(stacktag);
-      stack.setCount(buf.readInt());
+      //ditto
+      ItemStack stack = ItemStackUtil.readExtendedItemStack(buf);
       stacks.add(stack);
     }
 
