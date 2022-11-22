@@ -1,4 +1,4 @@
-package tfar.nabba.inventory;
+package tfar.nabba.client.screen.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.client.screen.SearchableItemScreen;
+import tfar.nabba.inventory.RightClickButton;
 import tfar.nabba.net.C2SInsertPacket;
 import tfar.nabba.net.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;
@@ -16,8 +17,8 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
 
     private final SearchableItemScreen<?,?> screen;
 
-    public ItemStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableItemScreen<?,?> screen, int index) {
-        super(pX, pY, pWidth, pHeight, pMessage, screen, index);
+    public ItemStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableItemScreen<?,?> screen) {
+        super(pX, pY, pWidth, pHeight, pMessage, screen);
         this.screen = screen;
         stack = ItemStack.EMPTY;
     }
@@ -27,9 +28,9 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
         boolean shift = Screen.hasShiftDown();
 
         if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {//try to take item
-            PacketHandler.sendToServer(new C2SExtractItemPacket(index, stack.getMaxStackSize(), shift));
+            PacketHandler.sendToServer(new C2SExtractItemPacket(stack, shift));
         } else if (!screen.getMenu().getCarried().isEmpty()){//try to insert item
-            PacketHandler.sendToServer(new C2SInsertPacket(index));
+            PacketHandler.sendToServer(new C2SInsertPacket());
         }
         super.onClick(pMouseX, pMouseY);
     }
@@ -37,7 +38,7 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
     @Override
     public void onRightClick(double pMouseX, double pMouseY) {
         if (!screen.getMenu().getCarried().isEmpty() && stack.isEmpty()) {//try to add item
-            PacketHandler.sendToServer(new C2SInsertPacket(index));
+            PacketHandler.sendToServer(new C2SInsertPacket());
         }
         super.onClick(pMouseX, pMouseY);
     }
@@ -64,7 +65,7 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
         float scale = .5f;
 
         viewModelPose.scale(scale, scale, scale);
-        viewModelPose.translate(-1 * x, -1 * y, 1000);
+        viewModelPose.translate(-1 * x, -1 * y, 500);
         RenderSystem.applyModelViewMatrix();
         if (stack.getCount() > 1) {
             Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack,x,y, Utils.formatLargeNumber(stack.getCount()));

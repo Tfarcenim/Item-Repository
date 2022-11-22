@@ -11,17 +11,15 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.net.PacketHandler;
-import tfar.nabba.net.S2CRefreshClientStacksPacket;
+import tfar.nabba.net.S2CRefreshClientItemStacksPacket;
 import tfar.nabba.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SearchableItemMenu<T extends SearchableItemHandler> extends SearchableMenu {
+public abstract class SearchableItemMenu<T extends SearchableItemHandler> extends SearchableMenu<ItemStack> {
 
     public final T itemHandler;
 
-    protected List<ItemStack> remoteItemStacks = new ArrayList<>();
 
     protected SearchableItemMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, T itemHandler, ContainerData inventoryData, ContainerData syncSlots) {
         super(pMenuType, pContainerId,inventory,access,inventoryData,syncSlots);
@@ -29,17 +27,13 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
     }
 
     public void refreshDisplay(ServerPlayer player, boolean forced) {
-        List<ItemStack> list = new ArrayList<>();
-        List<Integer> syncSlots = getDisplaySlots();
-        for (int i = 0; i < syncSlots.size();i++) {
-            list.add(itemHandler.getStackInSlot(syncSlots.get(i)));
-        }
+        List<ItemStack> list = getDisplaySlots();
 
-        boolean changed = forced || list.size() != remoteItemStacks.size();
+        boolean changed = forced || list.size() != remoteStacks.size();
 
         if (!changed) {
             for (int i = 0; i < list.size(); i++) {
-                if (!ItemStack.matches(remoteItemStacks.get(i), list.get(i))) {
+                if (!ItemStack.matches(remoteStacks.get(i), list.get(i))) {
                     changed = true;
                     break;
                 }
@@ -47,15 +41,15 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         }
 
         if (changed) {
-            remoteItemStacks.clear();
-            remoteItemStacks.addAll(list);
-            PacketHandler.sendToClient(new S2CRefreshClientStacksPacket(list, syncSlots), player);
+            remoteStacks.clear();
+            remoteStacks.addAll(list);
+            PacketHandler.sendToClient(new S2CRefreshClientItemStacksPacket(list), player);
         }
     }
 
     @Override
-    public List<Integer> getDisplaySlots() {
-        return itemHandler.getItemDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
+    public List<ItemStack> getDisplaySlots() {
+        return itemHandler.getItemsForDisplay(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof HasSearchBar repositoryBlock) {
                 return repositoryBlock.getSearchString();
@@ -73,7 +67,7 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         if (slot != null && slot.hasItem()) {
             ItemStack stack = slot.getItem();
 
-            ItemStack rejected = itemHandler.universalAddItem(stack,false);
+            ItemStack rejected = itemHandler.storeItem(stack,false);
             slot.set(rejected);
             slot.onTake(playerIn,stack);
         }
@@ -83,30 +77,18 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         return itemHandler;
     }
 
-    public void handleInsert(ServerPlayer player, int slot) {
+    public void handleInsert(ServerPlayer player) {
         ItemStack carried = getCarried();
-
-        if (slot == Utils.INVALID || slot >= itemHandler.getSlots()) {
-            ItemStack reject = itemHandler.universalAddItem(carried,false);
-            setCarried(reject);
-        } else {
-            ItemStack reject = itemHandler.insertItem(slot,carried,false);
-            setCarried(reject);
-        }
+        ItemStack reject = itemHandler.storeItem(carried,false);
+        setCarried(reject);
     }
 
-    public void handleItemExtract(ServerPlayer player, int slot, int amount, boolean shift) {
-
-        //if (!antiBarrelInventory.isSlotValid(slot)) {
-        //   return;
-        //  }
-
-        ItemStack stack = itemHandler.extractItem(slot, amount, false);
-
+    public void handleItemExtract(ServerPlayer player, ItemStack stack, boolean shift) {
+        ItemStack received = itemHandler.requestItem(stack);
         if (shift) {
-            ItemHandlerHelper.giveItemToPlayer(player, stack);
+            ItemHandlerHelper.giveItemToPlayer(player, received);
         } else {
-            setCarried(stack);
+            setCarried(received);
         }
     }
 }

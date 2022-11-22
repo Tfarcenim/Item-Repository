@@ -17,7 +17,7 @@ import tfar.nabba.net.C2SScrollPacket;
 import tfar.nabba.net.C2SSearchPacket;
 import tfar.nabba.net.PacketHandler;
 
-public class SearchableScreen<T extends SearchableMenu> extends AbstractContainerScreen<T> {
+public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractContainerScreen<T> {
 
     private EditBox editBox;
 

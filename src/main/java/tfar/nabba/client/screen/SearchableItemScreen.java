@@ -5,13 +5,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.api.SearchableItemHandler;
-import tfar.nabba.inventory.ItemStackWidget;
+import tfar.nabba.client.screen.button.ItemStackWidget;
 import tfar.nabba.menu.SearchableItemMenu;
-import tfar.nabba.util.Utils;
 
 import java.util.List;
 
-public class SearchableItemScreen<T extends SearchableItemHandler,U extends SearchableItemMenu<T>> extends SearchableScreen<U> {
+public class SearchableItemScreen<T extends SearchableItemHandler,U extends SearchableItemMenu<T>> extends SearchableScreen<ItemStack,U> {
 
     private final ItemStackWidget[] widgets = new ItemStackWidget[54];
     public SearchableItemScreen(U pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -27,7 +26,7 @@ public class SearchableItemScreen<T extends SearchableItemHandler,U extends Sear
             for (int x = 0; x < 9;x++) {
                 int index = x + 9 * y;
                 ItemStackWidget widget = new ItemStackWidget(xPos+ 18 * x,yPos + 18 * y, 18, 18, Component.literal("test"),
-                        this,menu.getDisplaySlot(index));
+                        this);
                 widgets[index] = widget;
                 addRenderableWidget(widget);
             }
@@ -40,14 +39,12 @@ public class SearchableItemScreen<T extends SearchableItemHandler,U extends Sear
         this.font.draw(pPoseStack, menu.getFilledSlotCount()+"", (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
     }
 
-    public void setGuiStacks(List<ItemStack> stacks, List<Integer> ints) {
+    public void setGuiStacks(List<ItemStack> stacks) {
         for (int i = 0; i < 54;i++) {
             if (i < stacks.size()) {
                 widgets[i].setStack(stacks.get(i));
-                widgets[i].setIndex(ints.get(i));
             } else {
                 widgets[i].setStack(ItemStack.EMPTY);
-                widgets[i].setIndex(Utils.INVALID);
             }
         }
     }

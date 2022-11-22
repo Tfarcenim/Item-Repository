@@ -7,7 +7,7 @@ public interface ItemHandler extends IItemHandler {
 
     boolean isFull();
 
-    default ItemStack universalAddItem(ItemStack stack,boolean simulate) {
+    default ItemStack storeItem(ItemStack stack, boolean simulate) {
         if (isFull()) return stack;
         ItemStack remainder = stack;
 

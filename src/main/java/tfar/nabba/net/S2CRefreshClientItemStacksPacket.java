@@ -2,7 +2,6 @@ package tfar.nabba.net;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.client.screen.SearchableItemScreen;
@@ -12,21 +11,19 @@ import tfar.nabba.net.util.S2CPacketHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
+public class S2CRefreshClientItemStacksPacket implements S2CPacketHelper {
 
   private final int size;
   private final List<ItemStack> stacks;
-  private final List<Integer> ints;
-  public S2CRefreshClientStacksPacket(List<ItemStack> stacks,List<Integer> ints) {
+  public S2CRefreshClientItemStacksPacket(List<ItemStack> stacks) {
     this.stacks = stacks;
     size = stacks.size();
-    this.ints = ints;
   }
 
   public void handleClient() {
       Minecraft mc = Minecraft.getInstance();
    if (mc.screen instanceof SearchableItemScreen<?,?> searchableScreen) {
-        searchableScreen.setGuiStacks(stacks,ints);
+        searchableScreen.setGuiStacks(stacks);
       }
   }
 
@@ -36,12 +33,9 @@ public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
       //these stacks can be large
       ItemStackUtil.writeExtendedItemStack(buf,stack);
     }
-    for (int i = 0; i < ints.size();i++) {
-      buf.writeInt(ints.get(i));
-    }
   }
 
-  public static S2CRefreshClientStacksPacket decode(FriendlyByteBuf buf) {
+  public static S2CRefreshClientItemStacksPacket decode(FriendlyByteBuf buf) {
     int size = buf.readInt();
     List<ItemStack> stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
@@ -50,11 +44,6 @@ public class S2CRefreshClientStacksPacket implements S2CPacketHelper {
       stacks.add(stack);
     }
 
-    List<Integer> ints = new ArrayList<>();
-    for (int i = 0; i < size;i++) {
-      ints.add(buf.readInt());
-    }
-
-    return new S2CRefreshClientStacksPacket(stacks,ints);
+    return new S2CRefreshClientItemStacksPacket(stacks);
   }
 }

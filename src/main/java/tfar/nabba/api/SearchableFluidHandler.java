@@ -2,6 +2,7 @@ package tfar.nabba.api;
 
 import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -9,22 +10,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface SearchableFluidHandler extends FluidHandler {
-    default List<Integer> getFluidDisplaySlots(int row, String search) {
-        List<Integer> disp = new ArrayList<>();
+    default List<FluidStack> getFluidDisplaySlots(int row, String search) {
+        List<FluidStack> disp = new ArrayList<>();
         int countForDisplay = 0;
         int index = 0;
         int startPos = 9 * row;
         while (countForDisplay < 54) {
-            FluidStack stack = getFluidInTank(startPos + index);
-            if (matches(stack,search)) {
-                disp.add(startPos + index);
-                countForDisplay++;
-            } else if (startPos+index >= getTanks()) {
+            FluidStack stack = getFluidInTank(startPos + index).copy();//don't accidentally modify the stack!
+            if (matches(stack, search)) {
+                if (!merge(disp, stack)) {
+                    countForDisplay++;
+                }
+            } else if (startPos + index >= getTanks()) {
                 break;
             }
             index++;
         }
         return disp;
+    }
+
+    default boolean merge(List<FluidStack> stacks, FluidStack toMerge) {
+        for (FluidStack stack : stacks) {
+            if (stack.isFluidEqual(toMerge)) {
+                stack.grow(toMerge.getAmount());
+                return true;
+            }
+        }
+        stacks.add(toMerge);
+        return false;
     }
 
     default boolean matches(FluidStack stack, String search) {
@@ -52,9 +65,9 @@ public interface SearchableFluidHandler extends FluidHandler {
 
     default int getFullFluidSlots(String search) {
         int j = 0;
-        for (int i = 0 ; i< getTanks();i++) {
+        for (int i = 0; i < getTanks(); i++) {
             FluidStack stack = getFluidInTank(i);
-            if (matches(stack,search)){
+            if (matches(stack, search)) {
                 i++;
             }
         }

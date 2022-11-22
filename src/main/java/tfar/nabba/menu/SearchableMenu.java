@@ -9,9 +9,10 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.inventory.FakeSlotSynchronizer;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SearchableMenu extends AbstractContainerMenu {
+public abstract class SearchableMenu<S> extends AbstractContainerMenu {
     protected final Inventory inventory;
     private final ContainerLevelAccess access;
     private final DataSlot row = DataSlot.standalone();
@@ -19,6 +20,8 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
     private final ContainerData inventoryData;
 
     private FakeSlotSynchronizer fakeSlotSynchronizer;
+
+    protected List<S> remoteStacks = new ArrayList<>();
 
 
     protected SearchableMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, ContainerData inventoryData, ContainerData syncSlots) {
@@ -65,7 +68,7 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
     }
 
 
-    public abstract void handleInsert(ServerPlayer player, int slot);
+    public abstract void handleInsert(ServerPlayer player);
 
     public void handleSearch(ServerPlayer player, String search) {
         access.execute((level, pos) -> {
@@ -87,7 +90,7 @@ public abstract class SearchableMenu extends AbstractContainerMenu {
         }
     }
 
-    public abstract List<Integer> getDisplaySlots();
+    public abstract List<S> getDisplaySlots();
 
     public int getFilledSlotCount() {
         return inventoryData.get(0);

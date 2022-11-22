@@ -167,11 +167,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         customName = hoverName;
     }
 
-    @Override
-    public void setChanged() {
-        super.setChanged();
-    }
-
     void setClientCountAndLast(ItemStack last,int count) {
         clientStored = count;
         this.last = last;

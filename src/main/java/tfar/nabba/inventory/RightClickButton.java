@@ -10,12 +10,12 @@ public class RightClickButton<T> extends AbstractWidget {
 
     protected int index;
     protected T stack;
-    protected final SearchableScreen<?> screen;
+    protected final SearchableScreen<?,?> screen;
 
-    public RightClickButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<?> screen,int index) {
+    public RightClickButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<?,?> screen) {
         super(pX, pY, pWidth, pHeight, pMessage);
         this.screen = screen;
-        this.index = index;
+
     }
 
     @Override
@@ -58,12 +58,4 @@ public class RightClickButton<T> extends AbstractWidget {
         this.stack = stack;
     }
 
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public int getIndex() {
-        return index;
-    }
 }

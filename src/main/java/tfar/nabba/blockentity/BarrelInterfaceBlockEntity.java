@@ -513,7 +513,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         }
 
         @Override
-        public FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean b) {
+        public FluidActionResult attemptDrainTankWithContainer(FluidStack stack, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean b) {
             return null;
         }
     }
@@ -528,10 +528,6 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
             this.blockEntity = blockEntity;
         }
 
-        @Override
-        public List<Integer> getItemDisplaySlots(int row, String search) {
-            return SearchableItemHandler.super.getItemDisplaySlots(row, search);
-        }
 
         @Override
         public boolean isFull() {

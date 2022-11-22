@@ -11,10 +11,10 @@ import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.client.screen.SearchableScreen;
 import tfar.nabba.menu.SearchableMenu;
 
-public class ScrollbarWidgetC<T extends SearchableMenu> extends AbstractWidget {
-    private final SearchableScreen<T> screen;
+public class ScrollbarWidgetC<S,T extends SearchableMenu<S>> extends AbstractWidget {
+    private final SearchableScreen<S,T> screen;
 
-    public ScrollbarWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<T> screen) {
+    public ScrollbarWidgetC(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<S,T> screen) {
         super(pX, pY, pWidth, pHeight, pMessage);
         this.screen = screen;
     }

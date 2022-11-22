@@ -1,4 +1,4 @@
-package tfar.nabba.inventory;
+package tfar.nabba.client.screen.button;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
@@ -8,6 +8,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import tfar.nabba.client.screen.SearchableFluidScreen;
+import tfar.nabba.inventory.RightClickButton;
 import tfar.nabba.net.C2SExtractFluidPacket;
 import tfar.nabba.net.C2SInsertPacket;
 import tfar.nabba.net.PacketHandler;
@@ -15,8 +16,8 @@ import tfar.nabba.util.ClientUtils;
 
 public class FluidStackWidget extends RightClickButton<FluidStack> {
 
-    public FluidStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableFluidScreen<?,?> screen, int index) {
-        super(pX, pY, pWidth, pHeight, pMessage, screen, index);
+    public FluidStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableFluidScreen<?,?> screen) {
+        super(pX, pY, pWidth, pHeight, pMessage, screen);
         stack = FluidStack.EMPTY;
     }
 
@@ -28,15 +29,15 @@ public class FluidStackWidget extends RightClickButton<FluidStack> {
 
         if (carried.isEmpty()&& shift) {
             //shiftclicking on a slot should try to extract to fluid containers in inventory
-            PacketHandler.sendToServer(new C2SExtractFluidPacket(index,shift));
+            PacketHandler.sendToServer(new C2SExtractFluidPacket(stack,shift));
         } else {
             carried.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(fluidHandlerItem -> {
                 boolean emptyContainer = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty();
                 if (emptyContainer && !stack.isEmpty()) {//try to take fluid
-                    PacketHandler.sendToServer(new C2SExtractFluidPacket(index, shift));
+                    PacketHandler.sendToServer(new C2SExtractFluidPacket(stack, shift));
 
                 } else {//try to insert fluid
-                    PacketHandler.sendToServer(new C2SInsertPacket(index));
+                    PacketHandler.sendToServer(new C2SInsertPacket());
                 }
 
             });

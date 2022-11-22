@@ -552,17 +552,9 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         }
 
         @Override
-        public FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean simulate) {
-            FluidActionResult result = FluidUtil.tryFillContainerAndStow(container, new SingleFluidSlotWrapper(this, tank), playerInv,Integer.MAX_VALUE, player, simulate);
-
-            return result;
+        public FluidActionResult attemptDrainTankWithContainer(FluidStack stack, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean simulate) {
+            return FluidUtil.tryFillContainerAndStow(container, this, playerInv,Integer.MAX_VALUE, player, simulate);
         }
-    }
-
-
-    @Override
-    public void setChanged() {
-        super.setChanged();
     }
 
     @Nonnull

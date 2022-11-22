@@ -1,6 +1,5 @@
 package tfar.nabba.menu;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -38,7 +37,7 @@ public class AntiBarrelMenu extends SearchableItemMenu<AntiBarrelBlockEntity.Ant
                 return ItemStack.EMPTY;
             }
 
-            itemHandler.universalAddItem(itemstack1, false);
+            itemHandler.storeItem(itemstack1, false);
             ItemStack stack = ItemStack.EMPTY;
             slot.set(stack);
 

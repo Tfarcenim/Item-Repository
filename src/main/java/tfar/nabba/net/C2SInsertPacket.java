@@ -9,24 +9,21 @@ import tfar.nabba.net.util.C2SPacketHelper;
 
 public class C2SInsertPacket implements C2SPacketHelper {
 
-    int slot;
-    public C2SInsertPacket(int slot) {
-        this.slot = slot;
+    public C2SInsertPacket() {
+
     }
 
     //decode
     public C2SInsertPacket(FriendlyByteBuf buf) {
-        slot =  buf.readInt();
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(slot);
     }
 
     public void handleServer(ServerPlayer player) {
         AbstractContainerMenu container = player.containerMenu;
-        if (container instanceof SearchableMenu searchableMenu) {
-            searchableMenu.handleInsert(player,slot);
+        if (container instanceof SearchableMenu<?> searchableMenu) {
+            searchableMenu.handleInsert(player);
         }
     }
 }

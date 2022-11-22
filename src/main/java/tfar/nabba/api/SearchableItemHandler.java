@@ -4,27 +4,57 @@ import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface SearchableItemHandler extends ItemHandler {
-    default List<Integer> getItemDisplaySlots(int row, String search) {
-        List<Integer> disp = new ArrayList<>();
+    default List<ItemStack> getItemsForDisplay(int row, String search) {
+        List<ItemStack> disp = new ArrayList<>();
         int countForDisplay = 0;
         int index = 0;
         int startPos = 9 * row;
         while (countForDisplay < 54) {
-            ItemStack stack = getStackInSlot(startPos + index);
+            ItemStack stack = getStackInSlot(startPos + index).copy();//don't accidentally modify the stack!
             if (matches(stack,search)) {
-                disp.add(startPos + index);
-                countForDisplay++;
+                if (!merge(disp,stack)) {
+                    countForDisplay++;
+                }
             } else if (startPos+index >= getSlots()) {
                 break;
             }
             index++;
         }
         return disp;
+    }
+
+    default ItemStack requestItem(ItemStack stack) {
+        ItemStack remaining = ItemHandlerHelper.copyStackWithSize(stack,stack.getMaxStackSize());
+        ItemStack extracted = ItemStack.EMPTY;
+        for (int i = 0; i < getSlots();i++) {
+            ItemStack simExtract = extractItem(i,remaining.getCount(),true);
+            if (!simExtract.isEmpty() && ItemStack.isSameItemSameTags(simExtract,remaining)) {
+                extractItem(i,remaining.getCount(),false);
+                if (extracted.isEmpty()) {
+                    extracted = simExtract;
+                } else {
+                    extracted.grow(simExtract.getCount());
+                }
+            }
+        }
+        return extracted;
+    }
+
+    default boolean merge(List<ItemStack> stacks,ItemStack toMerge) {
+        for (ItemStack stack : stacks) {
+            if (ItemStack.isSameItemSameTags(stack,toMerge)) {
+                stack.grow(toMerge.getCount());
+                return true;
+            }
+        }
+        stacks.add(toMerge);
+        return false;
     }
 
     default boolean matches(ItemStack stack, String search) {

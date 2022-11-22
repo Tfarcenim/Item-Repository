@@ -19,15 +19,11 @@ import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.S2CRefreshClientFluidStacksPacket;
 import tfar.nabba.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class SearchableFluidMenu<T extends SearchableFluidHandler> extends SearchableMenu {
+public class SearchableFluidMenu<T extends SearchableFluidHandler> extends SearchableMenu<FluidStack> {
 
     public final T fluidHandler;
-
-    protected List<FluidStack> remoteFluidStacks = new ArrayList<>();
-
 
     protected SearchableFluidMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, T fluidHandler, ContainerData inventoryData, ContainerData syncSlots) {
         super(pMenuType, pContainerId, inventory, access, inventoryData, syncSlots);
@@ -35,17 +31,13 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
     }
 
     public void refreshDisplay(ServerPlayer player, boolean forced) {
-        List<FluidStack> list = new ArrayList<>();
-        List<Integer> syncSlots = getDisplaySlots();
-        for (int i = 0; i < syncSlots.size();i++) {
-            list.add(fluidHandler.getFluidInTank(syncSlots.get(i)));
-        }
+        List<FluidStack> list = getDisplaySlots();
 
-        boolean changed = forced || list.size() != remoteFluidStacks.size();
+        boolean changed = forced || list.size() != remoteStacks.size();
 
         if (!changed) {
             for (int i = 0; i < list.size(); i++) {
-                if (!remoteFluidStacks.get(i).isFluidStackIdentical(list.get(i))) {
+                if (!remoteStacks.get(i).isFluidStackIdentical(list.get(i))) {
                     changed = true;
                     break;
                 }
@@ -53,21 +45,21 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         }
 
         if (changed) {
-            remoteFluidStacks.clear();
-            remoteFluidStacks.addAll(list);
-            PacketHandler.sendToClient(new S2CRefreshClientFluidStacksPacket(list, syncSlots), player);
+            remoteStacks.clear();
+            remoteStacks.addAll(list);
+            PacketHandler.sendToClient(new S2CRefreshClientFluidStacksPacket(list), player);
         }
     }
 
     @Override
-    public List<Integer> getDisplaySlots() {
-        return fluidHandler.getFluidDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
+    public List<FluidStack> getDisplaySlots() {
+        return fluidHandler.getFluidDisplaySlots(getRowSlot().get(), getAccess().evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof HasSearchBar repositoryBlock) {
                 return repositoryBlock.getSearchString();
             }
             return "";
-        },""));
+        }, ""));
     }
 
     @Override
@@ -81,7 +73,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
             stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
                 if (!iFluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-                    FluidActionResult result = fluidHandler.fillTanksWithContainer(stack, new PlayerInvWrapper(playerIn.getInventory()),(ServerPlayer) playerIn, false);
+                    FluidActionResult result = fluidHandler.fillTanksWithContainer(stack, new PlayerInvWrapper(playerIn.getInventory()), (ServerPlayer) playerIn, false);
                     if (result.isSuccess()) {
                         slot.set(result.getResult());
                         slot.onTake(playerIn, stack);
@@ -93,32 +85,20 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
     }
 
 
-
     public T getFluidHandler() {
         return fluidHandler;
     }
 
-    public void handleInsert(ServerPlayer player, int slot) {
+    public void handleInsert(ServerPlayer player) {
         ItemStack carried = getCarried();
-
-        if (slot == Utils.INVALID || slot >= fluidHandler.getTanks()) {
-            FluidActionResult result = fluidHandler.fillTanksWithContainer(carried,new PlayerInvWrapper(player.getInventory()), player, false);
-
-            if (result.isSuccess()) {
-                setCarried(result.getResult());
-            }
-        } else {
-            FluidActionResult result = fluidHandler.fillTankWithContainer(slot,carried,new PlayerInvWrapper(player.getInventory()), player, false);
-            if (result.isSuccess()) {
-                setCarried(result.getResult());
-            }
+        FluidActionResult result = fluidHandler.fillTanksWithContainer(carried, new PlayerInvWrapper(player.getInventory()), player, false);
+        if (result.isSuccess()) {
+            setCarried(result.getResult());
         }
     }
 
 
-
-
-    public void handleFluidExtract(ServerPlayer player, int slot, boolean shift) {
+    public void handleFluidExtract(ServerPlayer player, FluidStack slot, boolean shift) {
 
         //if (!antiBarrelInventory.isSlotValid(slot)) {
         //   return;
@@ -133,12 +113,12 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
             }
 
         } else {
-            for (int i = 0; i < player.getInventory().items.size();i++) {
+            for (int i = 0; i < player.getInventory().items.size(); i++) {
                 ItemStack stack = player.getInventory().items.get(i);
                 if (!stack.isEmpty()) {
-                    FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, stack,  new InvWrapper(player.getInventory()), player, false);
+                    FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, stack, new InvWrapper(player.getInventory()), player, false);
                     if (result.isSuccess()) {
-                        player.getInventory().items.set(i,result.getResult());
+                        player.getInventory().items.set(i, result.getResult());
                     }
                 }
             }
