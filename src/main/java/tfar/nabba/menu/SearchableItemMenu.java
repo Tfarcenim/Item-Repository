@@ -11,8 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.net.PacketHandler;
-import tfar.nabba.net.S2CRefreshClientItemStacksPacket;
-import tfar.nabba.util.Utils;
+import tfar.nabba.net.client.S2CRefreshClientItemStacksPacket;
 
 import java.util.List;
 

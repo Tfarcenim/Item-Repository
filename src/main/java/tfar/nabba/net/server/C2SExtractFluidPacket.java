@@ -1,4 +1,4 @@
-package tfar.nabba.net;
+package tfar.nabba.net.server;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

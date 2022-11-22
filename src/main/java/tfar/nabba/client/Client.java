@@ -21,7 +21,6 @@ import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.blockentity.BarrelInterfaceBlockEntity;
-import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.client.renderer.AntiBarrelRenderer;
 import tfar.nabba.client.renderer.BetterBarrelRenderer;
 import tfar.nabba.client.renderer.FluidBarrelRenderer;
@@ -38,7 +37,7 @@ import tfar.nabba.inventory.tooltip.ClientFluidBarrelTooltip;
 import tfar.nabba.inventory.tooltip.FluidBarrelTooltip;
 import tfar.nabba.menu.SearchableFluidMenu;
 import tfar.nabba.menu.SearchableItemMenu;
-import tfar.nabba.net.C2SScrollKeyPacket;
+import tfar.nabba.net.server.C2SScrollKeyPacket;
 
 public class Client {
 

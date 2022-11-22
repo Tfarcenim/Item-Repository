@@ -8,8 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.inventory.RightClickButton;
-import tfar.nabba.net.C2SInsertPacket;
-import tfar.nabba.net.C2SExtractItemPacket;
+import tfar.nabba.net.server.C2SInsertPacket;
+import tfar.nabba.net.server.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.Utils;
 

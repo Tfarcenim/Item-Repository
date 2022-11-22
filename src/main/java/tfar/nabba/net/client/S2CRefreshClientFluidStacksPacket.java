@@ -1,4 +1,4 @@
-package tfar.nabba.net;
+package tfar.nabba.net.client;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
@@ -7,16 +7,12 @@ import net.minecraftforge.fluids.FluidStack;
 import tfar.nabba.client.screen.SearchableFluidScreen;
 import tfar.nabba.net.util.S2CPacketHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class S2CRefreshClientFluidStacksPacket implements S2CPacketHelper {
+public class S2CRefreshClientFluidStacksPacket extends S2CRefreshClientStacksPacket<FluidStack> {
 
-  private final int size;
-  private final List<FluidStack> stacks;
   public S2CRefreshClientFluidStacksPacket(List<FluidStack> stacks) {
-    this.stacks = stacks;
-    size = stacks.size();
+    super(stacks);
   }
 
   public void handleClient() {

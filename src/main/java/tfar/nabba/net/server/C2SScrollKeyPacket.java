@@ -1,8 +1,9 @@
-package tfar.nabba.net;
+package tfar.nabba.net.server;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import tfar.nabba.item.keys.KeyRingItem;
+import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.util.C2SPacketHelper;
 
 public class C2SScrollKeyPacket implements C2SPacketHelper {

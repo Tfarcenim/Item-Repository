@@ -16,8 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.net.PacketHandler;
-import tfar.nabba.net.S2CRefreshClientFluidStacksPacket;
-import tfar.nabba.util.Utils;
+import tfar.nabba.net.client.S2CRefreshClientFluidStacksPacket;
 
 import java.util.List;
 

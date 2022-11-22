@@ -6,6 +6,9 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import tfar.nabba.NABBA;
+import tfar.nabba.net.client.S2CRefreshClientFluidStacksPacket;
+import tfar.nabba.net.client.S2CRefreshClientItemStacksPacket;
+import tfar.nabba.net.server.*;
 
 public class PacketHandler {
     public static SimpleChannel INSTANCE;

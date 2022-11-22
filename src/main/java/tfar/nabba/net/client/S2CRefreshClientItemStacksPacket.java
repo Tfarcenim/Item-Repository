@@ -1,4 +1,4 @@
-package tfar.nabba.net;
+package tfar.nabba.net.client;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
@@ -6,18 +6,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.net.util.ItemStackUtil;
-import tfar.nabba.net.util.S2CPacketHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class S2CRefreshClientItemStacksPacket implements S2CPacketHelper {
+public class S2CRefreshClientItemStacksPacket extends S2CRefreshClientStacksPacket<ItemStack> {
 
-  private final int size;
-  private final List<ItemStack> stacks;
   public S2CRefreshClientItemStacksPacket(List<ItemStack> stacks) {
-    this.stacks = stacks;
-    size = stacks.size();
+    super(stacks);
   }
 
   public void handleClient() {

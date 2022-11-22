@@ -12,9 +12,9 @@ import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
 import tfar.nabba.inventory.ScrollbarWidgetC;
 import tfar.nabba.menu.SearchableMenu;
-import tfar.nabba.net.C2SForceSyncPacket;
-import tfar.nabba.net.C2SScrollPacket;
-import tfar.nabba.net.C2SSearchPacket;
+import tfar.nabba.net.server.C2SForceSyncPacket;
+import tfar.nabba.net.server.C2SScrollPacket;
+import tfar.nabba.net.server.C2SSearchPacket;
 import tfar.nabba.net.PacketHandler;
 
 public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractContainerScreen<T> {
