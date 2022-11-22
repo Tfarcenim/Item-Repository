@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.blockentity.BarrelInterfaceBlockEntity;
 
 public class BarrelInterfaceBlock extends Block implements EntityBlock {
@@ -33,17 +35,14 @@ public class BarrelInterfaceBlock extends Block implements EntityBlock {
         ItemStack stack = player.getItemInHand(hand);
         if (!world.isClientSide) {
             Item item = stack.getItem();
-    //        if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(state, stack, world, pos, player)) {
-         //       return InteractionResult.SUCCESS;
-        //    } else {
-
+            if (!(item instanceof InteractsWithController interactsWithBarrel) || !interactsWithBarrel.handleController(state, stack, world, pos, player)) {
                 MenuProvider menuProvider = state.getMenuProvider(world, pos);
                 if (menuProvider != null) {
                     player.openMenu(menuProvider);
-               //     PiglinAi.angerNearbyPiglins(player, true);
+                    PiglinAi.angerNearbyPiglins(player, true);
                 }
-                return InteractionResult.SUCCESS;
-         //   }
+            }
+            return InteractionResult.SUCCESS;
         }
         return  InteractionResult.SUCCESS;
     }

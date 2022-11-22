@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface SearchableItemHandler extends ItemHandler {
-    default List<Integer> getDisplaySlots(int row, String search) {
+    default List<Integer> getItemDisplaySlots(int row, String search) {
         List<Integer> disp = new ArrayList<>();
         int countForDisplay = 0;
         int index = 0;
@@ -50,7 +50,7 @@ public interface SearchableItemHandler extends ItemHandler {
         return false;
     }
 
-    default int getFullSlots(String search) {
+    default int getFullItemSlots(String search) {
         int j = 0;
         for (int i = 0 ; i< getSlots();i++) {
             ItemStack stack = getStackInSlot(i);

@@ -10,7 +10,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
-import tfar.nabba.inventory.FakeSlotSynchronizer;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.S2CRefreshClientStacksPacket;
 import tfar.nabba.util.Utils;
@@ -40,7 +39,7 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
 
         if (!changed) {
             for (int i = 0; i < list.size(); i++) {
-                if (ItemStack.matches(remoteItemStacks.get(i), list.get(i))) {
+                if (!ItemStack.matches(remoteItemStacks.get(i), list.get(i))) {
                     changed = true;
                     break;
                 }
@@ -56,7 +55,7 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
 
     @Override
     public List<Integer> getDisplaySlots() {
-        return itemHandler.getDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
+        return itemHandler.getItemDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof HasSearchBar repositoryBlock) {
                 return repositoryBlock.getSearchString();

@@ -46,7 +46,7 @@ public class FluidBarrelBlockItem extends BlockItem {
     }
 
     public static boolean isFluidValid(ItemStack barrel,FluidStack stack) {
-        if (!stack.hasTag()) return true;
+        if (!barrel.hasTag()) return true;
         FluidStack existing = getStoredFluid(barrel);
         FluidStack ghost = getGhost(barrel);
         return Utils.isFluidValid(existing,stack,ghost);

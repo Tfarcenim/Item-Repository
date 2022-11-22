@@ -61,7 +61,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
     @Override
     public List<Integer> getDisplaySlots() {
-        return fluidHandler.getDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
+        return fluidHandler.getFluidDisplaySlots(getRowSlot().get(),getAccess().evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof HasSearchBar repositoryBlock) {
                 return repositoryBlock.getSearchString();

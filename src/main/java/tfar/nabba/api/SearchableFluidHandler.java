@@ -2,17 +2,14 @@ package tfar.nabba.api;
 
 import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface SearchableFluidHandler extends FluidHandler {
-    default List<Integer> getDisplaySlots(int row, String search) {
+    default List<Integer> getFluidDisplaySlots(int row, String search) {
         List<Integer> disp = new ArrayList<>();
         int countForDisplay = 0;
         int index = 0;
@@ -53,7 +50,7 @@ public interface SearchableFluidHandler extends FluidHandler {
         return false;
     }
 
-    default int getFullSlots(String search) {
+    default int getFullFluidSlots(String search) {
         int j = 0;
         for (int i = 0 ; i< getTanks();i++) {
             FluidStack stack = getFluidInTank(i);

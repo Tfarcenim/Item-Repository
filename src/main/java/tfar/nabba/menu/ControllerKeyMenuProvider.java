@@ -5,15 +5,16 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import tfar.nabba.api.ItemMenuProvider;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 
 import javax.annotation.Nullable;
 
 public class ControllerKeyMenuProvider implements MenuProvider {
 
-    private final ControllerBlockEntity controllerBlockEntity;
+    private final ItemMenuProvider controllerBlockEntity;
 
-    public ControllerKeyMenuProvider(ControllerBlockEntity controllerBlockEntity) {
+    public ControllerKeyMenuProvider(ItemMenuProvider controllerBlockEntity) {
         this.controllerBlockEntity = controllerBlockEntity;
     }
 

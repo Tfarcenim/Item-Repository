@@ -28,6 +28,7 @@ import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.api.InteractsWithController;
+import tfar.nabba.api.ItemMenuProvider;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.tag.ModItemTags;
@@ -50,7 +51,7 @@ public class ControllerKeyItem extends KeyItem implements InteractsWithControlle
     @Override
     public boolean handleController(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof ControllerBlockEntity controllerBlock) {
+        if (blockEntity instanceof ItemMenuProvider controllerBlock) {
             MenuProvider menuProvider = new ControllerKeyMenuProvider(controllerBlock);
                 player.openMenu(menuProvider);
         }

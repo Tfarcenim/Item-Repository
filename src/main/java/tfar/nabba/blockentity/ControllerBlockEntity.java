@@ -29,10 +29,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
-import tfar.nabba.api.HasSearchBar;
-import tfar.nabba.api.InteractsWithBarrel;
-import tfar.nabba.api.SearchableFluidHandler;
-import tfar.nabba.api.SearchableItemHandler;
+import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.inventory.SingleFluidSlotWrapper;
@@ -45,7 +42,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ControllerBlockEntity extends BlockEntity implements HasSearchBar {
+public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, ItemMenuProvider {
     private String search = "";
 
     protected final ContainerData itemDataAccess = new ContainerData() {
@@ -54,7 +51,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar {
                 case 0:
                     return barrels.get(BarrelType.BETTER).size();
                 case 1:
-                    return getItemHandler().getFullSlots(search);
+                    return getItemHandler().getFullItemSlots(search);
                 default:
                     return 0;
             }
@@ -78,7 +75,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar {
                 case 0:
                     return barrels.get(BarrelType.FLUID).size();
                 case 1:
-                    return getItemHandler().getFullSlots(search);
+                    return getItemHandler().getFullItemSlots(search);
                 default:
                     return 0;
             }

@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,30 +21,81 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.api.FluidHandler;
 import tfar.nabba.api.HasSearchBar;
+import tfar.nabba.api.ItemMenuProvider;
+import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
+import tfar.nabba.menu.ControllerKeyFluidMenu;
+import tfar.nabba.menu.ControllerKeyItemMenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar {
+public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar, ItemMenuProvider {
 
     private BarrelInterfaceItemHandler handler = new BarrelInterfaceItemHandler(this);
     private BarrelWrapper wrapper = new BarrelWrapper(this);
+
     private String search = "";
+
+    protected final ContainerData itemDataAccess = new ContainerData() {
+        public int get(int pIndex) {
+            switch (pIndex) {
+                case 0:
+                    return getWrapper().totalItemSlotCount;
+                case 1:
+                    return 1;//getWrapper().getFullSlots(search);
+                default:
+                    return 0;
+            }
+        }
+
+        public void set(int pIndex, int pValue) {
+            switch (pIndex) {
+                case 0:
+            }
+        }
+
+        public int getCount() {
+            return 2;
+        }
+    };
+
+    protected final ContainerData fluidDataAccess = new ContainerData() {
+        public int get(int pIndex) {
+            switch (pIndex) {
+                case 0:
+                    return getWrapper().totalFluidSlotCount;
+                case 1:
+                    return 1;//getItemHandler().getFullSlots(search);
+                default:
+                    return 0;
+            }
+        }
+
+        public void set(int pIndex, int pValue) {
+            switch (pIndex) {
+                case 0:
+            }
+        }
+
+        public int getCount() {
+            return 2;
+        }
+    };
+
 
     public BarrelInterfaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
         this(ModBlockEntityTypes.BARREL_INTERFACE, pPos, pBlockState);
@@ -59,7 +111,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
                 case 0:
                     return getHandler().getStoredCount();
                 case 1:
-                    return getHandler().getFullSlots(search);
+                    return getHandler().getFullItemSlots(search);
                 default:
                     return 0;
             }
@@ -78,6 +130,10 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
     public BarrelInterfaceItemHandler getHandler() {
         return handler;
+    }
+
+    public BarrelWrapper getWrapper() {
+        return wrapper;
     }
 
     protected final int[] syncSlots = new int[54];
@@ -153,7 +209,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
     public static final int SIZE = 256;
 
-    public static class BarrelWrapper<T> implements IItemHandler,IFluidHandler {
+    public static class BarrelWrapper implements SearchableItemHandler, SearchableFluidHandler {
 
         private BarrelInterfaceBlockEntity blockEntity;
 
@@ -430,6 +486,36 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
             }
             return drained;
         }
+
+        @Override
+        public boolean isFull() {
+            return false;
+        }
+
+        @Override
+        public int fill(int tank, int amount, FluidAction action) {
+            return 0;
+        }
+
+        @Override
+        public int fill(int tank, FluidStack stack, FluidAction action) {
+            return 0;
+        }
+
+        @Override
+        public @NotNull FluidStack drain(int tank, FluidStack resource, FluidAction action) {
+            return null;
+        }
+
+        @Override
+        public @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action) {
+            return null;
+        }
+
+        @Override
+        public FluidActionResult attemptDrainTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean b) {
+            return null;
+        }
     }
 
     public static class BarrelInterfaceItemHandler implements SearchableItemHandler, INBTSerializable<ListTag> {
@@ -443,8 +529,8 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         }
 
         @Override
-        public List<Integer> getDisplaySlots(int row, String search) {
-            return SearchableItemHandler.super.getDisplaySlots(row, search);
+        public List<Integer> getItemDisplaySlots(int row, String search) {
+            return SearchableItemHandler.super.getItemDisplaySlots(row, search);
         }
 
         @Override
@@ -544,4 +630,15 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
             blockEntity.setChanged();
         }
     }
+
+    @Nullable
+    public AbstractContainerMenu createItemMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new ControllerKeyItemMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),wrapper, itemDataAccess,syncSlotsAccess);
+    }
+
+    @Nullable
+    public AbstractContainerMenu createFluidMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new ControllerKeyFluidMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),wrapper, fluidDataAccess,syncSlotsAccess);
+    }
+
 }

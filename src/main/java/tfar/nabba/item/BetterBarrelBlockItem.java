@@ -98,7 +98,7 @@ public class BetterBarrelBlockItem extends BlockItem {
     }
 
     public static boolean isItemValid(ItemStack barrel,ItemStack stack) {
-        if (!stack.hasTag()) return true;
+        if (!barrel.hasTag()) return true;
         ItemStack existing = getStoredItem(barrel);
         ItemStack ghost = getGhost(barrel);
         return Utils.isItemValid(existing,stack,ghost);
