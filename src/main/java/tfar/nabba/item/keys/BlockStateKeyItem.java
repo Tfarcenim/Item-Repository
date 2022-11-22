@@ -24,7 +24,7 @@ public class BlockStateKeyItem extends KeyItem implements InteractsWithBarrel {
     }
 
     @Override
-    public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
+    public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
 
         if (!(state.getBlock() instanceof AbstractBarrelBlock) || !state.hasProperty(property)) return false;
 

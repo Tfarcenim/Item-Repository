@@ -23,8 +23,8 @@ public class FluidControllerKeyItem extends KeyItem implements InteractsWithCont
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(stack, level, pTooltipComponents, pIsAdvanced);
     }
 
     @Override

@@ -25,8 +25,8 @@ public class RemoteFluidControllerKeyItem extends KeyItem implements InteractsWi
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(stack, level, pTooltipComponents, pIsAdvanced);
     }
 
     @Override
@@ -47,10 +47,10 @@ public class RemoteFluidControllerKeyItem extends KeyItem implements InteractsWi
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand pUsedHand) {
         ItemStack stack = player.getItemInHand(pUsedHand);
         Pair<Level, BlockPos> contPos = getPosFromKey(player,stack);
-        if (!pLevel.isClientSide) {
+        if (!level.isClientSide) {
             if (contPos != null) {
                 BlockEntity blockEntity = contPos.getFirst().getBlockEntity(contPos.getSecond());
                 if (blockEntity instanceof ItemMenuProvider controllerBlock) {

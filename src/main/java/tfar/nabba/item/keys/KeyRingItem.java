@@ -21,6 +21,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.api.InteractsWithController;
@@ -35,25 +36,25 @@ public class KeyRingItem extends KeyItem implements InteractsWithBarrel, Interac
     }
 
     @Override
-    public boolean handleBarrel(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player pPlayer) {
-        Item key = getSelectedKey(keyRing);
-        if (key instanceof InteractsWithBarrel keyItem) {//nbt shouldn't be important
-            return keyItem.handleBarrel(state, keyRing, level, pos, pPlayer);
+    public boolean handleBarrel(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player player) {
+        ItemStack key = getSelectedKey(keyRing);
+        if (key.getItem() instanceof InteractsWithBarrel keyItem) {//nbt shouldn't be important
+            return keyItem.handleBarrel(state, key, level, pos, player);
         }
         return true;
     }
 
-    protected static List<Item> getKeys(ItemStack stack) {
-        List<Item> keys = new ArrayList<>();
+    protected static List<ItemStack> getKeys(ItemStack stack) {
+        List<ItemStack> keys = new ArrayList<>();
 
         if (!stack.hasTag()) return keys;
 
-        ListTag listTag = stack.getTag().getList("Keys", Tag.TAG_STRING);
+        ListTag listTag = stack.getTag().getList("Keys", Tag.TAG_COMPOUND);
 
         for (Tag tag : listTag) {
-            StringTag stringTag = (StringTag)tag;
-            Item item = Registry.ITEM.get(new ResourceLocation(stringTag.getAsString()));
-            if (item != Items.AIR) {
+            CompoundTag stringTag = (CompoundTag) tag;
+            ItemStack item = ItemStack.of(stringTag);
+            if (!item.isEmpty()) {
                 keys.add(item);
             }
         }
@@ -61,50 +62,61 @@ public class KeyRingItem extends KeyItem implements InteractsWithBarrel, Interac
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(stack, level, pTooltipComponents, pIsAdvanced);
 
-        List<Item> keys = getKeys(pStack);
-        for (Item item : keys) {
-            pTooltipComponents.add(((MutableComponent)item.getName(item.getDefaultInstance())).withStyle(ChatFormatting.GRAY));
+        List<ItemStack> keys = getKeys(stack);
+        for (ItemStack item : keys) {
+            pTooltipComponents.add(((MutableComponent) item.getHoverName()).withStyle(ChatFormatting.GRAY));
+            item.getItem().appendHoverText(item, level, pTooltipComponents, pIsAdvanced);
         }
     }
 
-    protected boolean addKey(ItemStack keyRing, Item key) {
-        List<Item> keys = getKeys(keyRing);
-        if (keys.contains(key)) {
-            return false;
+    protected boolean addKey(ItemStack keyRing, ItemStack key) {
+        ItemStack singleKey = ItemHandlerHelper.copyStackWithSize(key,1);//don't modify the original key
+        List<ItemStack> keys = getKeys(keyRing);
+
+        for (ItemStack stack : keys) {
+            if (stack.getItem() == singleKey.getItem())
+                return false;
         }
 
         CompoundTag tag = keyRing.getOrCreateTag();
-        ListTag listTag = tag.getList("Keys",Tag.TAG_STRING);
+        ListTag listTag = tag.getList("Keys", Tag.TAG_COMPOUND);
         if (listTag.isEmpty()) {
-            tag.putInt("Selected",0);
+            tag.putInt("Selected", 0);
         }
-        listTag.add(StringTag.valueOf(Registry.ITEM.getKey(key).toString()));
-        tag.put("Keys",listTag);
+        listTag.add(singleKey.save(new CompoundTag()));
+        tag.put("Keys", listTag);
         return true;
     }
 
     @Override
-    public Component getName(ItemStack pStack) {
-        Item selected = getSelectedKey(pStack);
-        if (selected == Items.AIR) {
-            return super.getName(pStack);
+    public Component getName(ItemStack stack) {
+        ItemStack selected = getSelectedKey(stack);
+        if (selected.isEmpty()) {
+            return super.getName(stack);
         }
 
-        Component base = super.getName(pStack);
-        Component selectedC = selected.getName(new ItemStack(selected));
+        Component base = super.getName(stack);
+        Component selectedC = selected.getHoverName();
 
-        return Component.translatable("nabba.key_ring.selected_key",base,selectedC);
+        return Component.translatable("nabba.key_ring.selected_key", base, selectedC);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack keyRing = player.getItemInHand(hand);
 
-        List<Item> keys = getKeys(keyRing);
-        if (!pLevel.isClientSide) {
+        List<ItemStack> keys = getKeys(keyRing);
+
+        ItemStack key = getSelectedKey(keyRing);
+
+        if (!key.isEmpty()) {
+            player.setItemInHand(hand,key);
+            key.use(level, player, hand);
+            player.setItemInHand(hand,keyRing);
+        } else if (!level.isClientSide) {
             //try to gather all keys the player has
             if (player.isCrouching()) {
                 Inventory inventory = player.getInventory();
@@ -112,8 +124,8 @@ public class KeyRingItem extends KeyItem implements InteractsWithBarrel, Interac
 
                 for (ItemStack stack : main) {
                     if (stack.is(ModItemTags.KEYS)) {
-                        if (!keys.contains(stack.getItem())) {
-                           if(addKey(keyRing,stack.getItem())) {
+                        if (!keys.contains(stack)) {
+                            if (addKey(keyRing, stack)) {
                                 stack.shrink(1);
                             }
                         }
@@ -121,18 +133,21 @@ public class KeyRingItem extends KeyItem implements InteractsWithBarrel, Interac
                 }
             }
         }
-        return super.use(pLevel, player, hand);
+        return super.use(level, player, hand);
     }
+
+    private static final String SEL = "Selected";
+
     public static void scrollKey(ItemStack keyRing, boolean up) {
-        List<Item> keys = getKeys(keyRing);
-        if (keys.isEmpty())return;
-        int selected = keyRing.getTag().getInt("Selected");
+        List<ItemStack> keys = getKeys(keyRing);
+        if (keys.isEmpty()) return;
+        int selected = keyRing.getTag().getInt(SEL);
         if (selected >= keys.size() - 1 && !up) {
-            keyRing.getTag().putInt("Selected",0);
-        } else if (selected <= 0 && up){
-            keyRing.getTag().putInt("Selected",keys.size() - 1);
+            keyRing.getTag().putInt(SEL, 0);
+        } else if (selected <= 0 && up) {
+            keyRing.getTag().putInt(SEL, keys.size() - 1);
         } else {
-            keyRing.getTag().putInt("Selected", up ? --selected : ++selected);
+            keyRing.getTag().putInt(SEL, up ? --selected : ++selected);
         }
     }
 
@@ -140,25 +155,32 @@ public class KeyRingItem extends KeyItem implements InteractsWithBarrel, Interac
         return !getKeys(keyRing).isEmpty();
     }
 
-    public static Item getSelectedKey(ItemStack keyRing) {
+    public static ItemStack getSelectedKey(ItemStack keyRing) {
         if (!keyRing.hasTag())
-            return Items.AIR;
-
-        List<Item> keys = getKeys(keyRing);
-        int selected = keyRing.getTag().getInt("Selected");
+            return ItemStack.EMPTY;
+        List<ItemStack> keys = getKeys(keyRing);
+        int selected = keyRing.getTag().getInt(SEL);
         //crash mitigation
         if (selected < 0 || selected >= keys.size()) {
-            keyRing.getTag().remove("Selected");
+            keyRing.getTag().remove(SEL);
             selected = 0;
         }
         return keys.get(selected);
     }
 
+    public static void saveKeyChanged(ItemStack keyRing, ItemStack key) {
+        int selected = keyRing.getOrCreateTag().getInt(SEL);
+        ListTag listTag = keyRing.getTag().getList("Keys", Tag.TAG_COMPOUND);
+        listTag.set(selected,key.save(new CompoundTag()));
+    }
+
     @Override
-    public boolean handleController(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player pPlayer) {
-        Item key = getSelectedKey(keyRing);
-        if (key instanceof InteractsWithController interactsWithController) {//nbt shouldn't be important
-            return interactsWithController.handleController(state, keyRing, level, pos, pPlayer);
+    public boolean handleController(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player player) {
+        ItemStack key = getSelectedKey(keyRing);
+        if (key.getItem() instanceof InteractsWithController interactsWithController) {//nbt is important!
+            boolean b = interactsWithController.handleController(state, key, level, pos, player);
+            saveKeyChanged(keyRing, key);
+            return b;
         }
         return false;
     }

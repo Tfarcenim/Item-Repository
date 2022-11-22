@@ -70,7 +70,7 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel,
     }
 
     @Override
-    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
-        return interactWithBarrels(state, itemstack, level, pos, pPlayer);
+    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
+        return interactWithBarrels(state, itemstack, level, pos, player);
     }
 }

@@ -32,9 +32,9 @@ public class FluidBarrelBlockItem extends BlockItem {
     }
 
     @Override
-    public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        FluidStack disp = getStoredFluid(pStack);
-        return disp.isEmpty() ? super.getTooltipImage(pStack) : Optional.of(new FluidBarrelTooltip(disp));
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        FluidStack disp = getStoredFluid(stack);
+        return disp.isEmpty() ? super.getTooltipImage(stack) : Optional.of(new FluidBarrelTooltip(disp));
     }
 
     public static FluidStack getStoredFluid(ItemStack barrel) {

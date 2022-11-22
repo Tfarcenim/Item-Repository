@@ -20,16 +20,16 @@ public class VanityKeyItem extends KeyItem implements InteractsWithBarrel, Inter
     }
 
     @Override
-    public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
+    public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof AbstractBarrelBlockEntity || blockEntity instanceof ControllerBlockEntity) {
-            NetworkHooks.openScreen((ServerPlayer) pPlayer,new VanityKeyMenuProvider(pos),pos);
+            NetworkHooks.openScreen((ServerPlayer) player,new VanityKeyMenuProvider(pos),pos);
         }
         return true;
     }
 
     @Override
-    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
-        return handleBarrel(state, itemstack, level, pos, pPlayer);
+    public boolean handleController(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
+        return handleBarrel(state, itemstack, level, pos, player);
     }
 }

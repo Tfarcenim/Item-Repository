@@ -15,9 +15,9 @@ public class AntiBarrelBlockItem extends BlockItem {
     }
 
     //  @Override
-//    public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-  //      ItemStack disp = getStoredItem(pStack);
-  //      return disp.isEmpty() ? super.getTooltipImage(pStack) : Optional.of(new BetterBarrelTooltip(disp));
+//    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+  //      ItemStack disp = getStoredItem(stack);
+  //      return disp.isEmpty() ? super.getTooltipImage(stack) : Optional.of(new BetterBarrelTooltip(disp));
    // }
 
 

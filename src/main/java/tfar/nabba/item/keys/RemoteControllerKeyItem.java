@@ -30,15 +30,18 @@ public class RemoteControllerKeyItem extends KeyItem implements InteractsWithCon
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        if (stack.hasTag() && level != null) {
+            int[] pos = stack.getTag().getIntArray("pos");
+            pTooltipComponents.add(Component.literal("Bound to ("+pos[0]+","+pos[0]+","+pos[2]+")"));
+        }
     }
 
     @Override
-    public boolean handleController(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player player) {
+    public boolean handleController(BlockState state, ItemStack key, Level level, BlockPos pos, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof ItemMenuProvider controllerBlock) {
-            savePosToKey(state, keyRing, level, pos, player);
+            savePosToKey(state, key, level, pos, player);
             player.sendSystemMessage(Component.literal("Successfully bound "+pos+" to key"));
         }
         return true;
@@ -49,22 +52,22 @@ public class RemoteControllerKeyItem extends KeyItem implements InteractsWithCon
         keyRing.getTag().putString("level",level.dimension().location().toString());
     }
 
-    private static Pair<Level,BlockPos> getPosFromKey(Player player, ItemStack stack) {
+    private static Pair<Level,BlockPos> getPosFromKey(Level homeLevel, ItemStack stack) {
         if (!stack.hasTag()) return null;
         int[] pos = stack.getTag().getIntArray("pos");
         BlockPos pos1 = new BlockPos(pos[0],pos[1],pos[2]);
 
-        Level level = player.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY,
+        Level level = homeLevel.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY,
                 new ResourceLocation(stack.getTag().getString("level"))));
 
         return Pair.of(level,pos1);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand pUsedHand) {
         ItemStack stack = player.getItemInHand(pUsedHand);
-        if (!pLevel.isClientSide) {
-            Pair<Level, BlockPos> contPos = getPosFromKey(player,stack);
+        if (!level.isClientSide) {
+            Pair<Level, BlockPos> contPos = getPosFromKey(level,stack);
             if (contPos != null) {
                 BlockEntity blockEntity = contPos.getFirst().getBlockEntity(contPos.getSecond());
                 if (blockEntity instanceof ItemMenuProvider controllerBlock) {

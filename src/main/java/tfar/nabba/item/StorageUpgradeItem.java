@@ -41,7 +41,7 @@ public class StorageUpgradeItem extends UpgradeItem {
     public static final String info1 = NABBA.MODID+".upgrade.info1";
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getUpgradeSlotsRequired()).withStyle(ChatFormatting.AQUA)));
         pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.getMaxPermitted()).withStyle(ChatFormatting.AQUA)));
         pTooltipComponents.add(Component.translatable(getDescriptionId() + ".tooltip",
@@ -53,7 +53,7 @@ public class StorageUpgradeItem extends UpgradeItem {
     }
 
     @Override
-    public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player pPlayer) {
+    public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof AbstractBarrelBlockEntity betterBarrelBlockEntity) {
