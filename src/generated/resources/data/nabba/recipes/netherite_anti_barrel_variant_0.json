@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:emerald_to_netherite_frame_upgrade"
+    },
+    {
+      "item": "nabba:emerald_anti_barrel"
+    }
+  ],
+  "result": {
+    "item": "nabba:netherite_anti_barrel"
+  }
+}

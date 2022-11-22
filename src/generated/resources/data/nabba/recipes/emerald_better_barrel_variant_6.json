@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:wood_to_emerald_frame_upgrade"
+    },
+    {
+      "item": "nabba:better_barrel"
+    }
+  ],
+  "result": {
+    "item": "nabba:emerald_better_barrel"
+  }
+}

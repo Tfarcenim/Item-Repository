@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:stone_to_gold_frame_upgrade"
+    },
+    {
+      "item": "nabba:stone_anti_barrel"
+    }
+  ],
+  "result": {
+    "item": "nabba:gold_anti_barrel"
+  }
+}

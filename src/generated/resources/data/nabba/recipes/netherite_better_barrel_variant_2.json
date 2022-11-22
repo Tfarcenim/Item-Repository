@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:gold_to_netherite_frame_upgrade"
+    },
+    {
+      "item": "nabba:gold_better_barrel"
+    }
+  ],
+  "result": {
+    "item": "nabba:netherite_better_barrel"
+  }
+}

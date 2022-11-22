@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:lapis_to_creative_frame_upgrade"
+    },
+    {
+      "item": "nabba:lapis_anti_barrel"
+    }
+  ],
+  "result": {
+    "item": "nabba:creative_anti_barrel"
+  }
+}

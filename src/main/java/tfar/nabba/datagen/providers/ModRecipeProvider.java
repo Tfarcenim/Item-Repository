@@ -1,5 +1,6 @@
 package tfar.nabba.datagen.providers;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
@@ -12,13 +13,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import tfar.nabba.NABBA;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.datagen.CopyNBTShapedRecipeBuilder;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.init.tag.ModItemTags;
+import tfar.nabba.item.BarrelFrameUpgradeItem;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider {
@@ -26,10 +28,14 @@ public class ModRecipeProvider extends RecipeProvider {
         super(pGenerator);
     }
 
-    public static final Map<Item,Integer> upgradeMap =  new HashMap<>();
+    public static final List<BarrelFrameUpgradeItem> upgradeMap =  new ArrayList<>();
 
     static {
-
+        for (Item item : ModItems.getItems()) {
+            if (item instanceof BarrelFrameUpgradeItem barrelFrameUpgradeItem) {
+                upgradeMap.add(barrelFrameUpgradeItem);
+            }
+        }
     }
 
     @Override
@@ -135,7 +141,78 @@ public class ModRecipeProvider extends RecipeProvider {
         betterBarrelFrameUpgradeItem(ModItems.GOLD_TO_DIAMOND_FRAME_UPGRADE,  Tags.Items.GEMS_DIAMOND, consumer);
         betterBarrelFrameUpgradeItem(ModItems.DIAMOND_TO_EMERALD_FRAME_UPGRADE,  Tags.Items.GEMS_EMERALD, consumer);
         betterBarrelFrameUpgradeItem(ModItems.EMERALD_TO_NETHERITE_FRAME_UPGRADE,  Tags.Items.INGOTS_NETHERITE, consumer);
+
+        for (int i = 0; i < upgradeMap.size(); i++) {
+            BarrelFrameUpgradeItem barrelFrameUpgradeItem = upgradeMap.get(i);
+            for (int j = i+1; j < upgradeMap.size();j++) {
+                BarrelFrameUpgradeItem barrelFrameUpgradeItem1 = upgradeMap.get(j);
+
+                Pair<Integer,Integer> pair1 = barrelFrameUpgradeItem.getUpgr();
+                Pair<Integer,Integer> pair2 = barrelFrameUpgradeItem1.getUpgr();
+
+                if (pair1.getSecond().equals(pair2.getFirst()) || pair1.getFirst().equals(pair2.getSecond())) {
+                    int i1 = pair1.getFirst();
+                    int i2 = pair1.getSecond();
+                    int i3 = pair2.getFirst();
+                    int i4 = pair2.getSecond();
+
+                    List<Integer> ints = List.of(i1,i2,i3,i4);
+
+                    int j1 = Collections.min(ints);
+                    int j2 = Collections.max(ints);
+                    Pair<Integer,Integer> pair = Pair.of(j1,j2);
+                    BarrelFrameUpgradeItem barrelFrameUpgradeItem2 = lookupPair(pair);
+
+                    if (barrelFrameUpgradeItem2!= null) {
+                        int variant = variants.getOrDefault(barrelFrameUpgradeItem2,0);
+
+                        ShapelessRecipeBuilder.shapeless(barrelFrameUpgradeItem2)
+                                .requires(barrelFrameUpgradeItem)
+                                .requires(barrelFrameUpgradeItem1)
+                                .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
+                                .save(consumer, new ResourceLocation(NABBA.MODID, RecipeBuilder.getDefaultRecipeId(barrelFrameUpgradeItem2).getPath() +
+                                        "_variant_"+variant));
+                        variants.put(barrelFrameUpgradeItem2,++variant);
+                    }
+                }
+            }
+
+            for (Block block : ModBlocks.getBlocks()) {
+                if (block instanceof AbstractBarrelBlock abstractBarrelBlock) {
+                    if (barrelFrameUpgradeItem.canUpgrade(abstractBarrelBlock)) {
+                        AbstractBarrelBlock upBlock = barrelFrameUpgradeItem.getTo().getBarrel(abstractBarrelBlock.getType());
+                        int variant = variants1.getOrDefault(upBlock,0);
+
+
+                        ShapelessRecipeBuilder.shapeless(upBlock)
+                                .requires(barrelFrameUpgradeItem)
+                                .requires(abstractBarrelBlock)
+                                .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
+                                .save(consumer, new ResourceLocation(NABBA.MODID, RecipeBuilder.getDefaultRecipeId(upBlock).getPath() +
+                                        "_variant_"+variant));
+
+                        variants1.put(upBlock,++variant);
+                    }
+                }
+            }
+        }
     }
+
+
+    private BarrelFrameUpgradeItem lookupPair(Pair<Integer,Integer> pair) {
+        for (BarrelFrameUpgradeItem barrelFrameUpgradeItem : upgradeMap) {
+            if (barrelFrameUpgradeItem.getUpgr().equals(pair)) {
+                return barrelFrameUpgradeItem;
+            }
+        }
+        return null;
+    }
+
+    private static Map<BarrelFrameUpgradeItem,Integer> variants = new HashMap<>();
+
+    private static Map<AbstractBarrelBlock,Integer> variants1 = new HashMap<>();
+
+
 
     protected void itemUpgrades(Consumer<FinishedRecipe> consumer) {
         ShapedRecipeBuilder.shaped(ModItems.BETTER_BARREL_STORAGE_UPGRADE)

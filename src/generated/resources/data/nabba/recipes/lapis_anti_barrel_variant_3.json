@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:wood_to_lapis_frame_upgrade"
+    },
+    {
+      "item": "nabba:anti_barrel"
+    }
+  ],
+  "result": {
+    "item": "nabba:lapis_anti_barrel"
+  }
+}

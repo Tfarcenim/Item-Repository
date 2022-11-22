@@ -2,6 +2,7 @@ package tfar.nabba.util;
 
 import net.minecraft.world.level.block.Block;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 
 import java.util.Locale;
@@ -20,9 +21,9 @@ public enum BarrelFrameTiers implements BarrelFrameTier {
     NETHERITE(2048,Map.of(BarrelType.BETTER,() -> ModBlocks.NETHERITE_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.NETHERITE_ANTI_BARREL,BarrelType.FLUID,() -> ModBlocks.NETHERITE_FLUID_BARREL)),
     CREATIVE(Integer.MAX_VALUE,Map.of(BarrelType.BETTER,() -> ModBlocks.CREATIVE_BETTER_BARREL,BarrelType.ANTI,() -> ModBlocks.CREATIVE_ANTI_BARREL,BarrelType.FLUID,() -> ModBlocks.CREATIVE_FLUID_BARREL));
     private int upgradeSlots;
-    private final Map<BarrelType,Supplier<Block>> barrels;
+    private final Map<BarrelType,Supplier<AbstractBarrelBlock>> barrels;
 
-    BarrelFrameTiers(int upgradeSlots, Map<BarrelType,Supplier<Block>> barrels) {
+    BarrelFrameTiers(int upgradeSlots, Map<BarrelType,Supplier<AbstractBarrelBlock>> barrels) {
         this.upgradeSlots = upgradeSlots;
         this.barrels = barrels;
     }
@@ -41,7 +42,7 @@ public enum BarrelFrameTiers implements BarrelFrameTier {
     }
 
     @Override
-    public Block getBarrel(BarrelType type) {
+    public AbstractBarrelBlock getBarrel(BarrelType type) {
         return barrels.get(type).get();
     }
 

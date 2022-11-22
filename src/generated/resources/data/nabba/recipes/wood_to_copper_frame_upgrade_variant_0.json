@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:wood_to_stone_frame_upgrade"
+    },
+    {
+      "item": "nabba:stone_to_copper_frame_upgrade"
+    }
+  ],
+  "result": {
+    "item": "nabba:wood_to_copper_frame_upgrade"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:copper_to_gold_frame_upgrade"
+    },
+    {
+      "item": "nabba:gold_to_netherite_frame_upgrade"
+    }
+  ],
+  "result": {
+    "item": "nabba:copper_to_netherite_frame_upgrade"
+  }
+}

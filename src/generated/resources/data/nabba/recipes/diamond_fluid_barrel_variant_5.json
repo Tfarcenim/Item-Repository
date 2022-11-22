@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:wood_to_diamond_frame_upgrade"
+    },
+    {
+      "item": "nabba:fluid_barrel"
+    }
+  ],
+  "result": {
+    "item": "nabba:diamond_fluid_barrel"
+  }
+}

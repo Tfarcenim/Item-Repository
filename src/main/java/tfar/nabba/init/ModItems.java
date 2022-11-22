@@ -4,6 +4,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
@@ -13,6 +14,10 @@ import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.item.barrels.FluidBarrelBlockItem;
 import tfar.nabba.item.keys.*;
 import tfar.nabba.util.BarrelFrameTiers;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModItems {
     static CreativeModeTab tab = new CreativeModeTab(NABBA.MODID) {
@@ -167,5 +172,20 @@ public class ModItems {
 
     private static Item.Properties unstackable() {
         return new Item.Properties().tab(tab).stacksTo(1);
+    }
+
+    private static final List<Item> ITEMS = new ArrayList<>();
+    public static List<Item> getItems() {
+        if (ITEMS.isEmpty()) {
+            for (Field field : ModItems.class.getFields()) {
+                try {
+                    Object o = field.get(null);
+                    if (o instanceof Item item) ITEMS.add(item);
+                } catch (IllegalAccessException illegalAccessException) {
+                    illegalAccessException.printStackTrace();
+                }
+            }
+        }
+        return ITEMS;
     }
 }

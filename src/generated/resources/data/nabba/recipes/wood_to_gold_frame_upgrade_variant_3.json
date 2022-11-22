@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:iron_to_gold_frame_upgrade"
+    },
+    {
+      "item": "nabba:wood_to_iron_frame_upgrade"
+    }
+  ],
+  "result": {
+    "item": "nabba:wood_to_gold_frame_upgrade"
+  }
+}

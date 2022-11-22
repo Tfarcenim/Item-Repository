@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "nabba:diamond_to_creative_frame_upgrade"
+    },
+    {
+      "item": "nabba:diamond_better_barrel"
+    }
+  ],
+  "result": {
+    "item": "nabba:creative_better_barrel"
+  }
+}
