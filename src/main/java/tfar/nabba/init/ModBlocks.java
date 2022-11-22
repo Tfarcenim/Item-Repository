@@ -1,18 +1,15 @@
 package tfar.nabba.init;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
-import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.block.*;
 import tfar.nabba.util.BarrelFrameTiers;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class ModBlocks {
     public static final AbstractBarrelBlock ANTI_BARREL = new AntiBarrelBlock(BlockBehaviour.Properties.copy(Blocks.NETHER_BRICKS), BarrelFrameTiers.WOOD);

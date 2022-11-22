@@ -1,0 +1,19 @@
+{
+  "type": "nabba:copy_nbt_shaped",
+  "key": {
+    "P": {
+      "tag": "minecraft:stone_crafting_materials"
+    },
+    "S": {
+      "tag": "forge:rods/wooden"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "S S",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:wood_to_stone_frame_upgrade"
+  }
+}

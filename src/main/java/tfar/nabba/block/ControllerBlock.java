@@ -16,10 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.api.InteractsWithController;
-import tfar.nabba.init.ModBlocks;
-import tfar.nabba.util.Utils;
+import tfar.nabba.blockentity.ControllerBlockEntity;
 
 import java.util.List;
 
@@ -48,10 +46,9 @@ public class ControllerBlock extends Block implements EntityBlock {
         return blockentity instanceof MenuProvider ? (MenuProvider) blockentity : null;
     }
 
-    final Component TOOLTIP = Component.translatable(getDescriptionId() +".tooltip");
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        pTooltip.add(TOOLTIP);
+        pTooltip.add(Component.translatable(getDescriptionId() +".tooltip"));
     }
 
     @Nullable

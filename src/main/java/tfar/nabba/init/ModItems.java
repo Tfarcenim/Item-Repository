@@ -54,6 +54,8 @@ public class ModItems {
     public static final Item NETHERITE_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.NETHERITE_FLUID_BARREL,basic());
     public static final Item CREATIVE_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.CREATIVE_FLUID_BARREL,basic());
 
+    public static final Item CONTROLLER = new BlockItem(ModBlocks.CONTROLLER,basic());
+    public static final Item BARREL_INTERFACE = new BlockItem(ModBlocks.BARREL_INTERFACE,basic());
     public static final Item BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.STORAGE);
     public static final Item x4_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x4_STORAGE);
     public static final Item x16_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x16_STORAGE);
@@ -158,9 +160,6 @@ public class ModItems {
 
 
     public static final Item WOOD_TO_CREATIVE_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.WOOD,BarrelFrameTiers.CREATIVE);
-
-    public static final Item CONTROLLER = new BlockItem(ModBlocks.CONTROLLER,basic());
-    public static final Item BARREL_INTERFACE = new BlockItem(ModBlocks.BARREL_INTERFACE,basic());
 
     private static Item.Properties basic() {
         return new Item.Properties().tab(tab);

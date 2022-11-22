@@ -17,11 +17,19 @@ import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.init.tag.ModItemTags;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator pGenerator) {
         super(pGenerator);
+    }
+
+    public static final Map<Item,Integer> upgradeMap =  new HashMap<>();
+
+    static {
+
     }
 
     @Override
@@ -69,18 +77,20 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(consumer);
 
         ShapedRecipeBuilder.shaped(ModItems.BARREL_INTERFACE)
-                .define('P', Tags.Items.GEMS_DIAMOND)
-                .define('H', Tags.Items.INGOTS_NETHERITE)
+                .define('P', Blocks.DEEPSLATE)
+                .define('H', ModBlocks.DIAMOND_BETTER_BARREL)
                 .define('b', ModBlocks.CONTROLLER)
                 .pattern("PHP")
-                .pattern("HbH")
-                .pattern("PHP")
+                .pattern("PbP")
+                .pattern("PPP")
                 .unlockedBy("has_controller", has(ModBlocks.CONTROLLER))
                 .save(consumer);
 
         barrelFrames(consumer);
         itemUpgrades(consumer);
         compressionRecipes(consumer);
+        barrelFrameUpgrades(consumer);
+        keys(consumer);
     }
 
     protected void keys(Consumer<FinishedRecipe> consumer) {
@@ -114,6 +124,17 @@ public class ModRecipeProvider extends RecipeProvider {
         betterBarrelFrameUpgrade(ModBlocks.DIAMOND_FLUID_BARREL, ModBlocks.GOLD_FLUID_BARREL, Tags.Items.GEMS_DIAMOND, consumer);
         betterBarrelFrameUpgrade(ModBlocks.EMERALD_FLUID_BARREL, ModBlocks.DIAMOND_FLUID_BARREL, Tags.Items.GEMS_EMERALD, consumer);
         betterBarrelFrameUpgrade(ModBlocks.NETHERITE_FLUID_BARREL, ModBlocks.EMERALD_FLUID_BARREL, Tags.Items.INGOTS_NETHERITE, consumer);
+    }
+
+    protected void barrelFrameUpgrades(Consumer<FinishedRecipe> consumer) {
+        betterBarrelFrameUpgradeItem(ModItems.WOOD_TO_STONE_FRAME_UPGRADE,ItemTags.STONE_CRAFTING_MATERIALS, consumer);
+        betterBarrelFrameUpgradeItem(ModItems.STONE_TO_COPPER_FRAME_UPGRADE, Tags.Items.INGOTS_COPPER, consumer);
+        betterBarrelFrameUpgradeItem(ModItems.COPPER_TO_IRON_FRAME_UPGRADE, Tags.Items.INGOTS_IRON, consumer);
+        betterBarrelFrameUpgradeItem(ModItems.IRON_TO_LAPIS_FRAME_UPGRADE,  Tags.Items.GEMS_LAPIS, consumer);
+        betterBarrelFrameUpgradeItem(ModItems.LAPIS_TO_GOLD_FRAME_UPGRADE, Tags.Items.INGOTS_GOLD, consumer);
+        betterBarrelFrameUpgradeItem(ModItems.GOLD_TO_DIAMOND_FRAME_UPGRADE,  Tags.Items.GEMS_DIAMOND, consumer);
+        betterBarrelFrameUpgradeItem(ModItems.DIAMOND_TO_EMERALD_FRAME_UPGRADE,  Tags.Items.GEMS_EMERALD, consumer);
+        betterBarrelFrameUpgradeItem(ModItems.EMERALD_TO_NETHERITE_FRAME_UPGRADE,  Tags.Items.INGOTS_NETHERITE, consumer);
     }
 
     protected void itemUpgrades(Consumer<FinishedRecipe> consumer) {
@@ -221,8 +242,23 @@ public class ModRecipeProvider extends RecipeProvider {
         barrelFrameUpgrade(next, barrel, Ingredient.of(mats), Ingredient.of(Tags.Items.RODS_WOODEN), consumer);
     }
 
+    protected static void betterBarrelFrameUpgradeItem(Item next, TagKey<Item> mats, Consumer<FinishedRecipe> consumer) {
+        barrelFrameUpgradeItem(next, Ingredient.of(mats), Ingredient.of(Tags.Items.RODS_WOODEN), consumer);
+    }
+
     protected static void antiBarrelFrameUpgrade(Block next, Block barrel, TagKey<Item> mats, Consumer<FinishedRecipe> consumer) {
         barrelFrameUpgrade(next, barrel, Ingredient.of(mats), Ingredient.of(Tags.Items.INGOTS_NETHER_BRICK), consumer);
+    }
+
+    protected static void barrelFrameUpgradeItem(Item next, Ingredient mats, Ingredient frame, Consumer<FinishedRecipe> consumer) {
+        CopyNBTShapedRecipeBuilder.shaped(next, 1)
+                .define('P', mats)
+                .define('S', frame)
+                .pattern("PSP")
+                .pattern("S S")
+                .pattern("PSP")
+                .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
+                .save(consumer);
     }
 
     protected static void barrelFrameUpgrade(Block next, Block barrel, Ingredient mats, Ingredient frame, Consumer<FinishedRecipe> consumer) {
