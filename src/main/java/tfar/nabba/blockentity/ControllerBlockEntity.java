@@ -154,7 +154,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
 
     public void addBarrel(BlockEntity blockEntity) {
         BlockPos pos = blockEntity.getBlockPos();
-        if ((!(blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity))) {
+        if ((!(blockEntity instanceof SingleSlotBarrelBlockEntity<?> abstractBarrelBlockEntity))) {
             NABBA.LOGGER.warn("attempted to add invalid barrel {} at {}",blockEntity,pos);
             return;
         }

@@ -62,7 +62,6 @@ public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapability
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
         if (isItemValid(slot, stack)) {
-
             if (slot == stacks.size()) {
                 if (!simulate) {
                     stacks.add(stack);

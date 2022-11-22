@@ -5,6 +5,7 @@
     "nabba:vanity_key",
     "nabba:controller_key",
     "nabba:fluid_controller_key",
-    "nabba:connect_key"
+    "nabba:connect_key",
+    "nabba:remote_controller_key"
   ]
 }

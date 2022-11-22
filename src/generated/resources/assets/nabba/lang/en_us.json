@@ -86,6 +86,7 @@
   "item.nabba.pickup_3x3_upgrade.tooltip": "Picks up items in a 3x3x3 volume centered on the barrel",
   "item.nabba.pickup_9x9_upgrade": "Pickup 9x9 Upgrade",
   "item.nabba.pickup_9x9_upgrade.tooltip": "Picks up items in a 9x3x9 area centered on the barrel",
+  "item.nabba.remote_controller_key": "Remote Controller Key",
   "item.nabba.stone_to_copper_frame_upgrade": "Stone To Copper Frame Upgrade",
   "item.nabba.stone_to_creative_frame_upgrade": "Stone To Creative Frame Upgrade",
   "item.nabba.stone_to_diamond_frame_upgrade": "Stone To Diamond Frame Upgrade",

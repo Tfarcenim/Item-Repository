@@ -1,4 +1,4 @@
-// 1.19.2	2022-11-21T14:54:36.6800023	Item Models: nabba
+// 1.19.2	2022-11-21T19:52:38.9730184	Item Models: nabba
 5ed323eabef7f71705faf7c1f2b51a2dfba47694 assets/nabba/models/item/anti_barrel.json
 d2e611657839162166132a783ae8fc230cafa876 assets/nabba/models/item/anti_barrel_storage_upgrade.json
 ecf8667a935b50479f8da420dd4994eb6f946cbc assets/nabba/models/item/better_barrel.json
@@ -71,6 +71,7 @@ eada94994b8bb7a354679711aa0b15556b58c081 assets/nabba/models/item/netherite_flui
 0cc0c46ea50391976fae09ab2d9ec848961fc588 assets/nabba/models/item/pickup_1x1_upgrade.json
 4af46d54349937f4c0903850d8f91124390c54e1 assets/nabba/models/item/pickup_3x3_upgrade.json
 9db9d10a1d0b47b5ae4545cc9f1c7c02d3c7dcc8 assets/nabba/models/item/pickup_9x9_upgrade.json
+276ab5a64b7aaf5d74f985ee27a4a33d6703c4b3 assets/nabba/models/item/remote_controller_key.json
 07138c16555974ee9673e77c53609c75c7552230 assets/nabba/models/item/stone_anti_barrel.json
 f07c8200d2029f39c55195fa17ed12171c27dc79 assets/nabba/models/item/stone_better_barrel.json
 3ab13b437280e6d1f9997cec8c9a6ffd05dd6f79 assets/nabba/models/item/stone_fluid_barrel.json
