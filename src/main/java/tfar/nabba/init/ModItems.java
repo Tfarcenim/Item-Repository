@@ -8,6 +8,9 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.item.*;
+import tfar.nabba.item.barrels.AntiBarrelBlockItem;
+import tfar.nabba.item.barrels.BetterBarrelBlockItem;
+import tfar.nabba.item.barrels.FluidBarrelBlockItem;
 import tfar.nabba.item.keys.*;
 import tfar.nabba.util.BarrelFrameTiers;
 

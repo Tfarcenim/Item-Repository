@@ -14,7 +14,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
-import tfar.nabba.item.BetterBarrelBlockItem;
+import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
 

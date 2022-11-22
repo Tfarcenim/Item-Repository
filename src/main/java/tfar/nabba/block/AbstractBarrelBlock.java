@@ -17,16 +17,12 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
-import tfar.nabba.blockentity.FluidBarrelBlockEntity;
-import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
-import tfar.nabba.item.BetterBarrelBlockItem;
+import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 
 import javax.annotation.Nullable;

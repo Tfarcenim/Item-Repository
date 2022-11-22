@@ -1,4 +1,4 @@
-package tfar.nabba.item;
+package tfar.nabba.item.barrels;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -9,7 +9,6 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.capability.FluidBarrelItemStackItemHandler;
-import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.inventory.tooltip.FluidBarrelTooltip;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Utils;

@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import tfar.nabba.api.BarrelFrameTier;
@@ -40,6 +41,13 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel,
         loadAndReplace(newState,level,pos);
         if (!player.getAbilities().instabuild) itemstack.shrink(1);
         return true;
+    }
+
+    public boolean canUpgrade(ItemStack barrel) {
+    //    if () {
+
+      //  }
+        return false;
     }
 
     public static BlockState copyBlockStates(BlockState old,BlockState newS) {

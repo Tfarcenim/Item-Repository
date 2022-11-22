@@ -1,4 +1,4 @@
-package tfar.nabba.item;
+package tfar.nabba.item.barrels;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BlockItem;
