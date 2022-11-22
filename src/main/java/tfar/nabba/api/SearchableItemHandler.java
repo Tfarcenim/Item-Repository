@@ -41,6 +41,10 @@ public interface SearchableItemHandler extends ItemHandler {
                 } else {
                     extracted.grow(simExtract.getCount());
                 }
+                remaining.shrink(simExtract.getCount());
+                if (remaining.isEmpty()) {
+                    return extracted;
+                }
             }
         }
         return extracted;
