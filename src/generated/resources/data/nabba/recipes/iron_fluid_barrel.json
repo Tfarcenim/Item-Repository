@@ -5,7 +5,7 @@
       "tag": "forge:ingots/iron"
     },
     "S": {
-      "tag": "forge:rods/wooden"
+      "tag": "minecraft:wooden_fences"
     },
     "b": {
       "item": "nabba:copper_fluid_barrel"

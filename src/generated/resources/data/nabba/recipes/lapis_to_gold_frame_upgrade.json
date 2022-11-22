@@ -5,7 +5,7 @@
       "tag": "forge:ingots/gold"
     },
     "S": {
-      "tag": "forge:rods/wooden"
+      "tag": "minecraft:wooden_fences"
     }
   },
   "pattern": [

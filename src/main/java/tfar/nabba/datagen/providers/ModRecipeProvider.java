@@ -314,13 +314,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(consumer, new ResourceLocation(NABBA.MODID, RecipeBuilder.getDefaultRecipeId(item).getPath() + "_reverse"));
     }
 
+    protected static final Ingredient CORNER = Ingredient.of(ItemTags.WOODEN_FENCES);
 
     protected static void betterBarrelFrameUpgrade(Block next, Block barrel, TagKey<Item> mats, Consumer<FinishedRecipe> consumer) {
-        barrelFrameUpgrade(next, barrel, Ingredient.of(mats), Ingredient.of(Tags.Items.RODS_WOODEN), consumer);
+        barrelFrameUpgrade(next, barrel, Ingredient.of(mats), CORNER, consumer);
     }
 
     protected static void betterBarrelFrameUpgradeItem(Item next, TagKey<Item> mats, Consumer<FinishedRecipe> consumer) {
-        barrelFrameUpgradeItem(next, Ingredient.of(mats), Ingredient.of(Tags.Items.RODS_WOODEN), consumer);
+        barrelFrameUpgradeItem(next, Ingredient.of(mats),CORNER, consumer);
     }
 
     protected static void antiBarrelFrameUpgrade(Block next, Block barrel, TagKey<Item> mats, Consumer<FinishedRecipe> consumer) {
