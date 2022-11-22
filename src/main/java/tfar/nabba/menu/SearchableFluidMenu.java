@@ -72,7 +72,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
             stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
                 if (!iFluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-                    FluidActionResult result = fluidHandler.fillTanksWithContainer(stack, new PlayerInvWrapper(playerIn.getInventory()), (ServerPlayer) playerIn, false);
+                    FluidActionResult result = fluidHandler.storeFluid(stack, new PlayerInvWrapper(playerIn.getInventory()), (ServerPlayer) playerIn, false);
                     if (result.isSuccess()) {
                         slot.set(result.getResult());
                         slot.onTake(playerIn, stack);
@@ -90,7 +90,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
     public void handleInsert(ServerPlayer player) {
         ItemStack carried = getCarried();
-        FluidActionResult result = fluidHandler.fillTanksWithContainer(carried, new PlayerInvWrapper(player.getInventory()), player, false);
+        FluidActionResult result = fluidHandler.storeFluid(carried, new PlayerInvWrapper(player.getInventory()), player, false);
         if (result.isSuccess()) {
             setCarried(result.getResult());
         }
@@ -105,7 +105,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
         if (!shift) {
             ItemStack container = getCarried();
-            FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, container, new InvWrapper(player.getInventory()), player, false);
+            FluidActionResult result = fluidHandler.requestFluid(slot, container, new InvWrapper(player.getInventory()), player, false);
 
             if (result.isSuccess()) {
                 setCarried(result.getResult());
@@ -115,7 +115,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
             for (int i = 0; i < player.getInventory().items.size(); i++) {
                 ItemStack stack = player.getInventory().items.get(i);
                 if (!stack.isEmpty()) {
-                    FluidActionResult result = fluidHandler.attemptDrainTankWithContainer(slot, stack, new InvWrapper(player.getInventory()), player, false);
+                    FluidActionResult result = fluidHandler.requestFluid(slot, stack, new InvWrapper(player.getInventory()), player, false);
                     if (result.isSuccess()) {
                         player.getInventory().items.set(i, result.getResult());
                     }

@@ -511,11 +511,6 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         public @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action) {
             return null;
         }
-
-        @Override
-        public FluidActionResult attemptDrainTankWithContainer(FluidStack stack, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean b) {
-            return null;
-        }
     }
 
     public static class BarrelInterfaceItemHandler implements SearchableItemHandler, INBTSerializable<ListTag> {

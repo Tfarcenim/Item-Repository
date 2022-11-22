@@ -13,5 +13,4 @@ public abstract class S2CRefreshClientStacksPacket<S> implements S2CPacketHelper
         this.stacks = stacks;
         size = stacks.size();
     }
-
 }

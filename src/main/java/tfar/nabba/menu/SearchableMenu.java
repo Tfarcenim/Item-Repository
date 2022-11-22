@@ -23,7 +23,6 @@ public abstract class SearchableMenu<S> extends AbstractContainerMenu {
 
     protected List<S> remoteStacks = new ArrayList<>();
 
-
     protected SearchableMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ContainerLevelAccess access, ContainerData inventoryData, ContainerData syncSlots) {
         super(pMenuType, pContainerId);
         this.inventory = inventory;

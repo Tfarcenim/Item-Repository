@@ -20,12 +20,14 @@ public interface FluidHandler extends IFluidHandler {
 
     @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action);
 
-    FluidActionResult attemptDrainTankWithContainer(FluidStack stack, ItemStack container,IItemHandler playerInv,ServerPlayer player, boolean b);
-    default FluidActionResult fillTanksWithContainer(ItemStack container, IItemHandler playerInv,ServerPlayer player,boolean simulate) {
-        return FluidUtil.tryEmptyContainerAndStow(container,this,playerInv,Integer.MAX_VALUE,player,simulate);
+    default FluidActionResult requestFluid(FluidStack requested, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean simulate) {
+        return FluidUtil.tryFillContainerAndStow(container, this, playerInv,Integer.MAX_VALUE, player, !simulate);
+    }
+    default FluidActionResult storeFluid(ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean simulate) {
+        return FluidUtil.tryEmptyContainerAndStow(container,this,playerInv,Integer.MAX_VALUE,player,!simulate);
     }
 
     default FluidActionResult fillTankWithContainer(int tank, ItemStack container, IItemHandler playerInv, ServerPlayer player, boolean simulate) {
-        return FluidUtil.tryEmptyContainerAndStow(container,new SingleFluidSlotWrapper(this,tank),playerInv,Integer.MAX_VALUE,player,simulate);
+        return FluidUtil.tryEmptyContainerAndStow(container,new SingleFluidSlotWrapper(this,tank),playerInv,Integer.MAX_VALUE,player,!simulate);
     }
 }
