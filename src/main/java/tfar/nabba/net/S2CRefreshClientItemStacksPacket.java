@@ -43,7 +43,6 @@ public class S2CRefreshClientItemStacksPacket implements S2CPacketHelper {
       ItemStack stack = ItemStackUtil.readExtendedItemStack(buf);
       stacks.add(stack);
     }
-
     return new S2CRefreshClientItemStacksPacket(stacks);
   }
 }

@@ -40,12 +40,6 @@ public class S2CRefreshClientFluidStacksPacket implements S2CPacketHelper {
       FluidStack stack = buf.readFluidStack();
       stacks.add(stack);
     }
-
-    List<Integer> ints = new ArrayList<>();
-    for (int i = 0; i < size;i++) {
-      ints.add(buf.readInt());
-    }
-
     return new S2CRefreshClientFluidStacksPacket(stacks);
   }
 }
