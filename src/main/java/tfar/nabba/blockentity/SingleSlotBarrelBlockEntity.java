@@ -25,6 +25,10 @@ public abstract class SingleSlotBarrelBlockEntity<T> extends AbstractBarrelBlock
         return ghost;
     }
 
+    public boolean isLocked() {
+        return getBlockState().getValue(SingleSlotBarrelBlock.LOCKED);
+    }
+
     public abstract void clearGhost();
 
     public BlockPos getControllerPos() {

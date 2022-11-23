@@ -141,19 +141,15 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
 
             int existing = stack.getCount();
             ItemStack newStack;
-            if (amount > existing) {
+            if (amount >= existing) {
                 newStack = ItemHandlerHelper.copyStackWithSize(stack, existing);
                 if (!simulate) {
-                    barrelBlockEntity.ghost = ItemHandlerHelper.copyStackWithSize(stack,1);
-
+                    barrelBlockEntity.ghost = barrelBlockEntity.isLocked() ? ItemHandlerHelper.copyStackWithSize(stack,1): ItemStack.EMPTY;
                     setStack(ItemStack.EMPTY);
                 }
             } else {
                 newStack = ItemHandlerHelper.copyStackWithSize(stack, amount);
                 if (!simulate) {
-                    if (amount == existing) {
-                        barrelBlockEntity.ghost = ItemHandlerHelper.copyStackWithSize(stack,1);
-                    }
                     stack.shrink(amount);
                 }
             }
