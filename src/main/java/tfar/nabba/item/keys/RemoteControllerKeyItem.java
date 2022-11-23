@@ -1,7 +1,6 @@
 package tfar.nabba.item.keys;
 
 import com.mojang.datafixers.util.Pair;
-import mekanism.api.NBTConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
