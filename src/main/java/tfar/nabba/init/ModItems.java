@@ -4,7 +4,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.BetterBarrelBlock;
@@ -102,6 +101,9 @@ public class ModItems {
     public static final Item REMOTE_CONTROLLER_KEY = new RemoteControllerKeyItem(basic());
     public static final Item CONNECT_KEY = new BlockStateKeyItem(basic(),BetterBarrelBlock.CONNECTED);
     public static final Item FLUID_CONTROLLER_KEY = new FluidControllerKeyItem(basic());
+    public static final Item REMOTE_FLUID_CONTROLLER_KEY = new RemoteFluidControllerKeyItem(basic());
+
+    public static final Item BARREL_FRAME_HAMMER = new BarrelHammerItem(basic());
 
     public static final Item VANITY_KEY = new VanityKeyItem(basic());
     public static final Item WOOD_TO_STONE_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.WOOD,BarrelFrameTiers.STONE);

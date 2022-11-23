@@ -50,6 +50,7 @@ public class ModLangProvider extends LanguageProvider {
         addItem(()-> ModItems.PICKUP_9x9_UPGRADE,"Pickup 9x9 Upgrade");
         defaultName(ModBlocks.CONTROLLER);
         defaultName(ModBlocks.BARREL_INTERFACE);
+        defaultName(ModItems.BARREL_FRAME_HAMMER);
 
         add(AbstractBarrelBlock.info,"Using %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");
@@ -68,6 +69,7 @@ public class ModLangProvider extends LanguageProvider {
         addUpgrade(Upgrades.PICKUP,"Pickup Units");
 
         add("nabba.key_ring.selected_key","%s (%s)");
+        add("itemGroup.nabba","Not (Just) Another Better Barrel Attempt");
     }
 
     public void storageUpgradeName(Item item) {
