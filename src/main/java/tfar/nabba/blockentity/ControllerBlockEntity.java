@@ -42,7 +42,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, ItemMenuProvider {
+public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, ItemMenuProvider,FluidMenuProvider {
     private String search = "";
 
     protected final ContainerData itemDataAccess = new ContainerData() {

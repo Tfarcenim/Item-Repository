@@ -199,7 +199,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
 
-    private BarrelFrameUpgradeItem lookupPair(Pair<Integer,Integer> pair) {
+    public static BarrelFrameUpgradeItem lookupPair(Pair<Integer,Integer> pair) {
         for (BarrelFrameUpgradeItem barrelFrameUpgradeItem : upgradeMap) {
             if (barrelFrameUpgradeItem.getUpgr().equals(pair)) {
                 return barrelFrameUpgradeItem;

@@ -30,10 +30,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.api.HasSearchBar;
-import tfar.nabba.api.ItemMenuProvider;
-import tfar.nabba.api.SearchableFluidHandler;
-import tfar.nabba.api.SearchableItemHandler;
+import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
@@ -43,7 +40,7 @@ import tfar.nabba.menu.ControllerKeyItemMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar, ItemMenuProvider {
+public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar, ItemMenuProvider, FluidMenuProvider {
 
     private BarrelInterfaceItemHandler handler = new BarrelInterfaceItemHandler(this);
     private BarrelWrapper wrapper = new BarrelWrapper(this);
