@@ -110,9 +110,7 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (stack.isEmpty() || !isItemValid(slot, stack)) return stack;
 
-            //reverse the "trick" we did earlier
-
-            int limit = getSlotLimit(slot) - (barrelBlockEntity.isVoid() ? 1 : 0);
+            int limit = getActualLimit(slot);
             int count = stack.getCount();
             int existing = this.stack.isEmpty() ? 0 : this.stack.getCount();
             if (count + existing > limit) {
@@ -160,7 +158,11 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         }
         @Override
         public int getSlotLimit(int slot) {//have to trick the vanilla hopper into inserting so voiding work
-            return barrelBlockEntity.getStorage() * stack.getMaxStackSize() + (barrelBlockEntity.isVoid() ? 1 : 0);
+            return getActualLimit(slot) + (barrelBlockEntity.isVoid() ? 1 : 0);
+        }
+
+        public int getActualLimit(int slot) {
+            return barrelBlockEntity.getStorage() * stack.getMaxStackSize();
         }
 
         @Override
