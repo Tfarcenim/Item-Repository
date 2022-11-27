@@ -15,7 +15,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 
@@ -41,84 +43,91 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
 
     protected void renderItem(T abstractBarrelBlockEntity, ItemStack stack, PoseStack pPoseStack, MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
 
+
         if (stack.isEmpty())return;
         float scale = (float) abstractBarrelBlockEntity.getSize();
         if (scale < .01) return;
 
+        Direction facing = abstractBarrelBlockEntity.getBlockState().getValue(AbstractBarrelBlock.H_FACING);
+
+        switch (facing) {
+            case NORTH -> {
+                try {
+                    pPoseStack.pushPose();
+                    pPoseStack.translate(.5,.5,zFighting);
+
+                    pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+
+                    pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
+                    BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
+                    if (bakedmodel.isGui3d())
+                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+                    else
+                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+                    itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+                } catch (Exception e) {
+                    //bruh
+                }
+                pPoseStack.popPose();
+            }
+            case EAST -> {
+
+                try {
+                    pPoseStack.pushPose();
+                    pPoseStack.translate(1 - zFighting,.5,.5);
+
+                    pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+
+                    pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
 
 
-        try {
-            pPoseStack.pushPose();
-            pPoseStack.translate(.5,.5,1 - zFighting);
-            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
-            BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-            if (bakedmodel.isGui3d())
-                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-            else
-                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
-            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-        } catch (Exception e) {
-            //bruh
+                    BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
+                    if (bakedmodel.isGui3d())
+                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+                    else
+                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+                    itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+                } catch (Exception e) {
+                    //bruh
+                }
+                pPoseStack.popPose();
+            }
+            case SOUTH -> {
+                try {
+                    pPoseStack.pushPose();
+                    pPoseStack.translate(.5,.5,1 - zFighting);
+                    pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
+                    BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
+                    if (bakedmodel.isGui3d())
+                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+                    else
+                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+                    itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+                } catch (Exception e) {
+                    //bruh
+                }
+                pPoseStack.popPose();
+            }
+            case WEST -> {
+                try {
+                    pPoseStack.pushPose();
+                    pPoseStack.translate(zFighting,.5,.5);
+
+                    pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270));
+
+                    pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
+                    BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
+                    if (bakedmodel.isGui3d())
+                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
+                    else
+                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+                    itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+                } catch (Exception e) {
+                    //bruh
+                }
+                pPoseStack.popPose();
+            }
         }
-        pPoseStack.popPose();
-
-        try {
-            pPoseStack.pushPose();
-            pPoseStack.translate(1 - zFighting,.5,.5);
-
-            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
-
-            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
-
-
-            BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-            if (bakedmodel.isGui3d())
-                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-            else
-                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
-            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-        } catch (Exception e) {
-            //bruh
-        }
-        pPoseStack.popPose();
-
-
-        try {
-            pPoseStack.pushPose();
-            pPoseStack.translate(.5,.5,zFighting);
-
-            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-
-            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
-            BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-            if (bakedmodel.isGui3d())
-                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-            else
-                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
-            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-        } catch (Exception e) {
-            //bruh
-        }
-        pPoseStack.popPose();
-
-
-        try {
-            pPoseStack.pushPose();
-            pPoseStack.translate(zFighting,.5,.5);
-
-            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270));
-
-            pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale,scale, 0.0001f));
-            BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-            if (bakedmodel.isGui3d())
-                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-            else
-                pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
-            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-        } catch (Exception e) {
-            //bruh
-        }
-        pPoseStack.popPose();
     }
 
 
@@ -168,5 +177,4 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
             pPoseStack.popPose();
         }
     }
-
 }

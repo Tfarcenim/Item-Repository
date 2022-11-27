@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -17,7 +18,9 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.api.UpgradeStack;
@@ -34,6 +37,7 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     protected final BarrelFrameTier barrelTier;
     public static final BooleanProperty VOID = BooleanProperty.create("void");
     public static final BooleanProperty DISCRETE = BooleanProperty.create("discrete");
+    public static final DirectionProperty H_FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final BarrelType type;
 
     public AbstractBarrelBlock(Properties pProperties, BarrelType type,BarrelFrameTier tier) {
@@ -75,6 +79,10 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
         }
     }
 
+    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        return this.defaultBlockState().setValue(H_FACING, pContext.getHorizontalDirection().getOpposite());
+    }
+
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return pLevel.isClientSide ? null : (Level pLevel1, BlockPos pPos, BlockState pState1, T pBlockEntity) -> AbstractBarrelBlockEntity.serverTick(pLevel1, pPos, pState1, (AbstractBarrelBlockEntity) pBlockEntity);
@@ -85,7 +93,7 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(VOID,DISCRETE);
+        pBuilder.add(VOID,DISCRETE,H_FACING);
     }
 
     public BarrelType getType() {
