@@ -26,11 +26,11 @@ public class AntiBarrelRenderer extends AbstractBarrelRenderer<AntiBarrelBlockEn
         int cap = antiBarrelBlockEntity.getStorage();
         String toDraw = infiniteVend ? "\u221E" :antiBarrelBlockEntity.getClientStored() + " / "+ cap;
 
-        renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay,toDraw,14/16d, antiBarrelBlockEntity.getColor(),.0075f);
+        renderText(antiBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay, toDraw, 14/16d, antiBarrelBlockEntity.getColor(), .0075f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem && antiBarrelBlockEntity.isValid(upgradeItem)) {
             String slots = antiBarrelBlockEntity.getUsedSlots() + " / " + antiBarrelBlockEntity.getTotalUpgradeSlots();
-            renderText(pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots, 3 / 16d,
-                    antiBarrelBlockEntity.canAcceptUpgrade(upgradeItem.getDataStack()) ? 0x00ffff : 0xff0000, .0075f);
+            renderText(antiBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay, slots,
+                    3 / 16d, antiBarrelBlockEntity.canAcceptUpgrade(upgradeItem.getDataStack()) ? 0x00ffff : 0xff0000, .0075f);
         }
         renderItem(antiBarrelBlockEntity,antiBarrelBlockEntity.getLastStack(), pPoseStack, bufferSource, pPackedLight, pPackedOverlay);
     }
