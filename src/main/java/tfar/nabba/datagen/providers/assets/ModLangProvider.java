@@ -50,7 +50,8 @@ public class ModLangProvider extends LanguageProvider {
         addItem(()-> ModItems.PICKUP_9x9_UPGRADE,"Pickup 9x9 Upgrade");
         defaultName(ModBlocks.CONTROLLER);
         defaultName(ModBlocks.BARREL_INTERFACE);
-        defaultName(ModItems.BARREL_FRAME_HAMMER);
+        defaultName(ModBlocks.CONTROLLER_PROXY);
+        defaultName(ModItems.BARREL_HAMMER);
 
         add(AbstractBarrelBlock.info,"Using %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");
@@ -63,6 +64,8 @@ public class ModLangProvider extends LanguageProvider {
         addTooltip(ModItems.PICKUP_9x9_UPGRADE,"Picks up items in a 9x3x9 area centered on the barrel");
         addTooltip(ModBlocks.CONTROLLER, "Connects to all barrels and tanks from this mod within a "
                 +(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+" volume");
+
+        addTooltip(ModBlocks.CONTROLLER_PROXY,"Connects to nearby controller as an additional point for interaction, DOES NOT EXTEND CONTROLLER RANGE!");
 
         addUpgrade(Upgrades.INFINITE_VENDING,"Infinite Vending");
         addUpgrade(Upgrades.STORAGE,"Storage Units");

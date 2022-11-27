@@ -72,7 +72,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(consumer);
 
 
-        ShapedRecipeBuilder.shaped(ModItems.CONTROLLER)
+        ShapedRecipeBuilder.shaped(ModBlocks.CONTROLLER)
                 .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
                 .define('H', Blocks.HOPPER)
                 .define('b', Blocks.ENDER_CHEST)
@@ -82,7 +82,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_ender_chest", has(Blocks.ENDER_CHEST))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(ModItems.BARREL_INTERFACE)
+        ShapedRecipeBuilder.shaped(ModBlocks.BARREL_INTERFACE)
                 .define('P', Blocks.DEEPSLATE)
                 .define('H', ModBlocks.DIAMOND_BETTER_BARREL)
                 .define('b', ModBlocks.CONTROLLER)

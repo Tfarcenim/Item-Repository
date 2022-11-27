@@ -33,6 +33,9 @@ public class ModBlockEntityTypes {
     public static final BlockEntityType<ControllerBlockEntity> CONTROLLER =
             BlockEntityType.Builder.of(ControllerBlockEntity::create,ModBlocks.CONTROLLER).build(null);
 
+    public static final BlockEntityType<ControllerProxyBlockEntity> CONTROLLER_PROXY =
+            BlockEntityType.Builder.of(ControllerProxyBlockEntity::create,ModBlocks.CONTROLLER_PROXY).build(null);
+
     public static final BlockEntityType<BarrelInterfaceBlockEntity> BARREL_INTERFACE =
             BlockEntityType.Builder.of(BarrelInterfaceBlockEntity::new,ModBlocks.BARREL_INTERFACE).build(null);
 

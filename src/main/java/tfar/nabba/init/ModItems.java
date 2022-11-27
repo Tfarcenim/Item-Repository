@@ -59,6 +59,7 @@ public class ModItems {
     public static final Item CREATIVE_FLUID_BARREL = new FluidBarrelBlockItem(ModBlocks.CREATIVE_FLUID_BARREL,basic());
 
     public static final Item CONTROLLER = new BlockItem(ModBlocks.CONTROLLER,basic());
+    public static final Item CONTROLLER_PROXY = new BlockItem(ModBlocks.CONTROLLER_PROXY,basic());
     public static final Item BARREL_INTERFACE = new BlockItem(ModBlocks.BARREL_INTERFACE,basic());
     public static final Item BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.STORAGE);
     public static final Item x4_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x4_STORAGE);
@@ -103,7 +104,7 @@ public class ModItems {
     public static final Item FLUID_CONTROLLER_KEY = new FluidControllerKeyItem(basic());
     public static final Item REMOTE_FLUID_CONTROLLER_KEY = new RemoteFluidControllerKeyItem(basic());
 
-    public static final Item BARREL_FRAME_HAMMER = new BarrelHammerItem(basic());
+    public static final Item BARREL_HAMMER = new BarrelHammerItem(basic());
 
     public static final Item VANITY_KEY = new VanityKeyItem(basic());
     public static final Item WOOD_TO_STONE_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.WOOD,BarrelFrameTiers.STONE);
