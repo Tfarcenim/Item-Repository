@@ -17,10 +17,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
@@ -36,17 +38,19 @@ import org.slf4j.Logger;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.client.Client;
-import tfar.nabba.command.RepositoryCommands;
+import tfar.nabba.command.ModCommands;
 import tfar.nabba.datagen.ModDatagen;
 import tfar.nabba.init.*;
 import tfar.nabba.inventory.FakeSlotSynchronizer;
-import tfar.nabba.menu.SearchableItemMenu;
 import tfar.nabba.menu.SearchableMenu;
+import tfar.nabba.mixin.MinecraftServerAccess;
 import tfar.nabba.net.PacketHandler;
-import tfar.nabba.world.AntiBarrelSavedData;
+import tfar.nabba.world.AntiBarrelSubData;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Locale;
+import java.util.UUID;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(NABBA.MODID)
@@ -56,7 +60,6 @@ public class NABBA {
     public static final String MODID = "nabba";
 
     public static NABBA instance;
-    public AntiBarrelSavedData data;
     public MinecraftServer server;
 
     public NABBA() {
@@ -74,17 +77,35 @@ public class NABBA {
     }
 
     private void addGameEvents() {
-        MinecraftForge.EVENT_BUS.addListener(this::onServerStarted);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         MinecraftForge.EVENT_BUS.addListener(this::commands);
         MinecraftForge.EVENT_BUS.addListener(this::leftClick);
         MinecraftForge.EVENT_BUS.addListener(this::setupSync);
     }
 
-    public void onServerStarted(ServerStartingEvent event) {
-        MinecraftServer server = event.getServer();
-        instance.server = server;
-        instance.data = server.getLevel(Level.OVERWORLD).getDataStorage()
-                .computeIfAbsent(AntiBarrelSavedData::loadStatic, AntiBarrelSavedData::new,MODID);
+    public void onServerStarting(ServerStartingEvent event) {
+        instance.server = event.getServer();
+        LevelStorageSource.LevelStorageAccess storageSource = ((MinecraftServerAccess) instance.server).getStorageSource();
+        File file = storageSource.getDimensionPath(instance.server.getLevel(Level.OVERWORLD).dimension())
+                .resolve("data/nabba").toFile();
+        file.mkdirs();
+    }
+
+    public void onServerStopped(ServerStoppedEvent event) {
+        instance.server = null;
+    }
+
+    public AntiBarrelSubData getData(UUID uuid) {
+        if (server != null) {
+            return getData(uuid,server);
+        }
+        throw new RuntimeException("Tried to get data on the client?");
+    }
+    public AntiBarrelSubData getData(UUID uuid,MinecraftServer server) {
+        return server.getLevel(Level.OVERWORLD).getDataStorage()
+                .computeIfAbsent(AntiBarrelSubData::loadStatic,AntiBarrelSubData::new,
+                        MODID+"/"+uuid.toString());
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -92,7 +113,7 @@ public class NABBA {
     }
 
     private void commands(RegisterCommandsEvent e) {
-        RepositoryCommands.register(e.getDispatcher());
+        ModCommands.register(e.getDispatcher());
     }
 
     private void registerObj(RegisterEvent e) {
@@ -115,7 +136,6 @@ public class NABBA {
             }
         }
     }
-
 
     private void leftClick(PlayerInteractEvent.LeftClickBlock e) {
         Level level = e.getLevel();

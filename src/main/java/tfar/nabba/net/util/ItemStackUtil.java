@@ -1,11 +1,14 @@
 package tfar.nabba.net.util;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
+import org.checkerframework.checker.units.qual.C;
+import tfar.nabba.util.NBTKeys;
 
 public class ItemStackUtil {
-    //this is needed because servers will truncate item count to a byte
+    //this is needed because servers, and the itemstack read/write methods will truncate item count to a byte
     public static void writeExtendedItemStack(FriendlyByteBuf buf, ItemStack stack) {
         buf.writeItem(stack);
         buf.writeInt(stack.getCount());
@@ -16,6 +19,20 @@ public class ItemStackUtil {
         int realCount = buf.readInt();
         itemstack.setCount(realCount);
         return itemstack;
+    }
+
+    public static CompoundTag writeExtendedStack(ItemStack stack) {
+        CompoundTag tag = new CompoundTag();
+        tag.put(NBTKeys.Stack.name(),stack.save(new CompoundTag()));
+        tag.putInt(NBTKeys.RealCount.name(), stack.getCount());
+        return tag;
+    }
+
+    public static ItemStack readExtendedItemStack(CompoundTag tag) {
+        ItemStack stack = ItemStack.of(tag.getCompound(NBTKeys.Stack.name()));
+        int count = tag.getInt(NBTKeys.RealCount.name());
+        stack.setCount(count);
+        return stack;
     }
 
     public static void writeList(FriendlyByteBuf buf, NonNullList<ItemStack> stacks) {

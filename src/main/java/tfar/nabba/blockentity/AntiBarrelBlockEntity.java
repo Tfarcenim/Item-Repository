@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,8 +29,10 @@ import tfar.nabba.api.ItemHandler;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
+import tfar.nabba.net.util.ItemStackUtil;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.world.AntiBarrelSubData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,10 +76,11 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     protected final int[] syncSlots = new int[54];
 
     private static void defaultDisplaySlots(int[] ints) {
-        for (int i = 0; i <  ints.length;i++) {
+        for (int i = 0; i < ints.length; i++) {
             ints[i] = i;
         }
     }
+
     protected final ContainerData syncSlotsAccess = new ContainerData() {
         @Override
         public int get(int pIndex) {
@@ -95,7 +99,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     };
 
     public AntiBarrelInventory getInventory() {
-        return NABBA.instance.data.getInventory(this);
+        return NABBA.instance.getData(uuid,level.getServer()).getInventory(this);
     }
 
     public static AntiBarrelBlockEntity create(BlockPos pos, BlockState state) {
@@ -112,7 +116,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     }
 
     public AntiBarrelBlockEntity(BlockPos pos, BlockState state) {
-        this(ModBlockEntityTypes.ANTI_BARREL,pos,state);
+        this(ModBlockEntityTypes.ANTI_BARREL, pos, state);
     }
 
     @Override
@@ -123,8 +127,9 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new AntiBarrelMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()), getInventory(), dataAccess, syncSlotsAccess);
+        return new AntiBarrelMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(level, getBlockPos()), getInventory(), dataAccess, syncSlotsAccess);
     }
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -147,9 +152,10 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             tag.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
         tag.putInt("Stored", clientStored);
-        tag.put("Last",last.save(new CompoundTag()));
+        tag.put("Last", last.save(new CompoundTag()));
         super.saveAdditional(tag);
     }
+
     @Override//read
     public void load(CompoundTag tag) {
         if (tag.hasUUID(NBTKeys.Uuid.name()) && tag.getUUID(NBTKeys.Uuid.name()) != Util.NIL_UUID) {
@@ -167,14 +173,14 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         customName = hoverName;
     }
 
-    void setClientCountAndLast(ItemStack last,int count) {
+    void setClientCountAndLast(ItemStack last, int count) {
         clientStored = count;
         this.last = last;
         setChanged();
     }
 
     public ItemStack getLastStack() {
-            return last;
+        return last;
     }
 
     public int getClientStored() {
@@ -214,6 +220,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     public static class AntiBarrelInventory implements SearchableItemHandler, ResizableIItemHandler {
 
         private final AntiBarrelBlockEntity blockEntity;
+
         public AntiBarrelInventory(AntiBarrelBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
         }
@@ -257,19 +264,17 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
                     setChanged();
                 }
                 return ItemStack.EMPTY;
-            }
-
-            else {
+            } else {
                 ItemStack existing = getStackInSlot(slot);
                 if (existing.isEmpty()) {
                     if (!simulate) {
-                        stacks.set(slot,stack);
+                        stacks.set(slot, stack);
                         setChanged();
                     }
                     return ItemStack.EMPTY;
                 } else {
-                    if (ItemStack.isSameItemSameTags(stack,existing)) {
-                        if (!simulate){
+                    if (ItemStack.isSameItemSameTags(stack, existing)) {
+                        if (!simulate) {
                             existing.grow(stack.getCount());
                             setChanged();
                         }
@@ -302,7 +307,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
                     existing.shrink(amount);
                     setChanged();
                 }
-                return ItemHandlerHelper.copyStackWithSize(existing,amount);
+                return ItemHandlerHelper.copyStackWithSize(existing, amount);
             }
         }
 
@@ -330,18 +335,15 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
 
         public void setChanged() {
-            if (NABBA.instance.data != null) {
-                NABBA.instance.data.writeInvData(this);
-                blockEntity.setClientCountAndLast(getLastItem(), getStoredCount());
-            }
+            NABBA.instance.getData(blockEntity.getUuid(), blockEntity.getLevel().getServer()).writeInvData(this);
+            blockEntity.setClientCountAndLast(getLastItem(), getStoredCount());
         }
 
         public ListTag save() {
             ListTag nbtTagList = new ListTag();
             for (int i = 0; i < this.stacks.size(); i++) {
-                    CompoundTag itemTag = new CompoundTag();
-                    stacks.get(i).save(itemTag);
-                    nbtTagList.add(itemTag);
+                CompoundTag itemTag = ItemStackUtil.writeExtendedStack(stacks.get(i));
+                nbtTagList.add(itemTag);
             }
             return nbtTagList;
         }
@@ -349,7 +351,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         public void loadItems(ListTag tag) {
             stacks.clear();
             for (Tag tag1 : tag) {
-                stacks.add(ItemStack.of((CompoundTag) tag1));
+                stacks.add(ItemStackUtil.readExtendedItemStack((CompoundTag) tag1));
             }
         }
 

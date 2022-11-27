@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -17,6 +18,7 @@ import tfar.nabba.NABBA;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
+import tfar.nabba.world.AntiBarrelSubData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,7 +133,7 @@ public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapability
     }
 
     public void markDirty() {
-        NABBA.instance.data.saveData(uuid, save(stacks));
+        NABBA.instance.getData(uuid).saveData(save(stacks));
         BetterBarrelBlockItem.getOrCreateBlockEntityTag(container).putInt("Stored", getStoredCount());
     }
 
@@ -158,7 +160,7 @@ public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapability
         if (saveData == null) {
             UUID uuid = UUID.randomUUID();
             antiBarrel.getOrCreateTag().putUUID(NBTKeys.Uuid.name(), uuid);
-            NABBA.instance.data.addNewTag(uuid);
+            NABBA.instance.getData(uuid);
         }
         return getSavedData(antiBarrel);
     }
@@ -166,7 +168,7 @@ public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapability
     public static ListTag getSavedData(ItemStack antiBarrel) {
         UUID uuid = getUUIDFromItem(antiBarrel);
         if (uuid != null) {
-            return NABBA.instance.data.getTag(uuid);
+            return NABBA.instance.getData(uuid).getStorage();
         }
         return null;
     }

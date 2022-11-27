@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "nabba.refmap.json",
   "mixins": [
+    "MinecraftServerAccess"
   ],
   "client": [
     "LevelChunkMixin"

@@ -1,7 +1,6 @@
 package tfar.nabba.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandRuntimeException;
@@ -15,32 +14,24 @@ import tfar.nabba.NABBA;
 
 import java.util.UUID;
 
-public class RepositoryCommands {
+public class ModCommands {
 
     public static void register(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         commandDispatcher.register(Commands.literal(NABBA.MODID)
                 .then(Commands.literal("clear")
                         .requires(commandSourceStack -> commandSourceStack.hasPermission(3))
-                        .then(Commands.literal("all")
-                                .executes(RepositoryCommands::clearAll))
-
                         .then(Commands.argument("id", UuidArgument.uuid())
-                                .executes(RepositoryCommands::clearID))
+                                .executes(ModCommands::clearID))
                 )
                 .then(Commands.literal("reset_frequency")
-                        .executes(RepositoryCommands::resetFrequency)
+                        .executes(ModCommands::resetFrequency)
                 )
         );
     }
 
-    private static int clearAll(CommandContext<CommandSourceStack> context) {
-        NABBA.instance.data.clearAll();
-        return 1;
-    }
-
     private static int clearID(CommandContext<CommandSourceStack> context) {
         UUID id = UuidArgument.getUuid(context, "id");
-        boolean success = NABBA.instance.data.clearId(id);
+        boolean success = true;//NABBA.instance.data.clearId(id);
         if (!success) {
             throw new CommandRuntimeException(Component.translatable("dankstorage.command.clear_id.invalid_id"));
         }
