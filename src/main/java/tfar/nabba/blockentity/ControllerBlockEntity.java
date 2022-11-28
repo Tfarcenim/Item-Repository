@@ -7,7 +7,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -21,9 +20,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +29,6 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
-import tfar.nabba.inventory.SingleFluidSlotWrapper;
 import tfar.nabba.menu.ControllerKeyFluidMenu;
 import tfar.nabba.menu.ControllerKeyItemMenu;
 import tfar.nabba.util.BarrelType;
@@ -145,7 +141,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
 
     public void gatherBarrels() {
         BlockPos thisPos = getBlockPos();
-        List<BlockEntity> betterBarrelBlockEntities = Utils.getNearbyBarrels(level,thisPos);
+        List<BlockEntity> betterBarrelBlockEntities = Utils.getNearbyFreeBarrels(level,thisPos);
         for (BlockEntity abstractBarrelBlockEntity : betterBarrelBlockEntities) {
             addBarrel(abstractBarrelBlockEntity);
         }
@@ -342,7 +338,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         }
 
         ListTag list = new ListTag();
-        for (BlockPos pos : findProxies()) {
+        for (BlockPos pos : findConnectedProxies()) {
             CompoundTag tag2 = new CompoundTag();
             tag2.putIntArray("pos",getArray(pos));
             list.add(tag2);
@@ -353,8 +349,10 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         itemstack.getOrCreateTag().put(NET_INFO,tag);
     }
 
-    public List<BlockPos> findProxies() {
-        return Utils.getNearbyProxies(level,getBlockPos()).stream().map(BlockEntity::getBlockPos).toList();
+    public List<BlockPos> findConnectedProxies() {
+        return Utils.getNearbyProxies(level,getBlockPos()).stream()
+                .filter(blockEntity -> ((ControllerProxyBlockEntity)blockEntity).getControllerPos().equals(getBlockPos()))
+                .map(BlockEntity::getBlockPos).toList();
     }
 
     public static int[] getArray(BlockPos pos) {

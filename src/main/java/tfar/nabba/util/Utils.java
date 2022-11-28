@@ -4,26 +4,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.wrappers.BucketPickupHandlerWrapper;
-import net.minecraftforge.fluids.capability.wrappers.FluidBlockWrapper;
-import net.minecraftforge.items.wrapper.EmptyHandler;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.api.HasHandler;
@@ -33,13 +24,11 @@ import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.blockentity.ControllerProxyBlockEntity;
 import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
-import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static tfar.nabba.block.BetterBarrelBlock.VOID;
 
@@ -150,8 +139,8 @@ public class Utils {
         return flag;
     }
 
-    public static List<BlockEntity> getNearbyBarrels(Level level, BlockPos thisPos) {
-        return getNearbyBlockEntities(level, isControllableBarrel, thisPos);
+    public static List<BlockEntity> getNearbyFreeBarrels(Level level, BlockPos thisPos) {
+        return getNearbyBlockEntities(level, isFreeAndControllableBarrel, thisPos);
     }
 
     public static List<BlockEntity> getNearbyControllers(Level level, BlockPos thisPos) {
@@ -164,9 +153,9 @@ public class Utils {
 
     public static final Predicate<BlockEntity> isController = ControllerBlockEntity.class::isInstance;
 
-    public static final Predicate<BlockEntity> isControllerProxy = ControllerProxyBlockEntity.class::isInstance;
+    public static final Predicate<BlockEntity> isControllerProxy = obj -> ControllerProxyBlockEntity.class.isInstance(obj);
 
-    public static final Predicate<BlockEntity> isControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect();
+    public static final Predicate<BlockEntity> isFreeAndControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect() && !singleSlotBarrelBlockEntity.hasController();
 
     //searches a 3x3 chunk area
     public static List<BlockEntity> getNearbyBlockEntities(Level level, Predicate<BlockEntity> predicate, BlockPos thisPos) {

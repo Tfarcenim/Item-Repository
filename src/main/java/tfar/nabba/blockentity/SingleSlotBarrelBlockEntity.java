@@ -35,6 +35,10 @@ public abstract class SingleSlotBarrelBlockEntity<T> extends AbstractBarrelBlock
         return controllerPos;
     }
 
+    public boolean hasController() {
+        return getControllerPos() != null;
+    }
+
     public void removeController() {
         if (controllerPos != null) {
             BlockEntity blockEntity = level.getBlockEntity(getControllerPos());
