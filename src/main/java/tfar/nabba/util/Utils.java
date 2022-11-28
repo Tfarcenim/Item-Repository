@@ -31,6 +31,7 @@ import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
+import tfar.nabba.blockentity.ControllerProxyBlockEntity;
 import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
 import tfar.nabba.init.tag.ModBlockEntityTypeTags;
 
@@ -157,7 +158,13 @@ public class Utils {
         return getNearbyBlockEntities(level, isController, thisPos);
     }
 
+    public static List<BlockEntity> getNearbyProxies(Level level,BlockPos thisPos) {
+        return getNearbyBlockEntities(level,isControllerProxy,thisPos);
+    }
+
     public static final Predicate<BlockEntity> isController = ControllerBlockEntity.class::isInstance;
+
+    public static final Predicate<BlockEntity> isControllerProxy = ControllerProxyBlockEntity.class::isInstance;
 
     public static final Predicate<BlockEntity> isControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect();
 

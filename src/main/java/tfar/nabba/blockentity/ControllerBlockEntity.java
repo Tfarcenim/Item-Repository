@@ -324,6 +324,43 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         return search;
     }
 
+    public static final String NET_INFO = "NetworkInfo";
+    public void storeNetworkInfo(ItemStack itemstack) {
+        CompoundTag tag = new CompoundTag();
+        tag.putIntArray("controller", new int[]{getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()});
+
+        CompoundTag tag1 = new CompoundTag();
+
+        for (BarrelType barrelType : barrels.keySet()) {
+            ListTag list = new ListTag();
+            for (BlockPos pos : barrels.get(barrelType)) {
+                CompoundTag tag2 = new CompoundTag();
+                tag2.putIntArray("pos",getArray(pos));
+                list.add(tag2);
+            }
+            tag1.put(barrelType.name(),list);
+        }
+
+        ListTag list = new ListTag();
+        for (BlockPos pos : findProxies()) {
+            CompoundTag tag2 = new CompoundTag();
+            tag2.putIntArray("pos",getArray(pos));
+            list.add(tag2);
+        }
+        tag.put("proxies",list);
+
+        tag.put("barrels",tag1);
+        itemstack.getOrCreateTag().put(NET_INFO,tag);
+    }
+
+    public List<BlockPos> findProxies() {
+        return Utils.getNearbyProxies(level,getBlockPos()).stream().map(BlockEntity::getBlockPos).toList();
+    }
+
+    public static int[] getArray(BlockPos pos) {
+        return new int[]{pos.getX(), pos.getY(), pos.getZ()};
+    }
+
     public static class ControllerHandler implements SearchableItemHandler {
         private final ControllerBlockEntity controllerBlockEntity;
 

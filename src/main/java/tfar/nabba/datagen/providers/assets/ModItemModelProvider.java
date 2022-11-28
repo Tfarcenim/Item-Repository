@@ -72,6 +72,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         }
 
         makeSimpleBlockItem(ModBlocks.CONTROLLER.asItem());
+        makeSimpleBlockItem(ModBlocks.CONTROLLER_PROXY.asItem());
 
         for (Item item : Registry.ITEM) {
             if (item instanceof BarrelFrameUpgradeItem) {

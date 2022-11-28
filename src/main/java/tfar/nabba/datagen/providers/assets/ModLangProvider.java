@@ -52,6 +52,7 @@ public class ModLangProvider extends LanguageProvider {
         defaultName(ModBlocks.BARREL_INTERFACE);
         defaultName(ModBlocks.CONTROLLER_PROXY);
         defaultName(ModItems.BARREL_HAMMER);
+        defaultName(ModItems.NETWORK_VISUALIZER);
 
         add(AbstractBarrelBlock.info,"Using %s upgrade slots");
         add(UpgradeItem.info,"Requires %s upgrade slots");

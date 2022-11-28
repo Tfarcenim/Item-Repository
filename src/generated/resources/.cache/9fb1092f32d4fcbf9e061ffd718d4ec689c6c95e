@@ -1,4 +1,6 @@
-// 1.19.2	2022-11-22T18:16:54.2336009	Recipes
+// 1.19.2	2022-11-27T20:26:55.5301791	Recipes
+e09fdaf9200b037aaf697c7401aebd31b7900980 data/minecraft/advancements/recipes/nabba/controller_reverse.json
+952335490c89c90f758d756d26b3e229348a9b03 data/minecraft/recipes/controller_reverse.json
 b19c9655b651548f7d63afb8e12c01539045d927 data/nabba/advancements/recipes/nabba/anti_barrel.json
 707bfcbc1dced27d305c0087b2fe2bfa723c9613 data/nabba/advancements/recipes/nabba/anti_barrel_storage_upgrade.json
 f88e9a379df824abeadd81ba657b1d1a4260d3e8 data/nabba/advancements/recipes/nabba/anti_barrel_storage_upgrade_reverse.json
@@ -7,6 +9,7 @@ f9159c17a8f2cf7472fa42540c1b14e83d3e15a3 data/nabba/advancements/recipes/nabba/b
 65041c7b77ffd0ad9eb6d09edede88edce167d12 data/nabba/advancements/recipes/nabba/better_barrel_storage_upgrade.json
 704f66ff5fdbca03daad8ace35036d776b52a353 data/nabba/advancements/recipes/nabba/better_barrel_storage_upgrade_reverse.json
 1ccb06de5ef54cf35137336f9f20e9e8f2bad564 data/nabba/advancements/recipes/nabba/controller.json
+49a9db2403896b0a9206eda99c1018124899e92d data/nabba/advancements/recipes/nabba/controller_proxy.json
 8ecf5b95bfaf483a8c433040fc850af43586d9ca data/nabba/advancements/recipes/nabba/copper_anti_barrel.json
 85852bb8bbea081a7fec5b4b150a2ead2f5d9031 data/nabba/advancements/recipes/nabba/copper_anti_barrel_variant_0.json
 1ff5446eeed516d7f3699c9dd7c7623cd6ccf669 data/nabba/advancements/recipes/nabba/copper_anti_barrel_variant_1.json
@@ -338,6 +341,7 @@ ff07a9b9534fefd4ee790200936e92665c5e90d9 data/nabba/advancements/recipes/nabba/x
 e6d98e590aeedb20dc9337f52eb4929ac2e53613 data/nabba/recipes/better_barrel_storage_upgrade.json
 c37d17438f0dec4ac06ab7d1b5d34840edcca3e9 data/nabba/recipes/better_barrel_storage_upgrade_reverse.json
 3cc35de8d77129039f901145d13de776dcdf385e data/nabba/recipes/controller.json
+ed67056ab2aacadba1c108a9948a1a4d87b34d72 data/nabba/recipes/controller_proxy.json
 354bc84a3b43348e60281a82bb24d1117edcfc4d data/nabba/recipes/copper_anti_barrel.json
 60c4f0f0180b1004b07ce754d1f89ed5dc866409 data/nabba/recipes/copper_anti_barrel_variant_0.json
 82db31bbf0f353f3954b31e8ed55ed2ef71e2e7a data/nabba/recipes/copper_anti_barrel_variant_1.json

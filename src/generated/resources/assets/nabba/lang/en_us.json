@@ -83,6 +83,7 @@
   "item.nabba.lapis_to_netherite_frame_upgrade": "Lapis To Netherite Frame Upgrade",
   "item.nabba.lock_key": "Lock Key",
   "item.nabba.netherite_to_creative_frame_upgrade": "Netherite To Creative Frame Upgrade",
+  "item.nabba.network_visualizer": "Network Visualizer",
   "item.nabba.pickup_1x1_upgrade": "Pickup 1x1 Upgrade",
   "item.nabba.pickup_1x1_upgrade.tooltip": "Picks up items in a 1x3x1 volume centered on the barrel",
   "item.nabba.pickup_3x3_upgrade": "Pickup 3x3 Upgrade",

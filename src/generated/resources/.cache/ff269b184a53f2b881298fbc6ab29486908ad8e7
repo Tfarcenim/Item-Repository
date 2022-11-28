@@ -1,7 +1,8 @@
-// 1.19.2	2022-11-27T19:26:26.4020793	Block States: nabba
+// 1.19.2	2022-11-28T02:45:47.0824044	Block States: nabba
 787e54ee7534bcad26c0a89edd34a0a39f303020 assets/nabba/blockstates/anti_barrel.json
 872dc5427ba020a4eb60ecc1eeaba90137ca2be8 assets/nabba/blockstates/better_barrel.json
 5737936e9ad61416a7920155404c0a9547bce5ad assets/nabba/blockstates/controller.json
+fb4d2b7cee813a3d35a60312be73e94867ab2116 assets/nabba/blockstates/controller_proxy.json
 a38c3142466637de24f4f5df2b5dacb3c761c757 assets/nabba/blockstates/copper_anti_barrel.json
 48b341e1db24d4cdb025f259ad59b573b008c819 assets/nabba/blockstates/copper_better_barrel.json
 42017a314344391855bfd8f1a492b450522b298c assets/nabba/blockstates/copper_fluid_barrel.json
@@ -33,6 +34,7 @@ f00db929aa690eca4447c89233d7fbccd2ddc0f5 assets/nabba/blockstates/stone_fluid_ba
 2b955ccbe5832f843a936a808ed79074e5ecfdb4 assets/nabba/models/block/anti_barrel.json
 a9344a3c55baa1709cc2673c24fd5d86984faf27 assets/nabba/models/block/better_barrel.json
 0cd9b904276265eb5958bacd4feea63c3a1c66d8 assets/nabba/models/block/controller.json
+9d469078c7724493aacbc83547be45a9118a8d8e assets/nabba/models/block/controller_proxy.json
 f5896d80fd3a587a27a1803f62909ba94b9ddb93 assets/nabba/models/block/copper_anti_barrel.json
 9d72ed20d4e686ee5e5e2c4306fcdf995e8a539f assets/nabba/models/block/copper_better_barrel.json
 f1533236d9c9481e8003e04b4dfc7a3d8c0c06ce assets/nabba/models/block/copper_fluid_barrel.json

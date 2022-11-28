@@ -55,6 +55,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         makeBarrel(ModBlocks.CREATIVE_FLUID_BARREL);
 
         simpleBlock(ModBlocks.CONTROLLER);
+        simpleBlock(ModBlocks.CONTROLLER_PROXY);
     }
 
     protected void makeAntiBarrel(AbstractBarrelBlock block) {

@@ -7,7 +7,8 @@
     "MinecraftServerAccess"
   ],
   "client": [
-    "LevelChunkMixin"
+    "LevelChunkMixin",
+    "LevelRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

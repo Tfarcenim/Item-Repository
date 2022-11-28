@@ -110,6 +110,8 @@ public class ModItems {
 
     public static final Item BARREL_HAMMER = new BarrelHammerItem(basic());
 
+    public static final Item NETWORK_VISUALIZER = new NetworkVisualizerItem(basic());
+
     public static final Item VANITY_KEY = new VanityKeyItem(basic());
     public static final Item WOOD_TO_STONE_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.WOOD,BarrelFrameTiers.STONE);
     public static final Item STONE_TO_COPPER_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.STONE,BarrelFrameTiers.COPPER);

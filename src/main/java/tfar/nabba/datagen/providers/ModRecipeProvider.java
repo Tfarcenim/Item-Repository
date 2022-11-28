@@ -92,6 +92,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_controller", has(ModBlocks.CONTROLLER))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(ModBlocks.CONTROLLER).define('#', ModBlocks.CONTROLLER_PROXY)
+                .pattern("##").pattern("##").unlockedBy("has_controller_proxy", has(ModBlocks.CONTROLLER_PROXY))
+                .save(consumer,RecipeBuilder
+                        .getDefaultRecipeId(ModBlocks.CONTROLLER).getPath() + "_reverse");
+
+        ShapelessRecipeBuilder.shapeless(ModBlocks.CONTROLLER_PROXY, 4).requires(ModBlocks.CONTROLLER)
+                .unlockedBy("has_controller", has(ModBlocks.CONTROLLER))
+                .save(consumer);
+
         barrelFrames(consumer);
         itemUpgrades(consumer);
         compressionRecipes(consumer);
