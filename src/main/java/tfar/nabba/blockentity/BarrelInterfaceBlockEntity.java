@@ -202,7 +202,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         return cap == ForgeCapabilities.ITEM_HANDLER || cap == ForgeCapabilities.FLUID_HANDLER ? LazyOptional.of(() -> wrapper).cast() : super.getCapability(cap, side);
     }
 
-    public static final int SIZE = 256;
+    public static final int SIZE = 4096;
 
     public static class BarrelWrapper implements SearchableItemHandler, SearchableFluidHandler {
 

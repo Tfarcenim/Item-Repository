@@ -44,7 +44,7 @@ public class Utils {
         BASE_STORAGE.put(BarrelType.FLUID, 16);//buckets
     }
 
-    public static final int RADIUS = 9;
+    public static final int RADIUS = 13;
 
     public static final double SIZE = .5;
     public static final int COLOR = 0xff88ff;
