@@ -12,6 +12,10 @@ import tfar.nabba.item.barrels.AntiBarrelBlockItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.item.barrels.FluidBarrelBlockItem;
 import tfar.nabba.item.keys.*;
+import tfar.nabba.item.keys.controller.ControllerKeyItem;
+import tfar.nabba.item.keys.controller.FluidControllerKeyItem;
+import tfar.nabba.item.keys.controller.RemoteControllerKeyItem;
+import tfar.nabba.item.keys.controller.RemoteFluidControllerKeyItem;
 import tfar.nabba.util.BarrelFrameTiers;
 
 import java.lang.reflect.Field;

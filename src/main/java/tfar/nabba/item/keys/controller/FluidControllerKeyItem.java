@@ -1,4 +1,4 @@
-package tfar.nabba.item.keys;
+package tfar.nabba.item.keys.controller;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.blockentity.ControllerBlockEntity;
+import tfar.nabba.item.keys.KeyItem;
 import tfar.nabba.menu.ControllerKeyMenuProvider;
 import tfar.nabba.menu.FluidControllerKeyMenuProvider;
 

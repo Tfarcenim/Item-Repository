@@ -62,9 +62,6 @@ public abstract class SearchableMenu<S> extends AbstractContainerMenu {
     public DataSlot getRowSlot() {
         return row;
     }
-    public int getDisplaySlot(int slot) {
-        return syncSlots.get(slot);
-    }
 
 
     public abstract void handleInsert(ServerPlayer player);

@@ -20,6 +20,14 @@
       "when": {
         "locked": "true"
       }
+    },
+    {
+      "apply": {
+        "model": "nabba:block/barrel_connected"
+      },
+      "when": {
+        "connected": "false"
+      }
     }
   ]
 }

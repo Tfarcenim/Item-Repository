@@ -1,4 +1,4 @@
-package tfar.nabba.item.keys;
+package tfar.nabba.item.keys.controller;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -32,6 +32,7 @@ import tfar.nabba.api.ItemMenuProvider;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.tag.ModItemTags;
+import tfar.nabba.item.keys.KeyItem;
 import tfar.nabba.menu.ControllerKeyMenuProvider;
 import tfar.nabba.menu.VanityKeyMenuProvider;
 

@@ -5,7 +5,7 @@
   "block.nabba.controller": "Controller",
   "block.nabba.controller.tooltip": "Connects to all barrels and tanks from this mod within a 19x19x19 volume",
   "block.nabba.controller_proxy": "Controller Proxy",
-  "block.nabba.controller_proxy.tooltip": "Connects to nearby controller as an additional connection point for interaction, DOES NOT EXTEND CONTROLLER RANGE!",
+  "block.nabba.controller_proxy.tooltip": "Connects to nearby controller as an additional point for interaction, DOES NOT EXTEND CONTROLLER RANGE!",
   "block.nabba.copper_anti_barrel": "Copper Anti Barrel",
   "block.nabba.copper_better_barrel": "Copper Better Barrel",
   "block.nabba.copper_fluid_barrel": "Copper Fluid Barrel",

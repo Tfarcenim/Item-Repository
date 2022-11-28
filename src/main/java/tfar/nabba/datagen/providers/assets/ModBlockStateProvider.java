@@ -86,6 +86,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .part().modelFile(models().getExistingFile(modLoc("block/barrel_void")))
                 .addModel().condition(BetterBarrelBlock.VOID,true).end()
                 .part().modelFile(models().getExistingFile(modLoc("block/barrel_lock")))
-                .addModel().condition(BetterBarrelBlock.LOCKED,true).end();
+                .addModel().condition(BetterBarrelBlock.LOCKED,true).end()
+                .part().modelFile(models().getExistingFile(modLoc("block/barrel_connected")))
+                .addModel().condition(BetterBarrelBlock.CONNECTED,false).end();
     }
 }
