@@ -83,9 +83,8 @@ public class Client {
         ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
 
         if (stack.getItem() instanceof NetworkVisualizerItem) {
-
-            if (stack != cache) {
-                cache = stack;
+            if (!ItemStack.isSameItemSameTags(stack,cache)) {
+                cache = stack.copy();
                 NetworkInfo.decode(stack);
             }
             NetworkInfo.render(pCamera);

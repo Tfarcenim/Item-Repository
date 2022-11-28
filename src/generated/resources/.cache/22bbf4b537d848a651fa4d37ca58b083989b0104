@@ -1,7 +1,8 @@
-// 1.19.2	2022-11-28T10:05:03.5053713	Item Models: nabba
+// 1.19.2	2022-11-28T15:07:24.6239838	Item Models: nabba
 5ed323eabef7f71705faf7c1f2b51a2dfba47694 assets/nabba/models/item/anti_barrel.json
 d2e611657839162166132a783ae8fc230cafa876 assets/nabba/models/item/anti_barrel_storage_upgrade.json
 c75df0f810eaaab3c331d70193ef3a735df4188c assets/nabba/models/item/barrel_hammer.json
+35d8bd01d54162ca94470c5efc49a4a01e86fc98 assets/nabba/models/item/barrel_interface.json
 ecf8667a935b50479f8da420dd4994eb6f946cbc assets/nabba/models/item/better_barrel.json
 c8334dc545aed16ad2e5894e094c28169c53d5a2 assets/nabba/models/item/better_barrel_storage_upgrade.json
 fbd72db9687b446fc6186a20c85070bdbf8e6d7c assets/nabba/models/item/connect_key.json

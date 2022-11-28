@@ -30,7 +30,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 ModBlocks.EMERALD_FLUID_BARREL,ModBlocks.NETHERITE_FLUID_BARREL,ModBlocks.CREATIVE_FLUID_BARREL);
 
         this.tag(BlockTags.MINEABLE_WITH_AXE).addTag(ModBlockTags.BETTER_BARRELS);
-        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addTags(ModBlockTags.ANTI_BARRELS,ModBlockTags.FLUID_BARRELS).add(ModBlocks.CONTROLLER,ModBlocks.BARREL_INTERFACE);
+        this.tag(BlockTags.MINEABLE_WITH_PICKAXE).addTags(ModBlockTags.ANTI_BARRELS,ModBlockTags.FLUID_BARRELS).add(ModBlocks.CONTROLLER,ModBlocks.CONTROLLER_PROXY,ModBlocks.BARREL_INTERFACE);
         this.tag(ModBlockTags.BARRELS).addTags(ModBlockTags.ANTI_BARRELS,ModBlockTags.BETTER_BARRELS,ModBlockTags.FLUID_BARRELS);
         
         this.tag(ModBlockTags.NETHER_BRICKS).add(Blocks.NETHER_BRICKS,Blocks.RED_NETHER_BRICKS,Blocks.CHISELED_NETHER_BRICKS,Blocks.CRACKED_NETHER_BRICKS);
