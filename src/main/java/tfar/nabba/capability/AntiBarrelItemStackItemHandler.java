@@ -47,10 +47,6 @@ public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapability
         return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, holder);
     }
 
-    private void initData() {
-
-    }
-
     @Override
     public int getSlots() {
         return stacks.size() + 1;

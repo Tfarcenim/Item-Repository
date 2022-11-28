@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +20,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
@@ -106,9 +104,9 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         public int get(int pIndex) {
             switch (pIndex) {
                 case 0:
-                    return getHandler().getStoredCount();
+                    return getInventory().getStoredCount();
                 case 1:
-                    return getHandler().getFullItemSlots(search);
+                    return getInventory().getFullItemSlots(search);
                 default:
                     return 0;
             }
@@ -125,7 +123,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         }
     };
 
-    public BarrelInterfaceItemHandler getHandler() {
+    public BarrelInterfaceItemHandler getInventory() {
         return handler;
     }
 
@@ -182,13 +180,13 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("Items", getHandler().serializeNBT());
+        pTag.put("Items", getInventory().serializeNBT());
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        getHandler().deserializeNBT(pTag.getList("Items", Tag.TAG_COMPOUND));
+        getInventory().deserializeNBT(pTag.getList("Items", Tag.TAG_COMPOUND));
     }
 
     @Override
@@ -272,7 +270,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         }
 
         public BarrelInterfaceItemHandler getBarrelInt() {
-            return blockEntity.getHandler();
+            return blockEntity.getInventory();
         }
 
         @Override
@@ -616,6 +614,10 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
         public void markDirty() {
             blockEntity.setChanged();
+        }
+
+        public List<ItemStack> getBarrels() {
+            return barrels;
         }
     }
 

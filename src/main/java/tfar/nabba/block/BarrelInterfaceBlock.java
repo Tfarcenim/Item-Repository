@@ -1,9 +1,8 @@
 package tfar.nabba.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -17,6 +16,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.blockentity.BarrelInterfaceBlockEntity;
+
+import java.util.List;
 
 public class BarrelInterfaceBlock extends Block implements EntityBlock {
     public BarrelInterfaceBlock(Properties pProperties) {
@@ -45,6 +46,21 @@ public class BarrelInterfaceBlock extends Block implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
         return  InteractionResult.SUCCESS;
+    }
+
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (!pState.is(pNewState.getBlock())) {
+            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+            if (blockentity instanceof BarrelInterfaceBlockEntity barrelInterfaceBlockEntity) {
+                dropContents(pLevel, pPos, barrelInterfaceBlockEntity.getInventory().getBarrels());
+                pLevel.updateNeighbourForOutputSignal(pPos, this);
+            }
+            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+        }
+    }
+
+    public static void dropContents(Level pLevel, BlockPos pPos, List<ItemStack> pStackList) {
+        pStackList.forEach(stack -> Containers.dropItemStack(pLevel, pPos.getX(), pPos.getY(), pPos.getZ(), stack));
     }
 
     @Nullable
