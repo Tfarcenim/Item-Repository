@@ -22,7 +22,7 @@ public interface ItemHandler extends IItemHandler {
     }
 
     default ItemStack requestItem(ItemStack stack) {
-        ItemStack remaining = ItemHandlerHelper.copyStackWithSize(stack,stack.getMaxStackSize());
+        ItemStack remaining = ItemHandlerHelper.copyStackWithSize(stack,Math.min(stack.getMaxStackSize(),stack.getCount()));
         ItemStack extracted = ItemStack.EMPTY;
         for (int i = 0; i < getSlots();i++) {
             ItemStack simExtract = extractItem(i,remaining.getCount(),true);

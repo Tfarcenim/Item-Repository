@@ -101,6 +101,15 @@ public class BetterBarrelBlockItem extends BlockItem {
         return false;
     }
 
+    public static boolean infiniteVending(ItemStack barrel) {
+        if (getBlockEntityTag(barrel)!=null) {
+            CompoundTag blockEntityTag = getBlockEntityTag(barrel);
+            ListTag listTag = blockEntityTag.getList(NBTKeys.Upgrades.name(), Tag.TAG_COMPOUND);
+
+        }
+        return false;
+    }
+
     public static boolean isItemValid(ItemStack barrel,ItemStack stack) {
         if (!barrel.hasTag()) return true;
         ItemStack existing = getStoredItem(barrel);

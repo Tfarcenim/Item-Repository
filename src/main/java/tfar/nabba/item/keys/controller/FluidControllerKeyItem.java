@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.FluidMenuProvider;
 import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.item.keys.KeyItem;
@@ -24,14 +25,9 @@ public class FluidControllerKeyItem extends KeyItem implements InteractsWithCont
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(stack, level, pTooltipComponents, pIsAdvanced);
-    }
-
-    @Override
     public boolean handleController(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof ControllerBlockEntity controllerBlock) {
+        if (blockEntity instanceof FluidMenuProvider controllerBlock) {
             MenuProvider menuProvider = new FluidControllerKeyMenuProvider(controllerBlock);
             player.openMenu(menuProvider);
         }

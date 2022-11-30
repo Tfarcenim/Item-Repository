@@ -15,6 +15,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
+import tfar.nabba.api.IItemHandlerItem;
+import tfar.nabba.api.ItemHandler;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapabilityProvider {
+public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabilityProvider {
     private final ItemStack container;
 
     private List<ItemStack> stacks;
@@ -120,7 +122,7 @@ public class AntiBarrelItemStackItemHandler implements IItemHandler, ICapability
         return !isFull() && stack.getMaxStackSize() == 1;
     }
 
-    boolean isFull() {
+    public boolean isFull() {
         return getStoredCount() >= BetterBarrelBlockItem.getStorageUnits(container, BarrelType.ANTI);
     }
 

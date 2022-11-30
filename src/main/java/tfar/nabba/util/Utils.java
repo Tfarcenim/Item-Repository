@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.api.HasHandler;
@@ -29,6 +30,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static tfar.nabba.block.BetterBarrelBlock.VOID;
 
@@ -209,4 +211,23 @@ public class Utils {
 
             return Float.toString(number).replaceAll("\\.?0*$", "");
         }
+
+    public static List<ItemStackWrapper> wrap(List<ItemStack> stacks) {
+        return stacks.stream().map(ItemStackWrapper::new).toList();
+    }
+
+    public static void merge(List<ItemStack> stacks, ItemStack toMerge) {
+        for (ItemStack stack : stacks) {
+            if (ItemHandlerHelper.canItemStacksStack(stack, toMerge)) {
+                int grow = Math.min(Integer.MAX_VALUE - stack.getCount(), toMerge.getCount());
+                if (grow > 0) {
+                    stack.grow(grow);
+                    toMerge.shrink(grow);
+                }
+            }
+        }
+        if (!toMerge.isEmpty()) {
+            stacks.add(toMerge);
+        }
+    }
 }

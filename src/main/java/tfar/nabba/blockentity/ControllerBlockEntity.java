@@ -557,11 +557,6 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         }
 
         @Override
-        public int fill(int tank, int amount, FluidAction action) {
-            return 0;
-        }
-
-        @Override
         public int fill(int tank, FluidStack stack, FluidAction action) {
             return 0;
         }
@@ -572,7 +567,8 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
             if (resource.isEmpty() || !resource.isFluidEqual(fluidStack)) {
                 return FluidStack.EMPTY;
             }
-            return drain(tank,resource.getAmount(), action);        }
+            return drain(tank,resource.getAmount(), action);
+        }
 
         @Override
         public @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action) {

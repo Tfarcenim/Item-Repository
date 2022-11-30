@@ -97,7 +97,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
     }
 
 
-    public void handleFluidExtract(ServerPlayer player, FluidStack slot, boolean shift) {
+    public void handleFluidExtract(ServerPlayer player, FluidStack fluidStack, boolean shift) {
 
         //if (!antiBarrelInventory.isSlotValid(slot)) {
         //   return;
@@ -105,7 +105,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
         if (!shift) {
             ItemStack container = getCarried();
-            FluidActionResult result = fluidHandler.requestFluid(slot, container, new InvWrapper(player.getInventory()), player, false);
+            FluidActionResult result = fluidHandler.requestFluid(fluidStack, container, new InvWrapper(player.getInventory()), player, false);
 
             if (result.isSuccess()) {
                 setCarried(result.getResult());
@@ -115,7 +115,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
             for (int i = 0; i < player.getInventory().items.size(); i++) {
                 ItemStack stack = player.getInventory().items.get(i);
                 if (!stack.isEmpty()) {
-                    FluidActionResult result = fluidHandler.requestFluid(slot, stack, new InvWrapper(player.getInventory()), player, false);
+                    FluidActionResult result = fluidHandler.requestFluid(fluidStack, stack, new InvWrapper(player.getInventory()), player, false);
                     if (result.isSuccess()) {
                         player.getInventory().items.set(i, result.getResult());
                     }

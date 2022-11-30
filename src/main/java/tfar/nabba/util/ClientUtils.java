@@ -66,7 +66,7 @@ public class ClientUtils {
         RenderSystem.applyModelViewMatrix();
     }
 
-    public static void renderBox(Camera camera, BlockPos pos,int rrggbbaa) {
+    public static void renderBox(Camera camera, BlockPos pos,int aarrggbb) {
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Tesselator tesselator = Tesselator.getInstance();
@@ -77,35 +77,34 @@ public class ClientUtils {
         RenderSystem.lineWidth(1.0F);
         bufferbuilder.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
 
-        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY(), pos.getZ(),rrggbbaa);
-        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ() + 1,rrggbbaa);
-        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ() + 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1,rrggbbaa);
-        renderLine(camera, bufferbuilder, pos.getX() + 1, pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY(), pos.getZ() + 1,rrggbbaa);
+        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY(), pos.getZ(),aarrggbb);
+        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ() + 1,aarrggbb);
+        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ() + 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1,aarrggbb);
+        renderLine(camera, bufferbuilder, pos.getX() + 1, pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY(), pos.getZ() + 1,aarrggbb);
 
         tesselator.end();
         bufferbuilder.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
 
-
-        renderLine(camera, bufferbuilder, pos.getX(), pos.getY()+1, pos.getZ(), pos.getX() + 1, pos.getY()+1, pos.getZ(),rrggbbaa);
-        renderLine(camera, bufferbuilder, pos.getX(), pos.getY()+1, pos.getZ(), pos.getX(), pos.getY()+1, pos.getZ() + 1,rrggbbaa);
-        renderLine(camera, bufferbuilder, pos.getX(), pos.getY()+1, pos.getZ() + 1, pos.getX() + 1, pos.getY()+1, pos.getZ() + 1,rrggbbaa);
-        renderLine(camera, bufferbuilder, pos.getX() + 1, pos.getY()+1, pos.getZ(), pos.getX() + 1, pos.getY()+1, pos.getZ() + 1,rrggbbaa);
+        renderLine(camera, bufferbuilder, pos.getX(), pos.getY()+1, pos.getZ(), pos.getX() + 1, pos.getY()+1, pos.getZ(),aarrggbb);
+        renderLine(camera, bufferbuilder, pos.getX(), pos.getY()+1, pos.getZ(), pos.getX(), pos.getY()+1, pos.getZ() + 1,aarrggbb);
+        renderLine(camera, bufferbuilder, pos.getX(), pos.getY()+1, pos.getZ() + 1, pos.getX() + 1, pos.getY()+1, pos.getZ() + 1,aarrggbb);
+        renderLine(camera, bufferbuilder, pos.getX() + 1, pos.getY()+1, pos.getZ(), pos.getX() + 1, pos.getY()+1, pos.getZ() + 1,aarrggbb);
         tesselator.end();
         bufferbuilder.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
 
-        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY()+1, pos.getZ(),rrggbbaa);
+        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY()+1, pos.getZ(),aarrggbb);
         tesselator.end();
 
         bufferbuilder.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
-        renderLine(camera, bufferbuilder, pos.getX()+1, pos.getY(), pos.getZ(), pos.getX()+1, pos.getY()+1, pos.getZ(),rrggbbaa);
+        renderLine(camera, bufferbuilder, pos.getX()+1, pos.getY(), pos.getZ(), pos.getX()+1, pos.getY()+1, pos.getZ(),aarrggbb);
         tesselator.end();
 
         bufferbuilder.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
-        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ()+1, pos.getX(), pos.getY()+1, pos.getZ()+1,rrggbbaa);
+        renderLine(camera, bufferbuilder, pos.getX(), pos.getY(), pos.getZ()+1, pos.getX(), pos.getY()+1, pos.getZ()+1,aarrggbb);
         tesselator.end();
 
         bufferbuilder.begin(VertexFormat.Mode.DEBUG_LINE_STRIP, DefaultVertexFormat.POSITION_COLOR);
-        renderLine(camera, bufferbuilder, pos.getX()+1, pos.getY(), pos.getZ()+1, pos.getX()+1, pos.getY()+1, pos.getZ()+1,rrggbbaa);
+        renderLine(camera, bufferbuilder, pos.getX()+1, pos.getY(), pos.getZ()+1, pos.getX()+1, pos.getY()+1, pos.getZ()+1,aarrggbb);
 
 
         tesselator.end();

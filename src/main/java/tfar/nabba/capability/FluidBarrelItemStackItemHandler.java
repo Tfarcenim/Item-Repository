@@ -7,17 +7,18 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.inventory.ImmutableFluidStack;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.item.barrels.FluidBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 
-public class FluidBarrelItemStackItemHandler implements IFluidHandler, ICapabilityProvider {
+public class FluidBarrelItemStackItemHandler implements IFluidHandlerItem, ICapabilityProvider {
     private final ItemStack container;
 
-    private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> this);
+    private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
 
     public FluidBarrelItemStackItemHandler(ItemStack stack) {
         this.container = stack;
@@ -29,17 +30,17 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandler, ICapabili
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return ForgeCapabilities.FLUID_HANDLER.orEmpty(cap, holder);
+        return ForgeCapabilities.FLUID_HANDLER_ITEM.orEmpty(cap, holder);
     }
 
     @Override
     public int getTanks() {
-        return 1;
+        return container.getCount();
     }
 
     @Override
     public @NotNull FluidStack getFluidInTank(int slot) {
-        return FluidBarrelBlockItem.getStoredFluid(container);
+        return ImmutableFluidStack.of(FluidBarrelBlockItem.getStoredFluid(container));
     }
 
     @Override
@@ -47,6 +48,11 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandler, ICapabili
             if (isFluidValid(0, stack)) {
                 int limit = getTankCapacity(0);
                 FluidStack existing = getFluidInTank(0);
+
+                if (existing.getAmount()>= limit) {
+                    return BetterBarrelBlockItem.isVoid(container) ? stack.getAmount() : 0;
+                }
+
                 if (existing.getAmount() + stack.getAmount() >= limit) {
                     if (!simulate.simulate()) {
                         FluidBarrelBlockItem.setFluid(container, new FluidStack(stack, limit));
@@ -56,7 +62,7 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandler, ICapabili
                     if (!simulate.simulate()) {
                         FluidBarrelBlockItem.setFluid(container, new FluidStack(stack, existing.getAmount() + stack.getAmount()));
                     }
-                    return existing.getAmount()+stack.getAmount();
+                    return stack.getAmount();
                 }
             }
             return 0;
@@ -78,11 +84,16 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandler, ICapabili
 
         for (int i = 0; i < getTanks();i++) {
             FluidStack existing = getFluidInTank(i);
+
+            if (BetterBarrelBlockItem.infiniteVending(container)) {
+                return new FluidStack(existing,amount);
+            }
+
             if (amount >= existing.getAmount()) {
                 if (!simulate.simulate()) {
                     FluidBarrelBlockItem.setFluid(container, FluidStack.EMPTY);
                 }
-                return existing;
+                return existing.copy();
             } else {
                 if (!simulate.simulate()) {
                     FluidBarrelBlockItem.setFluid(container, new FluidStack(existing, existing.getAmount() - amount));

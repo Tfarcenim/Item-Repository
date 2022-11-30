@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import tfar.nabba.inventory.SingleFluidSlotWrapper;
 
 public interface FluidHandler extends IFluidHandler {
-    int fill(int tank,int amount,FluidAction action);
 
     int fill(int tank,FluidStack stack,FluidAction action);
 

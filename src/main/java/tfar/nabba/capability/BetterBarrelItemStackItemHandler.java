@@ -10,10 +10,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.api.IItemHandlerItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.util.BarrelType;
 
-public class BetterBarrelItemStackItemHandler implements IItemHandler, ICapabilityProvider {
+public class BetterBarrelItemStackItemHandler implements IItemHandlerItem, ICapabilityProvider {
     private final ItemStack container;
 
     private final LazyOptional<IItemHandler> holder = LazyOptional.of(() -> this);
@@ -33,7 +34,7 @@ public class BetterBarrelItemStackItemHandler implements IItemHandler, ICapabili
 
     @Override
     public int getSlots() {
-        return 1;
+        return container.getCount();
     }
 
     @Override
