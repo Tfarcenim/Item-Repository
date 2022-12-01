@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.AbstractBarrelBlock;
+import tfar.nabba.init.ModItems;
 import tfar.nabba.item.StorageUpgradeItem;
 import tfar.nabba.item.UpgradeItem;
 import tfar.nabba.util.BarrelType;
@@ -40,12 +41,12 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     }
     private List<UpgradeStack> upgrades = new ArrayList<>();
 
-    private int computeUsedUpgradeSlots() {
+    protected int computeUsedUpgradeSlots() {
         int slots = 0;
         for (UpgradeStack entry : upgrades) {
             slots += entry.getUpgradeSlotsRequired();
         }
-        if (isVoid()) slots++;
+        if (isVoid()) slots+= Upgrades.VOID.getSlotRequirement();
         return slots;
     }
 
@@ -56,6 +57,8 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     public boolean isValid(UpgradeItem item) {
         if (item instanceof StorageUpgradeItem storageUpgradeItem) {
             return storageUpgradeItem.getType() == this.getBarrelType();
+        } else if (item == ModItems.INFINITE_VENDING_UPGRADE) {
+            return this instanceof SingleSlotBarrelBlockEntity<?>;
         }
         return true;
     }
@@ -91,6 +94,8 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     public int countUpgrade(Upgrade data) {
         if (data == Upgrades.VOID) {
             return isVoid() ? 1 : 0;
+        } else if (data == Upgrades.INFINITE_VENDING) {
+
         }
         for (UpgradeStack dataStack : getUpgrades()) {
             if (dataStack.getData() == data) return dataStack.getCount();

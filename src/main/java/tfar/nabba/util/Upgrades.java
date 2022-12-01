@@ -24,7 +24,7 @@ public enum Upgrades implements Upgrade {
     STORAGE(1, Utils.add_to_internal_upgrades,BASE_STORAGE,() -> ModItems.BETTER_BARREL_STORAGE_UPGRADE,64000,NOTHING),
     VOID(1,Utils.apply_void,() -> ModItems.VOID_UPGRADE,1),
     PICKUP(8,Utils.add_to_internal_upgrades,() -> ModItems.PICKUP_1x1_UPGRADE,9, PICKUP_TICK),
-    INFINITE_VENDING(2000000000,Utils.add_to_internal_upgrades,() -> ModItems.INFINITE_VENDING_UPGRADE,1);
+    INFINITE_VENDING(2000000000, apply_infinite_vending,() -> ModItems.INFINITE_VENDING_UPGRADE,1);
 
     private int slotsRequired;
     private final Map<BarrelType,Integer> additionalStorage;

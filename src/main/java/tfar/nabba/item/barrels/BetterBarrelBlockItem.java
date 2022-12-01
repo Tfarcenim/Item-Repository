@@ -3,18 +3,16 @@ package tfar.nabba.item.barrels;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.SlotAccess;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickAction;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.UpgradeStack;
+import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.capability.BetterBarrelItemStackItemHandler;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.util.BarrelType;
@@ -94,18 +92,16 @@ public class BetterBarrelBlockItem extends BlockItem {
     }
 
     public static boolean isVoid(ItemStack barrel) {
-        if (!barrel.hasTag())return false;
-        if (getBlockStateTag(barrel)!= null) {
-            return getBlockStateTag(barrel).getBoolean("void");
-        }
-        return false;
+        return getBooleanBlockStateValue(barrel, SingleSlotBarrelBlock.VOID);
+    }
+    public static boolean infiniteVending(ItemStack barrel) {
+        return getBooleanBlockStateValue(barrel, SingleSlotBarrelBlock.INFINITE_VENDING);
     }
 
-    public static boolean infiniteVending(ItemStack barrel) {
-        if (getBlockEntityTag(barrel)!=null) {
-            CompoundTag blockEntityTag = getBlockEntityTag(barrel);
-            ListTag listTag = blockEntityTag.getList(NBTKeys.Upgrades.name(), Tag.TAG_COMPOUND);
-
+    public static boolean getBooleanBlockStateValue(ItemStack barrel, BooleanProperty property) {
+        if (getBlockStateTag(barrel)!=null) {
+            CompoundTag blockStateTag = getBlockStateTag(barrel);
+            blockStateTag.getBoolean(property.getName());
         }
         return false;
     }

@@ -133,7 +133,7 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
             if (amount == 0 || stack.isEmpty()) return ItemStack.EMPTY;
 
             //handling infinite vending is easy
-            if (barrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING)) {
+            if (barrelBlockEntity.infiniteVending()) {
                 return ItemHandlerHelper.copyStackWithSize(this.stack,amount);
             }
 

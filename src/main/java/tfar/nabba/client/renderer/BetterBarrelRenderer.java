@@ -25,7 +25,7 @@ public class BetterBarrelRenderer extends AbstractBarrelRenderer<BetterBarrelBlo
     protected void renderTextAndItems(BetterBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
         ItemStack stack = betterBarrelBlockEntity.getItemHandler().getStack();
 
-        boolean infiniteVend = betterBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
+        boolean infiniteVend = betterBarrelBlockEntity.infiniteVending();
 
         int cap = betterBarrelBlockEntity.getItemHandler().getActualLimit(0);
         String toDraw = infiniteVend ? Utils.INFINITY :stack.getCount() + " / "+ cap;

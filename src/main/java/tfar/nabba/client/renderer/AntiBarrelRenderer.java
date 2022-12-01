@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
-import tfar.nabba.util.Upgrades;
 
 public class AntiBarrelRenderer extends AbstractBarrelRenderer<AntiBarrelBlockEntity> {
 
@@ -21,10 +20,9 @@ public class AntiBarrelRenderer extends AbstractBarrelRenderer<AntiBarrelBlockEn
     }
 
     protected void renderTextAndItems(AntiBarrelBlockEntity antiBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
-        boolean infiniteVend = antiBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
 
         int cap = antiBarrelBlockEntity.getStorage();
-        String toDraw = infiniteVend ? "\u221E" :antiBarrelBlockEntity.getClientStored() + " / "+ cap;
+        String toDraw = antiBarrelBlockEntity.getClientStored() + " / "+ cap;
 
         renderText(antiBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay, toDraw, 14/16d, antiBarrelBlockEntity.getColor(), .0075f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem && antiBarrelBlockEntity.isValid(upgradeItem)) {

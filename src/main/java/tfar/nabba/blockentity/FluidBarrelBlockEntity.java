@@ -133,7 +133,7 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidSta
             if (amount == 0 || stack.isEmpty()) return FluidStack.EMPTY;
 
             //handling infinite vending is easy
-            if (barrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING)) {
+            if (barrelBlockEntity.infiniteVending()) {
                 return Utils.copyFluidWithSize(this.stack,amount);
             }
 

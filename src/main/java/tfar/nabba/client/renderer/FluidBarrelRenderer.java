@@ -33,7 +33,7 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
     protected void renderTextAndItems(FluidBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
         FluidStack stack = betterBarrelBlockEntity.getFluidHandler().getFluid();
 
-        boolean infiniteVend = betterBarrelBlockEntity.hasUpgrade(Upgrades.INFINITE_VENDING);
+        boolean infiniteVend = betterBarrelBlockEntity.infiniteVending();
 
         int cap = betterBarrelBlockEntity.getStorage() * 1000;
         String toDraw = infiniteVend ? Utils.INFINITY :stack.getAmount() + " / "+ cap;

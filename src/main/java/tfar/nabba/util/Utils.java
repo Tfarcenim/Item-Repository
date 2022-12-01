@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
@@ -21,6 +22,9 @@ import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.api.HasHandler;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.UpgradeStack;
+import tfar.nabba.block.AbstractBarrelBlock;
+import tfar.nabba.block.BetterBarrelBlock;
+import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.blockentity.ControllerProxyBlockEntity;
@@ -31,8 +35,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static tfar.nabba.block.BetterBarrelBlock.VOID;
 
 public class Utils {
     public static final int INVALID = -1;
@@ -66,10 +68,16 @@ public class Utils {
         }
     };
 
-    public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> apply_void = (betterBarrelBlockEntity, upgradeData) -> {
-        BlockState state = betterBarrelBlockEntity.getBlockState();
-        betterBarrelBlockEntity.getLevel().setBlock(betterBarrelBlockEntity.getBlockPos(), state.setValue(VOID, true), 3);
-    };
+    public static BiConsumer<AbstractBarrelBlockEntity,UpgradeStack> createConsumer(BooleanProperty property) {
+        return (betterBarrelBlockEntity, upgradeData) -> {
+            BlockState state = betterBarrelBlockEntity.getBlockState();
+            betterBarrelBlockEntity.getLevel().setBlock(betterBarrelBlockEntity.getBlockPos(), state.setValue(property, true), 3);
+        };
+    }
+
+    public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> apply_void = createConsumer(AbstractBarrelBlock.VOID);
+    public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> apply_infinite_vending = createConsumer(SingleSlotBarrelBlock.INFINITE_VENDING);
+
 
     public static final BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> PICKUP_TICK =
             (betterBarrelBlockEntity, upgradeDataStack) -> pickupInABox(betterBarrelBlockEntity,

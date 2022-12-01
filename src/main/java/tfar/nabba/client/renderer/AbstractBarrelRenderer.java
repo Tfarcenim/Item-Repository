@@ -166,4 +166,8 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
         }
         pPoseStack.popPose();
     }
+
+    public String getDisplayString() {
+        return null;
+    }
 }

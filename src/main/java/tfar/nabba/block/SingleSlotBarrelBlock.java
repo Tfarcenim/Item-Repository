@@ -21,16 +21,17 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
 
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
+    public static final BooleanProperty INFINITE_VENDING = BooleanProperty.create("infinite_vending");
 
     public SingleSlotBarrelBlock(Properties pProperties, BarrelType type, BarrelFrameTier tier) {
         super(pProperties, type, tier);
-        registerDefaultState(defaultBlockState().setValue(LOCKED, false).setValue(CONNECTED, true));
+        registerDefaultState(defaultBlockState().setValue(LOCKED, false).setValue(CONNECTED, true).setValue(INFINITE_VENDING,false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder);
-        pBuilder.add(LOCKED, CONNECTED);
+        pBuilder.add(LOCKED, CONNECTED,INFINITE_VENDING);
     }
 
     //note,attack is not called if cancelling the left click block event
@@ -40,6 +41,7 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
             super.appendBlockStateInfo(tag, tooltip);
             tooltip.add(Component.literal("Locked: ").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
             tooltip.add(Component.literal("Connected: ").append(Component.literal(tag.getString(CONNECTED.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.literal("Infinite Vending: ").append(Component.literal(tag.getString(INFINITE_VENDING.getName())).withStyle(ChatFormatting.YELLOW)));
         }
     }
 

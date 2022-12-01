@@ -23,6 +23,7 @@ public class UpgradeStack {
     public static final UpgradeStack x256_STORAGE = new UpgradeStack(Upgrades.STORAGE,256).setImmutable(true);
     public static final UpgradeStack x1024_STORAGE = new UpgradeStack(Upgrades.STORAGE,1024).setImmutable(true);
     public static final UpgradeStack INFINITE_STORAGE = new UpgradeStack(Upgrades.STORAGE,64000).setImmutable(true);
+
     public static final UpgradeStack INFINITE_VENDING = defaultInstance(Upgrades.INFINITE_VENDING).setImmutable(true);
     public static final UpgradeStack VOID = defaultInstance(Upgrades.VOID).setImmutable(true);
 
