@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "O": {
+      "item": "minecraft:pink_dye"
+    },
+    "P": {
+      "item": "minecraft:iron_ingot"
+    },
+    "p": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "pattern": [
+    "pP ",
+    " P ",
+    " O "
+  ],
+  "result": {
+    "item": "nabba:vanity_key"
+  }
+}

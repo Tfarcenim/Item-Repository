@@ -92,6 +92,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_controller", has(ModBlocks.CONTROLLER))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(ModItems.NETWORK_VISUALIZER)
+                .define('P', Items.IRON_INGOT)
+                .define('H', Items.ENDER_EYE)
+                .pattern("PPP")
+                .pattern("PHP")
+                .pattern("PPP")
+                .unlockedBy("has_ender_eye", has(Items.ENDER_EYE))
+                .save(consumer);
+
         ShapedRecipeBuilder.shaped(ModBlocks.CONTROLLER).define('#', ModBlocks.CONTROLLER_PROXY)
                 .pattern("##").pattern("##").unlockedBy("has_controller_proxy", has(ModBlocks.CONTROLLER_PROXY))
                 .save(consumer,RecipeBuilder
@@ -109,7 +118,84 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     protected void keys(Consumer<FinishedRecipe> consumer) {
+        ShapedRecipeBuilder.shaped(ModItems.KEY_RING)
+                .define('P', Items.IRON_NUGGET)
+                .pattern(" P ")
+                .pattern("P P")
+                .pattern(" P ")
+                .unlockedBy("has_iron_nugget", has(Items.IRON_NUGGET))
+                .save(consumer);
 
+        ShapedRecipeBuilder.shaped(ModItems.LOCK_KEY)
+                .define('P', Items.IRON_INGOT)
+                .define('p', Items.IRON_NUGGET)
+                .pattern("pP ")
+                .pattern(" P ")
+                .pattern(" P ")
+                .unlockedBy("has_iron_nugget", has(Items.IRON_NUGGET))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.HIDE_KEY)
+                .define('P', Items.IRON_INGOT)
+                .define('p', Items.IRON_NUGGET)
+                .define('O', Items.ENDER_EYE)
+                .pattern("pP ")
+                .pattern(" P ")
+                .pattern(" O ")
+                .unlockedBy("has_iron_nugget", has(Items.IRON_NUGGET))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.CONNECT_KEY)
+                .define('P', Items.IRON_INGOT)
+                .define('p', Items.IRON_NUGGET)
+                .define('O', Items.SHEARS)
+                .pattern("pP ")
+                .pattern(" P ")
+                .pattern(" O ")
+                .unlockedBy("has_iron_nugget", has(Items.IRON_NUGGET))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.VANITY_KEY)
+                .define('P', Items.IRON_INGOT)
+                .define('p', Items.IRON_NUGGET)
+                .define('O', Items.PINK_DYE)
+                .pattern("pP ")
+                .pattern(" P ")
+                .pattern(" O ")
+                .unlockedBy("has_pink_dye", has(Items.PINK_DYE))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.CONTROLLER_KEY)
+                .define('P', Items.IRON_INGOT)
+                .define('p', Items.IRON_NUGGET)
+                .define('O', ModBlocks.CONTROLLER_PROXY)
+                .pattern("pP ")
+                .pattern(" P ")
+                .pattern(" O ")
+                .unlockedBy("has_controller_proxy", has(ModBlocks.CONTROLLER_PROXY))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(ModItems.FLUID_CONTROLLER_KEY)
+                .define('P', Items.COPPER_INGOT)
+                .define('p', Items.IRON_NUGGET)
+                .define('O', ModBlocks.CONTROLLER_PROXY)
+                .pattern("pP ")
+                .pattern(" P ")
+                .pattern(" O ")
+                .unlockedBy("has_controller_proxy", has(ModBlocks.CONTROLLER_PROXY))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(ModItems.REMOTE_CONTROLLER_KEY)
+                .requires(ModItems.CONTROLLER_KEY)
+                .requires(Items.ENDER_EYE)
+                .unlockedBy("has_controller_key", has(ModItems.CONTROLLER_KEY))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(ModItems.REMOTE_FLUID_CONTROLLER_KEY)
+                .requires(ModItems.FLUID_CONTROLLER_KEY)
+                .requires(Items.ENDER_EYE)
+                .unlockedBy("has_controller_key", has(ModItems.FLUID_CONTROLLER_KEY))
+                .save(consumer);
     }
 
     protected void barrelFrames(Consumer<FinishedRecipe> consumer) {

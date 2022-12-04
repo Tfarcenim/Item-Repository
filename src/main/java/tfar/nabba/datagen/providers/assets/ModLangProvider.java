@@ -9,6 +9,7 @@ import org.codehaus.plexus.util.StringUtils;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.block.AbstractBarrelBlock;
+import tfar.nabba.blockentity.BarrelInterfaceBlockEntity;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.item.BarrelFrameUpgradeItem;
@@ -58,6 +59,18 @@ public class ModLangProvider extends LanguageProvider {
         add(UpgradeItem.info,"Requires %s upgrade slots");
         add(UpgradeItem.info1,"Max of %s allowed per barrel");
 
+
+
+        addUpgrade(Upgrades.INFINITE_VENDING,"Infinite Vending");
+        addUpgrade(Upgrades.STORAGE,"Storage Units");
+        addUpgrade(Upgrades.PICKUP,"Pickup Units");
+
+        add("nabba.key_ring.selected_key","%s (%s)");
+        add("itemGroup.nabba","Not (Just) Another Better Barrel Attempt");
+        addItemTooltips();
+    }
+
+    public void addItemTooltips() {
         addTooltip(ModItems.INFINITE_VENDING_UPGRADE,"Items don't deplete when extracted");
         addTooltip(ModItems.VOID_UPGRADE,"Barrel voids excess items");
         addTooltip(ModItems.PICKUP_1x1_UPGRADE,"Picks up items in a 1x3x1 volume centered on the barrel");
@@ -67,13 +80,8 @@ public class ModLangProvider extends LanguageProvider {
                 +(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+" volume");
 
         addTooltip(ModBlocks.CONTROLLER_PROXY,"Connects to nearby controller as an additional point for interaction, DOES NOT EXTEND CONTROLLER RANGE!");
-
-        addUpgrade(Upgrades.INFINITE_VENDING,"Infinite Vending");
-        addUpgrade(Upgrades.STORAGE,"Storage Units");
-        addUpgrade(Upgrades.PICKUP,"Pickup Units");
-
-        add("nabba.key_ring.selected_key","%s (%s)");
-        add("itemGroup.nabba","Not (Just) Another Better Barrel Attempt");
+        addTooltip(ModBlocks.BARREL_INTERFACE,"Holds up to "+ BarrelInterfaceBlockEntity.SIZE+" barrels and exposes capabilities");
+        addTooltip(ModItems.NETWORK_VISUALIZER,"Shows proxies and barrels connected to a controller");
     }
 
     public void storageUpgradeName(Item item) {

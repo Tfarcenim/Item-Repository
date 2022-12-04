@@ -8,11 +8,16 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.blockentity.ControllerBlockEntity;
+
+import java.util.List;
 
 public class NetworkVisualizerItem extends Item implements InteractsWithController {
     public NetworkVisualizerItem(Properties pProperties) {
@@ -28,6 +33,12 @@ public class NetworkVisualizerItem extends Item implements InteractsWithControll
         }
         return false;
     }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        pTooltip.add(Component.translatable(getDescriptionId() +".tooltip"));
+    }
+
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
