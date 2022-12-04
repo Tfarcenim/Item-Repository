@@ -1,7 +1,6 @@
 package tfar.nabba.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -19,8 +18,13 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -51,16 +55,14 @@ import tfar.nabba.net.server.C2SScrollKeyPacket;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.ClientUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Client {
 
     public static void setup(FMLClientSetupEvent e) {
         MinecraftForge.EVENT_BUS.addListener(Client::scroll);
         MinecraftForge.EVENT_BUS.addListener(Client::onTexturePostStitch);
+     //   MinecraftForge.EVENT_BUS.addListener(Client::worldLast);
         MenuScreens.register(ModMenuTypes.ANTI_BARREL, (SearchableItemMenu<AntiBarrelBlockEntity.AntiBarrelInventory> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
         MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
         MenuScreens.register(ModMenuTypes.ITEM_CONTROLLER_KEY, (SearchableItemMenu<SearchableItemHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
@@ -78,8 +80,12 @@ public class Client {
         }
     }
 
+    public static void worldLast(RenderLevelLastEvent e) {
+        renderNetwork(e.getPoseStack(),Minecraft.getInstance().gameRenderer.getMainCamera());
+    }
+
     private static ItemStack cache = ItemStack.EMPTY;
-    public static void renderNetwork(PoseStack pPoseStack, Camera pCamera, Matrix4f pProjectionMatrix) {
+    public static void renderNetwork(PoseStack pPoseStack, Camera pCamera) {
         ItemStack stack = Minecraft.getInstance().player.getMainHandItem();
 
         if (stack.getItem() instanceof NetworkVisualizerItem) {
@@ -87,19 +93,24 @@ public class Client {
                 cache = stack.copy();
                 NetworkInfo.decode(stack);
             }
-            NetworkInfo.render(pCamera);
+            NetworkInfo.render(pPoseStack,pCamera);
         }
     }
 
     public static class NetworkInfo {
         public static BlockPos controller;
         public static Map<BarrelType, List<BlockPos>> barrels = new HashMap<>();
+
+        private static Map<BarrelType,BlockPos> cachedPoses = null;
+
+        private static Map<BarrelType,List<Line>> cachedEdges = null;
         public static List<BlockPos> proxies = new ArrayList<>();
 
         public static void clear() {
             controller = null;
             barrels.clear();
             proxies.clear();
+            cachedEdges = null;
         }
 
         public static void decode(ItemStack stack) {
@@ -128,17 +139,55 @@ public class Client {
                     proxies.add(new BlockPos(proxyPos[0],proxyPos[1],proxyPos[2]));
                 }
             }
+            updateEdges();
         }
 
-        public static void render(Camera camera) {
+        public static void updateEdges() {
+            if (cachedEdges != null) {
+                return;
+            }
+
+            cachedEdges = new HashMap<>();
+            cachedPoses = new HashMap<>();
+
+            for (BarrelType type : barrels.keySet()) {
+
+                List<BlockPos> shapeBlocks = barrels.get(type);
+
+                if (shapeBlocks.isEmpty()) {
+                    cachedEdges.put(type,Collections.emptyList());
+                    continue;
+                }
+
+                cachedPoses.put(type,shapeBlocks.get(0));
+
+                List<Line> lines = new ArrayList<>();
+
+                Collection<VoxelShape> shapes = new HashSet<>();
+                for (AABB aabb : ShapeMerger.merge(shapeBlocks, cachedPoses.get(type))) {
+                    shapes.add(Shapes.create(aabb));
+                }
+
+                orShapes(shapes).forAllEdges((x1, y1, z1, x2, y2, z2) -> lines.add(new Line(x1, y1, z1, x2, y2, z2)));
+                cachedEdges.put(type, lines);
+            }
+        }
+
+        public static void render(PoseStack poseStack, Camera camera) {
             if (controller != null) {
                 ClientUtils.renderBox(camera, controller, 0xffffffff);
+                if (cachedPoses == null || cachedEdges == null || cachedEdges.isEmpty()) {
+                    return;
+                }
+
                 for (BarrelType type : barrels.keySet()) {
-                    for (BlockPos pos : barrels.get(type)) {
-                        ClientUtils.renderBox(camera, pos, type.color);
-                        ClientUtils.renderLineSetup(camera,pos.getX() + .5,pos.getY() + .5,pos.getZ()+.5,
-                                controller.getX() + .5,controller.getY() +.5,controller.getZ() + .5, type.color);
+                    BlockPos cachedPos = cachedPoses.get(type);
+                    for (Line edge : cachedEdges.get(type)) {
+                        ClientUtils.renderLineSetup(camera,cachedPos.getX()+ edge.x1,cachedPos.getY()+ edge.y1, cachedPos.getZ()+edge.z1,
+                               cachedPos.getX()+ edge.x2,cachedPos.getY()+  edge.y2,cachedPos.getZ()+  edge.z2, type.color);
                     }
+                    ClientUtils.renderLineSetup(camera,cachedPos.getX()+.5,cachedPos.getY()+.5, cachedPos.getZ()+.5,
+                            controller.getX()+.5,controller.getY()+.5,controller.getZ()+.5, type.color);
                 }
 
                 for (BlockPos pos : proxies) {
@@ -147,6 +196,14 @@ public class Client {
                             controller.getX() + .5,controller.getY() +.5,controller.getZ() + .5, 0xffffff00);
                 }
             }
+        }
+
+        static VoxelShape orShapes(Collection<VoxelShape> shapes) {
+            VoxelShape combinedShape = Shapes.empty();
+            for (VoxelShape shape : shapes) {
+                combinedShape = Shapes.joinUnoptimized(combinedShape, shape, BooleanOp.OR);
+            }
+            return combinedShape;
         }
     }
 
