@@ -4,6 +4,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -11,7 +14,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
 import tfar.nabba.util.BarrelType;
 
@@ -32,6 +42,21 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder);
         pBuilder.add(LOCKED, CONNECTED,INFINITE_VENDING);
+    }
+
+    @Override
+    public void attack(BlockState pState, Level level, BlockPos pos, Player player) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+            ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
+            ItemHandlerHelper.giveItemToPlayer(player, stack);
+        } else if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
+            FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(player.getMainHandItem(), fluidBarrelBlockEntity.getFluidHandler(),
+                    new InvWrapper(player.getInventory()), Integer.MAX_VALUE, player, true);
+            if (fluidActionResult.isSuccess()) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, fluidActionResult.getResult());
+            }
+        }
     }
 
     //note,attack is not called if cancelling the left click block event

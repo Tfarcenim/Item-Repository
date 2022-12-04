@@ -163,8 +163,8 @@ public class Client {
     }
 
     public static ClientTooltipComponent tooltipImage(TooltipComponent data) {
-        if (data instanceof BetterBarrelTooltip dankTooltip) {
-            return new ClientBetterBarrelTooltip(dankTooltip);
+        if (data instanceof BetterBarrelTooltip betterBarrelTooltip) {
+            return new ClientBetterBarrelTooltip(betterBarrelTooltip);
         } else if (data instanceof FluidBarrelTooltip fluidBarrelTooltip) {
             return new ClientFluidBarrelTooltip(fluidBarrelTooltip);
         }

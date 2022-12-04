@@ -11,32 +11,28 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.registries.RegisterEvent;
 import org.slf4j.Logger;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
-import tfar.nabba.blockentity.FluidBarrelBlockEntity;
+import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.client.Client;
 import tfar.nabba.command.ModCommands;
 import tfar.nabba.datagen.ModDatagen;
@@ -80,7 +76,7 @@ public class NABBA {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         MinecraftForge.EVENT_BUS.addListener(this::commands);
-        MinecraftForge.EVENT_BUS.addListener(this::leftClick);
+        MinecraftForge.EVENT_BUS.addListener(this::blockBreak);
         MinecraftForge.EVENT_BUS.addListener(this::setupSync);
     }
 
@@ -137,29 +133,33 @@ public class NABBA {
         }
     }
 
-    private void leftClick(PlayerInteractEvent.LeftClickBlock e) {
+    private static final int DELAY = 5;
+    private void blockBreak(PlayerInteractEvent.LeftClickBlock e) {
         Level level = e.getLevel();
         BlockPos pos = e.getPos();
         Player player = e.getEntity();
-        boolean crouch = e.getEntity().isCrouching();
+        boolean crouch = player.isCrouching();
+        BlockState state = level.getBlockState(pos);
 
         //cancel block breaking and vend if not crouching
-        if (!crouch) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
-                if (!level.isClientSide) {
-                ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
-                ItemHandlerHelper.giveItemToPlayer(e.getEntity(), stack);
-            }
-                e.setCanceled(true);
-            } else if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
-                if (!level.isClientSide) {
-                    FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(e.getItemStack(), fluidBarrelBlockEntity.getFluidHandler(),
-                            new InvWrapper(player.getInventory()), Integer.MAX_VALUE, player, true);
-                    if (fluidActionResult.isSuccess()) {
-                        player.setItemInHand(e.getHand(), fluidActionResult.getResult());
-                    }
+        if (state.getBlock() instanceof SingleSlotBarrelBlock) {
+            if (!crouch) {
+                //attack is not called in creative, the block is simply broken
+                if (!level.isClientSide && player.getAbilities().instabuild) {
+                    state.attack(level, pos, player);
                 }
+                    e.setCanceled(true);
+            }
+        }
+    }
+
+    private void breakSpeed(PlayerEvent.BreakSpeed e) {
+        Player player = e.getEntity();
+        boolean crouch = player.isCrouching();
+        BlockState state = e.getState();
+        //cancel block breaking if not crouching
+        if (state.getBlock() instanceof SingleSlotBarrelBlock) {
+            if (player.getAbilities().instabuild && !crouch) {
                 e.setCanceled(true);
             }
         }
@@ -167,7 +167,7 @@ public class NABBA {
 
     private void setupSync(PlayerContainerEvent.Open e) {
         AbstractContainerMenu menu = e.getContainer();
-        if (menu instanceof SearchableMenu searchableItemMenu && e.getEntity() instanceof ServerPlayer player) {
+        if (menu instanceof SearchableMenu<?> searchableItemMenu && e.getEntity() instanceof ServerPlayer player) {
             searchableItemMenu.setFakeSlotSynchronizer(new FakeSlotSynchronizer(player));
         }
     }

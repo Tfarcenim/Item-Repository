@@ -165,7 +165,7 @@ public class Utils {
 
     public static final Predicate<BlockEntity> isControllerProxy = obj -> ControllerProxyBlockEntity.class.isInstance(obj);
 
-    public static final Predicate<BlockEntity> isFreeAndControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect() && !singleSlotBarrelBlockEntity.hasController();
+    public static final Predicate<BlockEntity> isFreeAndControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect();
 
     //searches a 3x3 chunk area
     public static List<BlockEntity> getNearbyBlockEntities(Level level, Predicate<BlockEntity> predicate, BlockPos thisPos) {
@@ -181,10 +181,12 @@ public class Utils {
                     BlockEntity blockEntity = entry.getValue();
                     if (predicate.test(blockEntity)) {
                         BlockPos pos = entry.getKey();
-                        if (Math.abs(pos.getX() - thisPos.getX()) < Utils.RADIUS
+                        if (
+                                Math.abs(pos.getX() - thisPos.getX()) < Utils.RADIUS
                                 && Math.abs(pos.getY() - thisPos.getY()) < Utils.RADIUS
-                                && Math.abs(pos.getZ() - thisPos.getZ()) < Utils.RADIUS) {
-                            blockentities.add(entry.getValue());
+                                && Math.abs(pos.getZ() - thisPos.getZ()) < Utils.RADIUS
+                        ) {
+                            blockentities.add(blockEntity);
                         }
                     }
                 }
