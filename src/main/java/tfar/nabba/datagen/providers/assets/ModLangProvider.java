@@ -67,6 +67,9 @@ public class ModLangProvider extends LanguageProvider {
 
         add("nabba.key_ring.selected_key","%s (%s)");
         add("itemGroup.nabba","Not (Just) Another Better Barrel Attempt");
+
+        add("nabba.menu.vanity_key","Vanity Key");
+
         addItemTooltips();
         addSystemMessages();
     }
@@ -84,6 +87,16 @@ public class ModLangProvider extends LanguageProvider {
         addTooltip(ModBlocks.BARREL_INTERFACE,"Holds up to "+ BarrelInterfaceBlockEntity.SIZE+" barrels and exposes capabilities");
         addTooltip(ModItems.NETWORK_VISUALIZER,"Shows proxies and barrels connected to a controller");
         addTooltip(ModItems.BARREL_HAMMER,"Used to downgrade barrel frames");
+        addTooltip(ModItems.REMOTE_CONTROLLER_KEY,"Bound to (%s,%s,%s)");
+
+        add("nabba.antibarrel.tooltip","Items Stored:");
+        add("nabba.barrel.tooltip.upgrades","Upgrades");
+
+        add("nabba.barrel.tooltip.discrete","Discrete:");
+        add("nabba.barrel.tooltip.void","Void:");
+        add("nabba.barrel.tooltip.locked","Locked:");
+        add("nabba.barrel.tooltip.connected","Connected:");
+        add("nabba.barrel.tooltip.infinite_vending","Infinite Vending:");
     }
 
     public void addSystemMessages() {

@@ -64,9 +64,9 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
     public void appendBlockStateInfo(CompoundTag tag, List<Component> tooltip) {
         if (!tag.isEmpty()) {
             super.appendBlockStateInfo(tag, tooltip);
-            tooltip.add(Component.literal("Locked: ").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
-            tooltip.add(Component.literal("Connected: ").append(Component.literal(tag.getString(CONNECTED.getName())).withStyle(ChatFormatting.YELLOW)));
-            tooltip.add(Component.literal("Infinite Vending: ").append(Component.literal(tag.getString(INFINITE_VENDING.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.translatable("nabba.barrel.tooltip.locked").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.translatable("nabba.barrel.tooltip.connected").append(Component.literal(tag.getString(CONNECTED.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.translatable("nabba.barrel.tooltip.infinite_vending").append(Component.literal(tag.getString(INFINITE_VENDING.getName())).withStyle(ChatFormatting.YELLOW)));
         }
     }
 

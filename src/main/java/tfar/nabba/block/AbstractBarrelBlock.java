@@ -59,7 +59,7 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
             List<UpgradeStack> upgradeStacks = BetterBarrelBlockItem.getUpgrades(pStack);
 
             if (!upgradeStacks.isEmpty()) {
-                pTooltip.add(Component.literal("Upgrades"));
+                pTooltip.add(Component.literal("nabba.barrel.tooltip"));
                 for (UpgradeStack upgradeStack: upgradeStacks) {
                     MutableComponent mutablecomponent = upgradeStack.getName();
                     pTooltip.add(mutablecomponent);
@@ -74,8 +74,8 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     public void appendBlockStateInfo(CompoundTag tag, List<Component> tooltip) {
         if (!tag.isEmpty()) {
             tooltip.add(Component.empty());
-            tooltip.add(Component.literal("Discrete: ").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
-            tooltip.add(Component.literal("Void: ").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.literal("nabba.barrel.tooltip.discrete").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.literal("nabba.barrel.tooltip.void").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
         }
     }
 

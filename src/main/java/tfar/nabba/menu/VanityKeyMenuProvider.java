@@ -19,7 +19,7 @@ public class VanityKeyMenuProvider implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Vanity Key");
+        return Component.translatable("nabba.menu.vanity_key");
     }
 
     @Nullable

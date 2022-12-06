@@ -33,7 +33,7 @@ public class RemoteControllerKeyItem extends ControllerKeyItem {
         super.appendHoverText(stack, level, pTooltipComponents, pIsAdvanced);
         if (stack.hasTag() && level != null) {
             int[] pos = stack.getTag().getIntArray("pos");
-            pTooltipComponents.add(Component.literal("Bound to ("+pos[0]+","+pos[0]+","+pos[2]+")"));
+            pTooltipComponents.add(Component.translatable(getDescriptionId() +".tooltip",pos[0],pos[1],pos[2]));
         }
     }
 
