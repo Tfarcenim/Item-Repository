@@ -22,9 +22,9 @@ public class RemoteFluidControllerKeyItem extends RemoteKeyItem {
     @Override
     public boolean handleController(BlockState state, ItemStack keyRing, Level level, BlockPos pos, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof FluidMenuProvider controllerBlock) {
+        if (blockEntity instanceof FluidMenuProvider) {
             savePosToKey(state, keyRing, level, pos, player);
-            player.sendSystemMessage(Component.literal("Successfully bound "+pos+" to key"));
+            player.sendSystemMessage(Component.translatable("nabba.remote_key.message.bind_success",pos));
         }
         return true;
     }

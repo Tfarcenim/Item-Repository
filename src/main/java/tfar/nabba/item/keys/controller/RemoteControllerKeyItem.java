@@ -33,9 +33,9 @@ public class RemoteControllerKeyItem extends RemoteKeyItem {
     @Override
     public boolean handleController(BlockState state, ItemStack key, Level level, BlockPos pos, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof ItemMenuProvider controllerBlock) {
+        if (blockEntity instanceof ItemMenuProvider) {
             savePosToKey(state, key, level, pos, player);
-            player.sendSystemMessage(Component.literal("Successfully bound "+pos+" to key"));
+            player.sendSystemMessage(Component.translatable("nabba.remote_key.message.bind_success",pos));
         }
         return true;
     }

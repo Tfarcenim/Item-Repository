@@ -45,7 +45,7 @@ public class BarrelHammerItem extends Item implements InteractsWithBarrel {
                 }
             }
         } else {
-            player.sendSystemMessage(Component.literal("Barrel frame cannot be downgraded any further"));
+            player.sendSystemMessage(Component.translatable("nabba.barrel_hammer.message.no_downgrade"));
         }
         return false;
     }
@@ -65,7 +65,7 @@ public class BarrelHammerItem extends Item implements InteractsWithBarrel {
         int capacity = target.getUpgradeSlots();
 
         if (capacity < currentPoints) {
-            player.sendSystemMessage(Component.literal("Remove some upgrades first"));
+            player.sendSystemMessage(Component.translatable("nabba.barrel_hammer.message.remove_upgrade"));
             return false;
         }
         return true;

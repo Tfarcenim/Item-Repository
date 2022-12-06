@@ -68,6 +68,7 @@ public class ModLangProvider extends LanguageProvider {
         add("nabba.key_ring.selected_key","%s (%s)");
         add("itemGroup.nabba","Not (Just) Another Better Barrel Attempt");
         addItemTooltips();
+        addSystemMessages();
     }
 
     public void addItemTooltips() {
@@ -83,6 +84,12 @@ public class ModLangProvider extends LanguageProvider {
         addTooltip(ModBlocks.BARREL_INTERFACE,"Holds up to "+ BarrelInterfaceBlockEntity.SIZE+" barrels and exposes capabilities");
         addTooltip(ModItems.NETWORK_VISUALIZER,"Shows proxies and barrels connected to a controller");
         addTooltip(ModItems.BARREL_HAMMER,"Used to downgrade barrel frames");
+    }
+
+    public void addSystemMessages() {
+        add("nabba.barrel_hammer.message.no_downgrade","Barrel frame cannot be downgraded any further");
+        add("nabba.barrel_hammer.message.remove_upgrade","Remove some upgrades first");
+        add("nabba.remote_key.message.bind_success","Successfully bound %s to key");
     }
 
     public void storageUpgradeName(Item item) {
