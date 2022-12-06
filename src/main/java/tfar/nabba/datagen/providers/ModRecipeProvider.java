@@ -186,6 +186,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_controller_proxy", has(ModBlocks.CONTROLLER_PROXY))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(ModItems.BARREL_HAMMER)
+                .define('P',Items.IRON_INGOT)
+                .define('O', ItemTags.FENCES)
+                .pattern(" P ")
+                .pattern(" O ")
+                .pattern(" O ")
+                .unlockedBy("has_iron_ingot", has(Items.IRON_INGOT))
+                .save(consumer);
+
         ShapelessRecipeBuilder.shapeless(ModItems.REMOTE_CONTROLLER_KEY)
                 .requires(ModItems.CONTROLLER_KEY)
                 .requires(Items.ENDER_EYE)

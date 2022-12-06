@@ -38,6 +38,7 @@
   "item.nabba.anti_barrel_storage_upgrade": "Anti Barrel Storage Upgrade",
   "item.nabba.anti_barrel_storage_upgrade.tooltip": "Adds %s items of storage",
   "item.nabba.barrel_hammer": "Barrel Hammer",
+  "item.nabba.barrel_hammer.tooltip": "Used to downgrade barrel frames",
   "item.nabba.better_barrel_storage_upgrade": "Better Barrel Storage Upgrade",
   "item.nabba.better_barrel_storage_upgrade.tooltip": "Adds %s stacks of storage",
   "item.nabba.connect_key": "Connect Key",

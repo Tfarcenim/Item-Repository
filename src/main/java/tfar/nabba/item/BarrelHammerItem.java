@@ -7,15 +7,19 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.datagen.providers.ModRecipeProvider;
+
+import java.util.List;
 
 public class BarrelHammerItem extends Item implements InteractsWithBarrel {
     public BarrelHammerItem(Properties pProperties) {
@@ -44,6 +48,11 @@ public class BarrelHammerItem extends Item implements InteractsWithBarrel {
             player.sendSystemMessage(Component.literal("Barrel frame cannot be downgraded any further"));
         }
         return false;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        pTooltip.add(Component.translatable(getDescriptionId() +".tooltip"));
     }
 
     @Override

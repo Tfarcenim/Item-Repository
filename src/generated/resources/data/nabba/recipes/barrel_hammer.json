@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "O": {
+      "tag": "minecraft:fences"
+    },
+    "P": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    " P ",
+    " O ",
+    " O "
+  ],
+  "result": {
+    "item": "nabba:barrel_hammer"
+  }
+}
