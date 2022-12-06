@@ -33,9 +33,6 @@ import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
-import tfar.nabba.menu.ControllerKeyFluidMenu;
-import tfar.nabba.menu.ControllerKeyItemMenu;
-import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.EmptyFluidHandlerItem;
 import tfar.nabba.util.ItemStackWrapper;
 import tfar.nabba.util.Utils;
@@ -44,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar, ItemMenuProvider, FluidMenuProvider {
+public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar, DisplayMenuProvider {
 
     private BarrelInterfaceItemHandler handler = new BarrelInterfaceItemHandler(this);
     private BarrelWrapper wrapper = new BarrelWrapper(this);
@@ -97,6 +94,17 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         }
     };
 
+    public ContainerData getItemDataAccess() {
+        return itemDataAccess;
+    }
+
+    public ContainerData getFluidDataAccess() {
+        return fluidDataAccess;
+    }
+
+    public ContainerData getSyncSlotsAccess() {
+        return syncSlotsAccess;
+    }
 
     public BarrelInterfaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
         this(ModBlockEntityTypes.BARREL_INTERFACE, pPos, pBlockState);
@@ -768,13 +776,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
     }
 
     @Nullable
-    public AbstractContainerMenu createItemMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new ControllerKeyItemMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(level, getBlockPos()), wrapper, itemDataAccess, syncSlotsAccess);
+    public AbstractContainerMenu createDisplayMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer, DisplayType type) {
+        return type.createBarrelInterfaceMenu(pContainerId, pPlayerInventory,this);
     }
-
-    @Nullable
-    public AbstractContainerMenu createFluidMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new ControllerKeyFluidMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(level, getBlockPos()), wrapper, fluidDataAccess, syncSlotsAccess);
-    }
-
 }

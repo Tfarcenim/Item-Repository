@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, ItemMenuProvider,FluidMenuProvider {
+public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, DisplayMenuProvider {
     private String search = "";
 
     protected final ContainerData itemDataAccess = new ContainerData() {
@@ -301,7 +301,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
     }
 
     @Nullable
-    public AbstractContainerMenu createItemMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+    public AbstractContainerMenu createDisplayMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer, DisplayType type) {
         return new ControllerKeyItemMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),controllerHandler, itemDataAccess,syncSlotsAccess);
     }
 

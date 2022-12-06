@@ -13,10 +13,9 @@ import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.item.barrels.FluidBarrelBlockItem;
 import tfar.nabba.item.keys.*;
 import tfar.nabba.item.keys.controller.ControllerKeyItem;
-import tfar.nabba.item.keys.controller.FluidControllerKeyItem;
 import tfar.nabba.item.keys.controller.RemoteControllerKeyItem;
-import tfar.nabba.item.keys.controller.RemoteFluidControllerKeyItem;
 import tfar.nabba.util.BarrelFrameTiers;
+import tfar.nabba.util.DisplayTypes;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -102,11 +101,11 @@ public class ModItems {
     public static final Item KEY_RING = new KeyRingItem(basic());
     public static final Item HIDE_KEY = new ControllerBlockStateKeyItem(basic(),BetterBarrelBlock.DISCRETE);
     public static final Item LOCK_KEY = new ControllerBlockStateKeyItem(basic(), BetterBarrelBlock.LOCKED);
-    public static final Item CONTROLLER_KEY = new ControllerKeyItem(basic());
-    public static final Item REMOTE_CONTROLLER_KEY = new RemoteControllerKeyItem(basic());
+    public static final Item CONTROLLER_KEY = new ControllerKeyItem(basic(),DisplayTypes.ITEM);
+    public static final Item REMOTE_CONTROLLER_KEY = new RemoteControllerKeyItem(basic(), DisplayTypes.ITEM);
     public static final Item CONNECT_KEY = new BlockStateKeyItem(basic(),BetterBarrelBlock.CONNECTED);
-    public static final Item FLUID_CONTROLLER_KEY = new FluidControllerKeyItem(basic());
-    public static final Item REMOTE_FLUID_CONTROLLER_KEY = new RemoteFluidControllerKeyItem(basic());
+    public static final Item FLUID_CONTROLLER_KEY = new ControllerKeyItem(basic(),DisplayTypes.FLUID);
+    public static final Item REMOTE_FLUID_CONTROLLER_KEY = new RemoteControllerKeyItem(basic(),DisplayTypes.FLUID);
 
     public static final Item BARREL_HAMMER = new BarrelHammerItem(basic());
 
