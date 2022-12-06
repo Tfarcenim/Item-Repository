@@ -60,8 +60,8 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel,
     }
 
     public static void copyBlockStatesAndData(BlockState state, BlockState newState, Level level, BlockPos pos) {
-        newState = copyBlockStates(state, newState);
-        loadAndReplace(newState, level, pos);
+        BlockState copied = copyBlockStates(state, newState);
+        loadAndReplace(copied, level, pos);
     }
 
     public boolean canUpgrade(AbstractBarrelBlock block) {
@@ -72,7 +72,7 @@ public class BarrelFrameUpgradeItem extends Item implements InteractsWithBarrel,
         Collection<Property<?>> properties = oldState.getProperties();
         for (Property property : properties) {
             if (newState.hasProperty(property)) {
-                newState.setValue(property, oldState.getValue(property));
+                newState = newState.setValue(property, oldState.getValue(property));
             } else {
                 NABBA.LOGGER.warn("{} doesn't have {} property from {}?", newState, property, oldState);
             }

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "nabba:copy_nbt_shapeless",
   "ingredients": [
     {
       "item": "nabba:gold_to_diamond_frame_upgrade"

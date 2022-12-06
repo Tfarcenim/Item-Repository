@@ -15,6 +15,7 @@ import net.minecraftforge.common.Tags;
 import tfar.nabba.NABBA;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.datagen.CopyNBTShapedRecipeBuilder;
+import tfar.nabba.datagen.CopyNBTShapelessRecipeBuilder;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.init.tag.ModItemTags;
@@ -279,7 +280,7 @@ public class ModRecipeProvider extends RecipeProvider {
                         int variant = variants1.getOrDefault(upBlock,0);
 
 
-                        ShapelessRecipeBuilder.shapeless(upBlock)
+                        CopyNBTShapelessRecipeBuilder.shapeless(upBlock)
                                 .requires(barrelFrameUpgradeItem)
                                 .requires(abstractBarrelBlock)
                                 .unlockedBy("has_better_barrel", has(ModBlocks.BETTER_BARREL))
