@@ -74,8 +74,8 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     public void appendBlockStateInfo(CompoundTag tag, List<Component> tooltip) {
         if (!tag.isEmpty()) {
             tooltip.add(Component.empty());
-            tooltip.add(Component.literal("nabba.barrel.tooltip.discrete").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
-            tooltip.add(Component.literal("nabba.barrel.tooltip.void").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.translatable("nabba.barrel.tooltip.discrete").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.translatable("nabba.barrel.tooltip.void").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
         }
     }
 

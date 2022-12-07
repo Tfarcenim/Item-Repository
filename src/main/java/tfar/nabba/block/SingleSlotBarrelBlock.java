@@ -74,7 +74,7 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
     public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         //only check for controllers if this is a new block
-        if ((blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity) && singleSlotBarrelBlockEntity.canConnect() && pOldState.getBlock() != pState.getBlock()) {
+        if (blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect() && pOldState.getBlock() != pState.getBlock()) {
             singleSlotBarrelBlockEntity.searchForControllers();
         }
     }
