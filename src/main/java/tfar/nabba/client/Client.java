@@ -24,7 +24,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -80,9 +79,9 @@ public class Client {
         }
     }
 
-    public static void worldLast(RenderLevelLastEvent e) {
-        renderNetwork(e.getPoseStack(),Minecraft.getInstance().gameRenderer.getMainCamera());
-    }
+  //  public static void worldLast(RenderLevelLastEvent e) {
+     //   renderNetwork(e.getPoseStack(),Minecraft.getInstance().gameRenderer.getMainCamera());
+   // }
 
     private static ItemStack cache = ItemStack.EMPTY;
     public static void renderNetwork(PoseStack pPoseStack, Camera pCamera) {
@@ -155,7 +154,6 @@ public class Client {
                 List<BlockPos> shapeBlocks = barrels.get(type);
 
                 if (shapeBlocks.isEmpty()) {
-                    cachedEdges.put(type,Collections.emptyList());
                     continue;
                 }
 
@@ -182,6 +180,9 @@ public class Client {
 
                 for (BarrelType type : barrels.keySet()) {
                     BlockPos cachedPos = cachedPoses.get(type);
+
+                    if (cachedPos == null) continue;
+
                     for (Line edge : cachedEdges.get(type)) {
                         ClientUtils.renderLineSetup(camera,cachedPos.getX()+ edge.x1,cachedPos.getY()+ edge.y1, cachedPos.getZ()+edge.z1,
                                cachedPos.getX()+ edge.x2,cachedPos.getY()+  edge.y2,cachedPos.getZ()+  edge.z2, type.color);

@@ -279,12 +279,15 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
 
         for (BarrelType barrelType : barrels.keySet()) {
             ListTag list = new ListTag();
-            for (BlockPos pos : barrels.get(barrelType)) {
+
+            List<BlockPos> blockPosList = barrels.get(barrelType);
+            for (BlockPos pos : blockPosList) {
                 CompoundTag tag2 = new CompoundTag();
                 tag2.putIntArray("pos",getArray(pos));
                 list.add(tag2);
             }
-            tag1.put(barrelType.name(),list);
+            if (!blockPosList.isEmpty())
+                tag1.put(barrelType.name(),list);
         }
 
         ListTag list = new ListTag();
