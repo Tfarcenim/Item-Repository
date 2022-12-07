@@ -615,7 +615,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-            if (stack.isEmpty() || !isItemValid(slot, stack)) return ItemStack.EMPTY;
+            if (stack.isEmpty() || !isItemValid(slot, stack)) return stack;
             if (slot >= barrels.size()) {
                 //add and move to next slot
                 if (!simulate) {

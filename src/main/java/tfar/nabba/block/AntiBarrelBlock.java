@@ -54,7 +54,7 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        pTooltip.add(Component.translatable("nabba.antibarrel.tooltip.upgrades").append(
+        pTooltip.add(Component.translatable("nabba.antibarrel.tooltip").append(
                 Component.literal(" "+ BetterBarrelBlockItem.getOrCreateBlockEntityTag(pStack).getInt("Stored")).withStyle(ChatFormatting.AQUA)));
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
     }

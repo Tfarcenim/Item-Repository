@@ -67,8 +67,10 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
             ItemStack stack = slot.getItem();
 
             ItemStack rejected = itemHandler.storeItem(stack,false);
-            slot.set(rejected);
-            slot.onTake(playerIn,stack);
+            if (rejected != stack) {
+                slot.set(rejected);
+                slot.onTake(playerIn, stack);
+            }
         }
         return ItemStack.EMPTY;
     }

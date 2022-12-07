@@ -85,11 +85,12 @@ public class ModRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder.shaped(ModBlocks.BARREL_INTERFACE)
                 .define('P', Blocks.DEEPSLATE)
-                .define('H', ModBlocks.DIAMOND_BETTER_BARREL)
+                .define('A', ModItems.x16_ANTI_BARREL_STORAGE_UPGRADE)
+                .define('H', ModBlocks.LAPIS_ANTI_BARREL)
                 .define('b', ModBlocks.CONTROLLER)
                 .pattern("PHP")
                 .pattern("PbP")
-                .pattern("PPP")
+                .pattern("PAP")
                 .unlockedBy("has_controller", has(ModBlocks.CONTROLLER))
                 .save(consumer);
 

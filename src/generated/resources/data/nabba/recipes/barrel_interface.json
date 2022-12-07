@@ -1,8 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
+    "A": {
+      "item": "nabba:x16_anti_barrel_storage_upgrade"
+    },
     "H": {
-      "item": "nabba:diamond_better_barrel"
+      "item": "nabba:lapis_anti_barrel"
     },
     "P": {
       "item": "minecraft:deepslate"
@@ -14,7 +17,7 @@
   "pattern": [
     "PHP",
     "PbP",
-    "PPP"
+    "PAP"
   ],
   "result": {
     "item": "nabba:barrel_interface"
