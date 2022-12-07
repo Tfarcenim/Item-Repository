@@ -132,7 +132,11 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         if (invalid.get(type).contains(pos)) {
             invalid.get(type).remove(pos);
         } else {
-            pending.get(type).add(pos);
+            if (!barrels.get(type).contains(pos)) {
+                pending.get(type).add(pos);
+            } else {
+                NABBA.LOGGER.warn("attempted to add duplicate barrel {} at {}",blockEntity,pos);
+            }
         }
     }
 
@@ -217,6 +221,8 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
                 BlockPos pos1 = new BlockPos(pos[0],pos[1],pos[2]);
                 if (!blockPosList.contains(pos1)) {
                     blockPosList.add(pos1);
+                } else {
+                    NABBA.LOGGER.warn("Removed duplicate {}",pos1);
                 }
             }
             barrels.put(type,blockPosList);
@@ -262,8 +268,6 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
                     posList.add(pos);
                 }
             }
-
-            posList.addAll(aList);
             aList.clear();
         }
 
