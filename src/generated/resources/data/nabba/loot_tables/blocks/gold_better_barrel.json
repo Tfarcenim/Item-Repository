@@ -17,6 +17,7 @@
               "function": "minecraft:copy_state",
               "properties": [
                 "discrete",
+                "infinite_vending",
                 "void",
                 "locked",
                 "connected"

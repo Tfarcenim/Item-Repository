@@ -64,7 +64,7 @@ public class ModBlockLoot extends BlockLoot {
         LootTable.Builder builder = LootTable.lootTable()
                 .withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                                 .add(LootItem.lootTableItem(block)
-                                        .apply(copySharedBlockStates(block).copy(BetterBarrelBlock.LOCKED).copy(BetterBarrelBlock.CONNECTED))
+                                        .apply(copySharedBlockStates(block).copy(BetterBarrelBlock.LOCKED).copy(BetterBarrelBlock.CONNECTED).copy(BetterBarrelBlock.INFINITE_VENDING))
                                         .apply(copySharedNBTInfo()
                                                 .copy(NBTKeys.Stack.name(), "BlockEntityTag." + NBTKeys.Stack)
                                                 .copy(NBTKeys.RealCount.name(), "BlockEntityTag." + NBTKeys.RealCount)

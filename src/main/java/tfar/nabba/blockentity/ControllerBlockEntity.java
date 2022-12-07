@@ -215,7 +215,9 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
                 CompoundTag compoundTag = (CompoundTag)tag;
                 int[] pos = compoundTag.getIntArray("pos");
                 BlockPos pos1 = new BlockPos(pos[0],pos[1],pos[2]);
-                blockPosList.add(pos1);
+                if (!blockPosList.contains(pos1)) {
+                    blockPosList.add(pos1);
+                }
             }
             barrels.put(type,blockPosList);
         }
@@ -254,6 +256,13 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
             List<BlockPos> aList = pending.get(type);
             markDirty |= !aList.isEmpty();
             List<BlockPos> posList = barrels.get(type);
+
+            for (BlockPos pos : aList) {
+                if (!posList.contains(pos)) {
+                    posList.add(pos);
+                }
+            }
+
             posList.addAll(aList);
             aList.clear();
         }
