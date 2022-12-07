@@ -77,6 +77,7 @@ public class NABBA {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         MinecraftForge.EVENT_BUS.addListener(this::commands);
         MinecraftForge.EVENT_BUS.addListener(this::blockBreak);
+        MinecraftForge.EVENT_BUS.addListener(this::breakSpeed);
         MinecraftForge.EVENT_BUS.addListener(this::setupSync);
     }
 
@@ -147,8 +148,8 @@ public class NABBA {
                 //attack is not called in creative, the block is simply broken
                 if (!level.isClientSide && player.getAbilities().instabuild) {
                     state.attack(level, pos, player);
-                }
                     e.setCanceled(true);
+                }
             }
         }
     }
@@ -159,7 +160,7 @@ public class NABBA {
         BlockState state = e.getState();
         //cancel block breaking if not crouching
         if (state.getBlock() instanceof SingleSlotBarrelBlock) {
-            if (player.getAbilities().instabuild && !crouch) {
+            if (!crouch) {
                 e.setCanceled(true);
             }
         }
