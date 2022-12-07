@@ -3,8 +3,6 @@ package tfar.nabba.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.Utils;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ControllerProxyBlockEntity extends BlockEntity {
@@ -27,7 +24,6 @@ public class ControllerProxyBlockEntity extends BlockEntity {
     protected ControllerProxyBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
 
-        //need to make sure the arraylists are NOT null
     }
 
     public static ControllerProxyBlockEntity create(BlockPos pos, BlockState state) {
@@ -108,20 +104,12 @@ public class ControllerProxyBlockEntity extends BlockEntity {
         }
     }
 
-    public IItemHandler getItemHandler() {
+    public ControllerBlockEntity.ControllerHandler getHandler() {
         ControllerBlockEntity controllerBlockEntity = getController();
         if (controllerBlockEntity == null) {
             return null;
         }
-        return controllerBlockEntity.getItemHandler();
-    }
-
-    public IFluidHandler getFluidHandler() {
-        ControllerBlockEntity controllerBlockEntity = getController();
-        if (controllerBlockEntity == null) {
-            return null;
-        }
-        return controllerBlockEntity.getFluidHandler();
+        return controllerBlockEntity.getHandler();
     }
 
     /*
@@ -136,8 +124,8 @@ public class ControllerProxyBlockEntity extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }*/
 
-    private LazyOptional<IItemHandler> item_optional = LazyOptional.of(this::getItemHandler);
-    private LazyOptional<IFluidHandler> fluid_optional = LazyOptional.of(this::getFluidHandler);
+    private LazyOptional<IItemHandler> item_optional = LazyOptional.of(this::getHandler);
+    private LazyOptional<IFluidHandler> fluid_optional = LazyOptional.of(this::getHandler);
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
@@ -158,7 +146,7 @@ public class ControllerProxyBlockEntity extends BlockEntity {
     @Override
     public void reviveCaps() {
         super.reviveCaps();
-        item_optional = LazyOptional.of(this::getItemHandler);
-        fluid_optional = LazyOptional.of(this::getFluidHandler);
+        item_optional = LazyOptional.of(this::getHandler);
+        fluid_optional = LazyOptional.of(this::getHandler);
     }
 }

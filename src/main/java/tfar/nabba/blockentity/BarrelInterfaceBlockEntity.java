@@ -41,70 +41,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvider, HasSearchBar, DisplayMenuProvider {
+public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements MenuProvider, DisplayMenuProvider {
 
     private BarrelInterfaceItemHandler handler = new BarrelInterfaceItemHandler(this);
     private BarrelWrapper wrapper = new BarrelWrapper(this);
-
-    private String search = "";
-
-    protected final ContainerData itemDataAccess = new ContainerData() {
-        public int get(int pIndex) {
-            switch (pIndex) {
-                case 0:
-                    return getWrapper().totalItemSlotCount;
-                case 1:
-                    return 1;//getWrapper().getFullSlots(search);
-                default:
-                    return 0;
-            }
-        }
-
-        public void set(int pIndex, int pValue) {
-            switch (pIndex) {
-                case 0:
-            }
-        }
-
-        public int getCount() {
-            return 2;
-        }
-    };
-
-    protected final ContainerData fluidDataAccess = new ContainerData() {
-        public int get(int pIndex) {
-            switch (pIndex) {
-                case 0:
-                    return getWrapper().totalFluidSlotCount;
-                case 1:
-                    return 1;//getItemHandler().getFullSlots(search);
-                default:
-                    return 0;
-            }
-        }
-
-        public void set(int pIndex, int pValue) {
-            switch (pIndex) {
-                case 0:
-            }
-        }
-
-        public int getCount() {
-            return 2;
-        }
-    };
-
-    public ContainerData getItemDataAccess() {
-        return itemDataAccess;
-    }
-
-    public ContainerData getFluidDataAccess() {
-        return fluidDataAccess;
-    }
-
-    public ContainerData getSyncSlotsAccess() {
-        return syncSlotsAccess;
-    }
 
     public BarrelInterfaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
         this(ModBlockEntityTypes.BARREL_INTERFACE, pPos, pBlockState);
@@ -112,6 +52,50 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
     public BarrelInterfaceBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
+        itemDataAccess = new ContainerData() {
+            public int get(int pIndex) {
+                switch (pIndex) {
+                    case 0:
+                        return getWrapper().totalItemSlotCount;
+                    case 1:
+                        return 1;//getWrapper().getFullSlots(search);
+                    default:
+                        return 0;
+                }
+            }
+
+            public void set(int pIndex, int pValue) {
+                switch (pIndex) {
+                    case 0:
+                }
+            }
+
+            public int getCount() {
+                return 2;
+            }
+        };
+
+        fluidDataAccess = new ContainerData() {
+            public int get(int pIndex) {
+                switch (pIndex) {
+                    case 0:
+                        return getWrapper().totalFluidSlotCount;
+                    case 1:
+                        return 1;//getItemHandler().getFullSlots(search);
+                    default:
+                        return 0;
+                }
+            }
+
+            public void set(int pIndex, int pValue) {
+                switch (pIndex) {
+                    case 0:
+                }
+            }
+            public int getCount() {
+                return 2;
+            }
+        };
     }
 
     protected final ContainerData dataAccess = new ContainerData() {
@@ -145,30 +129,12 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
         return wrapper;
     }
 
-    protected final int[] syncSlots = new int[54];
 
     private static void defaultDisplaySlots(int[] ints) {
         for (int i = 0; i < ints.length; i++) {
             ints[i] = i;
         }
     }
-
-    protected final ContainerData syncSlotsAccess = new ContainerData() {
-        @Override
-        public int get(int pIndex) {
-            return syncSlots[pIndex];
-        }
-
-        @Override
-        public void set(int pIndex, int pValue) {
-            syncSlots[pIndex] = pValue;
-        }
-
-        @Override
-        public int getCount() {
-            return syncSlots.length;
-        }
-    };
 
     @Override
     public Component getDisplayName() {
@@ -179,16 +145,6 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         return new BarrelInterfaceMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(level, worldPosition), handler, dataAccess, syncSlotsAccess);
-    }
-
-    @Override
-    public void setSearchString(String search) {
-        this.search = search;
-    }
-
-    @Override
-    public String getSearchString() {
-        return search;
     }
 
     @Override
@@ -615,7 +571,7 @@ public class BarrelInterfaceBlockEntity extends BlockEntity implements MenuProvi
 
     public static class BarrelInterfaceItemHandler implements SearchableItemHandler, INBTSerializable<ListTag> {
 
-        private BarrelInterfaceBlockEntity blockEntity;
+        private final BarrelInterfaceBlockEntity blockEntity;
 
         final List<ItemStack> barrels = new ArrayList<>();
 

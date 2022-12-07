@@ -38,57 +38,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, DisplayMenuProvider {
-    private String search = "";
-
-    protected final ContainerData itemDataAccess = new ContainerData() {
-        public int get(int pIndex) {
-            switch (pIndex) {
-                case 0:
-                    return barrels.get(BarrelType.BETTER).size();
-                case 1:
-                    return getItemHandler().getFullItemSlots(search);
-                default:
-                    return 0;
-            }
-        }
-
-        public void set(int pIndex, int pValue) {
-            switch (pIndex) {
-                case 0:
-            }
-        }
-
-        public int getCount() {
-            return 2;
-        }
-    };
-
-
-    protected final ContainerData fluidDataAccess = new ContainerData() {
-        public int get(int pIndex) {
-            switch (pIndex) {
-                case 0:
-                    return barrels.get(BarrelType.FLUID).size();
-                case 1:
-                    return getItemHandler().getFullItemSlots(search);
-                default:
-                    return 0;
-            }
-        }
-
-        public void set(int pIndex, int pValue) {
-            switch (pIndex) {
-                case 0:
-            }
-        }
-
-        public int getCount() {
-            return 2;
-        }
-    };
-
-
+public class ControllerBlockEntity extends SearchableBlockEntity implements DisplayMenuProvider {
     private final Map<BarrelType,List<BlockPos>> barrels = new HashMap<>();
     private final Map<BarrelType,List<BlockPos>> invalid = new HashMap<>();
     private final Map<BarrelType,List<BlockPos>> pending = new HashMap<>();
@@ -96,7 +46,6 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
     protected ControllerBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         controllerHandler = new ControllerHandler(this);
-        controllerFluidHandler = new ControllerFluidHandler(this);
         //need to make sure the arraylists are NOT null
         barrels.put(BarrelType.BETTER,new ArrayList<>());
         barrels.put(BarrelType.FLUID,new ArrayList<>());
@@ -106,33 +55,56 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
 
         invalid.put(BarrelType.BETTER,new ArrayList<>());
         invalid.put(BarrelType.FLUID,new ArrayList<>());
+        itemDataAccess = new ContainerData() {
+            public int get(int pIndex) {
+                switch (pIndex) {
+                    case 0:
+                        return barrels.get(BarrelType.BETTER).size();
+                    case 1:
+                        return getHandler().getFullItemSlots(search);
+                    default:
+                        return 0;
+                }
+            }
+
+            public void set(int pIndex, int pValue) {
+                switch (pIndex) {
+                    case 0:
+                }
+            }
+
+            public int getCount() {
+                return 2;
+            }
+        };
+
+
+        fluidDataAccess = new ContainerData() {
+            public int get(int pIndex) {
+                switch (pIndex) {
+                    case 0:
+                        return barrels.get(BarrelType.FLUID).size();
+                    case 1:
+                        return getHandler().getFullItemSlots(search);
+                    default:
+                        return 0;
+                }
+            }
+
+            public void set(int pIndex, int pValue) {
+                switch (pIndex) {
+                    case 0:
+                }
+            }
+
+            public int getCount() {
+                return 2;
+            }
+        };
+
     }
 
     private final ControllerHandler controllerHandler;
-    private final ControllerFluidHandler controllerFluidHandler;
-    protected final int[] syncSlots = new int[54];
-
-    private static void defaultDisplaySlots(int[] ints) {
-        for (int i = 0; i <  ints.length;i++) {
-            ints[i] = i;
-        }
-    }
-    protected final ContainerData syncSlotsAccess = new ContainerData() {
-        @Override
-        public int get(int pIndex) {
-            return syncSlots[pIndex];
-        }
-
-        @Override
-        public void set(int pIndex, int pValue) {
-            syncSlots[pIndex] = pValue;
-        }
-
-        @Override
-        public int getCount() {
-            return syncSlots.length;
-        }
-    };
 
 
     public static ControllerBlockEntity create(BlockPos pos, BlockState state) {
@@ -249,12 +221,8 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         }
     }
 
-    public ControllerHandler getItemHandler() {
+    public ControllerHandler getHandler() {
         return controllerHandler;
-    }
-
-    public ControllerFluidHandler getFluidHandler() {
-        return controllerFluidHandler;
     }
 
     public boolean interactWithBarrels(ItemStack stack, Player player) {
@@ -295,30 +263,12 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         }
     }
 
-
-    public Component getDisplayName() {
-        return Component.literal("controller");
-    }
-
     @Nullable
     public AbstractContainerMenu createDisplayMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer, DisplayType type) {
-        return new ControllerKeyItemMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),controllerHandler, itemDataAccess,syncSlotsAccess);
+        return type.createControllerMenu(pContainerId, pPlayerInventory,this);
     }
 
-    @Nullable
-    public AbstractContainerMenu createFluidMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new ControllerKeyFluidMenu(pContainerId,pPlayerInventory, ContainerLevelAccess.create(level,getBlockPos()),controllerFluidHandler, fluidDataAccess,syncSlotsAccess);
-    }
 
-    @Override
-    public void setSearchString(String search) {
-        this.search = search;
-    }
-
-    @Override
-    public String getSearchString() {
-        return search;
-    }
 
     public static final String NET_INFO = "NetworkInfo";
     public void storeNetworkInfo(ItemStack itemstack) {
@@ -359,7 +309,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         return new int[]{pos.getX(), pos.getY(), pos.getZ()};
     }
 
-    public static class ControllerHandler implements SearchableItemHandler {
+    public static class ControllerHandler implements SearchableItemHandler,SearchableFluidHandler {
         private final ControllerBlockEntity controllerBlockEntity;
 
         ControllerHandler(ControllerBlockEntity controllerBlockEntity) {
@@ -441,14 +391,6 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         public boolean isFull() {
             return false;
         }
-    }
-
-    public static class ControllerFluidHandler implements SearchableFluidHandler {
-        private final ControllerBlockEntity controllerBlockEntity;
-
-        ControllerFluidHandler(ControllerBlockEntity controllerBlockEntity) {
-            this.controllerBlockEntity = controllerBlockEntity;
-        }
 
         @Override
         public int getTanks() {
@@ -529,7 +471,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
 
         @Override
         public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-                return drain(resource.getAmount(),action);
+            return drain(resource.getAmount(),action);
         }
 
         @Override
@@ -577,10 +519,11 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
             BlockEntity be = controllerBlockEntity.getBE(tank,BarrelType.FLUID);
 
             if (be instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
-               return fluidBarrelBlockEntity.getFluidHandler().drain(maxDrain,action);
+                return fluidBarrelBlockEntity.getFluidHandler().drain(maxDrain,action);
             }
             return FluidStack.EMPTY;
         }
+
     }
 
     @Nonnull
@@ -594,8 +537,8 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    private LazyOptional<IItemHandler> item_optional = LazyOptional.of(this::getItemHandler);
-    private LazyOptional<IFluidHandler> fluid_optional = LazyOptional.of(this::getFluidHandler);
+    private LazyOptional<IItemHandler> item_optional = LazyOptional.of(this::getHandler);
+    private LazyOptional<IFluidHandler> fluid_optional = LazyOptional.of(this::getHandler);
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
@@ -616,7 +559,7 @@ public class ControllerBlockEntity extends BlockEntity implements HasSearchBar, 
     @Override
     public void reviveCaps() {
         super.reviveCaps();
-        item_optional = LazyOptional.of(this::getItemHandler);
-        fluid_optional = LazyOptional.of(this::getFluidHandler);
+        item_optional = LazyOptional.of(this::getHandler);
+        fluid_optional = LazyOptional.of(this::getHandler);
     }
 }
