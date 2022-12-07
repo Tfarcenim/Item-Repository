@@ -48,7 +48,7 @@ public class UpgradeItem extends Item implements InteractsWithBarrel, InteractsW
             boolean attempt = betterBarrelBlockEntity.canAcceptUpgrade(this.getDataStack());
             if (attempt) {
                 betterBarrelBlockEntity.upgrade(this.getDataStack());
-                itemstack.shrink(1);
+                if (!player.getAbilities().instabuild) itemstack.shrink(1);
                 return true;
             }
         }

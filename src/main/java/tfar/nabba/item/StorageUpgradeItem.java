@@ -54,7 +54,7 @@ public class StorageUpgradeItem extends UpgradeItem {
 
     @Override
     public boolean handleBarrel(BlockState state, ItemStack itemstack, Level level, BlockPos pos, Player player) {
-
+        if (itemstack.isEmpty()) return false;
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof AbstractBarrelBlockEntity betterBarrelBlockEntity) {
             boolean attempt = betterBarrelBlockEntity.isValid(this) && betterBarrelBlockEntity.canAcceptUpgrade(this.getDataStack());
