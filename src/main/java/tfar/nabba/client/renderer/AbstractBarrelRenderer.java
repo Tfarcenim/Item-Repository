@@ -115,35 +115,28 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
             case NORTH -> {
                 pPoseStack.translate(0.5D, yHeight, zFighting);
                 pPoseStack.scale(-dScale, -dScale, dScale);
-                Matrix4f matrix4f = pPoseStack.last().pose();
-                font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
+
             }
             case EAST -> {
                 pPoseStack.translate(1 - zFighting, yHeight, .5);
                 pPoseStack.scale(-dScale, -dScale, dScale);
                 pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
-                Matrix4f matrix4f = pPoseStack.last().pose();
-                font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             }
             case SOUTH -> {
                 pPoseStack.translate(0.5D, yHeight, 1 - zFighting);
                 pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
                 pPoseStack.scale(-dScale, -dScale, dScale);
-                Matrix4f matrix4f = pPoseStack.last().pose();
-                font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             }
             case WEST -> {
                 pPoseStack.translate(zFighting, yHeight, .5);
                 pPoseStack.scale(-dScale, -dScale, dScale);
                 pPoseStack.mulPose(Axis.YP.rotationDegrees(270));
-                Matrix4f matrix4f = pPoseStack.last().pose();
-                font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             }
         }
-        pPoseStack.popPose();
-    }
 
-    public String getDisplayString() {
-        return null;
+        Matrix4f matrix4f = pPoseStack.last().pose();
+        font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
+
+        pPoseStack.popPose();
     }
 }
