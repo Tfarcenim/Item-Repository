@@ -21,6 +21,8 @@ import org.joml.Vector3f;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 
+import java.util.Map;
+
 public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity> implements BlockEntityRenderer<T> {
     public static final double zFighting = -.0001;
     protected final EntityRenderDispatcher dispatcher;
@@ -30,11 +32,11 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
 
     protected static final Quaternionf ITEM_LIGHT_ROTATION_3D = Util.make(() -> {
         Quaternionf quaternion = new Quaternionf();//Axis.XP, -15f, true);
-        quaternion.setAngleAxis(-15 * Math.PI/180,1,0,1);
+        quaternion.setAngleAxis(-15 * Math.PI / 180, 1, 0, 1);
 
-    //    Quaternionf quaternion2 =new Quaternionf(Axis.YP, 15f, true);
+        //    Quaternionf quaternion2 =new Quaternionf(Axis.YP, 15f, true);
 
-      //  quaternion.mul();
+        //  quaternion.mul();
         return quaternion;
     });
     protected static final Quaternionf ITEM_LIGHT_ROTATION_FLAT;
@@ -42,7 +44,7 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
     static {
         ITEM_LIGHT_ROTATION_FLAT = new Quaternionf();
 
-        ITEM_LIGHT_ROTATION_FLAT.setAngleAxis(-45 * Math.PI / 180,1,0,0);
+        ITEM_LIGHT_ROTATION_FLAT.setAngleAxis(-45 * Math.PI / 180, 1, 0, 0);
 
         //new Quaternionf(Axis.XP, -45f, true)
     }
@@ -53,6 +55,8 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
         itemRenderer = pContext.getItemRenderer();
     }
 
+    protected static final Map<Direction, Integer> ROT_MAP = Map.of(Direction.SOUTH, 0, Direction.EAST, 90, Direction.NORTH, 180, Direction.WEST, 270);
+
     protected void renderItem(T abstractBarrelBlockEntity, ItemStack stack, PoseStack pPoseStack, MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
 
         if (stack.isEmpty()) return;
@@ -62,78 +66,33 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
         Direction facing = abstractBarrelBlockEntity.getBlockState().getValue(AbstractBarrelBlock.H_FACING);
         pPoseStack.pushPose();
 
-        switch (facing) {
-            case NORTH -> {
-                try {
-                    pPoseStack.translate(.5, .5, zFighting);
-
-                    pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
-
-                    flatten(pPoseStack,scale);
-                    BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-                    rotate(bakedmodel,pPoseStack);
-
-                    itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-                } catch (Exception e) {
-                    //bruh
-                }
-            }
-            case EAST -> {
-
-                try {
-                    pPoseStack.translate(1 - zFighting, .5, .5);
-
-                    pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
-
-                    flatten(pPoseStack,scale);
-
-
-                    BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-                    rotate(bakedmodel,pPoseStack);
-
-                    itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-                } catch (Exception e) {
-                    //bruh
-                }
-            }
-            case SOUTH -> {
-                try {
-                    pPoseStack.translate(.5, .5, 1 - zFighting);
-                    flatten(pPoseStack,scale);
-                    BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-
-                    rotate(bakedmodel,pPoseStack);
-
-                    itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-                } catch (Exception e) {
-                    //bruh
-                }
-            }
-
-            case WEST -> {
-                try {
-                    pPoseStack.translate(zFighting, .5, .5);
-
-                    pPoseStack.mulPose(Axis.YP.rotationDegrees(270));
-
-                    flatten(pPoseStack,scale);
-                    BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-                    rotate(bakedmodel,pPoseStack);
-
-                    itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
-                } catch (Exception e) {
-                    //bruh
-                }
-            }
+        try {
+            translateOnSide(pPoseStack, facing);
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(ROT_MAP.get(facing)));
+            flatten(pPoseStack, scale);
+            BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
+            rotate(bakedmodel, pPoseStack);
+            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+        } catch (Exception e) {
+            //bruh
         }
         pPoseStack.popPose();
     }
 
-    protected void flatten(PoseStack pPoseStack,float scale) {
+    protected void translateOnSide(PoseStack stack, Direction dir) {
+        switch (dir) {
+            case NORTH -> stack.translate(.5, .5, zFighting);
+            case EAST -> stack.translate(1 - zFighting, .5, .5);
+            case SOUTH -> stack.translate(.5, .5, 1 - zFighting);
+            case WEST -> stack.translate(zFighting, .5, .5);
+        }
+    }
+
+    protected void flatten(PoseStack pPoseStack, float scale) {
         pPoseStack.mulPoseMatrix(new Matrix4f().scale(scale, scale, 0.0001f));
     }
 
-    protected void rotate(BakedModel bakedmodel,PoseStack poseStack) {
+    protected void rotate(BakedModel bakedmodel, PoseStack poseStack) {
         if (bakedmodel.isGui3d())
             poseStack.last().normal().rotate(ITEM_LIGHT_ROTATION_3D);
         else
