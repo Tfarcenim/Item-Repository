@@ -1,6 +1,7 @@
 package tfar.nabba.datagen.providers.assets;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -28,7 +29,7 @@ public class ModLangProvider extends LanguageProvider {
     protected void addTranslations() {
 
         //saves a couple of hundred lines of repetitive code
-        for (Item item : Registry.ITEM) {
+        for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof BarrelFrameUpgradeItem || item instanceof KeyItem) {
                 defaultName(item);
             } else if (item instanceof StorageUpgradeItem storageUpgradeItem) {
@@ -37,7 +38,7 @@ public class ModLangProvider extends LanguageProvider {
             }
         }
 
-        for (Block block : Registry.BLOCK) {
+        for (Block block : BuiltInRegistries.BLOCK) {
             if (block instanceof AbstractBarrelBlock) {
                 defaultName(block);
             }

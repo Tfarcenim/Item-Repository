@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 public class CopyNBTShapelessRecipe extends ShapelessRecipe {
 
     public CopyNBTShapelessRecipe(ShapelessRecipe recipe) {
-        super(recipe.getId(), "upgrade", recipe.getResultItem(), recipe.getIngredients());
+        super(recipe.getId(), "upgrade", recipe.category(),recipe.getResultItem(), recipe.getIngredients());
     }
 
     @Nonnull

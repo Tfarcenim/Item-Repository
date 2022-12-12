@@ -45,7 +45,6 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
     }
 
     protected void initEditBox() {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.editBox = new EditBox(this.font, i + 82, j + 6, 103, 12, Component.translatable("container.anti_barrel"));
@@ -106,12 +105,6 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
 
         return this.editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || this.editBox.canConsumeInput() || super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
-
-    public void removed() {
-        super.removed();
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
-    }
-
     public static final ResourceLocation TEXTURE = new ResourceLocation(NABBA.MODID,"textures/gui/container/anti_barrel.png");
 
 }

@@ -16,7 +16,7 @@ public class BackgroundEditBox extends EditBox {
 
     @Override
     protected void renderBg(PoseStack pPoseStack, Minecraft pMinecraft, int pMouseX, int pMouseY) {
-        fill(pPoseStack, this.x, this.y, this.x + this.width, this.y + this.height, getBgColor());
+        fill(pPoseStack, this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, getBgColor());
     }
 
     public int getBgColor() {

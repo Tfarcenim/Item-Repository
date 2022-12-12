@@ -1,6 +1,7 @@
 package tfar.nabba.api;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -58,7 +59,7 @@ public interface SearchableItemHandler extends ItemHandler {
                     }
                 }
                 return false;
-            } else if (Registry.ITEM.getKey(item).getPath().startsWith(search)) {
+            } else if (BuiltInRegistries.ITEM.getKey(item).getPath().startsWith(search)) {
                 return true;
             }
         }

@@ -1,9 +1,7 @@
 package tfar.nabba.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -17,6 +15,9 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 
@@ -27,12 +28,24 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
     protected final ItemRenderer itemRenderer;
 
 
-    protected static final Quaternion ITEM_LIGHT_ROTATION_3D = Util.make(() -> {
-        Quaternion quaternion = new Quaternion(Vector3f.XP, -15f, true);
-        quaternion.mul(new Quaternion(Vector3f.YP, 15f, true));
+    protected static final Quaternionf ITEM_LIGHT_ROTATION_3D = Util.make(() -> {
+        Quaternionf quaternion = new Quaternionf();//Axis.XP, -15f, true);
+        quaternion.setAngleAxis(-15 * Math.PI/180,1,0,1);
+
+    //    Quaternionf quaternion2 =new Quaternionf(Axis.YP, 15f, true);
+
+      //  quaternion.mul();
         return quaternion;
     });
-    protected static final Quaternion ITEM_LIGHT_ROTATION_FLAT = new Quaternion(Vector3f.XP, -45f, true);
+    protected static final Quaternionf ITEM_LIGHT_ROTATION_FLAT;
+
+    static {
+        ITEM_LIGHT_ROTATION_FLAT = new Quaternionf();
+
+        ITEM_LIGHT_ROTATION_FLAT.setAngleAxis(-45 * Math.PI / 180,1,0,0);
+
+        //new Quaternionf(Axis.XP, -45f, true)
+    }
 
     public AbstractBarrelRenderer(BlockEntityRendererProvider.Context pContext) {
         dispatcher = pContext.getEntityRenderer();
@@ -54,14 +67,12 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
                 try {
                     pPoseStack.translate(.5, .5, zFighting);
 
-                    pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+                    pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
 
-                    pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale, scale, 0.0001f));
+                    flatten(pPoseStack,scale);
                     BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-                    if (bakedmodel.isGui3d())
-                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-                    else
-                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+                    rotate(bakedmodel,pPoseStack);
+
                     itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
                 } catch (Exception e) {
                     //bruh
@@ -72,16 +83,14 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
                 try {
                     pPoseStack.translate(1 - zFighting, .5, .5);
 
-                    pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+                    pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
 
-                    pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale, scale, 0.0001f));
+                    flatten(pPoseStack,scale);
 
 
                     BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-                    if (bakedmodel.isGui3d())
-                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-                    else
-                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+                    rotate(bakedmodel,pPoseStack);
+
                     itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
                 } catch (Exception e) {
                     //bruh
@@ -90,29 +99,27 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
             case SOUTH -> {
                 try {
                     pPoseStack.translate(.5, .5, 1 - zFighting);
-                    pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale, scale, 0.0001f));
+                    flatten(pPoseStack,scale);
                     BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-                    if (bakedmodel.isGui3d())
-                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-                    else
-                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+
+                    rotate(bakedmodel,pPoseStack);
+
                     itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
                 } catch (Exception e) {
                     //bruh
                 }
             }
+
             case WEST -> {
                 try {
                     pPoseStack.translate(zFighting, .5, .5);
 
-                    pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270));
+                    pPoseStack.mulPose(Axis.YP.rotationDegrees(270));
 
-                    pPoseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(scale, scale, 0.0001f));
+                    flatten(pPoseStack,scale);
                     BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
-                    if (bakedmodel.isGui3d())
-                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_3D);
-                    else
-                        pPoseStack.last().normal().mul(ITEM_LIGHT_ROTATION_FLAT);
+                    rotate(bakedmodel,pPoseStack);
+
                     itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
                 } catch (Exception e) {
                     //bruh
@@ -122,6 +129,16 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
         pPoseStack.popPose();
     }
 
+    protected void flatten(PoseStack pPoseStack,float scale) {
+        pPoseStack.mulPoseMatrix(new Matrix4f().scale(scale, scale, 0.0001f));
+    }
+
+    protected void rotate(BakedModel bakedmodel,PoseStack poseStack) {
+        if (bakedmodel.isGui3d())
+            poseStack.last().normal().rotate(ITEM_LIGHT_ROTATION_3D);
+        else
+            poseStack.last().normal().rotate(ITEM_LIGHT_ROTATION_FLAT);
+    }
 
     protected void renderText(T abstractBarrelBlockEntity, PoseStack pPoseStack, MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay, String text, double yHeight, int color, float dScale) {
 
@@ -145,13 +162,13 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
             case EAST -> {
                 pPoseStack.translate(1 - zFighting, yHeight, .5);
                 pPoseStack.scale(-dScale, -dScale, dScale);
-                pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+                pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
                 Matrix4f matrix4f = pPoseStack.last().pose();
                 font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             }
             case SOUTH -> {
                 pPoseStack.translate(0.5D, yHeight, 1 - zFighting);
-                pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+                pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
                 pPoseStack.scale(-dScale, -dScale, dScale);
                 Matrix4f matrix4f = pPoseStack.last().pose();
                 font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
@@ -159,7 +176,7 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
             case WEST -> {
                 pPoseStack.translate(zFighting, yHeight, .5);
                 pPoseStack.scale(-dScale, -dScale, dScale);
-                pPoseStack.mulPose(Vector3f.YP.rotationDegrees(270));
+                pPoseStack.mulPose(Axis.YP.rotationDegrees(270));
                 Matrix4f matrix4f = pPoseStack.last().pose();
                 font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
             }

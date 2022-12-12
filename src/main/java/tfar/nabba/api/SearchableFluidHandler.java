@@ -1,6 +1,7 @@
 package tfar.nabba.api;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
@@ -56,7 +57,7 @@ public interface SearchableFluidHandler extends FluidHandler {
                     }
                 }
                 return false;
-            } else if (Registry.FLUID.getKey(item).getPath().startsWith(search)) {
+            } else if (BuiltInRegistries.FLUID.getKey(item).getPath().startsWith(search)) {
                 return true;
             }
         }

@@ -3,6 +3,7 @@ package tfar.nabba;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -114,11 +115,11 @@ public class NABBA {
     }
 
     private void registerObj(RegisterEvent e) {
-        superRegister(e, ModBlocks.class,Registry.BLOCK_REGISTRY, Block.class);
-        superRegister(e, ModItems.class,Registry.ITEM_REGISTRY, Item.class);
-        superRegister(e, ModBlockEntityTypes.class,Registry.BLOCK_ENTITY_TYPE_REGISTRY, BlockEntityType.class);
-        superRegister(e, ModMenuTypes.class,Registry.MENU_REGISTRY, MenuType.class);
-        superRegister(e, ModRecipeSerializers.class,Registry.RECIPE_SERIALIZER_REGISTRY, RecipeSerializer.class);
+        superRegister(e, ModBlocks.class, Registries.BLOCK, Block.class);
+        superRegister(e, ModItems.class,Registries.ITEM, Item.class);
+        superRegister(e, ModBlockEntityTypes.class,Registries.BLOCK_ENTITY_TYPE, BlockEntityType.class);
+        superRegister(e, ModMenuTypes.class,Registries.MENU, MenuType.class);
+        superRegister(e, ModRecipeSerializers.class,Registries.RECIPE_SERIALIZER, RecipeSerializer.class);
     }
 
     public static <T> void superRegister(RegisterEvent e, Class<?> clazz, ResourceKey<? extends  Registry<T>> resourceKey, Class<?> filter) {

@@ -19,7 +19,7 @@ public class RightClickButton<T> extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+    public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
 
     }
 

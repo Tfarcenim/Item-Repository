@@ -1,6 +1,7 @@
 package tfar.nabba.init.tag;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -15,6 +16,6 @@ public class ModBlockEntityTypeTags {
     public static final TagKey<BlockEntityType<?>> FLUID_BARRELS = create("fluid_barrels");
 
     public static TagKey<BlockEntityType<?>> create(String name) {
-        return TagKey.create(Registry.BLOCK_ENTITY_TYPE_REGISTRY, new ResourceLocation(NABBA.MODID,name));
+        return TagKey.create(Registries.BLOCK_ENTITY_TYPE, new ResourceLocation(NABBA.MODID,name));
     }
 }

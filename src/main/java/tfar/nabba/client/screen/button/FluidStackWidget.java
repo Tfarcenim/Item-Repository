@@ -61,7 +61,7 @@ public class FluidStackWidget extends RightClickButton<FluidStack> {
     }
 
     public void renderFluid(PoseStack matrices) {
-        ClientUtils.renderFluid(matrices,x,y,stack);
+        ClientUtils.renderFluid(matrices, getX(), getY(),stack);
     }
 
 

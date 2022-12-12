@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModItems {
-    static CreativeModeTab tab = new CreativeModeTab(NABBA.MODID) {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(ModItems.ANTI_BARREL);
-        }
-    };
+  //  static CreativeModeTab tab = new CreativeModeTab(NABBA.MODID) {
+  //      @Override
+ //       public ItemStack makeIcon() {
+ //           return new ItemStack(ModItems.ANTI_BARREL);
+  //      }
+ ///   };
     public static final Item ANTI_BARREL = new AntiBarrelBlockItem(ModBlocks.ANTI_BARREL,unstackable());
     public static final Item STONE_ANTI_BARREL = new AntiBarrelBlockItem(ModBlocks.STONE_ANTI_BARREL,unstackable());
     public static final Item COPPER_ANTI_BARREL = new AntiBarrelBlockItem(ModBlocks.COPPER_ANTI_BARREL,unstackable());
@@ -175,11 +175,11 @@ public class ModItems {
     public static final Item WOOD_TO_CREATIVE_FRAME_UPGRADE = new BarrelFrameUpgradeItem(basic(), BarrelFrameTiers.WOOD,BarrelFrameTiers.CREATIVE);
 
     private static Item.Properties basic() {
-        return new Item.Properties().tab(tab);
+        return new Item.Properties();
     }
 
     private static Item.Properties unstackable() {
-        return new Item.Properties().tab(tab).stacksTo(1);
+        return basic().stacksTo(1);
     }
 
     private static final List<Item> ITEMS = new ArrayList<>();

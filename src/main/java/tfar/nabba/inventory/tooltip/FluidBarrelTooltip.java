@@ -9,7 +9,6 @@ public class FluidBarrelTooltip implements TooltipComponent {
     private final FluidStack stack;
 
     public FluidBarrelTooltip(FluidStack stack) {
-
         this.stack = stack;
     }
 

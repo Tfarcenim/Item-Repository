@@ -1,4 +1,4 @@
-// 1.19.2	2022-11-23T02:46:57.1886437	Tags for minecraft:item
+// 1.19.3	2022-12-12T17:05:30.311538	Tags for minecraft:item mod id nabba
 fd0967f6cd5c9a52da6b860985c4f449d649d5d8 data/forge/tags/items/blocks/nether_bricks.json
 466a3f2f73a11eb50fe958e8c57b56b2133d494f data/forge/tags/items/blocks/nether_brick_slabs.json
 86015206b0deb7be67db58c5babcf30e070f07a0 data/nabba/tags/items/anti_barrels.json

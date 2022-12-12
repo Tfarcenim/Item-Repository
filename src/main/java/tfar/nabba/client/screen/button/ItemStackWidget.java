@@ -49,7 +49,7 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
             if (isHovered) {
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
-                fill(pPoseStack, x, y, x + 16, y + 16, 0x80ffffff);
+                fill(pPoseStack, getX(), getY(), getX() + 16, getY() + 16, 0x80ffffff);
                 renderTooltip(pPoseStack, pMouseX, pMouseY);
             }
             renderItem(pPoseStack);
@@ -57,18 +57,18 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
     }
 
     public void renderItem(PoseStack matrices) {
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack,x,y);
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, getX(), getY());
 
         PoseStack viewModelPose = RenderSystem.getModelViewStack();
         viewModelPose.pushPose();
-        viewModelPose.translate(x + 8, y + 8, 0);
+        viewModelPose.translate(getX() + 8, getY() + 8, 0);
         float scale = .5f;
 
         viewModelPose.scale(scale, scale, scale);
-        viewModelPose.translate(-1 * x, -1 * y, 500);
+        viewModelPose.translate(-1 * getX(), -1 * getY(), 500);
         RenderSystem.applyModelViewMatrix();
         if (stack.getCount() > 1) {
-            Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack,x,y, Utils.formatLargeNumber(stack.getCount()));
+            Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, getX(), getY(), Utils.formatLargeNumber(stack.getCount()));
         }
 
         viewModelPose.popPose();

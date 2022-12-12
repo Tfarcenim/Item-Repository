@@ -1,7 +1,10 @@
 package tfar.nabba.datagen.providers.loot;
 
-import net.minecraft.core.Registry;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -15,12 +18,17 @@ import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.util.NBTKeys;
 
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Set;
 
-public class ModBlockLoot extends BlockLoot {
+public class ModBlockLoot extends BlockLootSubProvider {
+
+    public ModBlockLoot() {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags());
+    }
 
     @Override
-    protected void addTables() {
+    protected void generate() {
         dropBarrel(ModBlocks.BETTER_BARREL);
         dropBarrel(ModBlocks.STONE_BETTER_BARREL);
         dropBarrel(ModBlocks.COPPER_BETTER_BARREL);
@@ -105,6 +113,8 @@ public class ModBlockLoot extends BlockLoot {
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return Registry.BLOCK.stream().filter(block -> (Registry.BLOCK.getKey(block).getNamespace().equals(NABBA.MODID))).collect(Collectors.toList());
+        return BuiltInRegistries.BLOCK.stream()
+                .filter(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(NABBA.MODID))
+                .toList();
     }
 }

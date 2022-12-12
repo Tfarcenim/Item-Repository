@@ -1,5 +1,6 @@
 {
   "type": "nabba:copy_nbt_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "nabba:stone_to_netherite_frame_upgrade"

@@ -3,6 +3,8 @@ package tfar.nabba.item.keys.controller;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -47,7 +49,7 @@ public class RemoteControllerKeyItem extends ControllerKeyItem {
         int[] pos = stack.getTag().getIntArray("pos");
         BlockPos pos1 = new BlockPos(pos[0],pos[1],pos[2]);
 
-        Level level = homeLevel.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY,
+        Level level = homeLevel.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
                 new ResourceLocation(stack.getTag().getString("level"))));
 
         return Pair.of(level,pos1);

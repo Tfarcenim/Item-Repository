@@ -69,7 +69,6 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
     }
 
     protected void initEditBox(int posX,int posY,int color) {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.editBox = new BackgroundEditBox(this.font, i +posX, j + posY, 103, 12, Component.translatable("container.nabba.vanity_key"));
@@ -144,8 +143,4 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         PacketHandler.sendToServer(new C2SVanityPacket(localColor,slider.getValue()));
     }
 
-    public void removed() {
-        super.removed();
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
-    }
 }

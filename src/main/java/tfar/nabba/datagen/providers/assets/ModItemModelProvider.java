@@ -1,6 +1,7 @@
 package tfar.nabba.datagen.providers.assets;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -66,7 +67,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.BARREL_HAMMER);
         makeOneLayerItem(ModItems.NETWORK_VISUALIZER);
 
-        for (Block block : Registry.BLOCK) {
+        for (Block block : BuiltInRegistries.BLOCK) {
             if (block instanceof AbstractBarrelBlock) {
                 makeSimpleBlockItem(block.asItem());
             }
@@ -76,7 +77,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeSimpleBlockItem(ModBlocks.CONTROLLER_PROXY.asItem());
         makeSimpleBlockItem(ModBlocks.BARREL_INTERFACE.asItem());
 
-        for (Item item : Registry.ITEM) {
+        for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof BarrelFrameUpgradeItem) {
                 registerUpgrade(item);
             }
@@ -85,17 +86,17 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 
     protected void makeSimpleBlockItem(Item item, ResourceLocation loc) {
-        getBuilder(Registry.ITEM.getKey(item).toString())
+        getBuilder(BuiltInRegistries.ITEM.getKey(item).toString())
                 .parent(getExistingFile(loc));
     }
 
     protected void makeSimpleBlockItem(Item item) {
-        makeSimpleBlockItem(item, new ResourceLocation(NABBA.MODID, "block/" + Registry.ITEM.getKey(item).getPath()));
+        makeSimpleBlockItem(item, new ResourceLocation(NABBA.MODID, "block/" + BuiltInRegistries.ITEM.getKey(item).getPath()));
     }
 
 
     protected void makeOneLayerItem(Item item, ResourceLocation texture) {
-        String path = Registry.ITEM.getKey(item).getPath();
+        String path = BuiltInRegistries.ITEM.getKey(item).getPath();
         if (existingFileHelper.exists(new ResourceLocation(texture.getNamespace(), "item/" + texture.getPath())
                 , PackType.CLIENT_RESOURCES, ".png", "textures")) {
             getBuilder(path).parent(getExistingFile(mcLoc("item/generated")))
@@ -106,13 +107,13 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
 
     protected void makeOneLayerItem(Item item) {
-        ResourceLocation texture = Registry.ITEM.getKey(item);
+        ResourceLocation texture = BuiltInRegistries.ITEM.getKey(item);
         makeOneLayerItem(item, texture);
     }
 
     //wood_to_iron_frame_upgrade
     protected void registerUpgrade(Item item) {
-        String name = Registry.ITEM.getKey(item).getPath();
+        String name = BuiltInRegistries.ITEM.getKey(item).getPath();
         registerUpgrade(name);
     }
     protected void registerUpgrade(String name) {

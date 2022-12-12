@@ -29,14 +29,14 @@ public class ScrollbarWidgetC<S,T extends SearchableMenu<S>> extends AbstractWid
             int currentRow = screen.getMenu().getCurrentRow();
             double frac = (double)currentRow / (rows - 6);
             double position = height * frac;
-            blit(pPoseStack, x, (int) (y + position), 244, 0, 12, 15);
+            blit(pPoseStack, getX(), (int) (getY() + position), 244, 0, 12, 15);
         }
     }
 
 
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+    public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
 
     }
 }

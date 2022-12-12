@@ -1,6 +1,7 @@
 package tfar.nabba.datagen.providers.assets;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
@@ -60,7 +61,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     protected void makeAntiBarrel(AbstractBarrelBlock block) {
-        String name = Registry.BLOCK.getKey(block).getPath();
+        String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
         String barrel = block.getBarrelTier().getName();
 
         BlockModelBuilder modelBuilder = models().withExistingParent(name,modLoc("block/"+block.getType().toString().toLowerCase(Locale.ROOT)+"_barrel_block"));
@@ -75,7 +76,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     protected void makeBarrel(AbstractBarrelBlock block) {
-        String name = Registry.BLOCK.getKey(block).getPath();
+        String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
         String barrel = block.getBarrelTier().getName();
 
         BlockModelBuilder modelBuilder = models().withExistingParent(name,modLoc("block/"+block.getType().toString().toLowerCase(Locale.ROOT)+"_barrel_block"));
