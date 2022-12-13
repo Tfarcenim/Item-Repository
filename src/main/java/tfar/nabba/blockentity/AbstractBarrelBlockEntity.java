@@ -116,7 +116,7 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     public final int getTotalUpgradeSlots() {
         return ((AbstractBarrelBlock)getBlockState().getBlock()).getBarrelTier().getUpgradeSlots();
     }
-    public static void serverTick(Level pLevel1, BlockPos pPos, BlockState pState1, AbstractBarrelBlockEntity pBlockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, AbstractBarrelBlockEntity pBlockEntity) {
         for (UpgradeStack upgradeData : pBlockEntity.getUpgrades()) {
             upgradeData.getData().tick(pBlockEntity,upgradeData);
         }
