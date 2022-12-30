@@ -14,7 +14,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,14 +24,13 @@ import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.HasSearchBar;
-import tfar.nabba.api.ItemHandler;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.net.util.ItemStackUtil;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.world.AntiBarrelSubData;
+import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,7 +138,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     }
 
     @Override
-    public ItemHandler getItemHandler() {
+    public AntiBarrelInventory getItemHandler() {
         return getInventory();
     }
 
@@ -217,6 +215,11 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         return search;
     }
 
+    @Override
+    public int getRedstoneOutput() {
+        return Utils.getRedstoneSignalFromAntibarrel(getInventory());
+    }
+
     public static class AntiBarrelInventory implements SearchableItemHandler, ResizableIItemHandler {
 
         private final AntiBarrelBlockEntity blockEntity;
@@ -242,7 +245,11 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
 
         public boolean isFull() {
-            return getStoredCount() >= blockEntity.getStorage();
+            return getStoredCount() >= getActualLimit();
+        }
+
+        public int getActualLimit() {
+            return blockEntity.getStorageMultiplier() * NABBA.ServerCfg.anti_barrel_base_storage.get();
         }
 
         @Override

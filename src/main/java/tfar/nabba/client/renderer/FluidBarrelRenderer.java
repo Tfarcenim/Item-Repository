@@ -15,7 +15,6 @@ import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.client.FluidSpriteCache;
 import tfar.nabba.item.UpgradeItem;
-import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
 public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlockEntity> {
@@ -35,7 +34,7 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
 
         boolean infiniteVend = betterBarrelBlockEntity.infiniteVending();
 
-        int cap = betterBarrelBlockEntity.getStorage() * 1000;
+        int cap = betterBarrelBlockEntity.getFluidHandler().getActualCapacity(0);
         String toDraw = infiniteVend ? Utils.INFINITY :stack.getAmount() + " / "+ cap;
 
         renderText(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay, toDraw, 14/16d, betterBarrelBlockEntity.getColor(), .0075f);

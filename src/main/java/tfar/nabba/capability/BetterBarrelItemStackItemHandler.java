@@ -10,9 +10,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.NABBA;
 import tfar.nabba.api.IItemHandlerItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
-import tfar.nabba.util.BarrelType;
 
 public class BetterBarrelItemStackItemHandler implements IItemHandlerItem, ICapabilityProvider {
     private final ItemStack container;
@@ -85,9 +85,13 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem, ICapa
 
     @Override
     public int getSlotLimit(int slot) {
+        return getActualLimit(slot) + (BetterBarrelBlockItem.isVoid(container) ? 1 : 0);
+    }
+
+    public int getActualLimit(int slot) {
         ItemStack existing = getStackInSlot(slot);
-        return BetterBarrelBlockItem.getStorageUnits(container,BarrelType.BETTER) * existing.getMaxStackSize()
-                + (BetterBarrelBlockItem.isVoid(container) ? 1 : 0);
+        return BetterBarrelBlockItem.getStorageMultiplier(container) * existing.getMaxStackSize() *
+                (BetterBarrelBlockItem.storageDowngrade(container) ? 1 : NABBA.ServerCfg.better_barrel_base_storage.get());
     }
 
     @Override

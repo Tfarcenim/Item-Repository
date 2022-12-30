@@ -1,7 +1,6 @@
 package tfar.nabba.api;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -11,7 +10,6 @@ import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.Upgrades;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class UpgradeStack {
@@ -25,6 +23,9 @@ public class UpgradeStack {
     public static final UpgradeStack INFINITE_STORAGE = new UpgradeStack(Upgrades.STORAGE,64000).setImmutable(true);
 
     public static final UpgradeStack INFINITE_VENDING = defaultInstance(Upgrades.INFINITE_VENDING).setImmutable(true);
+
+    public static final UpgradeStack STORAGE_DOWNGRADE = defaultInstance(Upgrades.STORAGE_DOWNGRADE).setImmutable(true);
+    public static final UpgradeStack REDSTONE = defaultInstance(Upgrades.REDSTONE).setImmutable(true);
     public static final UpgradeStack VOID = defaultInstance(Upgrades.VOID).setImmutable(true);
 
     public static final UpgradeStack PICKUP_1x1 = defaultInstance(Upgrades.PICKUP).setImmutable(true);
@@ -96,8 +97,8 @@ public class UpgradeStack {
         return getData().getMaxStackSize() / getCount();
     }
 
-    public int getStorageUnits(BarrelType type) {
-        return getCount() * getData().getStorageBonus(type);
+    public int getStorageMultiplier() {
+        return getCount() * getData().getStorageMultiplier();
     }
 
     public UpgradeStack copy() {

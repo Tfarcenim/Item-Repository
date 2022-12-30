@@ -45,7 +45,6 @@ public class ModBlockEntityTypes {
         public static final BlockEntityType.BlockEntitySupplier<BetterBarrelBlockEntity> DISCRETE = BetterBarrelBlockEntity::createDiscrete;
         public static final BlockEntityType.BlockEntitySupplier<AntiBarrelBlockEntity> REGULAR_AB = AntiBarrelBlockEntity::create;
         public static final BlockEntityType.BlockEntitySupplier<AntiBarrelBlockEntity> DISCRETE_AB = AntiBarrelBlockEntity::createDiscrete;
-
         public static final BlockEntityType.BlockEntitySupplier<FluidBarrelBlockEntity> REGULAR_FB = FluidBarrelBlockEntity::create;
         public static final BlockEntityType.BlockEntitySupplier<FluidBarrelBlockEntity> DISCRETE_FB = FluidBarrelBlockEntity::createDiscrete;
     }

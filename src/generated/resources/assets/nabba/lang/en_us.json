@@ -93,6 +93,8 @@
   "item.nabba.pickup_3x3_upgrade.tooltip": "Picks up items in a 3x3x3 volume centered on the barrel",
   "item.nabba.pickup_9x9_upgrade": "Pickup 9x9 Upgrade",
   "item.nabba.pickup_9x9_upgrade.tooltip": "Picks up items in a 9x3x9 area centered on the barrel",
+  "item.nabba.redstone_upgrade": "Redstone Upgrade",
+  "item.nabba.redstone_upgrade.tooltip": "Gives barrels the ability to output redstone level",
   "item.nabba.remote_controller_key": "Remote Controller Key",
   "item.nabba.remote_controller_key.tooltip": "Bound to (%s,%s,%s)",
   "item.nabba.remote_fluid_controller_key": "Remote Fluid Controller Key",
@@ -104,6 +106,8 @@
   "item.nabba.stone_to_iron_frame_upgrade": "Stone To Iron Frame Upgrade",
   "item.nabba.stone_to_lapis_frame_upgrade": "Stone To Lapis Frame Upgrade",
   "item.nabba.stone_to_netherite_frame_upgrade": "Stone To Netherite Frame Upgrade",
+  "item.nabba.storage_downgrade": "Storage Downgrade",
+  "item.nabba.storage_downgrade.tooltip": "Downgrades better and fluid barrels to a single stack and bucket of storage respectively",
   "item.nabba.vanity_key": "Vanity Key",
   "item.nabba.void_upgrade": "Void Upgrade",
   "item.nabba.void_upgrade.tooltip": "Barrel voids excess items",
@@ -153,6 +157,8 @@
   "nabba.barrel.tooltip.discrete": "Discrete:",
   "nabba.barrel.tooltip.infinite_vending": "Infinite Vending:",
   "nabba.barrel.tooltip.locked": "Locked:",
+  "nabba.barrel.tooltip.redstone": "Redstone:",
+  "nabba.barrel.tooltip.storage_downgrade": "Storage Downgrade:",
   "nabba.barrel.tooltip.upgrades": "Upgrades",
   "nabba.barrel.tooltip.void": "Void:",
   "nabba.barrel_hammer.message.no_downgrade": "Barrel frame cannot be downgraded any further",
@@ -164,5 +170,7 @@
   "nabba.upgrade.info1": "Max of %s allowed per barrel",
   "nabba.upgrade.nabba.infinite_vending": "Infinite Vending",
   "nabba.upgrade.nabba.pickup": "Pickup Units",
-  "nabba.upgrade.nabba.storage": "Storage Units"
+  "nabba.upgrade.nabba.redstone": "Redstone Output",
+  "nabba.upgrade.nabba.storage": "Storage Multiplier",
+  "nabba.upgrade.nabba.storage_downgrade": "Storage Downgrade"
 }

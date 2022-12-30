@@ -8,7 +8,12 @@ public interface ItemHandler extends IItemHandler {
 
     boolean isFull();
 
-    default ItemStack storeItem(ItemStack stack, boolean simulate) {
+    default int getActualLimit() {
+        return Integer.MAX_VALUE;
+    }
+
+
+        default ItemStack storeItem(ItemStack stack, boolean simulate) {
         if (isFull()) return stack;
         ItemStack remainder = stack;
 

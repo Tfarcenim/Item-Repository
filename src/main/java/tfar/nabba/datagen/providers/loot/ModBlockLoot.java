@@ -6,15 +6,19 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyBlockState;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import tfar.nabba.NABBA;
+import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.BetterBarrelBlock;
+import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.util.NBTKeys;
 
@@ -72,7 +76,7 @@ public class ModBlockLoot extends BlockLootSubProvider {
         LootTable.Builder builder = LootTable.lootTable()
                 .withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                                 .add(LootItem.lootTableItem(block)
-                                        .apply(copySharedBlockStates(block).copy(BetterBarrelBlock.LOCKED).copy(BetterBarrelBlock.CONNECTED).copy(BetterBarrelBlock.INFINITE_VENDING))
+                                        .apply(copySharedBlockStates(block).copy(BetterBarrelBlock.LOCKED).copy(BetterBarrelBlock.CONNECTED).copy(BetterBarrelBlock.INFINITE_VENDING).copy(SingleSlotBarrelBlock.STORAGE_DOWNGRADE))
                                         .apply(copySharedNBTInfo()
                                                 .copy(NBTKeys.Stack.name(), "BlockEntityTag." + NBTKeys.Stack)
                                                 .copy(NBTKeys.RealCount.name(), "BlockEntityTag." + NBTKeys.RealCount)
@@ -108,7 +112,7 @@ public class ModBlockLoot extends BlockLootSubProvider {
     }
 
     public CopyBlockState.Builder copySharedBlockStates(Block block) {
-        return CopyBlockState.copyState(block).copy(BetterBarrelBlock.DISCRETE).copy(BetterBarrelBlock.VOID);
+        return CopyBlockState.copyState(block).copy(BetterBarrelBlock.DISCRETE).copy(BetterBarrelBlock.VOID).copy(AbstractBarrelBlock.REDSTONE);
     }
 
     @Override

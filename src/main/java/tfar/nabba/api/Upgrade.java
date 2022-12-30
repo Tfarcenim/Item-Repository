@@ -1,13 +1,10 @@
 package tfar.nabba.api;
 
-import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
-import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.util.BarrelType;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -23,7 +20,7 @@ public interface Upgrade {
     void setSlotsRequired(int slotsRequired);
     int getMaxStackSize();
 
-    int getStorageBonus(BarrelType type);
+    int getStorageMultiplier();
     void onUpgrade(AbstractBarrelBlockEntity betterBarrelBlockEntity, UpgradeStack stack);
     Supplier<Item> getItem();
     BiConsumer<AbstractBarrelBlockEntity, UpgradeStack> NOTHING = (b, u) -> {};

@@ -3,6 +3,7 @@ package tfar.nabba.datagen.providers.assets;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.Item;
@@ -16,8 +17,8 @@ import tfar.nabba.init.ModItems;
 import tfar.nabba.item.BarrelFrameUpgradeItem;
 
 public class ModItemModelProvider extends ItemModelProvider {
-    public ModItemModelProvider(DataGenerator generator,  ExistingFileHelper existingFileHelper) {
-        super(generator, NABBA.MODID, existingFileHelper);
+    public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+        super(output, NABBA.MODID, existingFileHelper);
     }
 
     @Override
@@ -48,6 +49,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         makeOneLayerItem(ModItems.INFINITE_FLUID_BARREL_STORAGE_UPGRADE,modLoc("fluid/infinite_storage_upgrade"));
 
         makeOneLayerItem(ModItems.INFINITE_VENDING_UPGRADE);
+        makeOneLayerItem(ModItems.STORAGE_DOWNGRADE);
+        makeOneLayerItem(ModItems.REDSTONE_UPGRADE);
 
         makeOneLayerItem(ModItems.VOID_UPGRADE);
 

@@ -16,11 +16,13 @@
               "block": "nabba:iron_fluid_barrel",
               "function": "minecraft:copy_state",
               "properties": [
-                "discrete",
+                "storage_downgrade",
                 "void",
+                "redstone",
                 "locked",
+                "connected",
                 "infinite_vending",
-                "connected"
+                "discrete"
               ]
             },
             {

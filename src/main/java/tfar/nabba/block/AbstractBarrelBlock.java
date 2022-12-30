@@ -37,6 +37,7 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     protected final BarrelFrameTier barrelTier;
     public static final BooleanProperty VOID = BooleanProperty.create("void");
     public static final BooleanProperty DISCRETE = BooleanProperty.create("discrete");
+    public static final BooleanProperty REDSTONE = BooleanProperty.create("redstone");
     public static final DirectionProperty H_FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final BarrelType type;
 
@@ -44,7 +45,7 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
         super(pProperties);
         this.type = type;
         this.barrelTier = tier;
-        registerDefaultState(this.stateDefinition.any().setValue(VOID,false).setValue(DISCRETE,false));
+        registerDefaultState(this.stateDefinition.any().setValue(VOID,false).setValue(DISCRETE,false).setValue(REDSTONE,false));
     }
 
     public BarrelFrameTier getBarrelTier() {
@@ -76,6 +77,7 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
             tooltip.add(Component.empty());
             tooltip.add(Component.translatable("nabba.barrel.tooltip.discrete").append(Component.literal(tag.getString(DISCRETE.getName())).withStyle(ChatFormatting.YELLOW)));
             tooltip.add(Component.translatable("nabba.barrel.tooltip.void").append(Component.literal(tag.getString(VOID.getName())).withStyle(ChatFormatting.YELLOW)));
+            tooltip.add(Component.translatable("nabba.barrel.tooltip.redstone").append(Component.literal(tag.getString(REDSTONE.getName())).withStyle(ChatFormatting.YELLOW)));
         }
     }
 
@@ -93,7 +95,19 @@ public abstract class AbstractBarrelBlock extends Block implements EntityBlock {
     }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(VOID,DISCRETE,H_FACING);
+        pBuilder.add(VOID,DISCRETE,H_FACING,REDSTONE);
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState pState) {
+        return pState.getValue(REDSTONE);
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        return blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity ?
+                abstractBarrelBlockEntity.getRedstoneOutput() : 0;
     }
 
     public BarrelType getType() {

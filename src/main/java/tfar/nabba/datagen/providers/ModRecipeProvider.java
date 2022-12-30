@@ -104,6 +104,24 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_ender_eye", has(Items.ENDER_EYE))
                 .save(consumer);
 
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.BETTER_BARREL_STORAGE_UPGRADE).define('#', ModItems.STORAGE_DOWNGRADE)
+                .pattern("##").pattern("##").unlockedBy("has_storage_downgrade", has(ModItems.STORAGE_DOWNGRADE))
+                .save(consumer,RecipeBuilder
+                        .getDefaultRecipeId(ModItems.STORAGE_DOWNGRADE).getPath() + "_reverse");
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,ModItems.STORAGE_DOWNGRADE, 4).requires(ModItems.BETTER_BARREL_STORAGE_UPGRADE)
+                .unlockedBy("has_better_barrel_storage_upgrade", has(ModItems.BETTER_BARREL_STORAGE_UPGRADE))
+                .save(consumer);
+
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.REDSTONE_UPGRADE)
+                .define('P', ItemTags.WOODEN_SLABS)
+                .define('H', Blocks.REPEATER)
+                .pattern("PHP")
+                .unlockedBy("has_repeater", has(Items.REPEATER))
+                .save(consumer);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModBlocks.CONTROLLER).define('#', ModBlocks.CONTROLLER_PROXY)
                 .pattern("##").pattern("##").unlockedBy("has_controller_proxy", has(ModBlocks.CONTROLLER_PROXY))
                 .save(consumer,RecipeBuilder

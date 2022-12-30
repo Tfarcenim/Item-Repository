@@ -28,6 +28,14 @@
       "when": {
         "connected": "false"
       }
+    },
+    {
+      "apply": {
+        "model": "nabba:block/barrel_redstone"
+      },
+      "when": {
+        "redstone": "true"
+      }
     }
   ]
 }

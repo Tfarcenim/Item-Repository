@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -45,7 +44,7 @@ public class StorageUpgradeItem extends UpgradeItem {
         pTooltipComponents.add(Component.translatable(info,Component.literal(""+data.getUpgradeSlotsRequired()).withStyle(ChatFormatting.AQUA)));
         pTooltipComponents.add(Component.translatable(info1,Component.literal(""+data.getMaxPermitted()).withStyle(ChatFormatting.AQUA)));
         pTooltipComponents.add(Component.translatable(getDescriptionId() + ".tooltip",
-                Component.literal(data.getStorageUnits(type)+"").withStyle(ChatFormatting.AQUA)));
+                Component.literal(data.getStorageMultiplier()+"").withStyle(ChatFormatting.AQUA)));
     }
 
     public BarrelType getType() {

@@ -3,6 +3,7 @@ package tfar.nabba.datagen.providers.assets;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -16,8 +17,8 @@ import tfar.nabba.init.ModBlocks;
 import java.util.Locale;
 
 public class ModBlockStateProvider extends BlockStateProvider {
-    public ModBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
-        super(gen, NABBA.MODID, exFileHelper);
+    public ModBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
+        super(output, NABBA.MODID, exFileHelper);
     }
 
     @Override
@@ -72,7 +73,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         getMultipartBuilder(block).part().modelFile(modelBuilder).addModel().end()
                 .part().modelFile(models().getExistingFile(modLoc("block/barrel_void")))
-                .addModel().condition(BetterBarrelBlock.VOID,true).end();
+                .addModel().condition(BetterBarrelBlock.VOID,true).end()
+
+                .part().modelFile(models().getExistingFile(modLoc("block/barrel_redstone")))
+                .addModel().condition(AbstractBarrelBlock.REDSTONE,true).end();
     }
 
     protected void makeBarrel(AbstractBarrelBlock block) {
@@ -91,6 +95,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .part().modelFile(models().getExistingFile(modLoc("block/barrel_lock")))
                 .addModel().condition(BetterBarrelBlock.LOCKED,true).end()
                 .part().modelFile(models().getExistingFile(modLoc("block/barrel_connected")))
-                .addModel().condition(BetterBarrelBlock.CONNECTED,false).end();
+                .addModel().condition(BetterBarrelBlock.CONNECTED,false).end()
+                .part().modelFile(models().getExistingFile(modLoc("block/barrel_redstone")))
+                .addModel().condition(AbstractBarrelBlock.REDSTONE,true).end()
+        ;
     }
 }

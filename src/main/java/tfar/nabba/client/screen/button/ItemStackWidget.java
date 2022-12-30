@@ -11,6 +11,7 @@ import tfar.nabba.inventory.RightClickButton;
 import tfar.nabba.net.server.C2SInsertPacket;
 import tfar.nabba.net.server.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;
+import tfar.nabba.util.ClientUtils;
 import tfar.nabba.util.Utils;
 
 public class ItemStackWidget extends RightClickButton<ItemStack> {
@@ -57,22 +58,8 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
     }
 
     public void renderItem(PoseStack matrices) {
+        ClientUtils.drawSmallItemNumbers(matrices,getX(),getY(),stack);
         Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, getX(), getY());
-
-        PoseStack viewModelPose = RenderSystem.getModelViewStack();
-        viewModelPose.pushPose();
-        viewModelPose.translate(getX() + 8, getY() + 8, 0);
-        float scale = .5f;
-
-        viewModelPose.scale(scale, scale, scale);
-        viewModelPose.translate(-1 * getX(), -1 * getY(), 500);
-        RenderSystem.applyModelViewMatrix();
-        if (stack.getCount() > 1) {
-            Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, getX(), getY(), Utils.formatLargeNumber(stack.getCount()));
-        }
-
-        viewModelPose.popPose();
-        RenderSystem.applyModelViewMatrix();
     }
 
     public void renderTooltip(PoseStack matrices,int x,int y) {

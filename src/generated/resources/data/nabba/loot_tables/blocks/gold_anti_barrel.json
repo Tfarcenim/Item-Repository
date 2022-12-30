@@ -16,8 +16,9 @@
               "block": "nabba:gold_anti_barrel",
               "function": "minecraft:copy_state",
               "properties": [
-                "discrete",
-                "void"
+                "void",
+                "redstone",
+                "discrete"
               ]
             },
             {

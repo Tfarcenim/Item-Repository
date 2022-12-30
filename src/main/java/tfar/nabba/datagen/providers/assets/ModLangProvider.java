@@ -1,8 +1,7 @@
 package tfar.nabba.datagen.providers.assets;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -14,15 +13,15 @@ import tfar.nabba.blockentity.BarrelInterfaceBlockEntity;
 import tfar.nabba.init.ModBlocks;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.item.BarrelFrameUpgradeItem;
-import tfar.nabba.item.keys.KeyItem;
 import tfar.nabba.item.StorageUpgradeItem;
 import tfar.nabba.item.UpgradeItem;
+import tfar.nabba.item.keys.KeyItem;
 import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
 public class ModLangProvider extends LanguageProvider {
-    public ModLangProvider(DataGenerator gen) {
-        super(gen, NABBA.MODID, "en_us");
+    public ModLangProvider(PackOutput output) {
+        super(output, NABBA.MODID, "en_us");
     }
 
     @Override
@@ -45,8 +44,10 @@ public class ModLangProvider extends LanguageProvider {
         }
 
 
-        addItem(() -> ModItems.INFINITE_VENDING_UPGRADE,"Infinite Vending Upgrade");
-        addItem(() -> ModItems.VOID_UPGRADE,"Void Upgrade");
+        defaultName(ModItems.INFINITE_VENDING_UPGRADE);
+        defaultName(ModItems.STORAGE_DOWNGRADE);
+        defaultName(ModItems.VOID_UPGRADE);
+        defaultName(ModItems.REDSTONE_UPGRADE);
         addItem(() -> ModItems.PICKUP_1x1_UPGRADE,"Pickup 1x1 Upgrade");
         addItem(() -> ModItems.PICKUP_3x3_UPGRADE,"Pickup 3x3 Upgrade");
         addItem(()-> ModItems.PICKUP_9x9_UPGRADE,"Pickup 9x9 Upgrade");
@@ -63,8 +64,10 @@ public class ModLangProvider extends LanguageProvider {
 
 
         addUpgrade(Upgrades.INFINITE_VENDING,"Infinite Vending");
-        addUpgrade(Upgrades.STORAGE,"Storage Units");
+        addUpgrade(Upgrades.STORAGE_DOWNGRADE,"Storage Downgrade");
+        addUpgrade(Upgrades.STORAGE,"Storage Multiplier");
         addUpgrade(Upgrades.PICKUP,"Pickup Units");
+        addUpgrade(Upgrades.REDSTONE,"Redstone Output");
 
         add("nabba.key_ring.selected_key","%s (%s)");
         add("itemGroup.nabba","Not (Just) Another Better Barrel Attempt");
@@ -89,6 +92,8 @@ public class ModLangProvider extends LanguageProvider {
         addTooltip(ModItems.NETWORK_VISUALIZER,"Shows proxies and barrels connected to a controller");
         addTooltip(ModItems.BARREL_HAMMER,"Used to downgrade barrel frames");
         addTooltip(ModItems.REMOTE_CONTROLLER_KEY,"Bound to (%s,%s,%s)");
+        addTooltip(ModItems.STORAGE_DOWNGRADE,"Downgrades better and fluid barrels to a single stack and bucket of storage respectively");
+        addTooltip(ModItems.REDSTONE_UPGRADE,"Gives barrels the ability to output redstone level");
 
         add("nabba.antibarrel.tooltip","Items Stored:");
         add("nabba.barrel.tooltip.upgrades","Upgrades");
@@ -98,6 +103,8 @@ public class ModLangProvider extends LanguageProvider {
         add("nabba.barrel.tooltip.locked","Locked:");
         add("nabba.barrel.tooltip.connected","Connected:");
         add("nabba.barrel.tooltip.infinite_vending","Infinite Vending:");
+        add("nabba.barrel.tooltip.storage_downgrade","Storage Downgrade:");
+        add("nabba.barrel.tooltip.redstone","Redstone:");
     }
 
     public void addSystemMessages() {

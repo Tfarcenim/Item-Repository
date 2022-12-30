@@ -1,4 +1,4 @@
-// 1.19.3	2022-12-12T17:05:30.3125382	Item Models: nabba
+// 1.19.3	2022-12-27T20:26:58.1196367	Item Models: nabba
 5ed323eabef7f71705faf7c1f2b51a2dfba47694 assets/nabba/models/item/anti_barrel.json
 d2e611657839162166132a783ae8fc230cafa876 assets/nabba/models/item/anti_barrel_storage_upgrade.json
 c75df0f810eaaab3c331d70193ef3a735df4188c assets/nabba/models/item/barrel_hammer.json
@@ -75,6 +75,7 @@ eada94994b8bb7a354679711aa0b15556b58c081 assets/nabba/models/item/netherite_flui
 0cc0c46ea50391976fae09ab2d9ec848961fc588 assets/nabba/models/item/pickup_1x1_upgrade.json
 4af46d54349937f4c0903850d8f91124390c54e1 assets/nabba/models/item/pickup_3x3_upgrade.json
 9db9d10a1d0b47b5ae4545cc9f1c7c02d3c7dcc8 assets/nabba/models/item/pickup_9x9_upgrade.json
+c5504a160bcfa0217a32dffd03fd1d3b3aee55f8 assets/nabba/models/item/redstone_upgrade.json
 276ab5a64b7aaf5d74f985ee27a4a33d6703c4b3 assets/nabba/models/item/remote_controller_key.json
 89d800ab958b0303d535aef083972685e6f4028d assets/nabba/models/item/remote_fluid_controller_key.json
 07138c16555974ee9673e77c53609c75c7552230 assets/nabba/models/item/stone_anti_barrel.json
@@ -88,6 +89,7 @@ ace9d6e1f5723e5c542cf69a2bcab41f9be3e867 assets/nabba/models/item/stone_to_emera
 87220d7b20b57107ad75dc94956a11aa81263dfb assets/nabba/models/item/stone_to_iron_frame_upgrade.json
 b388306f33a25c5129d1ce15ce815e325538bb5e assets/nabba/models/item/stone_to_lapis_frame_upgrade.json
 0a8c8d5fb6a5a1a3b4d78f8ec65367be2ac8b5db assets/nabba/models/item/stone_to_netherite_frame_upgrade.json
+fd7dae85f09cf47a6df6c763e0d41e27eaf0790b assets/nabba/models/item/storage_downgrade.json
 9f8a2fd214c7d0884fafea6711102a36504a72f1 assets/nabba/models/item/vanity_key.json
 9a2cd929e316d876d06a851c20148b1d70f46fdc assets/nabba/models/item/void_upgrade.json
 4bd9173a2ff7de3446ee3250378f79f5396f4376 assets/nabba/models/item/wood_to_copper_frame_upgrade.json

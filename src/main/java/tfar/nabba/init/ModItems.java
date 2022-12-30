@@ -72,7 +72,6 @@ public class ModItems {
     public static final Item x1024_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.x1024_STORAGE);
     public static final Item INFINITE_BETTER_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.better(basic(), UpgradeStack.INFINITE_STORAGE);
 
-
     public static final Item ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.STORAGE);
     public static final Item x4_ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.x4_STORAGE);
     public static final Item x16_ANTI_BARREL_STORAGE_UPGRADE = StorageUpgradeItem.anti(basic(), UpgradeStack.x16_STORAGE);
@@ -97,8 +96,9 @@ public class ModItems {
     public static final Item PICKUP_1x1_UPGRADE = new UpgradeItem(basic(), UpgradeStack.PICKUP_1x1);
     public static final Item PICKUP_3x3_UPGRADE = new UpgradeItem(basic(), UpgradeStack.PICKUP_3x3);
     public static final Item PICKUP_9x9_UPGRADE = new UpgradeItem(basic(), UpgradeStack.PICKUP_9x9);
-
-    public static final Item KEY_RING = new KeyRingItem(basic());
+    public static final Item STORAGE_DOWNGRADE = new UpgradeItem(basic(), UpgradeStack.STORAGE_DOWNGRADE);
+  public static final Item REDSTONE_UPGRADE = new UpgradeItem(basic(), UpgradeStack.REDSTONE);
+  public static final Item KEY_RING = new KeyRingItem(basic());
     public static final Item HIDE_KEY = new ControllerBlockStateKeyItem(basic(),BetterBarrelBlock.DISCRETE);
     public static final Item LOCK_KEY = new ControllerBlockStateKeyItem(basic(), BetterBarrelBlock.LOCKED);
     public static final Item CONTROLLER_KEY = new ControllerKeyItem(basic(),DisplayTypes.ITEM);

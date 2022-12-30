@@ -7,13 +7,10 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.Upgrade;
 import tfar.nabba.api.UpgradeStack;
@@ -32,7 +29,7 @@ import java.util.List;
 
 public abstract class AbstractBarrelBlockEntity extends BlockEntity {
 
-    private transient int cachedStorage = Utils.INVALID;
+    private transient int cachedStorageMultiplier = Utils.INVALID;
     private transient int cachedUsedUpgradeSlots = Utils.INVALID;
     protected int color = Utils.COLOR;
     protected double size = Utils.SIZE;
@@ -57,17 +54,15 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     public boolean isValid(UpgradeItem item) {
         if (item instanceof StorageUpgradeItem storageUpgradeItem) {
             return storageUpgradeItem.getType() == this.getBarrelType();
-        } else if (item == ModItems.INFINITE_VENDING_UPGRADE) {
+        } else if (item == ModItems.INFINITE_VENDING_UPGRADE || item == ModItems.STORAGE_DOWNGRADE) {
             return this instanceof SingleSlotBarrelBlockEntity<?>;
         }
         return true;
     }
     public boolean canAcceptUpgrade(UpgradeStack data) {
-
         int existing = countUpgrade(data.getData());
         int max = data.getData().getMaxStackSize();
         return existing + data.getCount() <= max && data.getUpgradeSlotsRequired() <= getFreeSlots();
-
     }
 
     public void setColor(int color) {
@@ -94,9 +89,12 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     public int countUpgrade(Upgrade data) {
         if (data == Upgrades.VOID) {
             return isVoid() ? 1 : 0;
-        } else if (data == Upgrades.INFINITE_VENDING) {
-
         }
+
+        else if (data == Upgrades.REDSTONE) {
+            return getBlockState().getValue(AbstractBarrelBlock.REDSTONE) ? 1 : 0;
+        }
+
         for (UpgradeStack dataStack : getUpgrades()) {
             if (dataStack.getData() == data) return dataStack.getCount();
         }
@@ -127,10 +125,10 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
     }
 
 
-    private int computeStorageUnits() {
-        int storage = Utils.BASE_STORAGE.get(getBarrelType());
+    protected int computeStorageMultiplier() {
+        int storage = 1;
         for (UpgradeStack upgradeStack : upgrades) {
-            storage += upgradeStack.getStorageUnits(getBarrelType());
+            storage += upgradeStack.getStorageMultiplier();
         }
         return storage;
     }
@@ -156,11 +154,11 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         return ((AbstractBarrelBlock)getBlockState().getBlock()).getType();
     }
 
-    public int getStorage() {
-        if (cachedStorage == -1) {//save CPU cycles by not iterating the upgrade map
-            cachedStorage = computeStorageUnits();
+    public int getStorageMultiplier() {
+        if (cachedStorageMultiplier < 0) {//save CPU cycles by not iterating the upgrade map
+            cachedStorageMultiplier = computeStorageMultiplier();
         }
-        return cachedStorage;
+        return cachedStorageMultiplier;
     }
 
     public int getUsedSlots() {
@@ -170,7 +168,7 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         return cachedUsedUpgradeSlots;
     }
     protected void invalidateCaches() {
-        cachedUsedUpgradeSlots = cachedStorage = Utils.INVALID;
+        cachedUsedUpgradeSlots = cachedStorageMultiplier = Utils.INVALID;
     }
 
     @Override
@@ -201,4 +199,5 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         size = pTag.getDouble(NBTKeys.Size.name());
         invalidateCaches();
     }
+    public abstract int getRedstoneOutput();
 }

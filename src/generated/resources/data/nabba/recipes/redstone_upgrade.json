@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "H": {
+      "item": "minecraft:repeater"
+    },
+    "P": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "pattern": [
+    "PHP"
+  ],
+  "result": {
+    "item": "nabba:redstone_upgrade"
+  }
+}

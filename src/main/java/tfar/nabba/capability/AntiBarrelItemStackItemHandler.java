@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -16,11 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.IItemHandlerItem;
-import tfar.nabba.api.ItemHandler;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
-import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.NBTKeys;
-import tfar.nabba.world.AntiBarrelSubData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,11 +119,15 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
     }
 
     public boolean isFull() {
-        return getStoredCount() >= BetterBarrelBlockItem.getStorageUnits(container, BarrelType.ANTI);
+        return getStoredCount() >= getActualLimit();
     }
 
     public int getStoredCount() {
         return stacks.stream().mapToInt(ItemStack::getCount).sum();
+    }
+
+    public int getActualLimit() {
+        return BetterBarrelBlockItem.getStorageMultiplier(container) * NABBA.ServerCfg.anti_barrel_base_storage.get();
     }
 
     public void markDirty() {

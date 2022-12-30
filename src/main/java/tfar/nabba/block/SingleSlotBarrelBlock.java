@@ -1,5 +1,6 @@
 package tfar.nabba.block;
 
+import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,41 +33,48 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
     public static final BooleanProperty LOCKED = BlockStateProperties.LOCKED;
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
     public static final BooleanProperty INFINITE_VENDING = BooleanProperty.create("infinite_vending");
+    public static final BooleanProperty STORAGE_DOWNGRADE = BooleanProperty.create("storage_downgrade");
 
     public SingleSlotBarrelBlock(Properties pProperties, BarrelType type, BarrelFrameTier tier) {
         super(pProperties, type, tier);
-        registerDefaultState(defaultBlockState().setValue(LOCKED, false).setValue(CONNECTED, true).setValue(INFINITE_VENDING,false));
+        registerDefaultState(defaultBlockState().setValue(LOCKED, false).setValue(CONNECTED, true)
+                .setValue(INFINITE_VENDING,false).setValue(STORAGE_DOWNGRADE,false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder);
-        pBuilder.add(LOCKED, CONNECTED,INFINITE_VENDING);
-    }
-
-    @Override
-    public void attack(BlockState pState, Level level, BlockPos pos, Player player) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
-            ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
-            ItemHandlerHelper.giveItemToPlayer(player, stack);
-        } else if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
-            FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(player.getMainHandItem(), fluidBarrelBlockEntity.getFluidHandler(),
-                    new InvWrapper(player.getInventory()), Integer.MAX_VALUE, player, true);
-            if (fluidActionResult.isSuccess()) {
-                player.setItemInHand(InteractionHand.MAIN_HAND, fluidActionResult.getResult());
-            }
-        }
+        pBuilder.add(LOCKED, CONNECTED,INFINITE_VENDING,STORAGE_DOWNGRADE);
     }
 
     //note,attack is not called if cancelling the left click block event
     @Override
+    public void attack(BlockState pState, Level level, BlockPos pos, Player player) {
+        if (!player.isCrouching()) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+                ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
+                ItemHandlerHelper.giveItemToPlayer(player, stack);
+            } else if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
+                FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(player.getMainHandItem(), fluidBarrelBlockEntity.getFluidHandler(),
+                        new InvWrapper(player.getInventory()), Integer.MAX_VALUE, player, true);
+                if (fluidActionResult.isSuccess()) {
+                    player.setItemInHand(InteractionHand.MAIN_HAND, fluidActionResult.getResult());
+                }
+            }
+        }
+    }
+
+    private static final List<BooleanProperty> props = Lists.newArrayList(LOCKED,CONNECTED,INFINITE_VENDING,STORAGE_DOWNGRADE);
+    @Override
     public void appendBlockStateInfo(CompoundTag tag, List<Component> tooltip) {
         if (!tag.isEmpty()) {
             super.appendBlockStateInfo(tag, tooltip);
-            tooltip.add(Component.translatable("nabba.barrel.tooltip.locked").append(Component.literal(tag.getString(LOCKED.getName())).withStyle(ChatFormatting.YELLOW)));
-            tooltip.add(Component.translatable("nabba.barrel.tooltip.connected").append(Component.literal(tag.getString(CONNECTED.getName())).withStyle(ChatFormatting.YELLOW)));
-            tooltip.add(Component.translatable("nabba.barrel.tooltip.infinite_vending").append(Component.literal(tag.getString(INFINITE_VENDING.getName())).withStyle(ChatFormatting.YELLOW)));
+
+            for (BooleanProperty property : props) {
+                String s = property.getName();
+                tooltip.add(Component.translatable("nabba.barrel.tooltip."+s).append(Component.literal(tag.getString(s)).withStyle(ChatFormatting.YELLOW)));
+            }
         }
     }
 

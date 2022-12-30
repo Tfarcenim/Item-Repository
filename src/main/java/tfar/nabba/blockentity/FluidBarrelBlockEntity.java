@@ -12,12 +12,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.NABBA;
 import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.inventory.ImmutableFluidStack;
 import tfar.nabba.util.NBTKeys;
-import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
 public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidStack> implements HasFluidHandler {
@@ -166,7 +166,8 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidSta
         }
 
         public int getActualCapacity(int tank) {
-            return barrelBlockEntity.getStorage() * 1000;
+            return barrelBlockEntity.getStorageMultiplier() * 1000 *
+                    (barrelBlockEntity.hasDowngrade() ? 1 : NABBA.ServerCfg.fluid_barrel_base_storage.get());
         }
 
         @Override
@@ -199,5 +200,10 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidSta
     public void reviveCaps() {
         super.reviveCaps();
         optional = LazyOptional.of(this::getFluidHandler);
+    }
+
+    @Override
+    public int getRedstoneOutput() {
+        return Utils.getRedstoneSignalFromContainer(getFluidHandler());
     }
 }

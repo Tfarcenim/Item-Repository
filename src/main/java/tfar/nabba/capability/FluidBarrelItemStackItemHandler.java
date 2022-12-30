@@ -10,10 +10,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.NABBA;
 import tfar.nabba.inventory.ImmutableFluidStack;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.item.barrels.FluidBarrelBlockItem;
-import tfar.nabba.util.BarrelType;
 
 public class FluidBarrelItemStackItemHandler implements IFluidHandlerItem, ICapabilityProvider {
     private final ItemStack container;
@@ -107,8 +107,14 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandlerItem, ICapa
 
     @Override
     public int getTankCapacity(int slot) {
-        return BetterBarrelBlockItem.getStorageUnits(container,BarrelType.FLUID) * 1000 + (BetterBarrelBlockItem.isVoid(container) ? 1 : 0);
+        return getActualLimit(slot) + (BetterBarrelBlockItem.isVoid(container) ? 1 : 0);
     }
+
+    public int getActualLimit(int slot) {
+        return BetterBarrelBlockItem.getStorageMultiplier(container) * 1000 *
+                (BetterBarrelBlockItem.storageDowngrade(container) ? 1 : NABBA.ServerCfg.fluid_barrel_base_storage.get());
+    }
+
 
     @Override
     public boolean isFluidValid(int slot, @NotNull FluidStack stack) {
