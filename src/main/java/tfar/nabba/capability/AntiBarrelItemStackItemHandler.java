@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.IItemHandlerItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
+import tfar.nabba.net.util.ItemStackUtil;
 import tfar.nabba.util.NBTKeys;
 
 import java.util.ArrayList;
@@ -26,24 +27,27 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
     private final ItemStack container;
 
     private final List<ItemStack> stacks;
-    private final UUID uuid;
+    private UUID uuid;
+    private final boolean server;
 
     private final LazyOptional<IItemHandler> holder = LazyOptional.of(() -> this);
 
     public AntiBarrelItemStackItemHandler(ItemStack stack) {
         this.container = stack;
         //return a dummy container if we're on the client for some reason
-        boolean server = NABBA.instance.server != null;
-        stacks = server ? loadItems(getOrCreateSavedData(container)) : new ArrayList<>();
+        server = NABBA.instance.server != null;
         uuid = getUUIDFromItem(container);
+        stacks = server && uuid != null ? loadItems(NABBA.instance.getData(uuid).getStorage()) : new ArrayList<>();
     }
 
     public ItemStack getContainer() {
         return container;
     }
 
+    //assign the uuid when someone tries to access the inventory
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        checkId();
         return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, holder);
     }
 
@@ -77,7 +81,7 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
                             ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() + existing.getCount() - getSlotLimit(slot));
                 } else {
                     if (!simulate) {
-                        stacks.set(slot,ItemHandlerHelper.copyStackWithSize(stack, existing.getCount() + stack.getCount()));
+                        stacks.set(slot, ItemHandlerHelper.copyStackWithSize(stack, existing.getCount() + stack.getCount()));
                         markDirty();
                     }
                     return ItemStack.EMPTY;
@@ -85,7 +89,15 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
             }
         }
         return stack;
-}
+    }
+
+    public void checkId() {
+        if (uuid == null) {
+            UUID uuid = UUID.randomUUID();
+            container.getOrCreateTag().putUUID(NBTKeys.Uuid.name(), uuid);
+            this.uuid = uuid;
+        }
+    }
 
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
@@ -133,17 +145,16 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
     }
 
     public void markDirty() {
-        if (uuid != null) {
-            NABBA.instance.getData(uuid).saveData(save(stacks));
+        if (uuid != null && server) {
+            NABBA.instance.getData(uuid).saveData(saveItems(stacks));
             BetterBarrelBlockItem.getOrCreateBlockEntityTag(container).putInt("Stored", getStoredCount());
         }
     }
 
-    public static ListTag save(List<ItemStack> stacks) {
+    public static ListTag saveItems(List<ItemStack> stacks) {
         ListTag nbtTagList = new ListTag();
         for (int i = 0; i < stacks.size(); i++) {
-            CompoundTag itemTag = new CompoundTag();
-            stacks.get(i).save(itemTag);
+            CompoundTag itemTag = ItemStackUtil.writeExtendedStack(stacks.get(i));
             nbtTagList.add(itemTag);
         }
         return nbtTagList;
@@ -152,27 +163,9 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
     public static List<ItemStack> loadItems(ListTag tag) {
         List<ItemStack> stacks = new ArrayList<>();
         for (Tag tag1 : tag) {
-            stacks.add(ItemStack.of((CompoundTag) tag1));
+            stacks.add(ItemStackUtil.readExtendedItemStack((CompoundTag) tag1));
         }
         return stacks;
-    }
-
-    public static ListTag getOrCreateSavedData(ItemStack antiBarrel) {
-        ListTag saveData = getSavedData(antiBarrel);
-        if (saveData == null) {
-            UUID uuid = UUID.randomUUID();
-            antiBarrel.getOrCreateTag().putUUID(NBTKeys.Uuid.name(), uuid);
-            NABBA.instance.getData(uuid);
-        }
-        return getSavedData(antiBarrel);
-    }
-
-    public static ListTag getSavedData(ItemStack antiBarrel) {
-        UUID uuid = getUUIDFromItem(antiBarrel);
-        if (uuid != null) {
-            return NABBA.instance.getData(uuid).getStorage();
-        }
-        return null;
     }
 
     public static UUID getUUIDFromItem(ItemStack antiBarrel) {

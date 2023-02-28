@@ -40,7 +40,7 @@ import java.util.UUID;
 
 public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider, HasItemHandler, HasSearchBar {
 
-    private UUID uuid = Util.NIL_UUID;
+    private UUID uuid;
     private Component customName;
 
     private String search = "";
@@ -143,7 +143,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     }
 
     public void saveAdditional(CompoundTag tag) {
-        if (getUuid() != Util.NIL_UUID) {
+        if (getUuid() != null) {
             tag.putUUID(NBTKeys.Uuid.name(), getUuid());
         }
         if (this.customName != null) {
@@ -156,7 +156,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     @Override//read
     public void load(CompoundTag tag) {
-        if (tag.hasUUID(NBTKeys.Uuid.name()) && tag.getUUID(NBTKeys.Uuid.name()) != Util.NIL_UUID) {
+        if (tag.hasUUID(NBTKeys.Uuid.name())) {
             setUuid(tag.getUUID(NBTKeys.Uuid.name()));
         }
         if (tag.contains("CustomName", 8)) {
@@ -187,8 +187,8 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     //make sure a new id is set if there isn't one and create an inventory for it so the game doesn't freak out
     public void initialize(ItemStack stack) {
-        if (uuid == Util.NIL_UUID) {
-            if (stack.hasTag() && stack.getTag().hasUUID(NBTKeys.Uuid.name()) && !stack.getTag().getUUID(NBTKeys.Uuid.name()).equals(Util.NIL_UUID)) {
+        if (uuid == null) {
+            if (stack.hasTag() && stack.getTag().hasUUID(NBTKeys.Uuid.name())) {
                 setUuid(stack.getTag().getUUID(NBTKeys.Uuid.name()));
             } else {
                 setUuid(UUID.randomUUID());
