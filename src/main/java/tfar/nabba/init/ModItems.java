@@ -106,7 +106,7 @@ public class ModItems {
     public static final Item CONNECT_KEY = new BlockStateKeyItem(basic(),BetterBarrelBlock.CONNECTED);
     public static final Item FLUID_CONTROLLER_KEY = new ControllerKeyItem(basic(),DisplayTypes.FLUID);
     public static final Item REMOTE_FLUID_CONTROLLER_KEY = new RemoteControllerKeyItem(basic(),DisplayTypes.FLUID);
-
+    //public static final Item CRAFTING_KEY = new CraftingKeyItem(basic());
     public static final Item BARREL_HAMMER = new BarrelHammerItem(basic());
 
     public static final Item NETWORK_VISUALIZER = new NetworkVisualizerItem(basic());

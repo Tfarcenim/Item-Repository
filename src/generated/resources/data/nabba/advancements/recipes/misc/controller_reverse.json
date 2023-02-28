@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_storage_downgrade": {
+    "has_controller_proxy": {
       "conditions": {
         "items": [
           {
             "items": [
-              "nabba:storage_downgrade"
+              "nabba:controller_proxy"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:storage_downgrade_reverse"
+        "recipe": "nabba:controller_reverse"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_storage_downgrade",
+      "has_controller_proxy",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:storage_downgrade_reverse"
+      "nabba:controller_reverse"
     ]
   }
 }

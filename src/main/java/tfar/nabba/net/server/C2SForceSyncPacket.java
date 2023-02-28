@@ -21,7 +21,7 @@ public class C2SForceSyncPacket implements C2SPacketHelper {
 
     public void handleServer(ServerPlayer player) {
         AbstractContainerMenu container = player.containerMenu;
-        if (container instanceof SearchableMenu antiBarrelMenu) {
+        if (container instanceof SearchableMenu<?> antiBarrelMenu) {
             antiBarrelMenu.refreshDisplay(player,true);
         }
     }

@@ -107,8 +107,8 @@ public class ModRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.BETTER_BARREL_STORAGE_UPGRADE).define('#', ModItems.STORAGE_DOWNGRADE)
                 .pattern("##").pattern("##").unlockedBy("has_storage_downgrade", has(ModItems.STORAGE_DOWNGRADE))
-                .save(consumer,RecipeBuilder
-                        .getDefaultRecipeId(ModItems.STORAGE_DOWNGRADE).getPath() + "_reverse");
+                .save(consumer,new ResourceLocation(NABBA.MODID,RecipeBuilder
+                        .getDefaultRecipeId(ModItems.STORAGE_DOWNGRADE).getPath() + "_reverse"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,ModItems.STORAGE_DOWNGRADE, 4).requires(ModItems.BETTER_BARREL_STORAGE_UPGRADE)
                 .unlockedBy("has_better_barrel_storage_upgrade", has(ModItems.BETTER_BARREL_STORAGE_UPGRADE))
@@ -124,8 +124,8 @@ public class ModRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModBlocks.CONTROLLER).define('#', ModBlocks.CONTROLLER_PROXY)
                 .pattern("##").pattern("##").unlockedBy("has_controller_proxy", has(ModBlocks.CONTROLLER_PROXY))
-                .save(consumer,RecipeBuilder
-                        .getDefaultRecipeId(ModBlocks.CONTROLLER).getPath() + "_reverse");
+                .save(consumer,new ResourceLocation(NABBA.MODID,RecipeBuilder
+                        .getDefaultRecipeId(ModBlocks.CONTROLLER).getPath() + "_reverse"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,ModBlocks.CONTROLLER_PROXY, 4).requires(ModBlocks.CONTROLLER)
                 .unlockedBy("has_controller", has(ModBlocks.CONTROLLER))

@@ -88,7 +88,7 @@ public class ModLangProvider extends LanguageProvider {
                 +(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+"x"+(2 * Utils.RADIUS+1)+" volume");
 
         addTooltip(ModBlocks.CONTROLLER_PROXY,"Connects to nearby controller as an additional point for interaction, DOES NOT EXTEND CONTROLLER RANGE!");
-        addTooltip(ModBlocks.BARREL_INTERFACE,"Holds up to "+ BarrelInterfaceBlockEntity.SIZE+" barrels and exposes capabilities");
+        addTooltip(ModBlocks.BARREL_INTERFACE,"Holds up to %s barrels and exposes capabilities");
         addTooltip(ModItems.NETWORK_VISUALIZER,"Shows proxies and barrels connected to a controller");
         addTooltip(ModItems.BARREL_HAMMER,"Used to downgrade barrel frames");
         addTooltip(ModItems.REMOTE_CONTROLLER_KEY,"Bound to (%s,%s,%s)");

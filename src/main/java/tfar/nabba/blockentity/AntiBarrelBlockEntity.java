@@ -262,7 +262,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             if (stack.isEmpty())
                 return ItemStack.EMPTY;
 
-            if (isFull())
+            if (isFull()||!isItemValid(slot,stack))
                 return stack;
 
             else if (slot == stacks.size()) {

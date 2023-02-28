@@ -56,7 +56,6 @@ public class ClientUtils {
         viewModelPose.translate(-1 * x, -1 * y, 0);
         RenderSystem.applyModelViewMatrix();
         String s = Utils.formatLargeNumber(fluidStack.getAmount());
-
         Minecraft.getInstance().font.drawShadow(matrices, s, x - Minecraft.getInstance().font.width(s), y, 0xffffff);
         viewModelPose.popPose();
         RenderSystem.applyModelViewMatrix();
@@ -72,10 +71,8 @@ public class ClientUtils {
         viewModelPose.scale(scale, scale, scale);
         viewModelPose.translate(-x, -y, 0);
         RenderSystem.applyModelViewMatrix();
-        if (stack.getCount() > 1) {
-            String amount = Utils.formatLargeNumber(stack.getCount());
-            Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, x, y, amount);
-        }
+        String amount = (stack.getCount() > 1) ? Utils.formatLargeNumber(stack.getCount()) : null;
+        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, x, y, amount);
         viewModelPose.popPose();
         RenderSystem.applyModelViewMatrix();
 

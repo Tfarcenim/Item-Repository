@@ -25,14 +25,16 @@ import java.util.UUID;
 public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabilityProvider {
     private final ItemStack container;
 
-    private List<ItemStack> stacks;
-    private UUID uuid;
+    private final List<ItemStack> stacks;
+    private final UUID uuid;
 
     private final LazyOptional<IItemHandler> holder = LazyOptional.of(() -> this);
 
     public AntiBarrelItemStackItemHandler(ItemStack stack) {
         this.container = stack;
-        stacks = loadItems(getOrCreateSavedData(container));
+        //return a dummy container if we're on the client for some reason
+        boolean server = NABBA.instance.server != null;
+        stacks = server ? loadItems(getOrCreateSavedData(container)) : new ArrayList<>();
         uuid = getUUIDFromItem(container);
     }
 
@@ -131,8 +133,10 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
     }
 
     public void markDirty() {
-        NABBA.instance.getData(uuid).saveData(save(stacks));
-        BetterBarrelBlockItem.getOrCreateBlockEntityTag(container).putInt("Stored", getStoredCount());
+        if (uuid != null) {
+            NABBA.instance.getData(uuid).saveData(save(stacks));
+            BetterBarrelBlockItem.getOrCreateBlockEntityTag(container).putInt("Stored", getStoredCount());
+        }
     }
 
     public static ListTag save(List<ItemStack> stacks) {

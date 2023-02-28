@@ -29,6 +29,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.NABBA;
 import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
@@ -171,8 +172,6 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return cap == ForgeCapabilities.ITEM_HANDLER || cap == ForgeCapabilities.FLUID_HANDLER ? LazyOptional.of(() -> wrapper).cast() : super.getCapability(cap, side);
     }
-
-    public static final int SIZE = 4096;
 
     public static class BarrelWrapper implements SearchableItemHandler, SearchableFluidHandler {
 
@@ -600,7 +599,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public boolean isFull() {
-            return getStoredCount() >= SIZE;
+            return getStoredCount() >= NABBA.ServerCfg.barrel_interface_storage.get();
         }
 
         @Override

@@ -8,7 +8,11 @@ import org.checkerframework.checker.units.qual.C;
 import tfar.nabba.util.NBTKeys;
 
 public class ItemStackUtil {
-    //this is needed because servers, and the itemstack read/write methods will truncate item count to a byte
+    /**this is needed because servers, and the itemstack read/write methods will truncate item count to a byte
+     *
+     * @param buf
+     * @param stack
+     */
     public static void writeExtendedItemStack(FriendlyByteBuf buf, ItemStack stack) {
         buf.writeItem(stack);
         buf.writeInt(stack.getCount());

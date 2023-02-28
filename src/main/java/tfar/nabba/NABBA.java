@@ -197,6 +197,7 @@ public class NABBA {
         public static ForgeConfigSpec.IntValue better_barrel_base_storage;
         public static ForgeConfigSpec.IntValue fluid_barrel_base_storage;
         public static ForgeConfigSpec.IntValue anti_barrel_base_storage;
+        public static ForgeConfigSpec.IntValue barrel_interface_storage;
 
         public ServerCfg(ForgeConfigSpec.Builder builder) {
             builder.push("server");
@@ -209,6 +210,9 @@ public class NABBA {
             anti_barrel_base_storage = builder.
                     comment("Base storage of anti barrel in item count")
                     .defineInRange("anti_barrel_base_storage", 256, 1, Integer.MAX_VALUE);
+            barrel_interface_storage = builder.
+                    comment("Number of barrels the barrel interface can hold")
+                    .defineInRange("barrel_interface_storage", 4096, 1, 65536);
         }
     }
 }

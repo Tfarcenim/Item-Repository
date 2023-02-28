@@ -1,7 +1,7 @@
 {
   "block.nabba.anti_barrel": "Anti Barrel",
   "block.nabba.barrel_interface": "Barrel Interface",
-  "block.nabba.barrel_interface.tooltip": "Holds up to 4096 barrels and exposes capabilities",
+  "block.nabba.barrel_interface.tooltip": "Holds up to %s barrels and exposes capabilities",
   "block.nabba.better_barrel": "Better Barrel",
   "block.nabba.controller": "Controller",
   "block.nabba.controller.tooltip": "Connects to all barrels and tanks from this mod within a 27x27x27 volume",
