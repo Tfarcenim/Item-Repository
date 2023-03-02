@@ -25,8 +25,7 @@ public class AntiBarrelSubData extends SavedData {
     }
 
     public AntiBarrelBlockEntity.AntiBarrelInventory getInventory(AntiBarrelBlockEntity antiBarrelBlockEntity) {
-        ListTag tag = storage;
-        return createFromTag(antiBarrelBlockEntity, tag);
+        return createFromTag(antiBarrelBlockEntity, storage);
     }
 
     public AntiBarrelBlockEntity.AntiBarrelInventory createFromTag(AntiBarrelBlockEntity antiBarrelBlockEntity, ListTag tag) {

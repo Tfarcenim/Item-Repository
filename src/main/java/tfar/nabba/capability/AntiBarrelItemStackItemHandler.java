@@ -72,13 +72,24 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
                 return ItemStack.EMPTY;
             } else {
                 ItemStack existing = getStackInSlot(slot);
-                if (existing.getCount() + stack.getCount() > getSlotLimit(slot)) {
+
+                if (!existing.isEmpty() && !ItemStack.isSameItemSameTags(stack,existing)) {
                     if (!simulate) {
-                        stacks.set(slot, ItemHandlerHelper.copyStackWithSize(stack, getSlotLimit(slot)));
+                        stacks.add(stack);
+                        markDirty();
+                    }
+                    return ItemStack.EMPTY;
+                }
+
+                int slotLimit = getSlotLimit(slot);
+
+                if (existing.getCount() + stack.getCount() > slotLimit) {
+                    if (!simulate) {
+                        stacks.set(slot, ItemHandlerHelper.copyStackWithSize(stack, slotLimit));
                         markDirty();
                     }
                     return BetterBarrelBlockItem.isVoid(container) ? ItemStack.EMPTY :
-                            ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() + existing.getCount() - getSlotLimit(slot));
+                            ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() + existing.getCount() - slotLimit);
                 } else {
                     if (!simulate) {
                         stacks.set(slot, ItemHandlerHelper.copyStackWithSize(stack, existing.getCount() + stack.getCount()));

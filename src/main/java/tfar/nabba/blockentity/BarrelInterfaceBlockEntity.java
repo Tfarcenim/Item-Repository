@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.*;
+import tfar.nabba.capability.AntiBarrelItemStackItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
@@ -331,6 +332,9 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             ItemStack stack = handler.insertItem(slot, incoming, simulate);
             if (!simulate && stack != incoming) {
                 markDirty();
+                if (handler instanceof AntiBarrelItemStackItemHandler) {
+                    recomputeItemSlots();
+                }
             }
             return stack;
         }

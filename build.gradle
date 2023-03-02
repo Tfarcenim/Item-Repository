@@ -159,7 +159,7 @@ repositories {
         url = uri("https://modmaven.dev/")
 
         content {
-            //includeGroup("appeng")
+            includeGroup("appeng")
             includeGroup("mekanism")
         }
     }
@@ -185,6 +185,8 @@ dependencies {
     // Real mod deobf dependency examples - these get remapped to your current mappings
   //   compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}") // Adds JEI API as a compile dependency
   //   runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}") // Adds the full JEI mod as a runtime dependency
+
+    implementation fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
     runtimeOnly fg.deobf("me.shedaniel:RoughlyEnoughItems-forge:$rei_version")
 
