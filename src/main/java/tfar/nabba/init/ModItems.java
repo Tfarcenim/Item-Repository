@@ -22,12 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModItems {
-  //  static CreativeModeTab tab = new CreativeModeTab(NABBA.MODID) {
-  //      @Override
- //       public ItemStack makeIcon() {
- //           return new ItemStack(ModItems.ANTI_BARREL);
-  //      }
- ///   };
+    public static CreativeModeTab tab;
+
     public static final Item ANTI_BARREL = new AntiBarrelBlockItem(ModBlocks.ANTI_BARREL,unstackable());
     public static final Item STONE_ANTI_BARREL = new AntiBarrelBlockItem(ModBlocks.STONE_ANTI_BARREL,unstackable());
     public static final Item COPPER_ANTI_BARREL = new AntiBarrelBlockItem(ModBlocks.COPPER_ANTI_BARREL,unstackable());
