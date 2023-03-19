@@ -22,7 +22,7 @@ public class ControllerKeyMenuProvider implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Controller Key");
+        return Component.literal("Controller");
     }
 
     @Nullable

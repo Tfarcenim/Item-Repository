@@ -48,7 +48,6 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.editBox = new EditBox(this.font, i + 82, j + 6, 103, 12, Component.translatable("container.anti_barrel"));
-        this.editBox.setCanLoseFocus(false);
         this.editBox.setTextColor(-1);
         this.editBox.setTextColorUneditable(-1);
         this.editBox.setBordered(false);
@@ -56,7 +55,6 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
         this.editBox.setResponder(this::onNameChanged);
         this.editBox.setValue("");
         this.addWidget(this.editBox);
-        this.setInitialFocus(this.editBox);
         this.editBox.setEditable(true);
     }
 

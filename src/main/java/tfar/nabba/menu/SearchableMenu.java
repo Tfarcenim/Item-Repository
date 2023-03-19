@@ -64,7 +64,7 @@ public abstract class SearchableMenu<S> extends AbstractContainerMenu {
     }
 
 
-    public abstract void handleInsert(ServerPlayer player);
+    public abstract void handleInsert(ServerPlayer player, int count);
 
     public void handleSearch(ServerPlayer player, String search) {
         access.execute((level, pos) -> {

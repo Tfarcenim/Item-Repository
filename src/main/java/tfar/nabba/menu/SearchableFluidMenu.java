@@ -88,7 +88,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         return fluidHandler;
     }
 
-    public void handleInsert(ServerPlayer player) {
+    public void handleInsert(ServerPlayer player, int count) {
         ItemStack carried = getCarried();
         FluidActionResult result = fluidHandler.storeFluid(carried, new PlayerInvWrapper(player.getInventory()), player, false);
         if (result.isSuccess()) {

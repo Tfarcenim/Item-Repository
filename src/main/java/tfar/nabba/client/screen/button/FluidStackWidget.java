@@ -37,7 +37,7 @@ public class FluidStackWidget extends RightClickButton<FluidStack> {
                     PacketHandler.sendToServer(new C2SExtractFluidPacket(stack, shift));
 
                 } else {//try to insert fluid
-                    PacketHandler.sendToServer(new C2SInsertPacket());
+                    PacketHandler.sendToServer(new C2SInsertPacket(Integer.MAX_VALUE));
                 }
 
             });

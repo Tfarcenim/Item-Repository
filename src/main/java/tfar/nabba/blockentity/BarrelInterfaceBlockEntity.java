@@ -190,6 +190,15 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         }
 
+        //prevent voiding
+        @Override
+        public ItemStack storeItem(ItemStack stack, boolean simulate) {
+            if (!blockEntity.isRemoved()) {
+                return SearchableItemHandler.super.storeItem(stack, simulate);
+            }
+            return stack;
+        }
+
         public void recomputeSlots() {
             recomputeItemSlots();
             recomputeFluidSlots();

@@ -78,10 +78,15 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         return itemHandler;
     }
 
-    public void handleInsert(ServerPlayer player) {
+    public void handleInsert(ServerPlayer player, int count) {
         ItemStack carried = getCarried();
-        ItemStack reject = itemHandler.storeItem(carried,false);
-        setCarried(reject);
+
+        ItemStack store = carried.copy();
+        store.setCount(count);
+        ItemStack reject = itemHandler.storeItem(store,false);
+        int diff = store.getCount() - reject.getCount();
+        //todo: does this break things
+        setCarried(ItemHandlerHelper.copyStackWithSize(carried,carried.getCount() - diff));
     }
 
     public void handleItemExtract(ServerPlayer player, ItemStack stack, boolean shift) {

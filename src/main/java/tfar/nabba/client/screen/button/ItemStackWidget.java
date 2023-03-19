@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.inventory.RightClickButton;
 import tfar.nabba.net.server.C2SInsertPacket;
@@ -28,19 +29,29 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
     public void onClick(double pMouseX, double pMouseY) {
         boolean shift = Screen.hasShiftDown();
 
-        if (screen.getMenu().getCarried().isEmpty() &&!stack.isEmpty()) {//try to take item
+        ItemStack mouseStack = screen.getMenu().getCarried();
+
+        if (mouseStack.isEmpty() &&!stack.isEmpty()) {//try to take item
             PacketHandler.sendToServer(new C2SExtractItemPacket(stack, shift));
-        } else if (!screen.getMenu().getCarried().isEmpty()){//try to insert item
-            PacketHandler.sendToServer(new C2SInsertPacket());
+        } else if (!mouseStack.isEmpty()) {//try to insert full stack
+            PacketHandler.sendToServer(new C2SInsertPacket(mouseStack.getCount()));
         }
         super.onClick(pMouseX, pMouseY);
     }
 
     @Override
     public void onRightClick(double pMouseX, double pMouseY) {
-        if (!screen.getMenu().getCarried().isEmpty() && stack.isEmpty()) {//try to add item
-            PacketHandler.sendToServer(new C2SInsertPacket());
+
+        ItemStack mouseStack = screen.getMenu().getCarried();
+
+        if (!mouseStack.isEmpty() && stack.isEmpty()) {//try to add one item
+            PacketHandler.sendToServer(new C2SInsertPacket(1));
+        } else if (mouseStack.isEmpty()) {
+            //take half
+            int count = (int) Math.ceil(Math.min(stack.getMaxStackSize(),stack.getCount()) / 2d);
+            PacketHandler.sendToServer(new C2SExtractItemPacket(ItemHandlerHelper.copyStackWithSize(stack,count), false));
         }
+
         super.onClick(pMouseX, pMouseY);
     }
 
