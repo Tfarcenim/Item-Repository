@@ -6,9 +6,14 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import tfar.nabba.util.SearchHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public interface SearchableItemHandler extends ItemHandler {
     default List<ItemStack> getItemsForDisplay(int row, String search) {
@@ -48,23 +53,32 @@ public interface SearchableItemHandler extends ItemHandler {
         if (search.isEmpty()) {
             return true;
         } else {
-            Item item = stack.getItem();
-            if (search.startsWith("#")) {
-                String sub = search.substring(1);
+            String[] groups = search.split(" ");
 
-                List<TagKey<Item>> tags = item.builtInRegistryHolder().tags().toList();
-                for (TagKey<Item> tag : tags) {
-                    if (tag.location().getPath().startsWith(sub)) {
-                        return true;
-                    }
+            for (String subGroup : groups) {
+
+                int len = subGroup.length();
+
+                char firstPrefix = subGroup.charAt(0);
+
+                boolean invert = firstPrefix == '-';
+
+                if (invert && len > 1) {
+                    firstPrefix = subGroup.charAt(1);
                 }
-                return false;
-            } else if (BuiltInRegistries.ITEM.getKey(item).getPath().startsWith(search)) {
-                return true;
+
+                BiPredicate<ItemStack,String> searchPred = SearchHelper.searchPredicate.get(firstPrefix);
+                boolean match = searchPred == null ? SearchHelper.DEFAULT.test(stack, invert? subGroup.substring(1) :subGroup) : searchPred.test(stack,invert ? subGroup.substring(2) : subGroup.substring(1));
+
+                match = invert != match;
+
+                if (!match) return false;
             }
         }
-        return false;
+        return true;
     }
+
+    Map<Character, Predicate<ItemStack>> searchPredicates = new HashMap<>();
 
     default int getFullItemSlots(String search) {
         int j = 0;
