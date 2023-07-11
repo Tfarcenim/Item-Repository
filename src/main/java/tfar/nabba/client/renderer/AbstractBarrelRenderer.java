@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -72,7 +73,7 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
             flatten(pPoseStack, scale);
             BakedModel bakedmodel = this.itemRenderer.getModel(stack, abstractBarrelBlockEntity.getLevel(), null, 0);
             rotate(bakedmodel, pPoseStack);
-            itemRenderer.render(stack, ItemTransforms.TransformType.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
+            itemRenderer.render(stack, ItemDisplayContext.GUI, false, pPoseStack, bufferSource, LightTexture.FULL_BRIGHT, pPackedOverlay, bakedmodel);
         } catch (Exception e) {
             //bruh
         }
@@ -135,7 +136,8 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
         }
 
         Matrix4f matrix4f = pPoseStack.last().pose();
-        font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, false, j, LightTexture.FULL_BRIGHT);
+        font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL,
+                j, LightTexture.FULL_BRIGHT,true);
 
         pPoseStack.popPose();
     }

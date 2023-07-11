@@ -87,8 +87,8 @@ public class Utils {
             } else if (betterBarrelBlockEntity instanceof HasFluidHandler hasFluidHandler) {
 
                 BlockPos.betweenClosedStream(
-                        betterBarrelBlockEntity.getBlockPos().offset(-(x - 1) / 2d, -(y - 1) / 2d, -(z - 1) / 2d),
-                        betterBarrelBlockEntity.getBlockPos().offset((x - 1) / 2d, (y - 1) / 2d, (z - 1) / 2d)
+                        betterBarrelBlockEntity.getBlockPos().offset(-(x - 1) / 2, -(y - 1) / 2, -(z - 1) / 2),
+                        betterBarrelBlockEntity.getBlockPos().offset((x - 1) / 2, (y - 1) / 2, (z - 1) / 2)
                 ).forEachOrdered(pos -> {
                     FluidState fluidState = level.getFluidState(pos);
 

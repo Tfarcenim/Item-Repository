@@ -1,8 +1,8 @@
 package tfar.nabba.client.screen.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -13,9 +13,8 @@ import tfar.nabba.net.server.C2SInsertPacket;
 import tfar.nabba.net.server.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.ClientUtils;
-import tfar.nabba.util.Utils;
 
-public class ItemStackWidget extends RightClickButton<ItemStack> {
+public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemScreen<?,?>> {
 
     private final SearchableItemScreen<?,?> screen;
 
@@ -56,24 +55,24 @@ public class ItemStackWidget extends RightClickButton<ItemStack> {
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         if (!stack.isEmpty()) {
             if (isHovered) {
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
-                fill(pPoseStack, getX(), getY(), getX() + 16, getY() + 16, 0x80ffffff);
+                pPoseStack.fill(getX(), getY(), getX() + 16, getY() + 16, 0x80ffffff);
                 renderTooltip(pPoseStack, pMouseX, pMouseY);
             }
             renderItem(pPoseStack);
         }
     }
 
-    public void renderItem(PoseStack matrices) {
+    public void renderItem(GuiGraphics matrices) {
         ClientUtils.drawSmallItemNumbers(matrices,getX(),getY(),stack);
-        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, getX(), getY());
+        matrices.renderItemDecorations(Minecraft.getInstance().font,stack, getX(), getY());
     }
 
-    public void renderTooltip(PoseStack matrices,int x,int y) {
-        screen.renderTooltip(matrices,stack,x,y);
+    public void renderTooltip(GuiGraphics matrices,int x,int y) {
+        screen.renderItemTooltip(matrices,stack,x,y);
     }
 }

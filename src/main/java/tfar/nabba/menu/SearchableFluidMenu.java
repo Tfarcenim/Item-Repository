@@ -63,7 +63,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int slotIndex) {
-        if (playerIn.level.isClientSide) {
+        if (playerIn.level().isClientSide) {
             return ItemStack.EMPTY;
         }
         Slot slot = this.slots.get(slotIndex);

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import tfar.nabba.client.FluidSpriteCache;
 
 public class ClientUtils {
 
-    public static void renderFluid(PoseStack matrices, int x, int y, FluidStack fluidStack) {
+    public static void renderFluid(GuiGraphics matrices, int x, int y, FluidStack fluidStack) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluidStack.getFluid());
@@ -26,13 +26,13 @@ public class ClientUtils {
         RenderSystem.setShaderColor((color >> 16 & 0xff) / 255f, (color >> 8 & 0xff) / 255f, (color & 0xff) / 255f, 1);
         RenderSystem.enableDepthTest();
 
-        GuiComponent.blit(matrices, x, y, 0, 16, 16, sprite);
+        matrices.blit(x, y, 0, 16, 16, sprite);
 
         drawSmallFluidNumbers(matrices, x, y, 0, fluidStack);
 
     }
 
-    public static void renderFluidTooltip(PoseStack matrices, int x, int y, FluidStack fluidStack) {
+    public static void renderFluidTooltip(GuiGraphics matrices, int x, int y, FluidStack fluidStack) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluidStack.getFluid());
@@ -42,12 +42,12 @@ public class ClientUtils {
 
         RenderSystem.enableDepthTest();
 
-        GuiComponent.blit(matrices, x, y, 400, 16, 16, sprite);
+        matrices.blit(x, y, 400, 16, 16, sprite);
 
         drawSmallFluidNumbers(matrices, x, y, 500, fluidStack);
     }
 
-    public static void drawSmallFluidNumbers(PoseStack matrices, int x, int y, int z, FluidStack fluidStack) {
+    public static void drawSmallFluidNumbers(GuiGraphics matrices, int x, int y, int z, FluidStack fluidStack) {
         PoseStack viewModelPose = RenderSystem.getModelViewStack();
         viewModelPose.pushPose();
         viewModelPose.translate(x + 16, y + 12, z);
@@ -56,12 +56,12 @@ public class ClientUtils {
         viewModelPose.translate(-1 * x, -1 * y, 0);
         RenderSystem.applyModelViewMatrix();
         String s = Utils.formatLargeNumber(fluidStack.getAmount());
-        Minecraft.getInstance().font.drawShadow(matrices, s, x - Minecraft.getInstance().font.width(s), y, 0xffffff);
+        matrices.drawString(Minecraft.getInstance().font, s, x - Minecraft.getInstance().font.width(s), y, 0xffffff);
         viewModelPose.popPose();
         RenderSystem.applyModelViewMatrix();
     }
 
-    public static void drawSmallItemNumbers(PoseStack matrices, int x, int y, ItemStack stack) {
+    public static void drawSmallItemNumbers(GuiGraphics matrices, int x, int y, ItemStack stack) {
 
 
         PoseStack viewModelPose = RenderSystem.getModelViewStack();
@@ -72,7 +72,7 @@ public class ClientUtils {
         viewModelPose.translate(-x, -y, 0);
         RenderSystem.applyModelViewMatrix();
         String amount = (stack.getCount() > 1) ? Utils.formatLargeNumber(stack.getCount()) : null;
-        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, x, y, amount);
+        matrices.renderItemDecorations(Minecraft.getInstance().font, stack, x, y, amount);
         viewModelPose.popPose();
         RenderSystem.applyModelViewMatrix();
 
@@ -84,7 +84,6 @@ public class ClientUtils {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
-        RenderSystem.disableTexture();
         RenderSystem.disableBlend();
 
         RenderSystem.lineWidth(1.0F);
@@ -122,7 +121,6 @@ public class ClientUtils {
 
         tesselator.end();
         RenderSystem.enableBlend();
-        RenderSystem.enableTexture();
     }
 
     public static void renderLineSetup(Camera camera, double x1, double y1, double z1, double x2, double y2, double z2, int aarrggbb) {

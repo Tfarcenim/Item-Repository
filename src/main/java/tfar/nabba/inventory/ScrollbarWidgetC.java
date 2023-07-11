@@ -2,6 +2,7 @@ package tfar.nabba.inventory;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
@@ -20,16 +21,15 @@ public class ScrollbarWidgetC<S,T extends SearchableMenu<S>> extends AbstractWid
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, SearchableItemScreen.TEXTURE);
         int rows = screen.getMenu().getSearchRows();
 
         if (rows > 6) {
             int currentRow = screen.getMenu().getCurrentRow();
             double frac = (double)currentRow / (rows - 6);
             double position = height * frac;
-            blit(pPoseStack, getX(), (int) (getY() + position), 244, 0, 12, 15);
+            pPoseStack.blit(SearchableItemScreen.TEXTURE,getX(), (int) (getY() + position), 244, 0, 12, 15);
         }
     }
 

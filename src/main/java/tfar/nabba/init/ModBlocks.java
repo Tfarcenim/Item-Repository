@@ -3,7 +3,6 @@ package tfar.nabba.init;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
 import tfar.nabba.block.*;
 import tfar.nabba.util.BarrelFrameTiers;
 
@@ -46,11 +45,11 @@ public class ModBlocks {
     public static final AbstractBarrelBlock NETHERITE_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.NETHERITE);
     public static final AbstractBarrelBlock CREATIVE_FLUID_BARREL = new FluidBarrelBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), BarrelFrameTiers.CREATIVE);
 
-    public static final Block CONTROLLER = new ControllerBlock(BlockBehaviour.Properties.of(Material.METAL).requiresCorrectToolForDrops().strength(3.5f));
+    public static final Block CONTROLLER = new ControllerBlock(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(3.5f));
 
-    public static final Block CONTROLLER_PROXY = new ControllerProxyBlock(BlockBehaviour.Properties.of(Material.METAL).requiresCorrectToolForDrops().strength(3.5f));
+    public static final Block CONTROLLER_PROXY = new ControllerProxyBlock(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(3.5f));
 
-    public static final Block BARREL_INTERFACE = new BarrelInterfaceBlock(BlockBehaviour.Properties.of(Material.METAL).requiresCorrectToolForDrops().strength(3.5f));
+    public static final Block BARREL_INTERFACE = new BarrelInterfaceBlock(BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(3.5f));
 
     private static final List<Block> BLOCKS = new ArrayList<>();
     public static List<Block> getBlocks() {

@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
@@ -26,8 +27,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.CreativeModeTabRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.SearchableFluidHandler;
@@ -221,16 +222,6 @@ public class Client {
     public static void tooltipC(RegisterClientTooltipComponentFactoriesEvent e) {
         e.register(BetterBarrelTooltip.class, Client::tooltipImage);
         e.register(FluidBarrelTooltip.class,Client::tooltipImage);
-    }
-
-    public static void tabC(CreativeModeTabEvent.Register event) {
-        ModItems.tab = event.registerCreativeModeTab(new ResourceLocation(NABBA.MODID, NABBA.MODID), builder -> builder
-                .icon(() -> new ItemStack(ModItems.ANTI_BARREL))
-                .title(Component.translatable("itemGroup.nabba"))
-                .displayItems((features, output, operator) -> {
-                    ModItems.getItems().forEach(output::accept);
-                })
-        );
     }
 
     public static ClientTooltipComponent tooltipImage(TooltipComponent data) {

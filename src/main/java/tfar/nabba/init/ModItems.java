@@ -1,5 +1,6 @@
 package tfar.nabba.init;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -22,7 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModItems {
-    public static CreativeModeTab tab;
+    public static CreativeModeTab tab = CreativeModeTab.builder()
+            .icon(() -> new ItemStack(ModItems.ANTI_BARREL))
+            .title(Component.translatable("itemGroup.nabba"))
+            .displayItems((features, output) -> {
+        ModItems.getItems().forEach(output::accept);
+    }).build();
 
     public static final Item ANTI_BARREL = new AntiBarrelBlockItem(ModBlocks.ANTI_BARREL,unstackable());
     public static final Item STONE_ANTI_BARREL = new AntiBarrelBlockItem(ModBlocks.STONE_ANTI_BARREL,unstackable());

@@ -1,8 +1,11 @@
 package tfar.nabba.client.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.client.screen.button.FluidStackWidget;
@@ -33,10 +36,15 @@ public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends Se
         }
     }
 
+    public void renderFluidTooltip(GuiGraphics graphics, FluidStack pItemStack, int pMouseX, int pMouseY) {
+        //super.renderTooltip(graphics, pItemStack, pMouseX, pMouseY);
+        graphics.renderTooltip(this.font, List.of(pItemStack.getDisplayName()), java.util.Optional.empty(), pMouseX, pMouseY);
+    }
+
     @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        this.font.draw(pPoseStack, menu.getFilledSlotCount()+"", (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
+        pPoseStack.drawString(font,menu.getFilledSlotCount()+"", this.titleLabelX + 60, this.inventoryLabelY, 0x404040);
     }
 
     public void setGuiFluids(List<FluidStack> stacks) {

@@ -6,13 +6,13 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import tfar.nabba.client.screen.SearchableScreen;
 
-public class RightClickButton<T> extends AbstractWidget {
+public abstract class RightClickButton<T,U extends SearchableScreen<?,?>> extends AbstractWidget {
 
     protected int index;
     protected T stack;
-    protected final SearchableScreen<?,?> screen;
+    protected final U screen;
 
-    public RightClickButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableScreen<?,?> screen) {
+    public RightClickButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, U screen) {
         super(pX, pY, pWidth, pHeight, pMessage);
         this.screen = screen;
 

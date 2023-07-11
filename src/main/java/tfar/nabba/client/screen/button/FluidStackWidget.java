@@ -1,6 +1,6 @@
 package tfar.nabba.client.screen.button;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ import tfar.nabba.net.server.C2SInsertPacket;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.ClientUtils;
 
-public class FluidStackWidget extends RightClickButton<FluidStack> {
+public class FluidStackWidget extends RightClickButton<FluidStack,SearchableFluidScreen<?,?>> {
 
     public FluidStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableFluidScreen<?,?> screen) {
         super(pX, pY, pWidth, pHeight, pMessage, screen);
@@ -51,7 +51,7 @@ public class FluidStackWidget extends RightClickButton<FluidStack> {
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         if (!stack.isEmpty()) {
             renderFluid(pPoseStack);
             if (isHovered) {
@@ -60,12 +60,12 @@ public class FluidStackWidget extends RightClickButton<FluidStack> {
         }
     }
 
-    public void renderFluid(PoseStack matrices) {
+    public void renderFluid(GuiGraphics matrices) {
         ClientUtils.renderFluid(matrices, getX(), getY(),stack);
     }
 
 
-    public void renderTooltip(PoseStack matrices,int x,int y) {
-        screen.renderTooltip(matrices,stack.getDisplayName(),x,y);
+    public void renderTooltip(GuiGraphics matrices,int x,int y) {
+        screen.renderFluidTooltip(matrices,stack,x,y);
     }
 }

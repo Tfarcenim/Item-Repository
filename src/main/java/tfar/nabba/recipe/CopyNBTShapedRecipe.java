@@ -1,5 +1,6 @@
 package tfar.nabba.recipe;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -12,13 +13,13 @@ import javax.annotation.Nonnull;
 public class CopyNBTShapedRecipe extends ShapedRecipe {
 
     public CopyNBTShapedRecipe(ShapedRecipe recipe) {
-        super(recipe.getId(), "upgrade", recipe.category(), recipe.getWidth(), recipe.getHeight(),recipe.getIngredients(), recipe.getResultItem());
+        super(recipe.getId(), "upgrade", recipe.category(), recipe.getWidth(), recipe.getHeight(),recipe.getIngredients(), recipe.getResultItem(null));
     }
 
     @Nonnull
     @Override
-    public ItemStack assemble(CraftingContainer inv) {
-        ItemStack newBarrel = super.assemble(inv).copy();
+    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
+        ItemStack newBarrel = super.assemble(inv,access).copy();
 
         //search for barrel
         for (int i = 0; i < inv.getContainerSize();i++) {

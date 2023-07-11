@@ -1,7 +1,6 @@
 package tfar.nabba.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -29,7 +28,7 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         editBox.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
@@ -58,9 +57,10 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
         this.editBox.setEditable(true);
     }
 
-    @Override
-    public void renderTooltip(PoseStack pPoseStack, ItemStack pItemStack, int pMouseX, int pMouseY) {
-        super.renderTooltip(pPoseStack, pItemStack, pMouseX, pMouseY);
+    //@Override
+    public void renderItemTooltip(GuiGraphics graphics, ItemStack pItemStack, int pMouseX, int pMouseY) {
+        //super.renderTooltip(graphics, pItemStack, pMouseX, pMouseY);
+        graphics.renderTooltip(this.font, this.getTooltipFromContainerItem(pItemStack), pItemStack.getTooltipImage(), pItemStack, pMouseX, pMouseY);
     }
 
     private void onNameChanged(String string) {
@@ -75,11 +75,10 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
      * @param mouseY
      */
     @Override
-    protected void renderBg(PoseStack stack,float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0,TEXTURE);
+    protected void renderBg(GuiGraphics stack,float partialTicks, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.blit(stack,i, j, 0, 0, this.imageWidth, this.imageHeight);
+        stack.blit(TEXTURE,i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     public boolean canScroll() {

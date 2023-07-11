@@ -49,13 +49,13 @@ public class VanityKeyMenu extends AbstractContainerMenu {
     }
 
     public void receiveVanity(int color,double size) {
-            BlockEntity blockEntity= player.level.getBlockEntity(pos);
+            BlockEntity blockEntity= player.level().getBlockEntity(pos);
             if (blockEntity instanceof AbstractBarrelBlockEntity betterBarrelBlockEntity) {
                 betterBarrelBlockEntity.setColor(color);
                 betterBarrelBlockEntity.setSize(size);
             } else if (blockEntity instanceof ControllerBlockEntity controllerBlock) {
                 for (BlockPos pos1 : controllerBlock.getAllBarrels()) {
-                    BlockEntity blockEntity1 = player.level.getBlockEntity(pos1);
+                    BlockEntity blockEntity1 = player.level().getBlockEntity(pos1);
                     if (blockEntity1 instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
                         abstractBarrelBlockEntity.setColor(color);
                         abstractBarrelBlockEntity.setSize(size);
@@ -65,7 +65,7 @@ public class VanityKeyMenu extends AbstractContainerMenu {
     }
 
     protected boolean stillValid(Player pPlayer, TagKey<Block> targetBlocks) {
-        return pPlayer.level.getBlockState(pos).is(targetBlocks)
+        return pPlayer.level().getBlockState(pos).is(targetBlocks)
                 && pPlayer.distanceToSqr((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D) <= 64.0D;
     }
 }

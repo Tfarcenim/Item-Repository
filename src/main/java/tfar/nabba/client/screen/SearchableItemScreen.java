@@ -1,6 +1,7 @@
 package tfar.nabba.client.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -34,9 +35,9 @@ public class SearchableItemScreen<T extends SearchableItemHandler,U extends Sear
     }
 
     @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        this.font.draw(pPoseStack, menu.getFilledSlotCount()+"", (float)this.titleLabelX + 60, (float)this.inventoryLabelY, 0x404040);
+        pPoseStack.drawString(font,menu.getFilledSlotCount()+"", this.titleLabelX + 60, this.inventoryLabelY, 0x404040);
     }
 
     public void setGuiStacks(List<ItemStack> stacks) {
