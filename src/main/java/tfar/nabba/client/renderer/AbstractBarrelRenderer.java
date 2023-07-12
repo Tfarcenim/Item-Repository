@@ -137,7 +137,7 @@ public abstract class AbstractBarrelRenderer<T extends AbstractBarrelBlockEntity
 
         Matrix4f matrix4f = pPoseStack.last().pose();
         font.drawInBatch(text, f2 + .5f, 0, color, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL,
-                j, LightTexture.FULL_BRIGHT,true);
+                j, LightTexture.FULL_BRIGHT,false);
 
         pPoseStack.popPose();
     }
