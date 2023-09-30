@@ -1,5 +1,6 @@
 package tfar.nabba.net;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -11,10 +12,15 @@ import tfar.nabba.net.client.S2CRefreshClientItemStacksPacket;
 import tfar.nabba.net.server.*;
 
 public class PacketHandler {
-    public static SimpleChannel INSTANCE;
+
 
     public static void registerMessages() {
         int id = 0;
+
+
+        ServerPlayNetworking.registerGlobalReceiver(scroll, new C2SMessageScrollSlot());
+
+
 
         INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(NABBA.MODID, NABBA.MODID), () -> "1.0", s -> true, s -> true);
 

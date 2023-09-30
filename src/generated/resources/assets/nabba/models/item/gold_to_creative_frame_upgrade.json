@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "nabba:item/frame_upgrade/from_gold",
-    "layer1": "nabba:item/frame_upgrade/to_creative"
-  }
-}

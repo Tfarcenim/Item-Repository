@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "nabba:item/pickup_9x9_upgrade"
-  }
-}

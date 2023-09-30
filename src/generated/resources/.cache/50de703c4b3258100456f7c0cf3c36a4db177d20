@@ -1,9 +1,0 @@
-// 1.19.3	2022-12-12T17:05:30.3225407	Tags for minecraft:block mod id nabba
-fd0967f6cd5c9a52da6b860985c4f449d649d5d8 data/forge/tags/blocks/blocks/nether_bricks.json
-466a3f2f73a11eb50fe958e8c57b56b2133d494f data/forge/tags/blocks/blocks/nether_brick_slabs.json
-a4949928bf0025ea737a395fa687594b397663f2 data/minecraft/tags/blocks/mineable/axe.json
-fab55b0ea40791c6a1f3bbc07366624329bdf700 data/minecraft/tags/blocks/mineable/pickaxe.json
-86015206b0deb7be67db58c5babcf30e070f07a0 data/nabba/tags/blocks/anti_barrels.json
-b60ac048ec3c27aedf28c8ce073a16151d88aea3 data/nabba/tags/blocks/barrels.json
-64a9d344579ab0bc311d8798074cfba9f6217a00 data/nabba/tags/blocks/better_barrels.json
-dd8a4b4227f85ab2c7d8dd4719a9bb1561bdf9e2 data/nabba/tags/blocks/fluid_barrels.json

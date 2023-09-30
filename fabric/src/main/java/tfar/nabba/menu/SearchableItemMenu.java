@@ -6,12 +6,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.client.S2CRefreshClientItemStacksPacket;
+import tfar.nabba.util.CommonUtils;
 
 import java.util.List;
 
@@ -86,7 +86,7 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         ItemStack reject = itemHandler.storeItem(store,false);
         int diff = store.getCount() - reject.getCount();
         //todo: does this break things
-        setCarried(ItemHandlerHelper.copyStackWithSize(carried,carried.getCount() - diff));
+        setCarried(CommonUtils.copyStackWithSize(carried,carried.getCount() - diff));
     }
 
     public void handleItemExtract(ServerPlayer player, ItemStack stack, boolean shift) {
