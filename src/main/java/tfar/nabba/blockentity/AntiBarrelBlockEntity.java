@@ -14,7 +14,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,14 +24,13 @@ import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.HasSearchBar;
-import tfar.nabba.api.ItemHandler;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.net.util.ItemStackUtil;
 import tfar.nabba.util.NBTKeys;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.world.AntiBarrelSubData;
+import tfar.nabba.util.Utils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,7 +40,7 @@ import java.util.UUID;
 
 public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider, HasItemHandler, HasSearchBar {
 
-    private UUID uuid = Util.NIL_UUID;
+    private UUID uuid;
     private Component customName;
 
     private String search = "";
@@ -140,12 +138,12 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     }
 
     @Override
-    public ItemHandler getItemHandler() {
+    public AntiBarrelInventory getItemHandler() {
         return getInventory();
     }
 
     public void saveAdditional(CompoundTag tag) {
-        if (getUuid() != Util.NIL_UUID) {
+        if (getUuid() != null) {
             tag.putUUID(NBTKeys.Uuid.name(), getUuid());
         }
         if (this.customName != null) {
@@ -158,7 +156,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     @Override//read
     public void load(CompoundTag tag) {
-        if (tag.hasUUID(NBTKeys.Uuid.name()) && tag.getUUID(NBTKeys.Uuid.name()) != Util.NIL_UUID) {
+        if (tag.hasUUID(NBTKeys.Uuid.name())) {
             setUuid(tag.getUUID(NBTKeys.Uuid.name()));
         }
         if (tag.contains("CustomName", 8)) {
@@ -189,8 +187,8 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
 
     //make sure a new id is set if there isn't one and create an inventory for it so the game doesn't freak out
     public void initialize(ItemStack stack) {
-        if (uuid == Util.NIL_UUID) {
-            if (stack.hasTag() && stack.getTag().hasUUID(NBTKeys.Uuid.name()) && !stack.getTag().getUUID(NBTKeys.Uuid.name()).equals(Util.NIL_UUID)) {
+        if (uuid == null) {
+            if (stack.hasTag() && stack.getTag().hasUUID(NBTKeys.Uuid.name())) {
                 setUuid(stack.getTag().getUUID(NBTKeys.Uuid.name()));
             } else {
                 setUuid(UUID.randomUUID());
@@ -215,6 +213,11 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     @Override
     public String getSearchString() {
         return search;
+    }
+
+    @Override
+    public int getRedstoneOutput() {
+        return Utils.getRedstoneSignalFromAntibarrel(getInventory());
     }
 
     public static class AntiBarrelInventory implements SearchableItemHandler, ResizableIItemHandler {
@@ -242,7 +245,11 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
 
         public boolean isFull() {
-            return getStoredCount() >= blockEntity.getStorage();
+            return getStoredCount() >= getActualLimit();
+        }
+
+        public int getActualLimit() {
+            return blockEntity.getStorageMultiplier() * NABBA.ServerCfg.anti_barrel_base_storage.get();
         }
 
         @Override
@@ -255,7 +262,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             if (stack.isEmpty())
                 return ItemStack.EMPTY;
 
-            if (isFull())
+            if (isFull()||!isItemValid(slot,stack))
                 return stack;
 
             else if (slot == stacks.size()) {

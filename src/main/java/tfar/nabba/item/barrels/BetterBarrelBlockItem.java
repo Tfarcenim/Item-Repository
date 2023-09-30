@@ -8,7 +8,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.UpgradeStack;
@@ -82,11 +81,11 @@ public class BetterBarrelBlockItem extends BlockItem {
         return i;
     }
 
-    public static int getStorageUnits(ItemStack barrel,BarrelType type) {
-        int storage = Utils.BASE_STORAGE.get(type);
+    public static int getStorageMultiplier(ItemStack barrel) {
+        int storage = 1;
         List<UpgradeStack> upgrades = getUpgrades(barrel);
         for (UpgradeStack upgradeStack : upgrades) {
-            storage += upgradeStack.getStorageUnits(type);
+            storage += upgradeStack.getStorageMultiplier();
         }
         return storage;
     }
@@ -96,6 +95,10 @@ public class BetterBarrelBlockItem extends BlockItem {
     }
     public static boolean infiniteVending(ItemStack barrel) {
         return getBooleanBlockStateValue(barrel, SingleSlotBarrelBlock.INFINITE_VENDING);
+    }
+
+    public static boolean storageDowngrade(ItemStack barrel) {
+        return getBooleanBlockStateValue(barrel,SingleSlotBarrelBlock.STORAGE_DOWNGRADE);
     }
 
     public static boolean getBooleanBlockStateValue(ItemStack barrel, BooleanProperty property) {

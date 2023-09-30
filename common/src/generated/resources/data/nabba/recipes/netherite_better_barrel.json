@@ -1,0 +1,24 @@
+{
+  "type": "nabba:copy_nbt_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "forge:ingots/netherite"
+    },
+    "S": {
+      "tag": "minecraft:wooden_fences"
+    },
+    "b": {
+      "item": "nabba:emerald_better_barrel"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "SbS",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:netherite_better_barrel"
+  },
+  "show_notification": true
+}

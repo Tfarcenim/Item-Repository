@@ -1,0 +1,21 @@
+{
+  "type": "nabba:copy_nbt_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "forge:gems/emerald"
+    },
+    "S": {
+      "tag": "minecraft:wooden_fences"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "S S",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:diamond_to_emerald_frame_upgrade"
+  },
+  "show_notification": true
+}

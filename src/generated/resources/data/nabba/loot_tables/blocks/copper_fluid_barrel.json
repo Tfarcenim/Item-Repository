@@ -16,11 +16,13 @@
               "block": "nabba:copper_fluid_barrel",
               "function": "minecraft:copy_state",
               "properties": [
-                "discrete",
-                "infinite_vending",
+                "storage_downgrade",
                 "void",
+                "redstone",
                 "locked",
-                "connected"
+                "connected",
+                "infinite_vending",
+                "discrete"
               ]
             },
             {

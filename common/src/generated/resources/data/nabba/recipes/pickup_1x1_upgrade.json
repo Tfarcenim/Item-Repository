@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "forge:rods/wooden"
+    },
+    "b": {
+      "item": "minecraft:hopper"
+    }
+  },
+  "pattern": [
+    "P P",
+    " b ",
+    "P P"
+  ],
+  "result": {
+    "item": "nabba:pickup_1x1_upgrade"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,38 @@
+{
+    "schemaVersion": 1,
+    "id": "nabba",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "Barrels",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "homepage": "https://fabricmc.net/",
+        "sources": "https://github.com/FabricMC/fabric-example-mod"
+    },
+    "license": "CC0-1.0",
+    "icon": "assets/modid/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "tfar.nabba.NABBAFabric"
+        ],
+        "client": [
+            "tfar.nabba.client.Client"
+        ]
+    },
+    "mixins": [
+      "nabba.fabric.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.14",
+        "fabric": "*",
+        "minecraft": "1.20",
+        "java": ">=17"
+    },
+    "suggests": {
+        "another-mod": "*"
+    }
+}
+  

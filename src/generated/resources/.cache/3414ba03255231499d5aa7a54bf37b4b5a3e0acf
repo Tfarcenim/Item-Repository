@@ -1,0 +1,5 @@
+// 1.19.3	2022-12-12T17:05:30.311538	Tags for minecraft:block_entity_type mod id nabba
+e2658ac49ed1a3dba0c44b297f6805596b2e7fe0 data/nabba/tags/block_entity_type/anti_barrels.json
+d45ec0f998141ca4b677a4e364de2bbf3aafc06e data/nabba/tags/block_entity_type/barrels.json
+17681ae3c82146da7ce32ad5dd23f03fcd56e916 data/nabba/tags/block_entity_type/better_barrels.json
+21cc73c2e2a2cf241bbc2938d122dad002b1defd data/nabba/tags/block_entity_type/fluid_barrels.json

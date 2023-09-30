@@ -1,0 +1,8 @@
+{
+  "parent": "nabba:block/better_barrel_block",
+  "textures": {
+    "frame_bottom": "nabba:block/lapis_barrel_frame_side",
+    "frame_side": "nabba:block/lapis_barrel_frame_side",
+    "frame_top": "nabba:block/lapis_barrel_frame_side"
+  }
+}

@@ -9,6 +9,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -54,8 +55,10 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        pTooltip.add(Component.translatable("nabba.antibarrel.tooltip").append(
-                Component.literal(" "+ BetterBarrelBlockItem.getOrCreateBlockEntityTag(pStack).getInt("Stored")).withStyle(ChatFormatting.AQUA)));
+        if (pStack.getTagElement(BlockItem.BLOCK_ENTITY_TAG) != null) {
+            pTooltip.add(Component.translatable("nabba.antibarrel.tooltip").append(
+                    Component.literal(" "+ BetterBarrelBlockItem.getBlockEntityTag(pStack).getInt("Stored")).withStyle(ChatFormatting.AQUA)));
+        }
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
     }
 

@@ -1,0 +1,21 @@
+{
+  "type": "nabba:copy_nbt_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "forge:gems/diamond"
+    },
+    "S": {
+      "tag": "minecraft:wooden_fences"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "S S",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:gold_to_diamond_frame_upgrade"
+  },
+  "show_notification": true
+}

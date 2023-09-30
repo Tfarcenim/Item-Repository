@@ -172,8 +172,8 @@ public final class ShapeMerger {
 					Optional<Direction> moveNext = previousCenterPoint.map(
 							v -> {
 								Vec3 w = centerPoint.subtract(v);
-								BlockPos onPos = new BlockPos(w);
-								return Direction.fromNormal(onPos.getX(), onPos.getY(), onPos.getZ());
+								BlockPos onPos = new BlockPos((int) w.x, (int) w.y, (int) w.z);
+								return Direction.fromDelta(onPos.getX(), onPos.getY(), onPos.getZ());//todo
 							}
 					);
 

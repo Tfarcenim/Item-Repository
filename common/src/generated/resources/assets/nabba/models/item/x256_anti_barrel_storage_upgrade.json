@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nabba:item/anti/x256_storage_upgrade"
+  }
+}

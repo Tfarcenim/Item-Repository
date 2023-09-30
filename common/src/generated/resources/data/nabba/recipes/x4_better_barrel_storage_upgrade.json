@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "nabba:better_barrel_storage_upgrade"
+    }
+  },
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "result": {
+    "item": "nabba:x4_better_barrel_storage_upgrade"
+  },
+  "show_notification": true
+}

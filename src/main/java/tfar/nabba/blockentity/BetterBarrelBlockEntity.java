@@ -13,12 +13,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.NABBA;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.ItemHandler;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.NBTKeys;
-import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
 public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemStack> implements HasItemHandler {
@@ -110,7 +110,7 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (stack.isEmpty() || !isItemValid(slot, stack)) return stack;
 
-            int limit = getActualLimit(slot);
+            int limit = getActualLimit();
             int count = stack.getCount();
             int existing = this.stack.isEmpty() ? 0 : this.stack.getCount();
             if (count + existing > limit) {
@@ -158,11 +158,12 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         }
         @Override
         public int getSlotLimit(int slot) {//have to trick the vanilla hopper into inserting so voiding work
-            return getActualLimit(slot) + (barrelBlockEntity.isVoid() ? 1 : 0);
+            return getActualLimit() + (barrelBlockEntity.isVoid() ? 1 : 0);
         }
 
-        public int getActualLimit(int slot) {
-            return barrelBlockEntity.getStorage() * stack.getMaxStackSize();
+        public int getActualLimit() {
+            return barrelBlockEntity.getStorageMultiplier() * stack.getMaxStackSize() *
+                    (barrelBlockEntity.hasDowngrade() ? 1 : NABBA.ServerCfg.better_barrel_base_storage.get());
         }
 
         @Override
@@ -190,5 +191,10 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
     public void reviveCaps() {
         super.reviveCaps();
         optional = LazyOptional.of(this::getItemHandler);
+    }
+
+    @Override
+    public int getRedstoneOutput() {
+        return Utils.getRedstoneSignalFromContainer(getItemHandler());
     }
 }

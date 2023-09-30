@@ -2,6 +2,7 @@ package tfar.nabba.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +36,7 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
     private ForgeSlider slider;
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pPoseStack);
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
         editBox.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
@@ -48,7 +49,7 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
-        BlockEntity blockEntity =  player.level.getBlockEntity(menu.getPos());
+        BlockEntity blockEntity =  player.level().getBlockEntity(menu.getPos());
         int initialColor = Utils.COLOR;
         double initialSize = Utils.SIZE;
         if (blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
@@ -69,7 +70,6 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
     }
 
     protected void initEditBox(int posX,int posY,int color) {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.editBox = new BackgroundEditBox(this.font, i +posX, j + posY, 103, 12, Component.translatable("container.nabba.vanity_key"));
@@ -113,23 +113,22 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack stack, float pPartialTick, int pMouseX, int pMouseY) {
-        RenderSystem.setShaderTexture(0,TEXTURE);
+    protected void renderBg(GuiGraphics graphics, float pPartialTick, int pMouseX, int pMouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.blit(stack,i, j, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(TEXTURE,i, j, 0, 0, this.imageWidth, this.imageHeight);
 
         int xPos = 134;
         int yPos = 27;
 
-        fill(stack,leftPos+ xPos,topPos + yPos,i +xPos + 10 , j +yPos+ 10, 0xff000000 | localColor);
+        graphics.fill(leftPos+ xPos,topPos + yPos,i +xPos + 10 , j +yPos+ 10, 0xff000000 | localColor);
     }
 
     @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        this.font.draw(pPoseStack, Component.literal("Color:"), this.titleLabelX, this.titleLabelY + 24, 0x404040);
-        this.font.draw(pPoseStack, Component.literal("Size:"), this.titleLabelX, this.titleLabelY + 45, 0x404040);
+    protected void renderLabels(GuiGraphics graphics, int pMouseX, int pMouseY) {
+        super.renderLabels(graphics, pMouseX, pMouseY);
+        graphics.drawString(font, Component.literal("Color:"), this.titleLabelX, this.titleLabelY + 24, 0x404040);
+        graphics.drawString(font, Component.literal("Size:"), this.titleLabelX, this.titleLabelY + 45, 0x404040);
     }
 
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
@@ -144,8 +143,4 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         PacketHandler.sendToServer(new C2SVanityPacket(localColor,slider.getValue()));
     }
 
-    public void removed() {
-        super.removed();
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
-    }
 }

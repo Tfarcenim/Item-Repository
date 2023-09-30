@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "nabba:better_barrel_storage_upgrade"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "nabba:storage_downgrade"
+  }
+}

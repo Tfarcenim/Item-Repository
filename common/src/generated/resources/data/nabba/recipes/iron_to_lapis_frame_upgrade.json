@@ -1,0 +1,21 @@
+{
+  "type": "nabba:copy_nbt_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "forge:gems/lapis"
+    },
+    "S": {
+      "tag": "minecraft:wooden_fences"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "S S",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:iron_to_lapis_frame_upgrade"
+  },
+  "show_notification": true
+}

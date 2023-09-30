@@ -1,0 +1,8 @@
+{
+  "parent": "nabba:block/fluid_barrel_block",
+  "textures": {
+    "frame_bottom": "nabba:block/iron_barrel_frame_side",
+    "frame_side": "nabba:block/iron_barrel_frame_side",
+    "frame_top": "nabba:block/iron_barrel_frame_side"
+  }
+}

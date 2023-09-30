@@ -5,6 +5,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import tfar.nabba.api.Upgrade;
+import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.util.Upgrades;
@@ -59,6 +61,20 @@ public abstract class SingleSlotBarrelBlockEntity<T> extends AbstractBarrelBlock
 
     public final boolean infiniteVending() {
         return getBlockState().getValue(SingleSlotBarrelBlock.INFINITE_VENDING);
+    }
+
+    public int countUpgrade(Upgrade data) {
+        if (data == Upgrades.INFINITE_VENDING) {
+            return infiniteVending() ? 1 : 0;
+        } else if (data == Upgrades.STORAGE_DOWNGRADE) {
+            return hasDowngrade() ? 1 : 0;
+        }
+        return super.countUpgrade(data);
+    }
+
+
+    public final boolean hasDowngrade() {
+        return getBlockState().getValue(SingleSlotBarrelBlock.STORAGE_DOWNGRADE);
     }
 
     public boolean canConnect() {

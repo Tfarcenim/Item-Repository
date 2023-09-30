@@ -1,8 +1,6 @@
 package tfar.nabba.client.renderer;
 
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -11,11 +9,12 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.client.FluidSpriteCache;
 import tfar.nabba.item.UpgradeItem;
-import tfar.nabba.util.Upgrades;
 import tfar.nabba.util.Utils;
 
 public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlockEntity> {
@@ -35,7 +34,7 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
 
         boolean infiniteVend = betterBarrelBlockEntity.infiniteVending();
 
-        int cap = betterBarrelBlockEntity.getStorage() * 1000;
+        int cap = betterBarrelBlockEntity.getFluidHandler().getActualCapacity(0);
         String toDraw = infiniteVend ? Utils.INFINITY :stack.getAmount() + " / "+ cap;
 
         renderText(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay, toDraw, 14/16d, betterBarrelBlockEntity.getColor(), .0075f);
@@ -82,9 +81,7 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
         IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluid.getFluid());
 
         int color = renderProperties.getTintColor(fluid);
-
-        int[] col = splitRGBA(color);
-
+        
         VertexConsumer builder = buffer.getBuffer(Sheets.translucentCullBlockSheet());
         Matrix4f matrix = pPoseStack.last().pose();
         Matrix3f normal = pPoseStack.last().normal();
@@ -95,50 +92,50 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
         float maxV = sprite.getV(16);
 
         //Top
-        //      builder.vertex(matrix, MAX_WH, MAX_D, MIN_WH).color(col[0], col[1], col[2], col[3]).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal,  0,  1, 0).endVertex();
-        //      builder.vertex(matrix, MIN_WH, MAX_D, MIN_WH).color(col[0], col[1], col[2], col[3]).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal,  0,  1, 0).endVertex();
-        //      builder.vertex(matrix, MIN_WH, MAX_D, MAX_WH).color(col[0], col[1], col[2], col[3]).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal,  0,  1, 0).endVertex();
-        //      builder.vertex(matrix, MAX_WH, MAX_D, MAX_WH).color(col[0], col[1], col[2], col[3]).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal,  0,  1, 0).endVertex();
+        //      builder.vertex(matrix, MAX_WH, MAX_D, MIN_WH).color(color).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal,  0,  1, 0).endVertex();
+        //      builder.vertex(matrix, MIN_WH, MAX_D, MIN_WH).color(color).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal,  0,  1, 0).endVertex();
+        //      builder.vertex(matrix, MIN_WH, MAX_D, MAX_WH).color(color).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal,  0,  1, 0).endVertex();
+        //      builder.vertex(matrix, MAX_WH, MAX_D, MAX_WH).color(color).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal,  0,  1, 0).endVertex();
 
         //Bottom
-        //     builder.vertex(matrix, MIN_WH, MIN_D, MIN_WH).color(col[0], col[1], col[2], col[3]).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal,  0, -1, 0).endVertex();
-        //     builder.vertex(matrix, MAX_WH, MIN_D, MIN_WH).color(col[0], col[1], col[2], col[3]).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal,  0, -1, 0).endVertex();
-        //     builder.vertex(matrix, MAX_WH, MIN_D, MAX_WH).color(col[0], col[1], col[2], col[3]).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal,  0, -1, 0).endVertex();
-        //     builder.vertex(matrix, MIN_WH, MIN_D, MAX_WH).color(col[0], col[1], col[2], col[3]).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal,  0, -1, 0).endVertex();
+        //     builder.vertex(matrix, MIN_WH, MIN_D, MIN_WH).color(color).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal,  0, -1, 0).endVertex();
+        //     builder.vertex(matrix, MAX_WH, MIN_D, MIN_WH).color(color).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal,  0, -1, 0).endVertex();
+        //     builder.vertex(matrix, MAX_WH, MIN_D, MAX_WH).color(color).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal,  0, -1, 0).endVertex();
+        //     builder.vertex(matrix, MIN_WH, MIN_D, MAX_WH).color(color).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal,  0, -1, 0).endVertex();
 
         Direction facing = abstractBarrelBlockEntity.getBlockState().getValue(AbstractBarrelBlock.H_FACING);
 
         switch (facing) {
             case NORTH -> {
                 //North
-                builder.vertex(matrix, MAX_WH, MIN_WH, MIN_D).color(col[0], col[1], col[2], col[3]).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, -1).endVertex();
-                builder.vertex(matrix, MIN_WH, MIN_WH, MIN_D).color(col[0], col[1], col[2], col[3]).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, -1).endVertex();
-                builder.vertex(matrix, MIN_WH, MAX_WH, MIN_D).color(col[0], col[1], col[2], col[3]).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, -1).endVertex();
-                builder.vertex(matrix, MAX_WH, MAX_WH, MIN_D).color(col[0], col[1], col[2], col[3]).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, -1).endVertex();
+                builder.vertex(matrix, MAX_WH, MIN_WH, MIN_D).color(color).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, -1).endVertex();
+                builder.vertex(matrix, MIN_WH, MIN_WH, MIN_D).color(color).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, -1).endVertex();
+                builder.vertex(matrix, MIN_WH, MAX_WH, MIN_D).color(color).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, -1).endVertex();
+                builder.vertex(matrix, MAX_WH, MAX_WH, MIN_D).color(color).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, -1).endVertex();
             }
 
             case SOUTH -> {
                 //South
-                builder.vertex(matrix, MIN_WH, MIN_WH, MAX_D).color(col[0], col[1], col[2], col[3]).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, 1).endVertex();
-                builder.vertex(matrix, MAX_WH, MIN_WH, MAX_D).color(col[0], col[1], col[2], col[3]).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, 1).endVertex();
-                builder.vertex(matrix, MAX_WH, MAX_WH, MAX_D).color(col[0], col[1], col[2], col[3]).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, 1).endVertex();
-                builder.vertex(matrix, MIN_WH, MAX_WH, MAX_D).color(col[0], col[1], col[2], col[3]).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, 1).endVertex();
+                builder.vertex(matrix, MIN_WH, MIN_WH, MAX_D).color(color).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, 1).endVertex();
+                builder.vertex(matrix, MAX_WH, MIN_WH, MAX_D).color(color).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, 1).endVertex();
+                builder.vertex(matrix, MAX_WH, MAX_WH, MAX_D).color(color).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, 1).endVertex();
+                builder.vertex(matrix, MIN_WH, MAX_WH, MAX_D).color(color).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 0, 0, 1).endVertex();
             }
 
             case EAST -> {
                 //East
-                builder.vertex(matrix, MAX_D, MIN_WH, MAX_WH).color(col[0], col[1], col[2], col[3]).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal, 1, 0, 0).endVertex();
-                builder.vertex(matrix, MAX_D, MIN_WH, MIN_WH).color(col[0], col[1], col[2], col[3]).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal, 1, 0, 0).endVertex();
-                builder.vertex(matrix, MAX_D, MAX_WH, MIN_WH).color(col[0], col[1], col[2], col[3]).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 1, 0, 0).endVertex();
-                builder.vertex(matrix, MAX_D, MAX_WH, MAX_WH).color(col[0], col[1], col[2], col[3]).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 1, 0, 0).endVertex();
+                builder.vertex(matrix, MAX_D, MIN_WH, MAX_WH).color(color).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal, 1, 0, 0).endVertex();
+                builder.vertex(matrix, MAX_D, MIN_WH, MIN_WH).color(color).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal, 1, 0, 0).endVertex();
+                builder.vertex(matrix, MAX_D, MAX_WH, MIN_WH).color(color).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 1, 0, 0).endVertex();
+                builder.vertex(matrix, MAX_D, MAX_WH, MAX_WH).color(color).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal, 1, 0, 0).endVertex();
             }
 
             case WEST -> {
                 //West
-                builder.vertex(matrix, MIN_D, MIN_WH, MIN_WH).color(col[0], col[1], col[2], col[3]).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal, -1, 0, 0).endVertex();
-                builder.vertex(matrix, MIN_D, MIN_WH, MAX_WH).color(col[0], col[1], col[2], col[3]).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal, -1, 0, 0).endVertex();
-                builder.vertex(matrix, MIN_D, MAX_WH, MAX_WH).color(col[0], col[1], col[2], col[3]).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal, -1, 0, 0).endVertex();
-                builder.vertex(matrix, MIN_D, MAX_WH, MIN_WH).color(col[0], col[1], col[2], col[3]).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal, -1, 0, 0).endVertex();
+                builder.vertex(matrix, MIN_D, MIN_WH, MIN_WH).color(color).uv(minU, minV).overlayCoords(overlay).uv2(240).normal(normal, -1, 0, 0).endVertex();
+                builder.vertex(matrix, MIN_D, MIN_WH, MAX_WH).color(color).uv(maxU, minV).overlayCoords(overlay).uv2(240).normal(normal, -1, 0, 0).endVertex();
+                builder.vertex(matrix, MIN_D, MAX_WH, MAX_WH).color(color).uv(maxU, maxV).overlayCoords(overlay).uv2(240).normal(normal, -1, 0, 0).endVertex();
+                builder.vertex(matrix, MIN_D, MAX_WH, MIN_WH).color(color).uv(minU, maxV).overlayCoords(overlay).uv2(240).normal(normal, -1, 0, 0).endVertex();
             }
         }
     }

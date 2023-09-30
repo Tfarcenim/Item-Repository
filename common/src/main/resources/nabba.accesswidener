@@ -1,0 +1,12 @@
+accessWidener v1 named
+accessible method net/minecraft/data/recipes/ShapedRecipeBuilder ensureValid (Lnet/minecraft/resources/ResourceLocation;)V
+accessible method net/minecraft/data/recipes/ShapelessRecipeBuilder ensureValid (Lnet/minecraft/resources/ResourceLocation;)V
+
+accessible field net/minecraft/data/recipes/ShapedRecipeBuilder count I
+accessible field net/minecraft/data/recipes/ShapedRecipeBuilder advancement Lnet/minecraft/advancements/Advancement$Builder;
+accessible field net/minecraft/data/recipes/ShapedRecipeBuilder group Ljava/lang/String;
+
+accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder count I
+accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder advancement Lnet/minecraft/advancements/Advancement$Builder;
+accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder group Ljava/lang/String;
+accessible field net/minecraft/data/recipes/ShapelessRecipeBuilder ingredients Ljava/util/List;

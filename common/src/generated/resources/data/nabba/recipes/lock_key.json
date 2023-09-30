@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "minecraft:iron_ingot"
+    },
+    "p": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "pattern": [
+    "pP ",
+    " P ",
+    " P "
+  ],
+  "result": {
+    "item": "nabba:lock_key"
+  },
+  "show_notification": true
+}

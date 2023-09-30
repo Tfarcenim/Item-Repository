@@ -29,7 +29,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.NABBA;
 import tfar.nabba.api.*;
+import tfar.nabba.capability.AntiBarrelItemStackItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
@@ -172,8 +174,6 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         return cap == ForgeCapabilities.ITEM_HANDLER || cap == ForgeCapabilities.FLUID_HANDLER ? LazyOptional.of(() -> wrapper).cast() : super.getCapability(cap, side);
     }
 
-    public static final int SIZE = 4096;
-
     public static class BarrelWrapper implements SearchableItemHandler, SearchableFluidHandler {
 
         private BarrelInterfaceBlockEntity blockEntity;
@@ -188,6 +188,15 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
 
+        }
+
+        //prevent voiding
+        @Override
+        public ItemStack storeItem(ItemStack stack, boolean simulate) {
+            if (!blockEntity.isRemoved()) {
+                return SearchableItemHandler.super.storeItem(stack, simulate);
+            }
+            return stack;
         }
 
         public void recomputeSlots() {
@@ -332,6 +341,9 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             ItemStack stack = handler.insertItem(slot, incoming, simulate);
             if (!simulate && stack != incoming) {
                 markDirty();
+                if (handler instanceof AntiBarrelItemStackItemHandler) {
+                    recomputeItemSlots();
+                }
             }
             return stack;
         }
@@ -600,7 +612,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public boolean isFull() {
-            return getStoredCount() >= SIZE;
+            return getStoredCount() >= NABBA.ServerCfg.barrel_interface_storage.get();
         }
 
         @Override

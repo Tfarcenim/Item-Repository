@@ -1,0 +1,102 @@
+package tfar.nabba.util;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.NotNull;
+import tfar.nabba.platform.Services;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+
+public class CommonUtils {
+
+    public static final int INVALID = -1;
+    public static final String INFINITY = "\u221E";
+
+    public static final int RADIUS = 13;
+
+    public static final double DEFAULT_SIZE = .5;
+    public static final int DEFAULT_COLOR = 0xff88ff;
+
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.##");
+
+    public static boolean isItemValid(ItemStack existing, @NotNull ItemStack incoming, ItemStack ghost) {
+        return (ghost.isEmpty() || ItemStack.isSameItemSameTags(incoming, ghost))
+                && (existing.isEmpty() || ItemStack.isSameItemSameTags(existing, incoming));
+    }
+
+    public static String formatLargeNumber(int number) {
+        if (number >= 1000000000) return decimalFormat.format(number / 1000000000f) + "b";
+        if (number >= 1000000) return decimalFormat.format(number / 1000000f) + "m";
+        if (number >= 1000) return decimalFormat.format(number / 1000f) + "k";
+
+        return Float.toString(number).replaceAll("\\.?0*$", "");
+    }
+
+    public static List<ItemStackWrapper> wrap(List<ItemStack> stacks) {
+        return stacks.stream().map(ItemStackWrapper::new).toList();
+    }
+
+    public static void merge(List<ItemStack> stacks, ItemStack toMerge) {
+        for (ItemStack stack : stacks) {
+            if (canItemStacksStack(stack, toMerge)) {
+                int grow = Math.min(Integer.MAX_VALUE - stack.getCount(), toMerge.getCount());
+                if (grow > 0) {
+                    stack.grow(grow);
+                    toMerge.shrink(grow);
+                }
+            }
+        }
+        if (!toMerge.isEmpty()) {
+            stacks.add(toMerge);
+        }
+    }
+
+    //forge has to check caps
+    public static boolean canItemStacksStack(@NotNull ItemStack a, @NotNull ItemStack b) {
+        return Services.PLATFORM.canItemStacksStack(a,b);
+    }
+
+    public static ItemStack copyStackWithSize(@NotNull ItemStack itemStack, int size) {
+        if (size == 0)
+            return ItemStack.EMPTY;
+        ItemStack copy = itemStack.copy();
+        copy.setCount(size);
+        return copy;
+    }
+
+    //searches a 3x3 chunk area
+    public static List<BlockEntity> getNearbyBlockEntities(Level level, Predicate<BlockEntity> predicate, BlockPos thisPos) {
+
+        int chunkX = SectionPos.blockToSectionCoord(thisPos.getX());
+        int chunkZ = SectionPos.blockToSectionCoord(thisPos.getZ());
+        List<BlockEntity> blockentities = new ArrayList<>();
+        for (int z = -1; z <= 1; z++) {
+            for (int x = -1; x <= 1; x++) {
+                LevelChunk chunk = level.getChunk(chunkX + x, chunkZ + z);
+                Map<BlockPos, BlockEntity> blockEntities = chunk.getBlockEntities();
+                for (Map.Entry<BlockPos, BlockEntity> entry : blockEntities.entrySet()) {
+                    BlockEntity blockEntity = entry.getValue();
+                    if (predicate.test(blockEntity)) {
+                        BlockPos pos = entry.getKey();
+                        if (
+                                Math.abs(pos.getX() - thisPos.getX()) < RADIUS
+                                        && Math.abs(pos.getY() - thisPos.getY()) < RADIUS
+                                        && Math.abs(pos.getZ() - thisPos.getZ()) < RADIUS
+                        ) {
+                            blockentities.add(blockEntity);
+                        }
+                    }
+                }
+            }
+        }
+        return blockentities;
+    }
+}

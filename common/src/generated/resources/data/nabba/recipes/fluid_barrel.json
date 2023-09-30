@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "forge:ingots/copper"
+    },
+    "S": {
+      "item": "minecraft:heavy_weighted_pressure_plate"
+    },
+    "b": {
+      "tag": "forge:barrels/wooden"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "PbP",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:fluid_barrel"
+  },
+  "show_notification": true
+}

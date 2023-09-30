@@ -3,6 +3,7 @@ package tfar.nabba;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -17,20 +18,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelStorageSource;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.RegisterEvent;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.client.Client;
@@ -60,6 +63,7 @@ public class NABBA {
 
     public NABBA() {
         // Register the setup method for modloading
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, SERVER_SPEC);
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         bus.addListener(this::registerObj);
@@ -114,11 +118,11 @@ public class NABBA {
     }
 
     private void registerObj(RegisterEvent e) {
-        superRegister(e, ModBlocks.class,Registry.BLOCK_REGISTRY, Block.class);
-        superRegister(e, ModItems.class,Registry.ITEM_REGISTRY, Item.class);
-        superRegister(e, ModBlockEntityTypes.class,Registry.BLOCK_ENTITY_TYPE_REGISTRY, BlockEntityType.class);
-        superRegister(e, ModMenuTypes.class,Registry.MENU_REGISTRY, MenuType.class);
-        superRegister(e, ModRecipeSerializers.class,Registry.RECIPE_SERIALIZER_REGISTRY, RecipeSerializer.class);
+        superRegister(e, ModBlocks.class, Registries.BLOCK, Block.class);
+        superRegister(e, ModItems.class,Registries.ITEM, Item.class);
+        superRegister(e, ModBlockEntityTypes.class,Registries.BLOCK_ENTITY_TYPE, BlockEntityType.class);
+        superRegister(e, ModMenuTypes.class,Registries.MENU, MenuType.class);
+        superRegister(e, ModRecipeSerializers.class,Registries.RECIPE_SERIALIZER, RecipeSerializer.class);
     }
 
     public static <T> void superRegister(RegisterEvent e, Class<?> clazz, ResourceKey<? extends  Registry<T>> resourceKey, Class<?> filter) {
@@ -170,6 +174,45 @@ public class NABBA {
         AbstractContainerMenu menu = e.getContainer();
         if (menu instanceof SearchableMenu<?> searchableItemMenu && e.getEntity() instanceof ServerPlayer player) {
             searchableItemMenu.setFakeSlotSynchronizer(new FakeSlotSynchronizer(player));
+        }
+    }
+
+
+   // public static final ClientConfig CLIENT;
+   // public static final ForgeConfigSpec CLIENT_SPEC;
+
+    public static final ServerCfg SERVER;
+    public static final ForgeConfigSpec SERVER_SPEC;
+
+    static {
+      //  final Pair<ClientConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ClientConfig::new);
+       // CLIENT_SPEC = specPair.getRight();
+       // CLIENT = specPair.getLeft();
+        final Pair<ServerCfg, ForgeConfigSpec> specPair2 = new ForgeConfigSpec.Builder().configure(ServerCfg::new);
+        SERVER_SPEC = specPair2.getRight();
+        SERVER = specPair2.getLeft();
+    }
+
+    public static class ServerCfg {
+        public static ForgeConfigSpec.IntValue better_barrel_base_storage;
+        public static ForgeConfigSpec.IntValue fluid_barrel_base_storage;
+        public static ForgeConfigSpec.IntValue anti_barrel_base_storage;
+        public static ForgeConfigSpec.IntValue barrel_interface_storage;
+
+        public ServerCfg(ForgeConfigSpec.Builder builder) {
+            builder.push("server");
+            better_barrel_base_storage = builder.
+                    comment("Base storage of better barrel in stacks")
+                    .defineInRange("better_barrel_base_storage", 64, 1, Integer.MAX_VALUE);
+            fluid_barrel_base_storage = builder.
+                    comment("Base storage of fluid barrel in stacks")
+                    .defineInRange("fluid_barrel_base_storage", 16, 1, Integer.MAX_VALUE);
+            anti_barrel_base_storage = builder.
+                    comment("Base storage of anti barrel in item count")
+                    .defineInRange("anti_barrel_base_storage", 256, 1, Integer.MAX_VALUE);
+            barrel_interface_storage = builder.
+                    comment("Number of barrels the barrel interface can hold")
+                    .defineInRange("barrel_interface_storage", 4096, 1, 65536);
         }
     }
 }

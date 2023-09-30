@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "nabba:item/frame_upgrade/from_copper",
+    "layer1": "nabba:item/frame_upgrade/to_emerald"
+  }
+}

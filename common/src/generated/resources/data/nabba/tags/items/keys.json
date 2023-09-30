@@ -1,0 +1,12 @@
+{
+  "values": [
+    "nabba:hide_key",
+    "nabba:lock_key",
+    "nabba:vanity_key",
+    "nabba:controller_key",
+    "nabba:fluid_controller_key",
+    "nabba:connect_key",
+    "nabba:remote_controller_key",
+    "nabba:remote_fluid_controller_key"
+  ]
+}

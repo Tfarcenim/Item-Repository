@@ -1,0 +1,24 @@
+{
+  "type": "nabba:copy_nbt_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "forge:gems/emerald"
+    },
+    "S": {
+      "tag": "minecraft:wooden_fences"
+    },
+    "b": {
+      "item": "nabba:diamond_fluid_barrel"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "SbS",
+    "PSP"
+  ],
+  "result": {
+    "item": "nabba:emerald_fluid_barrel"
+  },
+  "show_notification": true
+}

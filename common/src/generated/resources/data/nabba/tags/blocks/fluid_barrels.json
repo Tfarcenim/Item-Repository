@@ -1,0 +1,14 @@
+{
+  "values": [
+    "nabba:fluid_barrel",
+    "nabba:stone_fluid_barrel",
+    "nabba:copper_fluid_barrel",
+    "nabba:iron_fluid_barrel",
+    "nabba:lapis_fluid_barrel",
+    "nabba:gold_fluid_barrel",
+    "nabba:diamond_fluid_barrel",
+    "nabba:emerald_fluid_barrel",
+    "nabba:netherite_fluid_barrel",
+    "nabba:creative_fluid_barrel"
+  ]
+}

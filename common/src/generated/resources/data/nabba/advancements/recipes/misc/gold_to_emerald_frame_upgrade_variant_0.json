@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_better_barrel": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "nabba:better_barrel"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "nabba:gold_to_emerald_frame_upgrade_variant_0"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_better_barrel",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "nabba:gold_to_emerald_frame_upgrade_variant_0"
+    ]
+  },
+  "sends_telemetry_event": false
+}
