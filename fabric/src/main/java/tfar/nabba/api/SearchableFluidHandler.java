@@ -1,5 +1,6 @@
 package tfar.nabba.api;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
@@ -17,7 +18,7 @@ public interface SearchableFluidHandler extends FluidHandler {
         int index = 0;
         int startPos = 9 * row;
         while (countForDisplay < 54) {
-            FluidStack stack = getFluidInTank(startPos + index).copy();//don't accidentally modify the stack!
+            FluidVariant stack = getFluidInTank(startPos + index).copy();//don't accidentally modify the stack!
             if (matches(stack, search)) {
                 if (!merge(disp, stack)) {
                     countForDisplay++;
@@ -31,7 +32,7 @@ public interface SearchableFluidHandler extends FluidHandler {
     }
 
     default boolean merge(List<FluidStack> stacks, FluidStack toMerge) {
-        for (FluidStack stack : stacks) {
+        for (FluidVariant stack : stacks) {
             if (stack.isFluidEqual(toMerge)) {
                 stack.grow(toMerge.getAmount());
                 return true;
@@ -41,8 +42,8 @@ public interface SearchableFluidHandler extends FluidHandler {
         return false;
     }
 
-    default boolean matches(FluidStack stack, String search) {
-        if (stack.isEmpty()) return false;
+    default boolean matches(FluidVariant stack, String search) {
+        if (stack.isBlank()) return false;
         if (search.isEmpty()) {
             return true;
         } else {

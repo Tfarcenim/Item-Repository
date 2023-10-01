@@ -461,8 +461,8 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         }
 
         @Override
-        public @NotNull FluidStack getFluidInTank(int slot) {
-            if (slot >= getTanks()) return FluidStack.EMPTY;
+        public @NotNull FluidVariant getFluidInTank(int slot) {
+            if (slot >= getTanks()) return FluidVariant.EMPTY;
             BlockEntity blockEntity = controllerBlockEntity.getBE(slot,BarrelType.FLUID);
             if (blockEntity instanceof FluidBarrelBlockEntity barrelBlockEntity) {
                 return barrelBlockEntity.getFluidHandler().getFluidInTank(0);
@@ -473,7 +473,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         }
 
         @Override
-        public int fill(@NotNull FluidStack stack, FluidAction action) {
+        public int fill(@NotNull FluidStack stack, IFluidHandlerShim.FluidAction action) {
             if (stack.isEmpty()) return 0;
             return universalFill(stack, action);
         }
