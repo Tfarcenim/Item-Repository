@@ -1,21 +1,14 @@
 package tfar.nabba.blockentity;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import tfar.nabba.NABBA;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.ItemHandler;
 import tfar.nabba.block.BetterBarrelBlock;
@@ -24,9 +17,6 @@ import tfar.nabba.inventory.BetterBarrelSlotWrapper;
 import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.FabricUtils;
 import tfar.nabba.util.NBTKeys;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemStack> implements HasItemHandler {
 
@@ -171,7 +161,7 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
 
         public int getActualLimit() {
             return barrelBlockEntity.getStorageMultiplier() * stack.getMaxStackSize() *
-                    (barrelBlockEntity.hasDowngrade() ? 1 : NABBA.ServerCfg.better_barrel_base_storage.get());
+                    (barrelBlockEntity.hasDowngrade() ? 1 : 64);//NABBA.ServerCfg.better_barrel_base_storage.get());
         }
 
         @Override
@@ -184,47 +174,20 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         }
     }
 
-    private LazyOptional<IItemHandler> optional = LazyOptional.of(this::getItemHandler);
 
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap == ForgeCapabilities.ITEM_HANDLER ? optional.cast() : super.getCapability(cap, side);
-    }
+    private Storage<ItemVariant> storage;
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        optional.invalidate();
-    }
-
-    @Override
-    public void reviveCaps() {
-        super.reviveCaps();
-        optional = LazyOptional.of(this::getItemHandler);
-    }
-
-
-    private CombinedStorage<ItemVariant, BetterBarrelSlotWrapper> storage;
-
-    public CombinedStorage<ItemVariant, BetterBarrelSlotWrapper> getStorage(Direction direction) {
-
+    public Storage<ItemVariant> getStorage(Direction direction) {
         BarrelHandler dankInventory = getItemHandler();
-
-        if (storage != null && storage.parts.size() != dankInventory.getSlots()) {
-            storage = null;
-        }
         if (storage == null) {
             storage = create(dankInventory);
         }
         return storage;
     }
 
-
-    public static CombinedStorage<ItemVariant, BetterBarrelSlotWrapper> create(BarrelHandler barrelHandler) {
-        List<BetterBarrelSlotWrapper> storages = new ArrayList<>();
+    public static Storage<ItemVariant> create(BarrelHandler barrelHandler) {
         BetterBarrelSlotWrapper storage = new BetterBarrelSlotWrapper(barrelHandler);
-        storages.add(storage);
-        return new CombinedStorage<>(storages);
+        return storage;
     }
 
 

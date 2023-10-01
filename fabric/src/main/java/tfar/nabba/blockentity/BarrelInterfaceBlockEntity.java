@@ -34,6 +34,7 @@ import tfar.nabba.capability.AntiBarrelItemStackItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
+import tfar.nabba.shim.IItemHandlerShim;
 import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.EmptyFluidHandlerItem;
 import tfar.nabba.util.ItemStackWrapper;
@@ -270,7 +271,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             return -1;
         }
 
-        protected IItemHandler getItemHandlerFromIndex(int index) {
+        protected IItemHandlerShim getItemHandlerFromIndex(int index) {
             if (index < 0 || index >= itemHandlers.size()) {
                 return EmptyHandler.INSTANCE;
             }
@@ -324,14 +325,14 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack incoming, boolean simulate) {
             int index = getIndexForItemSlot(slot);
-            IItemHandler handler = getItemHandlerFromIndex(index);
+            IItemHandlerShim handler = getItemHandlerFromIndex(index);
 
             //probably a safe cast
             IItemHandlerItem iItemHandlerItem = (IItemHandlerItem)handler;
             ItemStack container = iItemHandlerItem.getContainer();
             if (container.getCount() > 1) {
                 //need to split and add remainder
-                ItemStack leftover = ItemHandlerHelper.copyStackWithSize(container,container.getCount() - 1);
+                ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
                 container.setCount(1);
                 blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
             }
@@ -359,7 +360,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             ItemStack container = iItemHandlerItem.getContainer();
             if (container.getCount() > 1) {
                 //need to split and add remainder
-                ItemStack leftover = ItemHandlerHelper.copyStackWithSize(container,container.getCount() - 1);
+                ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
                 container.setCount(1);
                 blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
             }
@@ -429,7 +430,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                     ItemStack container = fl.getContainer();
                     if (container.getCount() > 1) {
                             //need to split and add remainder
-                            ItemStack leftover = ItemHandlerHelper.copyStackWithSize(container,container.getCount() - 1);
+                            ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
                             container.setCount(1);
                             blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
                     }
@@ -454,7 +455,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                     ItemStack container = fl.getContainer();
                     if (container.getCount() > 1) {
                         //need to split and add remainder
-                        ItemStack leftover = ItemHandlerHelper.copyStackWithSize(container,container.getCount() - 1);
+                        ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
                         container.setCount(1);
                         blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
                     }
@@ -492,7 +493,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                     ItemStack container = fl.getContainer();
                     if (container.getCount() > 1) {
                         //need to split and add remainder
-                        ItemStack leftover = ItemHandlerHelper.copyStackWithSize(container,container.getCount() - 1);
+                        ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
                         container.setCount(1);
                         blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
                     }
@@ -533,7 +534,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             ItemStack container = iItemHandlerItem.getContainer();
             if (container.getCount() > 1) {
                 //need to split and add remainder
-                ItemStack leftover = ItemHandlerHelper.copyStackWithSize(container,container.getCount() - 1);
+                ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
                 container.setCount(1);
                 blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
             }
@@ -567,7 +568,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             ItemStack container = iFluidHandlerItem.getContainer();
             if (container.getCount() > 1) {
                 //need to split and add remainder
-                ItemStack leftover = ItemHandlerHelper.copyStackWithSize(container,container.getCount() - 1);
+                ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
                 container.setCount(1);
                 blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
             }
@@ -653,13 +654,13 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
                 if (!simulate) {
                     if (existing.isEmpty()) {
-                        this.barrels.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
+                        this.barrels.set(slot, reachedLimit ? CommonUtils.copyStackWithSize(stack, limit) : stack);
                     } else {
                         existing.grow(reachedLimit ? limit : stack.getCount());
                     }
                     markDirty();
                 }
-                return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
+                return reachedLimit ? CommonUtils.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
             }
         }
 
@@ -686,7 +687,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                         markDirty();
                         blockEntity.wrapper.recomputeSlots();
                     }
-                    return ItemHandlerHelper.copyStackWithSize(stack,amount);
+                    return CommonUtils.copyStackWithSize(stack,amount);
                 }
             }
 

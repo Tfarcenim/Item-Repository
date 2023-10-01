@@ -8,8 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tfar.dankstorage.event.ClientMixinEvents;
-import tfar.nabba.client.Client;
+import tfar.nabba.client.CommonClientEvents;
 
 @Mixin(MouseHandler.class)
 public class MouseMixin {
@@ -22,7 +21,6 @@ public class MouseMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getInventory()Lnet/minecraft/world/entity/player/Inventory;"), cancellable = true)
     private void onScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
         double delta = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(horizontal) : vertical) * this.minecraft.options.mouseWheelSensitivity().get();
-
-        if (Client.onScroll((MouseHandler) (Object) this, window, horizontal, vertical, delta)) ci.cancel();
+        if (CommonClientEvents.onScroll(minecraft,delta)) ci.cancel();
     }
 }

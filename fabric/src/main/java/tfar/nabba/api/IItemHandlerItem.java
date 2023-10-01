@@ -1,9 +1,8 @@
 package tfar.nabba.api;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
+import tfar.nabba.shim.IItemHandlerShim;
 
-public interface IItemHandlerItem extends IItemHandler {
+public interface IItemHandlerItem extends IItemHandlerShim {
     ItemStack getContainer();
 }

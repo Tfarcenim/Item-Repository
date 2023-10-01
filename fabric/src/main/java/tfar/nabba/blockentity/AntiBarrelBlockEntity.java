@@ -21,11 +21,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBA;
+import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.inventory.ResizableIItemHandler;
 import tfar.nabba.menu.AntiBarrelMenu;
+import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.ItemStackUtil;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.NBTKeys;
@@ -96,7 +98,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     };
 
     public AntiBarrelInventory getInventory() {
-        return NABBA.instance.getData(uuid,level.getServer()).getInventory(this);
+        return NABBAFabric.getData(uuid,level.getServer()).getInventory(this);
     }
 
     public static AntiBarrelBlockEntity create(BlockPos pos, BlockState state) {
@@ -313,7 +315,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
                     existing.shrink(amount);
                     setChanged();
                 }
-                return ItemHandlerHelper.copyStackWithSize(existing, amount);
+                return CommonUtils.copyStackWithSize(existing, amount);
             }
         }
 
@@ -341,7 +343,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
 
         public void setChanged() {
-            NABBA.instance.getData(blockEntity.getUuid(), blockEntity.getLevel().getServer()).writeInvData(this);
+            NABBAFabric.getData(blockEntity.getUuid(), blockEntity.getLevel().getServer()).writeInvData(this);
             blockEntity.setClientCountAndLast(getLastItem(), getStoredCount());
         }
 

@@ -2,6 +2,8 @@ package tfar.nabba;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,34 +17,22 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.registries.RegisterEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import tfar.nabba.block.SingleSlotBarrelBlock;
-import tfar.nabba.client.Client;
+import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.*;
 import tfar.nabba.inventory.FakeSlotSynchronizer;
 import tfar.nabba.menu.SearchableMenu;
-import tfar.nabba.mixin.MinecraftServerAccess;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.world.AntiBarrelSubData;
 
-import java.io.File;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.UUID;
@@ -59,19 +49,8 @@ public class NABBAFabric implements ModInitializer {
     public void onInitialize() {
 
         PacketHandler.registerMessages();
-
-        // Register the setup method for modloading
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, SERVER_SPEC);
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(this::setup);
-        registerObj();
-        bus.addListener(ModDatagen::start);
-        if (FMLEnvironment.dist.isClient()) {
-            bus.addListener(Client::setup);
-            bus.addListener(Client::tooltipC);
-        }
         addGameEvents();
-        instance = this;
+        ItemStorage.SIDED.registerForBlockEntity(BetterBarrelBlockEntity::getStorage,ModBlockEntityTypes.BETTER_BARREL);
         Constants.LOG.info("Hello Fabric world!");
         NABBA.init();
     }
@@ -80,7 +59,8 @@ public class NABBAFabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTING.register(NABBA::onServerStarting);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> NABBA.onServerStop());
 
-        MinecraftForge.EVENT_BUS.addListener(this::blockBreak);
+        PlayerBlockBreakEvents.BEFORE.register(this::blockBreak);
+
         MinecraftForge.EVENT_BUS.addListener(this::breakSpeed);
         MinecraftForge.EVENT_BUS.addListener(this::setupSync);
     }
@@ -89,9 +69,6 @@ public class NABBAFabric implements ModInitializer {
         return server.getLevel(Level.OVERWORLD).getDataStorage()
                 .computeIfAbsent(AntiBarrelSubData::loadStatic,AntiBarrelSubData::new,
                         MODID+"/"+uuid.toString());
-    }
-
-    private void setup(final FMLCommonSetupEvent event) {
     }
 
     public static void registerObj() {
@@ -116,12 +93,10 @@ public class NABBAFabric implements ModInitializer {
     }
 
     private static final int DELAY = 5;
-    private void blockBreak(PlayerInteractEvent.LeftClickBlock e) {
-        Level level = e.getLevel();
-        BlockPos pos = e.getPos();
-        Player player = e.getEntity();
+
+    //returning false stops the block from breaking
+    private boolean blockBreak(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity) {
         boolean crouch = player.isCrouching();
-        BlockState state = level.getBlockState(pos);
 
         //cancel block breaking and vend if not crouching
         if (state.getBlock() instanceof SingleSlotBarrelBlock) {
@@ -129,13 +104,14 @@ public class NABBAFabric implements ModInitializer {
                 //attack is not called in creative, the block is simply broken
                 if (!level.isClientSide && player.getAbilities().instabuild) {
                     state.attack(level, pos, player);
-                    e.setCanceled(true);
+                    return false;
                 }
             }
         }
+        return true;
     }
 
-    private void breakSpeed(PlayerEvent.BreakSpeed e) {
+   /* private void breakSpeed(PlayerEvent.BreakSpeed e) {
         Player player = e.getEntity();
         boolean crouch = player.isCrouching();
         BlockState state = e.getState();
@@ -145,7 +121,7 @@ public class NABBAFabric implements ModInitializer {
                 e.setCanceled(true);
             }
         }
-    }
+    }*/
 
     private void setupSync(PlayerContainerEvent.Open e) {
         AbstractContainerMenu menu = e.getContainer();

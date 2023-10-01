@@ -6,6 +6,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.NABBAForge;
+import tfar.nabba.net.PacketHandler;
+import tfar.nabba.net.server.C2SScrollKeyPacket;
 import tfar.nabba.platform.services.IPlatformHelper;
 
 public class ForgePlatformHelper implements IPlatformHelper {
@@ -36,5 +38,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public void registerGameObjects() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(NABBAForge::registerObj);
+    }
+
+    @Override
+    public void sendScrollKeyRingPacket(boolean right) {
+        C2SScrollKeyPacket.send(right);
     }
 }

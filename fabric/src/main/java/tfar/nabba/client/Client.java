@@ -2,11 +2,12 @@ package tfar.nabba.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -26,7 +27,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.CreativeModeTabRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import tfar.nabba.api.SearchableFluidHandler;
@@ -43,7 +43,6 @@ import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.client.screen.VanityKeyScreen;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.ModBlocks;
-import tfar.nabba.init.ModItems;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.inventory.tooltip.ClientBetterBarrelTooltip;
@@ -61,24 +60,9 @@ import java.util.*;
 public class Client implements ClientModInitializer {
 
     public static void setup(FMLClientSetupEvent e) {
-        MinecraftForge.EVENT_BUS.addListener(Client::scroll);
         MinecraftForge.EVENT_BUS.addListener(Client::onTexturePostStitch);
      //   MinecraftForge.EVENT_BUS.addListener(Client::worldLast);
-        MenuScreens.register(ModMenuTypes.ANTI_BARREL, (SearchableItemMenu<AntiBarrelBlockEntity.AntiBarrelInventory> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
-        MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
-        MenuScreens.register(ModMenuTypes.ITEM_CONTROLLER_KEY, (SearchableItemMenu<SearchableItemHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
-        MenuScreens.register(ModMenuTypes.FLUID_CONTROLLER_KEY, (SearchableFluidMenu<SearchableFluidHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableFluidScreen<>(pMenu, pPlayerInventory, pTitle));
-        MenuScreens.register(ModMenuTypes.BARREL_INTERFACE, (SearchableItemMenu<BarrelInterfaceBlockEntity.BarrelInterfaceItemHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
 
-        BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL, BetterBarrelRenderer::new);
-        BlockEntityRenderers.register(ModBlockEntityTypes.ANTI_BARREL, AntiBarrelRenderer::new);
-        BlockEntityRenderers.register(ModBlockEntityTypes.FLUID_BARREL, FluidBarrelRenderer::new);
-
-        for (Block block : ModBlocks.getBlocks()) {
-            if (block instanceof AbstractBarrelBlock) {
-                setCutOutRenderLayer(block);
-            }
-        }
     }
 
   //  public static void worldLast(RenderLevelLastEvent e) {
@@ -101,6 +85,23 @@ public class Client implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientPacketHandler.registerPackets();
+        MenuScreens.register(ModMenuTypes.ANTI_BARREL, (SearchableItemMenu<AntiBarrelBlockEntity.AntiBarrelInventory> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
+        MenuScreens.register(ModMenuTypes.VANITY_KEY, VanityKeyScreen::new);
+        MenuScreens.register(ModMenuTypes.ITEM_CONTROLLER_KEY, (SearchableItemMenu<SearchableItemHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
+        MenuScreens.register(ModMenuTypes.FLUID_CONTROLLER_KEY, (SearchableFluidMenu<SearchableFluidHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableFluidScreen<>(pMenu, pPlayerInventory, pTitle));
+        MenuScreens.register(ModMenuTypes.BARREL_INTERFACE, (SearchableItemMenu<BarrelInterfaceBlockEntity.BarrelInterfaceItemHandler> pMenu, Inventory pPlayerInventory, Component pTitle) -> new SearchableItemScreen<>(pMenu, pPlayerInventory, pTitle));
+
+        BlockEntityRenderers.register(ModBlockEntityTypes.BETTER_BARREL, BetterBarrelRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntityTypes.ANTI_BARREL, AntiBarrelRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntityTypes.FLUID_BARREL, FluidBarrelRenderer::new);
+
+        for (Block block : ModBlocks.getBlocks()) {
+            if (block instanceof AbstractBarrelBlock) {
+                setCutOutRenderLayer(block);
+            }
+        }
+            TooltipComponentCallback.EVENT.register(Client::tooltipImage);
+
     }
 
     public static class NetworkInfo {
@@ -222,11 +223,6 @@ public class Client implements ClientModInitializer {
         }
     }
 
-    public static void tooltipC(RegisterClientTooltipComponentFactoriesEvent e) {
-        e.register(BetterBarrelTooltip.class, Client::tooltipImage);
-        e.register(FluidBarrelTooltip.class,Client::tooltipImage);
-    }
-
     public static ClientTooltipComponent tooltipImage(TooltipComponent data) {
         if (data instanceof BetterBarrelTooltip betterBarrelTooltip) {
             return new ClientBetterBarrelTooltip(betterBarrelTooltip);
@@ -237,13 +233,6 @@ public class Client implements ClientModInitializer {
     }
 
     private static void setCutOutRenderLayer(Block block) {
-        ItemBlockRenderTypes.setRenderLayer(block, RenderType.cutoutMipped());
-    }
-
-    private static void scroll(InputEvent.MouseScrollingEvent e) {
-        if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.getMainHandItem().is(ModItems.KEY_RING) && Minecraft.getInstance().player.isCrouching()) {
-            C2SScrollKeyRingPacket.send(e.getScrollDelta() > 0);
-            e.setCanceled(true);
-        }
+        BlockRenderLayerMap.INSTANCE.putBlock(block, RenderType.cutoutMipped());
     }
 }

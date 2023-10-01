@@ -17,7 +17,10 @@ import tfar.nabba.NABBA;
 import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.IItemHandlerItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
+import tfar.nabba.util.BlockItemBarrelUtils;
+import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.ItemStackUtil;
+import tfar.nabba.util.NBTKeys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +38,9 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
     public AntiBarrelItemStackItemHandler(ItemStack stack) {
         this.container = stack;
         //return a dummy container if we're on the client for some reason
-        server = NABBA.instance.server != null;
+        server = NABBA.server != null;
         uuid = getUUIDFromItem(container);
-        stacks = server && uuid != null ? loadItems(NABBAFabric.getData(uuid).getStorage()) : new ArrayList<>();
+        stacks = server && uuid != null ? loadItems(NABBAFabric.getData(uuid,NABBA.server).getStorage()) : new ArrayList<>();
     }
 
     public ItemStack getContainer() {
@@ -126,10 +129,10 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
             return existing;
         } else {
             if (!simulate) {
-                stacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - amount));
+                stacks.set(slot, CommonUtils.copyStackWithSize(existing, existing.getCount() - amount));
                 markDirty();
             }
-            return ItemHandlerHelper.copyStackWithSize(existing, amount);
+            return CommonUtils.copyStackWithSize(existing, amount);
         }
     }
 
@@ -157,8 +160,8 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
 
     public void markDirty() {
         if (uuid != null && server) {
-            NABBA.instance.getData(uuid).saveData(saveItems(stacks));
-            BetterBarrelBlockItem.getOrCreateBlockEntityTag(container).putInt("Stored", getStoredCount());
+            NABBAFabric.getData(uuid,NABBA.server).saveData(saveItems(stacks));
+            BlockItemBarrelUtils.getOrCreateBlockEntityTag(container).putInt("Stored", getStoredCount());
         }
     }
 

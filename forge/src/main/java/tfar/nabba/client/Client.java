@@ -41,7 +41,6 @@ import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.client.screen.VanityKeyScreen;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.ModBlocks;
-import tfar.nabba.init.ModItems;
 import tfar.nabba.init.ModMenuTypes;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.inventory.tooltip.ClientBetterBarrelTooltip;
@@ -50,9 +49,7 @@ import tfar.nabba.inventory.tooltip.FluidBarrelTooltip;
 import tfar.nabba.item.NetworkVisualizerItem;
 import tfar.nabba.menu.SearchableFluidMenu;
 import tfar.nabba.menu.SearchableItemMenu;
-import tfar.nabba.net.server.C2SScrollKeyPacket;
 import tfar.nabba.util.BarrelType;
-import tfar.nabba.util.ClientUtils;
 import tfar.nabba.util.ShapeMerger;
 
 import java.util.*;
@@ -235,8 +232,7 @@ public class Client {
     }
 
     private static void scroll(InputEvent.MouseScrollingEvent e) {
-        if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.getMainHandItem().is(ModItems.KEY_RING) && Minecraft.getInstance().player.isCrouching()) {
-            C2SScrollKeyPacket.send(e.getScrollDelta() > 0);
+        if (CommonClientEvents.onScroll(Minecraft.getInstance(), e.getScrollDelta())) {
             e.setCanceled(true);
         }
     }

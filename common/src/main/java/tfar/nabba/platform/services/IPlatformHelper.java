@@ -43,4 +43,7 @@ public interface IPlatformHelper {
     }
 
     void registerGameObjects();
+
+    void sendScrollKeyRingPacket(boolean right);
+
 }
