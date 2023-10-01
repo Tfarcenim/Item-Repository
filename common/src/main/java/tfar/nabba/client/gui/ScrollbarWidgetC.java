@@ -1,15 +1,12 @@
-package tfar.nabba.inventory;
+package tfar.nabba.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import tfar.nabba.api.SearchableItemHandler;
-import tfar.nabba.client.screen.SearchableItemScreen;
-import tfar.nabba.client.screen.SearchableScreen;
+import tfar.nabba.client.gui.screens.SearchableScreen;
 import tfar.nabba.menu.SearchableMenu;
 
 public class ScrollbarWidgetC<S,T extends SearchableMenu<S>> extends AbstractWidget {
@@ -29,7 +26,7 @@ public class ScrollbarWidgetC<S,T extends SearchableMenu<S>> extends AbstractWid
             int currentRow = screen.getMenu().getCurrentRow();
             double frac = (double)currentRow / (rows - 6);
             double position = height * frac;
-            pPoseStack.blit(SearchableItemScreen.TEXTURE,getX(), (int) (getY() + position), 244, 0, 12, 15);
+            pPoseStack.blit(SearchableScreen.TEXTURE,getX(), (int) (getY() + position), 244, 0, 12, 15);
         }
     }
 

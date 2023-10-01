@@ -7,7 +7,10 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.NABBAForge;
 import tfar.nabba.net.PacketHandler;
+import tfar.nabba.net.server.C2SForceSyncPacket;
 import tfar.nabba.net.server.C2SScrollKeyPacket;
+import tfar.nabba.net.server.C2SScrollPacket;
+import tfar.nabba.net.server.C2SSearchPacket;
 import tfar.nabba.platform.services.IPlatformHelper;
 
 public class ForgePlatformHelper implements IPlatformHelper {
@@ -41,7 +44,22 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public void sendScrollPacket(int scroll) {
+        PacketHandler.sendToServer(new C2SScrollPacket(scroll));
+    }
+
+    @Override
     public void sendScrollKeyRingPacket(boolean right) {
         C2SScrollKeyPacket.send(right);
+    }
+
+    @Override
+    public void sendForceSyncPacket() {
+        PacketHandler.sendToServer(new C2SForceSyncPacket());
+    }
+
+    @Override
+    public void sendSearchPacket(String search) {
+        PacketHandler.sendToServer(new C2SSearchPacket(search));
     }
 }

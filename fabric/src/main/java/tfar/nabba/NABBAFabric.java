@@ -3,6 +3,7 @@ package tfar.nabba;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -51,6 +52,8 @@ public class NABBAFabric implements ModInitializer {
         PacketHandler.registerMessages();
         addGameEvents();
         ItemStorage.SIDED.registerForBlockEntity(BetterBarrelBlockEntity::getStorage,ModBlockEntityTypes.BETTER_BARREL);
+        FluidStorage.SIDED.registerForBlockEntity((myTank, direction) -> myTank.fluidStorage, ModBlockEntityTypes.FLUID_BARREL);
+
         Constants.LOG.info("Hello Fabric world!");
         NABBA.init();
     }
@@ -61,7 +64,6 @@ public class NABBAFabric implements ModInitializer {
 
         PlayerBlockBreakEvents.BEFORE.register(this::blockBreak);
 
-        MinecraftForge.EVENT_BUS.addListener(this::breakSpeed);
         MinecraftForge.EVENT_BUS.addListener(this::setupSync);
     }
 

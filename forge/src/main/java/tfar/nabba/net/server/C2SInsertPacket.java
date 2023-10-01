@@ -3,7 +3,6 @@ package tfar.nabba.net.server;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import tfar.nabba.menu.SearchableItemMenu;
 import tfar.nabba.menu.SearchableMenu;
 import tfar.nabba.net.util.C2SPacketHelper;
 

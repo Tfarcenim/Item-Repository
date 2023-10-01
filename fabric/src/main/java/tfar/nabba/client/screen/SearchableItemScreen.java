@@ -1,11 +1,11 @@
 package tfar.nabba.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.api.SearchableItemHandler;
+import tfar.nabba.client.gui.screens.SearchableScreen;
 import tfar.nabba.client.screen.button.ItemStackWidget;
 import tfar.nabba.menu.SearchableItemMenu;
 

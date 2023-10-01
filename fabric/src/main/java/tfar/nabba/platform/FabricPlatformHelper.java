@@ -30,7 +30,22 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public void sendScrollPacket(int scroll) {
+        PacketHandler.sendToServer(PacketHandler.scroll,buf -> buf.writeInt(scroll));
+    }
+
+    @Override
     public void sendScrollKeyRingPacket(boolean right) {
         PacketHandler.sendToServer(PacketHandler.scroll_keyring,buf -> buf.writeBoolean(right));
+    }
+
+    @Override
+    public void sendForceSyncPacket() {
+        PacketHandler.sendToServer(PacketHandler.force_sync,buf ->{});
+    }
+
+    @Override
+    public void sendSearchPacket(String search) {
+        PacketHandler.sendToServer(PacketHandler.search, buf -> buf.writeUtf(search));
     }
 }

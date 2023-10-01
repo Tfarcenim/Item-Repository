@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -97,7 +98,8 @@ public class PacketHandler {
     private static void receiveExtractFluid(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) {
         AbstractContainerMenu container = player.containerMenu;
         if (container instanceof SearchableFluidMenu<?> antiBarrelMenu) {
-            antiBarrelMenu.handleFluidExtract(player,buf.readItem(), buf.readBoolean());//stack, shift
+            FluidVariant fluidVariant = FluidVariant.fromPacket(buf);
+            antiBarrelMenu.handleFluidExtract(player,fluidVariant, buf.readBoolean());//stack, shift
         }
     }
 

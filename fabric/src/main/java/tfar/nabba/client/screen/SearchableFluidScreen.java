@@ -1,19 +1,18 @@
 package tfar.nabba.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import tfar.nabba.api.SearchableFluidHandler;
+import tfar.nabba.client.gui.screens.SearchableScreen;
 import tfar.nabba.client.screen.button.FluidStackWidget;
 import tfar.nabba.menu.SearchableFluidMenu;
 
 import java.util.List;
 
-public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends SearchableFluidMenu<T>> extends SearchableScreen<FluidStack,U> {
+public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends SearchableFluidMenu<T>> extends SearchableScreen<FluidVariant,U> {
 
     private final FluidStackWidget[] widgets = new FluidStackWidget[54];
     public SearchableFluidScreen(U pMenu, Inventory pPlayerInventory, Component pTitle) {

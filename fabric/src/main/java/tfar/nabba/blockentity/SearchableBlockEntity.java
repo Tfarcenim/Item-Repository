@@ -5,7 +5,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import tfar.nabba.api.HasSearchBar;
 
 public abstract class SearchableBlockEntity extends BlockEntity implements HasSearchBar {
 

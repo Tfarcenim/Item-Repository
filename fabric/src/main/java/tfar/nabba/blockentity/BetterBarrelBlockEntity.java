@@ -178,9 +178,9 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
     private Storage<ItemVariant> storage;
 
     public Storage<ItemVariant> getStorage(Direction direction) {
-        BarrelHandler dankInventory = getItemHandler();
+        BarrelHandler itemHandler = getItemHandler();
         if (storage == null) {
-            storage = create(dankInventory);
+            storage = create(itemHandler);
         }
         return storage;
     }

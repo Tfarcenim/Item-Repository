@@ -1,5 +1,6 @@
 package tfar.nabba.menu;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -13,13 +14,12 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.net.PacketHandler;
 
 import java.util.List;
 
-public class SearchableFluidMenu<T extends SearchableFluidHandler> extends SearchableMenu<FluidStack> {
+public class SearchableFluidMenu<T extends SearchableFluidHandler> extends SearchableMenu<FluidVariant> {
 
     public final T fluidHandler;
 
@@ -96,7 +96,7 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
     }
 
 
-    public void handleFluidExtract(ServerPlayer player, FluidStack fluidStack, boolean shift) {
+    public void handleFluidExtract(ServerPlayer player, FluidVariant fluidStack, boolean shift) {
 
         //if (!antiBarrelInventory.isSlotValid(slot)) {
         //   return;
