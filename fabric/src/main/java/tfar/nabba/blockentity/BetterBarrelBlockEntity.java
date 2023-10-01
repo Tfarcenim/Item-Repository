@@ -1,5 +1,7 @@
 package tfar.nabba.blockentity;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,8 +20,13 @@ import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.ItemHandler;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.inventory.BetterBarrelSlotWrapper;
 import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.FabricUtils;
+import tfar.nabba.util.NBTKeys;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemStack> implements HasItemHandler {
 
@@ -41,7 +48,7 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
     }
 
     public ItemStack tryRemoveItem() {
-        return getItemHandler().extractItem(0,barrelHandler.getStack().getMaxStackSize(),false);
+        return getItemHandler().extractItem(0, barrelHandler.getStack().getMaxStackSize(), false);
     }
 
     public boolean hasGhost() {
@@ -115,13 +122,13 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
             int existing = this.stack.isEmpty() ? 0 : this.stack.getCount();
             if (count + existing > limit) {
                 if (!simulate) {
-                    this.stack = ItemHandlerHelper.copyStackWithSize(stack, limit);
+                    this.stack = CommonUtils.copyStackWithSize(stack, limit);
                     markDirty();
                 }
-                return barrelBlockEntity.isVoid() ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(stack, count + existing - limit);
+                return barrelBlockEntity.isVoid() ? ItemStack.EMPTY : CommonUtils.copyStackWithSize(stack, count + existing - limit);
             } else {
                 if (!simulate) {
-                    this.stack = ItemHandlerHelper.copyStackWithSize(stack, existing + count);
+                    this.stack = CommonUtils.copyStackWithSize(stack, existing + count);
                     markDirty();
                 }
                 return ItemStack.EMPTY;
@@ -134,19 +141,19 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
 
             //handling infinite vending is easy
             if (barrelBlockEntity.infiniteVending()) {
-                return ItemHandlerHelper.copyStackWithSize(this.stack,amount);
+                return CommonUtils.copyStackWithSize(this.stack, amount);
             }
 
             int existing = stack.getCount();
             ItemStack newStack;
             if (amount >= existing) {
-                newStack = ItemHandlerHelper.copyStackWithSize(stack, existing);
+                newStack = CommonUtils.copyStackWithSize(stack, existing);
                 if (!simulate) {
-                    barrelBlockEntity.ghost = barrelBlockEntity.isLocked() ? ItemHandlerHelper.copyStackWithSize(stack,1): ItemStack.EMPTY;
+                    barrelBlockEntity.ghost = barrelBlockEntity.isLocked() ? CommonUtils.copyStackWithSize(stack, 1) : ItemStack.EMPTY;
                     setStack(ItemStack.EMPTY);
                 }
             } else {
-                newStack = ItemHandlerHelper.copyStackWithSize(stack, amount);
+                newStack = CommonUtils.copyStackWithSize(stack, amount);
                 if (!simulate) {
                     stack.shrink(amount);
                 }
@@ -156,6 +163,7 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
             }
             return newStack;
         }
+
         @Override
         public int getSlotLimit(int slot) {//have to trick the vanilla hopper into inserting so voiding work
             return getActualLimit() + (barrelBlockEntity.isVoid() ? 1 : 0);
@@ -168,14 +176,16 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack incoming) {
-            return CommonUtils.isItemValid(this.stack,incoming,barrelBlockEntity.ghost);
+            return CommonUtils.isItemValid(this.stack, incoming, barrelBlockEntity.ghost);
         }
 
         public void markDirty() {
             barrelBlockEntity.setChanged();
         }
     }
+
     private LazyOptional<IItemHandler> optional = LazyOptional.of(this::getItemHandler);
+
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return cap == ForgeCapabilities.ITEM_HANDLER ? optional.cast() : super.getCapability(cap, side);
@@ -192,6 +202,31 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         super.reviveCaps();
         optional = LazyOptional.of(this::getItemHandler);
     }
+
+
+    private CombinedStorage<ItemVariant, BetterBarrelSlotWrapper> storage;
+
+    public CombinedStorage<ItemVariant, BetterBarrelSlotWrapper> getStorage(Direction direction) {
+
+        BarrelHandler dankInventory = getItemHandler();
+
+        if (storage != null && storage.parts.size() != dankInventory.getSlots()) {
+            storage = null;
+        }
+        if (storage == null) {
+            storage = create(dankInventory);
+        }
+        return storage;
+    }
+
+
+    public static CombinedStorage<ItemVariant, BetterBarrelSlotWrapper> create(BarrelHandler barrelHandler) {
+        List<BetterBarrelSlotWrapper> storages = new ArrayList<>();
+        BetterBarrelSlotWrapper storage = new BetterBarrelSlotWrapper(barrelHandler);
+        storages.add(storage);
+        return new CombinedStorage<>(storages);
+    }
+
 
     @Override
     public int getRedstoneOutput() {

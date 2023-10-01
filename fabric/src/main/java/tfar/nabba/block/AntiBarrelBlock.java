@@ -24,7 +24,6 @@ import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
-import tfar.nabba.util.BarrelType;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package tfar.nabba.platform;
 
-import com.example.examplemod.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import tfar.nabba.NABBAFabric;
+import tfar.nabba.platform.services.IPlatformHelper;
 
 public class FabricPlatformHelper implements IPlatformHelper {
 

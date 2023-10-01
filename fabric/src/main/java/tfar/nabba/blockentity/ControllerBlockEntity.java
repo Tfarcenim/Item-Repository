@@ -27,7 +27,6 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
-import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.FabricUtils;
 
 import javax.annotation.Nonnull;

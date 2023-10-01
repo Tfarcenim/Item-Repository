@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import tfar.nabba.item.keys.KeyRingItem;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.util.C2SPacketHelper;
+import tfar.nabba.util.CommonUtils;
 
 public class C2SScrollKeyPacket implements C2SPacketHelper {
 
@@ -28,7 +29,7 @@ public class C2SScrollKeyPacket implements C2SPacketHelper {
 
     public void handleServer(ServerPlayer player) {
         if (player.getMainHandItem().getItem() instanceof KeyRingItem) {
-            KeyRingItem.scrollKey(player.getMainHandItem(),right);
+            CommonUtils.scrollKey(player.getMainHandItem(),right);
         }
     }
 }

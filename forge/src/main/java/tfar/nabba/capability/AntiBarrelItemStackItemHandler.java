@@ -13,6 +13,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tfar.nabba.NABBA;
 import tfar.nabba.NABBAForge;
 import tfar.nabba.api.IItemHandlerItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
@@ -36,9 +37,9 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
     public AntiBarrelItemStackItemHandler(ItemStack stack) {
         this.container = stack;
         //return a dummy container if we're on the client for some reason
-        server = NABBAForge.instance.server != null;
+        server = NABBA.server != null;
         uuid = getUUIDFromItem(container);
-        stacks = server && uuid != null ? loadItems(NABBAForge.instance.getData(uuid).getStorage()) : new ArrayList<>();
+        stacks = server && uuid != null ? loadItems(NABBAForge.getData(uuid).getStorage()) : new ArrayList<>();
     }
 
     public ItemStack getContainer() {
@@ -158,7 +159,7 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
 
     public void markDirty() {
         if (uuid != null && server) {
-            NABBAForge.instance.getData(uuid).saveData(saveItems(stacks));
+            NABBAForge.getData(uuid).saveData(saveItems(stacks));
             BlockItemBarrelUtils.getOrCreateBlockEntityTag(container).putInt("Stored", getStoredCount());
         }
     }

@@ -18,9 +18,7 @@ import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.init.ModItems;
 import tfar.nabba.item.StorageUpgradeItem;
 import tfar.nabba.item.UpgradeItem;
-import tfar.nabba.util.BarrelType;
-import tfar.nabba.util.Upgrades;
-import tfar.nabba.util.FabricUtils;
+import tfar.nabba.util.*;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -28,10 +26,10 @@ import java.util.List;
 
 public abstract class AbstractBarrelBlockEntity extends BlockEntity {
 
-    private transient int cachedStorageMultiplier = FabricUtils.INVALID;
-    private transient int cachedUsedUpgradeSlots = FabricUtils.INVALID;
-    protected int color = FabricUtils.DEFAULT_COLOR;
-    protected double size = FabricUtils.SIZE;
+    private transient int cachedStorageMultiplier = CommonUtils.INVALID;
+    private transient int cachedUsedUpgradeSlots = CommonUtils.INVALID;
+    protected int color = CommonUtils.DEFAULT_COLOR;
+    protected double size = CommonUtils.DEFAULT_SIZE;
     public AbstractBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }
@@ -167,7 +165,7 @@ public abstract class AbstractBarrelBlockEntity extends BlockEntity {
         return cachedUsedUpgradeSlots;
     }
     protected void invalidateCaches() {
-        cachedUsedUpgradeSlots = cachedStorageMultiplier = FabricUtils.INVALID;
+        cachedUsedUpgradeSlots = cachedStorageMultiplier = CommonUtils.INVALID;
     }
 
     @Override

@@ -4,8 +4,12 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import org.slf4j.Logger;
 import tfar.nabba.platform.Services;
+
+import java.io.File;
 
 // This class is part of the common project meaning it is shared between all supported loaders. Code written here can only
 // import and access the vanilla codebase, libraries used by vanilla, and optionally third party libraries that provide
@@ -16,8 +20,7 @@ public class NABBA {
     public static final String MODID = "nabba";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static NABBA instance;
-    public MinecraftServer server;
+    public static MinecraftServer server;
 
 
     // The loader specific projects are able to import and use any code from the common project. This allows you to
@@ -38,5 +41,19 @@ public class NABBA {
         }
 
         Services.PLATFORM.registerGameObjects();
+    }
+
+
+    public static void onServerStarting(MinecraftServer server) {
+        NABBA.server = server;
+        LevelStorageSource.LevelStorageAccess storageSource = server.storageSource;
+        File file = storageSource.getDimensionPath(server.getLevel(Level.OVERWORLD).dimension())
+                .resolve("data/nabba").toFile();
+        file.mkdirs();
+    }
+
+
+    public static void onServerStop() {
+        server = null;
     }
 }

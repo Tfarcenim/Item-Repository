@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -42,23 +41,20 @@ import tfar.nabba.datagen.ModDatagen;
 import tfar.nabba.init.*;
 import tfar.nabba.inventory.FakeSlotSynchronizer;
 import tfar.nabba.menu.SearchableMenu;
-import tfar.nabba.mixin.MinecraftServerAccess;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.world.AntiBarrelSubData;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.UUID;
+
+import static tfar.nabba.NABBA.server;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(NABBA.MODID)
 public class NABBAForge {
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
-
-    public static NABBAForge instance;
-    public MinecraftServer server;
 
     public NABBAForge() {
         // Register the setup method for modloading
@@ -71,7 +67,6 @@ public class NABBAForge {
             bus.addListener(Client::tooltipC);
         }
         addGameEvents();
-        instance = this;
         NABBA.init();
     }
 
@@ -85,24 +80,20 @@ public class NABBAForge {
     }
 
     public void onServerStarting(ServerStartingEvent event) {
-        instance.server = event.getServer();
-        LevelStorageSource.LevelStorageAccess storageSource = ((MinecraftServerAccess) instance.server).getStorageSource();
-        File file = storageSource.getDimensionPath(instance.server.getLevel(Level.OVERWORLD).dimension())
-                .resolve("data/nabba").toFile();
-        file.mkdirs();
+        NABBA.onServerStarting(event.getServer());
     }
 
     public void onServerStopped(ServerStoppedEvent event) {
-        instance.server = null;
+        NABBA.onServerStop();
     }
 
-    public AntiBarrelSubData getData(UUID uuid) {
+    public static AntiBarrelSubData getData(UUID uuid) {
         if (server != null) {
             return getData(uuid,server);
         }
         throw new RuntimeException("Tried to get data on the client?");
     }
-    public AntiBarrelSubData getData(UUID uuid,MinecraftServer server) {
+    public static AntiBarrelSubData getData(UUID uuid,MinecraftServer server) {
         return server.getLevel(Level.OVERWORLD).getDataStorage()
                 .computeIfAbsent(AntiBarrelSubData::loadStatic,AntiBarrelSubData::new,
                         NABBA.MODID+"/"+uuid.toString());

@@ -2,6 +2,9 @@ package tfar.nabba.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,6 +29,7 @@ public class CommonUtils {
     public static final int DEFAULT_COLOR = 0xff88ff;
 
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.##");
+    public static final String SEL = "Selected";
 
     public static boolean isItemValid(ItemStack existing, @NotNull ItemStack incoming, ItemStack ghost) {
         return (ghost.isEmpty() || ItemStack.isSameItemSameTags(incoming, ghost))
@@ -98,5 +102,73 @@ public class CommonUtils {
             }
         }
         return blockentities;
+    }
+
+    public static void scrollKey(ItemStack keyRing, boolean up) {
+        List<ItemStack> keys = getKeys(keyRing);
+        if (keys.isEmpty()) return;
+        int selected = keyRing.getTag().getInt(SEL);
+        if (selected >= keys.size() - 1 && !up) {
+            keyRing.getTag().putInt(SEL, 0);
+        } else if (selected <= 0 && up) {
+            keyRing.getTag().putInt(SEL, keys.size() - 1);
+        } else {
+            keyRing.getTag().putInt(SEL, up ? --selected : ++selected);
+        }
+    }
+
+    public static List<ItemStack> getKeys(ItemStack stack) {
+        List<ItemStack> keys = new ArrayList<>();
+
+        if (!stack.hasTag()) return keys;
+
+        ListTag listTag = stack.getTag().getList("Keys", Tag.TAG_COMPOUND);
+
+        for (Tag tag : listTag) {
+            CompoundTag stringTag = (CompoundTag) tag;
+            ItemStack item = ItemStack.of(stringTag);
+            if (!item.isEmpty()) {
+                keys.add(item);
+            }
+        }
+        return keys;
+    }
+
+    public static boolean addKey(ItemStack keyRing, ItemStack key) {
+        ItemStack singleKey = copyStackWithSize(key,1);//don't modify the original key
+        List<ItemStack> keys = getKeys(keyRing);
+
+        for (ItemStack stack : keys) {
+            if (stack.getItem() == singleKey.getItem())
+                return false;
+        }
+
+        CompoundTag tag = keyRing.getOrCreateTag();
+        ListTag listTag = tag.getList("Keys", Tag.TAG_COMPOUND);
+        if (listTag.isEmpty()) {
+            tag.putInt("Selected", 0);
+        }
+        listTag.add(singleKey.save(new CompoundTag()));
+        tag.put("Keys", listTag);
+        return true;
+    }
+
+    public static ItemStack getSelectedKey(ItemStack keyRing) {
+        if (!keyRing.hasTag())
+            return ItemStack.EMPTY;
+        List<ItemStack> keys = getKeys(keyRing);
+        int selected = keyRing.getTag().getInt(SEL);
+        //crash mitigation
+        if (selected < 0 || selected >= keys.size()) {
+            keyRing.getTag().remove(SEL);
+            selected = 0;
+        }
+        return keys.get(selected);
+    }
+
+    public static void saveKeyChanged(ItemStack keyRing, ItemStack key) {
+        int selected = keyRing.getOrCreateTag().getInt(SEL);
+        ListTag listTag = keyRing.getTag().getList("Keys", Tag.TAG_COMPOUND);
+        listTag.set(selected,key.save(new CompoundTag()));
     }
 }

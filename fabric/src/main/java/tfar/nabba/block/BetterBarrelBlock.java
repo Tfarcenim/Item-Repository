@@ -15,7 +15,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.util.BarrelType;
 
 import javax.annotation.Nullable;
 

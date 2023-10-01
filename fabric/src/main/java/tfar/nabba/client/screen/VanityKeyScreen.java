@@ -13,7 +13,6 @@ import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.client.BackgroundEditBox;
 import tfar.nabba.menu.VanityKeyMenu;
-import tfar.nabba.net.server.C2SVanityPacket;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.FabricUtils;
 

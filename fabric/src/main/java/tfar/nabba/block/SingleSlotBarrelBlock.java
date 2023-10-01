@@ -24,7 +24,6 @@ import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
-import tfar.nabba.util.BarrelType;
 
 import java.util.List;
 

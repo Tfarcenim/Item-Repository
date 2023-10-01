@@ -52,7 +52,7 @@ import tfar.nabba.inventory.tooltip.FluidBarrelTooltip;
 import tfar.nabba.item.NetworkVisualizerItem;
 import tfar.nabba.menu.SearchableFluidMenu;
 import tfar.nabba.menu.SearchableItemMenu;
-import tfar.nabba.net.server.C2SScrollKeyPacket;
+import tfar.nabba.net.client.ClientPacketHandler;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.ShapeMerger;
 
@@ -100,7 +100,7 @@ public class Client implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
+        ClientPacketHandler.registerPackets();
     }
 
     public static class NetworkInfo {
@@ -242,7 +242,7 @@ public class Client implements ClientModInitializer {
 
     private static void scroll(InputEvent.MouseScrollingEvent e) {
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().player.getMainHandItem().is(ModItems.KEY_RING) && Minecraft.getInstance().player.isCrouching()) {
-            C2SScrollKeyPacket.send(e.getScrollDelta() > 0);
+            C2SScrollKeyRingPacket.send(e.getScrollDelta() > 0);
             e.setCanceled(true);
         }
     }

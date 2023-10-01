@@ -1,10 +1,10 @@
 package tfar.nabba.api;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import tfar.nabba.shim.IItemHandlerShim;
+import tfar.nabba.util.CommonUtils;
 
-public interface ItemHandler extends IItemHandler {
+public interface ItemHandler extends IItemHandlerShim {
 
     boolean isFull();
 
@@ -27,7 +27,7 @@ public interface ItemHandler extends IItemHandler {
     }
 
     default ItemStack requestItem(ItemStack stack) {
-        ItemStack remaining = ItemHandlerHelper.copyStackWithSize(stack,Math.min(stack.getMaxStackSize(),stack.getCount()));
+        ItemStack remaining = CommonUtils.copyStackWithSize(stack,Math.min(stack.getMaxStackSize(),stack.getCount()));
         ItemStack extracted = ItemStack.EMPTY;
         for (int i = 0; i < getSlots();i++) {
             ItemStack simExtract = extractItem(i,remaining.getCount(),true);

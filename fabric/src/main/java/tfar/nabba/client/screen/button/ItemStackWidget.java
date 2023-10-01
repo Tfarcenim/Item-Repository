@@ -6,13 +6,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.inventory.RightClickButton;
-import tfar.nabba.net.server.C2SInsertPacket;
-import tfar.nabba.net.server.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.ClientUtils;
+import tfar.nabba.util.CommonUtils;
 
 public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemScreen<?,?>> {
 
@@ -48,7 +46,7 @@ public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemSc
         } else if (mouseStack.isEmpty()) {
             //take half
             int count = (int) Math.ceil(Math.min(stack.getMaxStackSize(),stack.getCount()) / 2d);
-            PacketHandler.sendToServer(new C2SExtractItemPacket(ItemHandlerHelper.copyStackWithSize(stack,count), false));
+            PacketHandler.sendToServer(new C2SExtractItemPacket(CommonUtils.copyStackWithSize(stack,count), false));
         }
 
         super.onClick(pMouseX, pMouseY);

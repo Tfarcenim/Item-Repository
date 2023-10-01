@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModItems {
-    public static CreativeModeTab tab = CreativeModeTab.builder()
+    public static CreativeModeTab tab = CreativeModeTab.builder(null, -1)
             .icon(() -> new ItemStack(ModItems.ANTI_BARREL))
             .title(Component.translatable("itemGroup.nabba"))
             .displayItems((features, output) -> {

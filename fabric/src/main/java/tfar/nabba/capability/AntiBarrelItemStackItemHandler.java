@@ -14,6 +14,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
+import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.IItemHandlerItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.util.ItemStackUtil;
@@ -36,7 +37,7 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
         //return a dummy container if we're on the client for some reason
         server = NABBA.instance.server != null;
         uuid = getUUIDFromItem(container);
-        stacks = server && uuid != null ? loadItems(NABBA.instance.getData(uuid).getStorage()) : new ArrayList<>();
+        stacks = server && uuid != null ? loadItems(NABBAFabric.getData(uuid).getStorage()) : new ArrayList<>();
     }
 
     public ItemStack getContainer() {

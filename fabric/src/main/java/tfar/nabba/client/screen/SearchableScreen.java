@@ -11,9 +11,6 @@ import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
 import tfar.nabba.inventory.ScrollbarWidgetC;
 import tfar.nabba.menu.SearchableMenu;
-import tfar.nabba.net.server.C2SForceSyncPacket;
-import tfar.nabba.net.server.C2SScrollPacket;
-import tfar.nabba.net.server.C2SSearchPacket;
 import tfar.nabba.net.PacketHandler;
 
 public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractContainerScreen<T> {
@@ -60,7 +57,7 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
     //@Override
     public void renderItemTooltip(GuiGraphics graphics, ItemStack pItemStack, int pMouseX, int pMouseY) {
         //super.renderTooltip(graphics, pItemStack, pMouseX, pMouseY);
-        graphics.renderTooltip(this.font, this.getTooltipFromContainerItem(pItemStack), pItemStack.getTooltipImage(), pItemStack, pMouseX, pMouseY);
+        graphics.renderTooltip(this.font, this.getTooltipFromContainerItem(pItemStack), pItemStack.getTooltipImage(), pMouseX, pMouseY);
     }
 
     private void onNameChanged(String string) {
@@ -87,9 +84,8 @@ public class SearchableScreen<S,T extends SearchableMenu<S>> extends AbstractCon
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
-
         if (canScroll()) {
-            PacketHandler.sendToServer(new C2SScrollPacket((int) pDelta));
+            PacketHandler.sendToServer(PacketHandler.scroll,buf -> buf.writeInt((int) pDelta));
         }
 
         return super.mouseScrolled(pMouseX, pMouseY, pDelta);

@@ -1,19 +1,25 @@
 package tfar.nabba.menu;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.net.PacketHandler;
-import tfar.nabba.net.client.S2CRefreshClientItemStacksPacket;
 import tfar.nabba.util.CommonUtils;
+import tfar.nabba.util.ItemStackUtil;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 public abstract class SearchableItemMenu<T extends SearchableItemHandler> extends SearchableMenu<ItemStack> {
 
@@ -42,7 +48,20 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         if (changed) {
             remoteStacks.clear();
             remoteStacks.addAll(list);
-            PacketHandler.sendToClient(new S2CRefreshClientItemStacksPacket(list), player);
+            PacketHandler.sendToClient(player, PacketHandler.refresh_items, new ListSerializer(list));
+        }
+    }
+
+    public static class ListSerializer implements Consumer<FriendlyByteBuf> {
+        private final List<ItemStack> list;
+        public ListSerializer(List<ItemStack> list) {
+            this.list = list;
+        }
+
+        @Override
+        public void accept(FriendlyByteBuf buf) {
+            buf.writeInt(list.size());
+            IntStream.range(0,list.size()).forEach(integer -> ItemStackUtil.writeExtendedItemStack(buf,list.get(integer)));
         }
     }
 

@@ -95,7 +95,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     };
 
     public AntiBarrelInventory getInventory() {
-        return NABBAForge.instance.getData(uuid,level.getServer()).getInventory(this);
+        return NABBAForge.getData(uuid,level.getServer()).getInventory(this);
     }
 
     public static AntiBarrelBlockEntity create(BlockPos pos, BlockState state) {
@@ -340,7 +340,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
 
         public void setChanged() {
-            NABBAForge.instance.getData(blockEntity.getUuid(), blockEntity.getLevel().getServer()).writeInvData(this);
+            NABBAForge.getData(blockEntity.getUuid(), blockEntity.getLevel().getServer()).writeInvData(this);
             blockEntity.setClientCountAndLast(getLastItem(), getStoredCount());
         }
 
