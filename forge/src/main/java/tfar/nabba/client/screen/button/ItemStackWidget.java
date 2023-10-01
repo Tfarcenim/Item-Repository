@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.client.screen.SearchableItemScreen;
-import tfar.nabba.inventory.RightClickButton;
+import tfar.nabba.client.gui.RightClickButton;
 import tfar.nabba.net.server.C2SInsertPacket;
 import tfar.nabba.net.server.C2SExtractItemPacket;
 import tfar.nabba.net.PacketHandler;

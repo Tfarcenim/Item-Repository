@@ -133,30 +133,13 @@ public class NABBAFabric implements ModInitializer {
     }
 
 
-   // public static final ClientConfig CLIENT;
-   // public static final ForgeConfigSpec CLIENT_SPEC;
-
-    public static final ServerCfg SERVER;
-    public static final ForgeConfigSpec SERVER_SPEC;
-
-    static {
-      //  final Pair<ClientConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ClientConfig::new);
-       // CLIENT_SPEC = specPair.getRight();
-       // CLIENT = specPair.getLeft();
-        final Pair<ServerCfg, ForgeConfigSpec> specPair2 = new ForgeConfigSpec.Builder().configure(ServerCfg::new);
-        SERVER_SPEC = specPair2.getRight();
-        SERVER = specPair2.getLeft();
-    }
-
-
-
     public static class ServerCfg {
-        public static ForgeConfigSpec.IntValue better_barrel_base_storage;
-        public static ForgeConfigSpec.IntValue fluid_barrel_base_storage;
-        public static ForgeConfigSpec.IntValue anti_barrel_base_storage;
-        public static ForgeConfigSpec.IntValue barrel_interface_storage;
+        public static int better_barrel_base_storage = 64;
+        public static int fluid_barrel_base_storage = 16;
+        public static int anti_barrel_base_storage = 256;
+        public static int barrel_interface_storage = 4096;
 
-        public ServerCfg(ForgeConfigSpec.Builder builder) {
+       /* public ServerCfg(ForgeConfigSpec.Builder builder) {
             builder.push("server");
             better_barrel_base_storage = builder.
                     comment("Base storage of better barrel in stacks")
@@ -170,6 +153,6 @@ public class NABBAFabric implements ModInitializer {
             barrel_interface_storage = builder.
                     comment("Number of barrels the barrel interface can hold")
                     .defineInRange("barrel_interface_storage", 4096, 1, 65536);
-        }
+        }*/
     }
 }

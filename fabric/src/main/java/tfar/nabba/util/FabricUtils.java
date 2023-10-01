@@ -1,5 +1,6 @@
 package tfar.nabba.util;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -9,6 +10,8 @@ import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,6 +23,7 @@ import tfar.nabba.api.*;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.blockentity.*;
+import tfar.nabba.shim.IFluidHandlerShim;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -81,20 +85,17 @@ public class FabricUtils {
                 ).forEachOrdered(pos -> {
                     FluidState fluidState = level.getFluidState(pos);
 
-                    if (hasFluidHandler.isValid(new FluidStack(fluidState.getType(), 1000))) {
-                        if (fluidState.getType().canConvertToSource(fluidState, level, pos)) {
-                            hasFluidHandler.getFluidHandler().fill(new FluidStack(fluidState.getType(), 1000), IFluidHandler.FluidAction.EXECUTE);
+                    if (hasFluidHandler.isValid(FabricFluidUtils.createFluidVariantWithAmount(fluidState.getType(), 1000))) {
+
+                        Fluid fluid = fluidState.getType();
+
+                        if (fluid instanceof FlowingFluid flowingFluid && flowingFluid.canConvertToSource(level)) {
+                            hasFluidHandler.getFluidHandler().fill(FabricFluidUtils.createFluidVariantWithAmount(fluidState.getType(), 1000), IFluidHandlerShim.FluidAction.EXECUTE);
                         } else {
                             BlockState state = level.getBlockState(pos);
                             if (state.getBlock() instanceof BucketPickup bucketPickup) {
                                 ItemStack filled = bucketPickup.pickupBlock(level, pos, state);
                                 FluidUtil.tryEmptyContainer(filled, hasFluidHandler.getFluidHandler(), Integer.MAX_VALUE, null, true);
-                                //only modded blocks use this, does it even work?
-                            } else if (state.getBlock() instanceof IFluidBlock iFluidBlock) {
-                                if (iFluidBlock.canDrain(level, pos)) {
-                                    FluidStack drain = iFluidBlock.drain(level, pos, IFluidHandler.FluidAction.EXECUTE);
-                                    hasFluidHandler.getFluidHandler().fill(drain, IFluidHandler.FluidAction.EXECUTE);
-                                }
                             }
                         }
                     }
@@ -143,15 +144,10 @@ public class FabricUtils {
 
     public static final Predicate<BlockEntity> isFreeAndControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect();
 
-    @NotNull
-    public static FluidStack copyFluidWithSize(@NotNull FluidStack itemStack, int size) {
-        if (size == 0) return FluidStack.EMPTY;
-        return new FluidStack(itemStack, size);
-    }
 
-    public static boolean isFluidValid(FluidStack existing, @NotNull FluidStack incoming, FluidStack ghost) {
-        return (ghost.isEmpty() || incoming.isFluidEqual(ghost))
-                && (existing.isEmpty() || existing.isFluidEqual(incoming));
+    public static boolean isFluidValid(FluidVariant existing, @NotNull FluidVariant incoming, FluidVariant ghost) {
+        return (ghost.isBlank() || incoming.equals(ghost))
+                && (existing.isBlank() || existing.equals(incoming));
     }
 
 
@@ -165,10 +161,11 @@ public class FabricUtils {
         }
     }
 
-    public static int getRedstoneSignalFromContainer(IFluidHandler pContainer) {
-        FluidStack fluid = pContainer.getFluidInTank(0);
-        if (!fluid.isEmpty()) {
-            float f = (float) fluid.getAmount() / (float) pContainer.getTankCapacity(0);
+    public static int getRedstoneSignalFromContainer(IFluidHandlerShim pContainer) {
+        FluidVariant fluid = pContainer.getFluidInTank(0);
+        if (!fluid.isBlank()) {
+            long amount = fluid.getNbt().getLong("amount");
+            float f = (float) amount / (float) pContainer.getTankCapacity(0);
             return Mth.floor(f * 14.0F) + 1;
         } else {
             return 0;

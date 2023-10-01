@@ -1,18 +1,17 @@
 package tfar.nabba.inventory.tooltip;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 public class FluidBarrelTooltip implements TooltipComponent {
 
-    private final FluidStack stack;
+    private final FluidVariant stack;
 
-    public FluidBarrelTooltip(FluidStack stack) {
+    public FluidBarrelTooltip(FluidVariant stack) {
         this.stack = stack;
     }
 
-    public FluidStack getStack() {
+    public FluidVariant getStack() {
         return stack;
     }
 }

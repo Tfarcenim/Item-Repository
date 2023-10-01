@@ -12,7 +12,7 @@ minecraft {
 
     if(file("src/main/resources/${mod_id}.accesswidener").exists()){
         accessWideners(file("src/main/resources/${mod_id}.accesswidener"))
-    }
+   }
 }
 
 dependencies {

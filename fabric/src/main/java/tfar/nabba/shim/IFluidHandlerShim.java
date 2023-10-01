@@ -1,5 +1,6 @@
 package tfar.nabba.shim;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import org.jetbrains.annotations.NotNull;
 
 public interface IFluidHandlerShim {
@@ -39,7 +40,7 @@ public interface IFluidHandlerShim {
      * @return FluidStack in a given tank. FluidStack.EMPTY if the tank is empty.
      */
     @NotNull
-    FluidStack getFluidInTank(int tank);
+    FluidVariant getFluidInTank(int tank);
 
     /**
      * Retrieves the maximum fluid amount for a given tank.
@@ -58,7 +59,7 @@ public interface IFluidHandlerShim {
      * @return TRUE if the tank can hold the FluidStack, not considering current state.
      * (Basically, is a given fluid EVER allowed in this tank?) Return FALSE if the answer to that question is 'no.'
      */
-    boolean isFluidValid(int tank, @NotNull FluidStack stack);
+    boolean isFluidValid(int tank, @NotNull FluidVariant stack);
 
     /**
      * Fills fluid into internal tanks, distribution is left entirely to the IFluidHandler.
@@ -67,7 +68,7 @@ public interface IFluidHandlerShim {
      * @param action   If SIMULATE, fill will only be simulated.
      * @return Amount of resource that was (or would have been, if simulated) filled.
      */
-    int fill(FluidStack resource, FluidAction action);
+    int fill(FluidVariant resource, FluidAction action);
 
     /**
      * Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
@@ -78,7 +79,7 @@ public interface IFluidHandlerShim {
      * simulated) drained.
      */
     @NotNull
-    FluidStack drain(FluidStack resource, FluidAction action);
+    FluidVariant drain(FluidVariant resource, FluidAction action);
 
     /**
      * Drains fluid out of internal tanks, distribution is left entirely to the IFluidHandler.
@@ -91,7 +92,7 @@ public interface IFluidHandlerShim {
      * simulated) drained.
      */
     @NotNull
-    FluidStack drain(int maxDrain, FluidAction action);
+    FluidVariant drain(int maxDrain, FluidAction action);
 
 }
 

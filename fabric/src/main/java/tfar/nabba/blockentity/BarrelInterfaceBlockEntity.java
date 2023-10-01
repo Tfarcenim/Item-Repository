@@ -24,7 +24,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -317,7 +316,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
             int index = getIndexForItemSlot(slot);
-            IItemHandler handler = getItemHandlerFromIndex(index);
+            IItemHandlerShim handler = getItemHandlerFromIndex(index);
             slot = getItemSlotFromIndex(slot, index);
             return handler.getStackInSlot(slot);
         }

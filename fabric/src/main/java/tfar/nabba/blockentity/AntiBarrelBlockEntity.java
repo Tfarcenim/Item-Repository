@@ -1,7 +1,6 @@
 package tfar.nabba.blockentity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -15,24 +14,18 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
-import tfar.nabba.NABBA;
 import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.HasItemHandler;
+import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
-import tfar.nabba.inventory.ResizableIItemHandler;
+import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.util.CommonUtils;
-import tfar.nabba.util.ItemStackUtil;
-import tfar.nabba.init.ModBlockEntityTypes;
-import tfar.nabba.util.NBTKeys;
 import tfar.nabba.util.FabricUtils;
+import tfar.nabba.util.ItemStackUtil;
+import tfar.nabba.util.NBTKeys;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,15 +121,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         return new AntiBarrelMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(level, getBlockPos()), getInventory(), dataAccess, syncSlotsAccess);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return LazyOptional.of(this::getInventory).cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
     @Override
     public AntiBarrelInventory getItemHandler() {
         return getInventory();
@@ -220,7 +204,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         return FabricUtils.getRedstoneSignalFromAntibarrel(getInventory());
     }
 
-    public static class AntiBarrelInventory implements SearchableItemHandler, ResizableIItemHandler {
+    public static class AntiBarrelInventory implements SearchableItemHandler {
 
         private final AntiBarrelBlockEntity blockEntity;
 
@@ -249,7 +233,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         }
 
         public int getActualLimit() {
-            return blockEntity.getStorageMultiplier() * NABBA.ServerCfg.anti_barrel_base_storage.get();
+            return blockEntity.getStorageMultiplier() * NABBAFabric.ServerCfg.anti_barrel_base_storage;
         }
 
         @Override

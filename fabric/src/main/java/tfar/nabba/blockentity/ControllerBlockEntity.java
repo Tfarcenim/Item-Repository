@@ -1,5 +1,6 @@
 package tfar.nabba.blockentity;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +28,9 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
+import tfar.nabba.shim.IFluidHandlerShim;
+import tfar.nabba.util.BarrelType;
+import tfar.nabba.util.FabricFluidUtils;
 import tfar.nabba.util.FabricUtils;
 
 import javax.annotation.Nonnull;
@@ -409,8 +413,8 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         }
 
         //attempts to add fluid to every connected tank
-        public int universalFill(FluidStack stack, FluidAction action) {
-            FluidStack remainder = stack.copy();
+        public int universalFill(FluidVariant stack, FluidVariant action) {
+            FluidVariant remainder = FabricFluidUtils.copyFluidVariant(stack);
             int totalFilled = 0;
             for (int i = 0; i < getTanks();i++) {
 
@@ -498,7 +502,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         }
 
         @Override
-        public boolean isFluidValid(int slot, @NotNull FluidStack incoming) {
+        public boolean isFluidValid(int slot, @NotNull FluidVariant incoming) {
             if (slot < getTanks()) {
                 if (controllerBlockEntity.getBE(slot,BarrelType.FLUID) instanceof FluidBarrelBlockEntity barrelBlockEntity) {
                     return barrelBlockEntity.getFluidHandler().isFluidValid(0, incoming);
@@ -510,12 +514,12 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         }
 
         @Override
-        public int fill(int tank, FluidStack stack, FluidAction action) {
+        public int fill(int tank, FluidStack stack, IFluidHandlerShim.FluidAction action) {
             return 0;
         }
 
         @Override
-        public @NotNull FluidStack drain(int tank, FluidStack resource, FluidAction action) {
+        public @NotNull FluidStack drain(int tank, FluidStack resource, IFluidHandlerShim.FluidAction action) {
             FluidStack fluidStack = getFluidInTank(tank);
             if (resource.isEmpty() || !resource.isFluidEqual(fluidStack)) {
                 return FluidStack.EMPTY;

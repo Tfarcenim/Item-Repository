@@ -1,5 +1,6 @@
 package tfar.nabba.item.barrels;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
@@ -31,11 +32,11 @@ public class FluidBarrelBlockItem extends BlockItem {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        FluidStack disp = getStoredFluid(stack);
+        FluidVariant disp = getStoredFluid(stack);
         return disp.isEmpty() ? super.getTooltipImage(stack) : Optional.of(new FluidBarrelTooltip(disp));
     }
 
-    public static FluidStack getStoredFluid(ItemStack barrel) {
+    public static FluidVariant getStoredFluid(ItemStack barrel) {
         if (barrel.getTagElement(BlockItem.BLOCK_ENTITY_TAG) != null) {
             FluidStack stack = FluidStack.loadFluidStackFromNBT(BetterBarrelBlockItem.getBlockEntityTag(barrel).getCompound(NBTKeys.Stack.name()));
             return stack;

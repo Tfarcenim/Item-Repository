@@ -8,7 +8,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import tfar.nabba.client.screen.SearchableFluidScreen;
-import tfar.nabba.inventory.RightClickButton;
+import tfar.nabba.client.gui.RightClickButton;
 import tfar.nabba.net.server.C2SExtractFluidPacket;
 import tfar.nabba.net.server.C2SInsertPacket;
 import tfar.nabba.net.PacketHandler;

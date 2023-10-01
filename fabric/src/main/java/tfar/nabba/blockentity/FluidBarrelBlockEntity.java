@@ -1,5 +1,6 @@
 package tfar.nabba.blockentity;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -13,18 +14,21 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
+import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.inventory.ImmutableFluidStack;
+import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.util.FabricUtils;
+import tfar.nabba.util.NBTKeys;
 
-public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidStack> implements HasFluidHandler {
+public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidVariant> implements HasFluidHandler {
 
     protected FluidBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         barrelHandler = new FluidBarrelHandler(this);
-        ghost = FluidStack.EMPTY;
+        ghost = FluidVariant.blank();
     }
 
     private final FluidBarrelHandler barrelHandler;
@@ -42,7 +46,7 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidSta
     }
 
     public void clearGhost() {
-        ghost = FluidStack.EMPTY;
+        ghost = FluidVariant.blank();
         setChanged();
     }
 
@@ -65,14 +69,14 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidSta
         return barrelHandler;
     }
 
-    public static class FluidBarrelHandler implements IFluidHandler {
+    public static class FluidBarrelHandler implements IFluidHandlerShim {
         private final FluidBarrelBlockEntity barrelBlockEntity;
 
         FluidBarrelHandler(FluidBarrelBlockEntity barrelBlockEntity) {
             this.barrelBlockEntity = barrelBlockEntity;
         }
 
-        private FluidStack stack = FluidStack.EMPTY;
+        private FluidVariant stack = FluidStack.EMPTY;
 
         @Override
         public int getTanks() {
@@ -166,39 +170,22 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FluidSta
 
         public int getActualCapacity(int tank) {
             return barrelBlockEntity.getStorageMultiplier() * 1000 *
-                    (barrelBlockEntity.hasDowngrade() ? 1 : NABBA.ServerCfg.fluid_barrel_base_storage.get());
+                    (barrelBlockEntity.hasDowngrade() ? 1 : NABBAFabric.ServerCfg.fluid_barrel_base_storage);
         }
 
         @Override
-        public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        public boolean isFluidValid(int tank, @NotNull FluidVariant stack) {
             return isFluidValid(stack);
         }
 
-        public boolean isFluidValid(@NotNull FluidStack incoming) {
-            return (!barrelBlockEntity.hasGhost() || incoming.isFluidEqual(barrelBlockEntity.getGhost()))
-                    && (this.stack.isEmpty() || this.stack.isFluidEqual(incoming));
+        public boolean isFluidValid(@NotNull FluidVariant incoming) {
+            return (!barrelBlockEntity.hasGhost() || incoming.equals(barrelBlockEntity.getGhost()))
+                    && (this.stack.isBlank() || this.stack.equals(incoming));
         }
 
         public void markDirty() {
             barrelBlockEntity.setChanged();
         }
-    }
-    private LazyOptional<IFluidHandler> optional = LazyOptional.of(this::getFluidHandler);
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap == ForgeCapabilities.FLUID_HANDLER ? optional.cast() : super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        optional.invalidate();
-    }
-
-    @Override
-    public void reviveCaps() {
-        super.reviveCaps();
-        optional = LazyOptional.of(this::getFluidHandler);
     }
 
     @Override

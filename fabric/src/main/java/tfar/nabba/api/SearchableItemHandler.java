@@ -1,11 +1,6 @@
 package tfar.nabba.api;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.util.SearchHelper;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package tfar.nabba.inventory;
+package tfar.nabba.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
