@@ -27,6 +27,11 @@ public class FabricFluidStack {
         this.amount = amount;
     }
 
+    public FabricFluidStack(FabricFluidStack existing,long amount) {
+        this.fluidVariant = existing.getFluidVariant();
+        this.amount = amount;
+    }
+
     public boolean isEmpty() {
         return this == empty() || amount <= 0 || fluidVariant.isBlank();
     }

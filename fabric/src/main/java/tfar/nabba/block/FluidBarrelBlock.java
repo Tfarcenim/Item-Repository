@@ -10,12 +10,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.util.BarrelType;
 
 import javax.annotation.Nullable;
 
@@ -38,11 +37,11 @@ public class FluidBarrelBlock extends SingleSlotBarrelBlock {
                 if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(pState,handStack,pLevel,pPos,pPlayer)) {
 
                 } else {
-                    FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(handStack, betterBarrelBlockEntity.getFluidHandler(),
-                            new InvWrapper(pPlayer.getInventory()), Integer.MAX_VALUE, pPlayer, true);
-                    if (fluidActionResult.isSuccess()) {
-                        pPlayer.setItemInHand(pHand,fluidActionResult.getResult());
-                    }
+    //                FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(handStack, betterBarrelBlockEntity.getFluidHandler(),
+    //                        new InvWrapper(pPlayer.getInventory()), Integer.MAX_VALUE, pPlayer, true);
+    //                if (fluidActionResult.isSuccess()) {
+    //                    pPlayer.setItemInHand(pHand,fluidActionResult.getResult());
+    //                }
                 }
             }
         }

@@ -13,8 +13,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import tfar.nabba.api.BarrelFrameTier;
+import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.util.BarrelType;
 
 import javax.annotation.Nullable;
 

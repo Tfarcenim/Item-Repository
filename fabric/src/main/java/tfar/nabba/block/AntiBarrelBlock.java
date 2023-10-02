@@ -24,6 +24,8 @@ import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
+import tfar.nabba.util.BarrelType;
+import tfar.nabba.util.BlockItemBarrelUtils;
 
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class AntiBarrelBlock extends AbstractBarrelBlock {
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         if (pStack.getTagElement(BlockItem.BLOCK_ENTITY_TAG) != null) {
             pTooltip.add(Component.translatable("nabba.antibarrel.tooltip").append(
-                    Component.literal(" "+ BetterBarrelBlockItem.getBlockEntityTag(pStack).getInt("Stored")).withStyle(ChatFormatting.AQUA)));
+                    Component.literal(" "+ BlockItemBarrelUtils.getBlockEntityTag(pStack).getInt("Stored")).withStyle(ChatFormatting.AQUA)));
         }
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
     }

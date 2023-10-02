@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.item.UpgradeItem;
+import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.FabricUtils;
 
 public class BetterBarrelRenderer extends AbstractBarrelRenderer<BetterBarrelBlockEntity> {
@@ -27,7 +28,7 @@ public class BetterBarrelRenderer extends AbstractBarrelRenderer<BetterBarrelBlo
         boolean infiniteVend = betterBarrelBlockEntity.infiniteVending();
 
         int cap = betterBarrelBlockEntity.getItemHandler().getActualLimit();
-        String toDraw = infiniteVend ? FabricUtils.INFINITY :stack.getCount() + " / "+ cap;
+        String toDraw = infiniteVend ? CommonUtils.INFINITY :stack.getCount() + " / "+ cap;
 
         renderText(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay, toDraw, 14/16d, betterBarrelBlockEntity.getColor(), .0075f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem&& betterBarrelBlockEntity.isValid(upgradeItem)) {

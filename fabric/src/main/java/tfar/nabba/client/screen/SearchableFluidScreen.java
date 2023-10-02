@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.client.gui.screens.SearchableScreen;
 import tfar.nabba.client.screen.button.FluidStackWidget;
@@ -14,7 +13,7 @@ import tfar.nabba.util.FabricFluidStack;
 
 import java.util.List;
 
-public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends SearchableFluidMenu<T>> extends SearchableScreen<FluidVariant,U> {
+public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends SearchableFluidMenu<T>> extends SearchableScreen<FabricFluidStack,U> {
 
     private final FluidStackWidget[] widgets = new FluidStackWidget[54];
     public SearchableFluidScreen(U pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -48,12 +47,12 @@ public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends Se
         pPoseStack.drawString(font,menu.getFilledSlotCount()+"", this.titleLabelX + 60, this.inventoryLabelY, 0x404040);
     }
 
-    public void setGuiFluids(List<FluidStack> stacks) {
+    public void setGuiFluids(List<FabricFluidStack> stacks) {
         for (int i = 0; i < 54;i++) {
             if (i < stacks.size()) {
                 widgets[i].setStack(stacks.get(i));
             } else {
-                widgets[i].setStack(FluidStack.EMPTY);
+                widgets[i].setStack(FabricFluidStack.empty());
             }
         }
     }

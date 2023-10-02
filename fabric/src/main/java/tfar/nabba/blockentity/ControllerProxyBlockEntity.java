@@ -1,18 +1,10 @@
 package tfar.nabba.blockentity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.FabricUtils;
 
@@ -110,43 +102,5 @@ public class ControllerProxyBlockEntity extends BlockEntity {
             return null;
         }
         return controllerBlockEntity.getHandler();
-    }
-
-    /*
-    @Nonnull
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }*/
-
-    private LazyOptional<IItemHandler> item_optional = LazyOptional.of(this::getHandler);
-    private LazyOptional<IFluidHandler> fluid_optional = LazyOptional.of(this::getHandler);
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return item_optional.cast();
-        } else if (cap == ForgeCapabilities.FLUID_HANDLER) {
-            return fluid_optional.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        item_optional.invalidate();
-        fluid_optional.invalidate();
-    }
-
-    @Override
-    public void reviveCaps() {
-        super.reviveCaps();
-        item_optional = LazyOptional.of(this::getHandler);
-        fluid_optional = LazyOptional.of(this::getHandler);
     }
 }

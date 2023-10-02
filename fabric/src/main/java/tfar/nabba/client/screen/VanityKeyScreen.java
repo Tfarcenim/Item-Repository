@@ -7,13 +7,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.client.gui.widget.ForgeSlider;
 import org.lwjgl.glfw.GLFW;
 import tfar.nabba.NABBA;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
 import tfar.nabba.client.BackgroundEditBox;
+import tfar.nabba.client.FabricSlider;
 import tfar.nabba.menu.VanityKeyMenu;
 import tfar.nabba.net.PacketHandler;
+import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.FabricUtils;
 
 public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
@@ -30,7 +31,7 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(NABBA.MODID,"textures/gui/container/vanity_key.png");
     private BackgroundEditBox editBox;
 
-    private ForgeSlider slider;
+    private FabricSlider slider;
 
     @Override
     public void render(GuiGraphics pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
@@ -47,14 +48,14 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         int j = (this.height - this.imageHeight) / 2;
 
         BlockEntity blockEntity =  player.level().getBlockEntity(menu.getPos());
-        int initialColor = FabricUtils.DEFAULT_COLOR;
-        double initialSize = FabricUtils.SIZE;
+        int initialColor = CommonUtils.DEFAULT_COLOR;
+        double initialSize = CommonUtils.DEFAULT_SIZE;
         if (blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
             initialColor = abstractBarrelBlockEntity.getColor();
             initialSize = abstractBarrelBlockEntity.getSize();
         }
 
-        slider = new ForgeSlider(i + 38,j + 46,100,20,Component.empty(),Component.empty(),
+        slider = new FabricSlider(i + 38,j + 46,100,20,Component.empty(),Component.empty(),
                 0,1,initialSize,.01,0,true){
             @Override
             public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
@@ -137,7 +138,10 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
     }
 
     protected void syncVanity() {
-        PacketHandler.sendToServer(new C2SVanityPacket(localColor,slider.getValue()));
+        PacketHandler.sendToServer(PacketHandler.vanity,buf -> {
+            buf.writeInt(localColor);
+            buf.writeDouble(slider.getValue());
+        });
     }
 
 }

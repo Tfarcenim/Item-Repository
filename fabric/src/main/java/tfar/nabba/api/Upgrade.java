@@ -3,6 +3,7 @@ package tfar.nabba.api;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;
+import tfar.nabba.util.BarrelType;
 
 import java.util.HashMap;
 import java.util.Map;

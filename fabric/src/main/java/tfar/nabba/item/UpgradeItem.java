@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
+import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.blockentity.AbstractBarrelBlockEntity;

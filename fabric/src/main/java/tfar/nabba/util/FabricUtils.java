@@ -14,10 +14,6 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.api.*;
 import tfar.nabba.block.AbstractBarrelBlock;
@@ -90,12 +86,13 @@ public class FabricUtils {
                         Fluid fluid = fluidState.getType();
 
                         if (fluid instanceof FlowingFluid flowingFluid && flowingFluid.canConvertToSource(level)) {
-                            hasFluidHandler.getFluidHandler().fill(FabricFluidUtils.copyFluidStackWithSize(fluidState.getType(), 1000), IFluidHandlerShim.FluidAction.EXECUTE);
+                            hasFluidHandler.getFluidHandler().fill(new FabricFluidStack(FluidVariant.of(fluidState.getType()), 1000), IFluidHandlerShim.FluidAction.EXECUTE);
                         } else {
                             BlockState state = level.getBlockState(pos);
                             if (state.getBlock() instanceof BucketPickup bucketPickup) {
                                 ItemStack filled = bucketPickup.pickupBlock(level, pos, state);
-                                FluidUtil.tryEmptyContainer(filled, hasFluidHandler.getFluidHandler(), Integer.MAX_VALUE, null, true);
+                                //todo
+                               // FluidUtil.tryEmptyContainer(filled, hasFluidHandler.getFluidHandler(), Integer.MAX_VALUE, null, true);
                             }
                         }
                     }

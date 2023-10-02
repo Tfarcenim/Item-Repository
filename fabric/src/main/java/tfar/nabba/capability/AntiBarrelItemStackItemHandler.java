@@ -5,12 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
@@ -26,15 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabilityProvider {
+public class AntiBarrelItemStackItemHandler implements IItemHandlerItem {
     private final ItemStack container;
 
     private final List<ItemStack> stacks;
     private UUID uuid;
     private final boolean server;
-
-    private final LazyOptional<IItemHandler> holder = LazyOptional.of(() -> this);
-
+    
     public AntiBarrelItemStackItemHandler(ItemStack stack) {
         this.container = stack;
         //return a dummy container if we're on the client for some reason
@@ -47,12 +39,6 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
         return container;
     }
 
-    //assign the uuid when someone tries to access the inventory
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        checkId();
-        return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, holder);
-    }
 
     @Override
     public int getSlots() {
@@ -88,14 +74,14 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
 
                 if (existing.getCount() + stack.getCount() > slotLimit) {
                     if (!simulate) {
-                        stacks.set(slot, ItemHandlerHelper.copyStackWithSize(stack, slotLimit));
+                        stacks.set(slot, CommonUtils.copyStackWithSize(stack, slotLimit));
                         markDirty();
                     }
                     return BetterBarrelBlockItem.isVoid(container) ? ItemStack.EMPTY :
-                            ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() + existing.getCount() - slotLimit);
+                            CommonUtils.copyStackWithSize(stack, stack.getCount() + existing.getCount() - slotLimit);
                 } else {
                     if (!simulate) {
-                        stacks.set(slot, ItemHandlerHelper.copyStackWithSize(stack, existing.getCount() + stack.getCount()));
+                        stacks.set(slot, CommonUtils.copyStackWithSize(stack, existing.getCount() + stack.getCount()));
                         markDirty();
                     }
                     return ItemStack.EMPTY;
@@ -155,7 +141,7 @@ public class AntiBarrelItemStackItemHandler implements IItemHandlerItem, ICapabi
     }
 
     public int getActualLimit() {
-        return BetterBarrelBlockItem.getStorageMultiplier(container) * NABBA.ServerCfg.anti_barrel_base_storage.get();
+        return BetterBarrelBlockItem.getStorageMultiplier(container) * NABBAFabric.ServerCfg.anti_barrel_base_storage;
     }
 
     public void markDirty() {

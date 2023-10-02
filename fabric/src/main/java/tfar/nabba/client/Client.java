@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -24,11 +23,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.block.AbstractBarrelBlock;
@@ -59,11 +53,11 @@ import java.util.*;
 
 public class Client implements ClientModInitializer {
 
-    public static void setup(FMLClientSetupEvent e) {
-        MinecraftForge.EVENT_BUS.addListener(Client::onTexturePostStitch);
+    //public static void setup(FMLClientSetupEvent e) {
+    //    MinecraftForge.EVENT_BUS.addListener(Client::onTexturePostStitch);
      //   MinecraftForge.EVENT_BUS.addListener(Client::worldLast);
 
-    }
+   // }
 
   //  public static void worldLast(RenderLevelLastEvent e) {
      //   renderNetwork(e.getPoseStack(),Minecraft.getInstance().gameRenderer.getMainCamera());
@@ -216,12 +210,12 @@ public class Client implements ClientModInitializer {
         }
     }
 
-    public static void onTexturePostStitch(final TextureStitchEvent.Post event) {
+   // public static void onTexturePostStitch(final TextureStitchEvent.Post event) {
         //noinspection deprecation
-        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-            FluidSpriteCache.invalidateSpriteCache();
-        }
-    }
+  //      if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+  //          FluidSpriteCache.invalidateSpriteCache();
+  //      }
+    //}
 
     public static ClientTooltipComponent tooltipImage(TooltipComponent data) {
         if (data instanceof BetterBarrelTooltip betterBarrelTooltip) {

@@ -8,11 +8,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.SingleSlotBarrelBlock;
-import tfar.nabba.capability.BetterBarrelItemStackItemHandler;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.util.BlockItemBarrelUtils;
 import tfar.nabba.util.CommonUtils;
@@ -28,11 +25,6 @@ public class BetterBarrelBlockItem extends BlockItem {
     }
 
 
-
-    @Override
-    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new BetterBarrelItemStackItemHandler(stack);
-    }
 
     public static ItemStack getStoredItem(ItemStack barrel) {
         if (BlockItemBarrelUtils.getBlockEntityTag(barrel) != null) {
@@ -99,8 +91,8 @@ public class BetterBarrelBlockItem extends BlockItem {
     }
 
     public static boolean getBooleanBlockStateValue(ItemStack barrel, BooleanProperty property) {
-        if (getBlockStateTag(barrel)!=null) {
-            CompoundTag blockStateTag = getBlockStateTag(barrel);
+        if (BlockItemBarrelUtils.getBlockStateTag(barrel)!=null) {
+            CompoundTag blockStateTag = BlockItemBarrelUtils.getBlockStateTag(barrel);
             blockStateTag.getBoolean(property.getName());
         }
         return false;

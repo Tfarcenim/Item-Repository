@@ -15,15 +15,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import tfar.nabba.api.BarrelFrameTier;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
+import tfar.nabba.util.BarrelType;
 
 import java.util.List;
 
@@ -51,7 +47,7 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
     public void attack(BlockState pState, Level level, BlockPos pos, Player player) {
         if (!player.isCrouching()) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+         /*   if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
                 ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
                 ItemHandlerHelper.giveItemToPlayer(player, stack);
             } else if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
@@ -60,7 +56,7 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
                 if (fluidActionResult.isSuccess()) {
                     player.setItemInHand(InteractionHand.MAIN_HAND, fluidActionResult.getResult());
                 }
-            }
+            }*/
         }
     }
 

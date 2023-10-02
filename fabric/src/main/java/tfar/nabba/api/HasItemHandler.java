@@ -1,7 +1,6 @@
 package tfar.nabba.api;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 
 public interface HasItemHandler extends HasHandler {
     ItemHandler getItemHandler();

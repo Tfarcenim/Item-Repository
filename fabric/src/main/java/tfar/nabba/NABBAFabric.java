@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -55,7 +56,7 @@ public class NABBAFabric implements ModInitializer {
     }
 
     private void addGameEvents() {
-        ServerLifecycleEvents.SERVER_STARTING.register(NABBA::onServerStarting);
+        ServerLifecycleEvents.SERVER_STARTED.register(NABBA::onServerStarting);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> NABBA.onServerStop());
 
         PlayerBlockBreakEvents.BEFORE.register(this::blockBreak);
@@ -75,6 +76,7 @@ public class NABBAFabric implements ModInitializer {
         superRegister(ModBlockEntityTypes.class,BuiltInRegistries.BLOCK_ENTITY_TYPE, BlockEntityType.class);
         superRegister(ModMenuTypes.class,BuiltInRegistries.MENU, MenuType.class);
         superRegister(ModRecipeSerializers.class,BuiltInRegistries.RECIPE_SERIALIZER, RecipeSerializer.class);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,new ResourceLocation(MODID,"tab"),ModItems.tab);
     }
 
     public static <T> void superRegister(Class<?> clazz, Registry<T> resourceKey, Class<?> filter) {
