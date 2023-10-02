@@ -73,7 +73,6 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFl
         }
 
         private FabricFluidStack stack = FabricFluidStack.empty();
-        long amount = 0;
 
         @Override
         public int getTanks() {
@@ -98,7 +97,7 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFl
             if (incoming.isEmpty() || !isFluidValid(incoming)) return 0;
 
             long limit = getActualCapacity(0);
-            long existing = amount;
+            long existing = stack.getAmount();
             long count = incoming.getAmount();
             boolean isVoid = barrelBlockEntity.isVoid();
             if (existing >= limit) {
