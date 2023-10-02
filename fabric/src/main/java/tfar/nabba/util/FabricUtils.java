@@ -1,5 +1,6 @@
 package tfar.nabba.util;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -73,7 +74,7 @@ public class FabricUtils {
                 for (ItemEntity itemEntity : itemEntities) {
                     addItem((HasItemHandler) betterBarrelBlockEntity, itemEntity);
                 }
-            } else if (betterBarrelBlockEntity instanceof HasFluidHandler hasFluidHandler) {
+            } else if (betterBarrelBlockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
 
                 BlockPos.betweenClosedStream(
                         betterBarrelBlockEntity.getBlockPos().offset(-(x - 1) / 2, -(y - 1) / 2, -(z - 1) / 2),
@@ -81,18 +82,18 @@ public class FabricUtils {
                 ).forEachOrdered(pos -> {
                     FluidState fluidState = level.getFluidState(pos);
 
-                    if (hasFluidHandler.isValid(new FabricFluidStack(FluidVariant.of(fluidState.getType()), 1000))) {
-
+                    FabricFluidStack fabricFluidStack = new FabricFluidStack(FluidVariant.of(fluidState.getType()), FluidConstants.BUCKET);
+                    if (fluidBarrelBlockEntity.isValid(fabricFluidStack)) {
                         Fluid fluid = fluidState.getType();
 
                         if (fluid instanceof FlowingFluid flowingFluid && flowingFluid.canConvertToSource(level)) {
-                            hasFluidHandler.getFluidHandler().fill(new FabricFluidStack(FluidVariant.of(fluidState.getType()), 1000), IFluidHandlerShim.FluidAction.EXECUTE);
+                            FluidMovingUtil.interactWithFluidStorageFill(fluidBarrelBlockEntity.getFluidStorage(),fabricFluidStack);
                         } else {
                             BlockState state = level.getBlockState(pos);
                             if (state.getBlock() instanceof BucketPickup bucketPickup) {
                                 ItemStack filled = bucketPickup.pickupBlock(level, pos, state);
                                 //todo
-                               // FluidUtil.tryEmptyContainer(filled, hasFluidHandler.getFluidHandler(), Integer.MAX_VALUE, null, true);
+                               // FluidUtil.tryEmptyContainer(filled, fluidBarrelBlockEntity.getFluidHandler(), Integer.MAX_VALUE, null, true);
                             }
                         }
                     }

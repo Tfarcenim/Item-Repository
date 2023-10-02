@@ -180,8 +180,8 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFl
         }
 
         public boolean isFluidValid(@NotNull FabricFluidStack incoming) {
-            return (!barrelBlockEntity.hasGhost() || incoming.equals(barrelBlockEntity.getGhost()))
-                    && (this.stack.isEmpty() || this.stack.equals(incoming));
+            return (!barrelBlockEntity.hasGhost() || incoming.getFluidVariant().equals(barrelBlockEntity.getGhost().getFluidVariant()))
+                    && (this.stack.isEmpty() || this.stack.getFluidVariant().equals(incoming.getFluidVariant()));
         }
 
         public void markDirty() {

@@ -1,7 +1,5 @@
 package tfar.nabba.api;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.util.FabricFluidStack;
