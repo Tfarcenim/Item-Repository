@@ -45,11 +45,9 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
         super.init();
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-
-        BlockEntity blockEntity =  player.level().getBlockEntity(menu.getPos());
         int initialColor = CommonUtils.DEFAULT_COLOR;
         double initialSize = CommonUtils.DEFAULT_SIZE;
-        if (blockEntity instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
+        if (getMenu().getBlockEntity() instanceof AbstractBarrelBlockEntity abstractBarrelBlockEntity) {
             initialColor = abstractBarrelBlockEntity.getColor();
             initialSize = abstractBarrelBlockEntity.getSize();
         }
@@ -88,6 +86,14 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
             return slider.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
         }
         return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double d, double e, int i) {
+        //need to call super.super on fabric to make slider work properly
+        this.setDragging(false);
+        boolean otherbuttons = this.getChildAt(d, e).filter(guiEventListener -> guiEventListener.mouseReleased(d, e, i)).isPresent();
+        return super.mouseReleased(d, e, i);
     }
 
     private void onNameChanged(String string) {
