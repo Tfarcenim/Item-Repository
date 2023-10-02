@@ -54,7 +54,7 @@ public class FluidMovingUtil {
         Item handItem = player.getItemInHand(hand).getItem();
 
         try {
-            return moveWithSound(storage, handStorage, player, true, handItem) || moveWithSound(handStorage, storage, player, false, handItem);
+            return moveWithSound(storage, handStorage, player, true, handItem);
         } catch (Exception e) {
             CrashReport report = CrashReport.forThrowable(e, "Interacting with fluid storage");
             report.addCategory("Interaction details")
@@ -92,7 +92,7 @@ public class FluidMovingUtil {
             Item handItem = player.getItemInHand(hand).getItem();
 
             try {
-                return moveWithSound(storage, handStorage, player, true, handItem) || moveWithSound(handStorage, storage, player, false, handItem);
+                return  moveWithSound(handStorage, storage, player, false, handItem);
             } catch (Exception e) {
                 CrashReport report = CrashReport.forThrowable(e, "Interacting with fluid storage");
                 report.addCategory("Interaction details")

@@ -1,6 +1,8 @@
 package tfar.nabba.block;
 
 import com.google.common.collect.Lists;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,6 +22,8 @@ import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.blockentity.SingleSlotBarrelBlockEntity;
 import tfar.nabba.util.BarrelType;
+import tfar.nabba.util.CommonUtils;
+import tfar.nabba.util.FluidMovingUtil;
 
 import java.util.List;
 
@@ -47,16 +51,13 @@ public abstract class SingleSlotBarrelBlock extends AbstractBarrelBlock {
     public void attack(BlockState pState, Level level, BlockPos pos, Player player) {
         if (!player.isCrouching()) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
-         /*   if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
+            if (blockEntity instanceof BetterBarrelBlockEntity betterBarrelBlockEntity) {
                 ItemStack stack = betterBarrelBlockEntity.tryRemoveItem();
-                ItemHandlerHelper.giveItemToPlayer(player, stack);
+                CommonUtils.giveItemToPlayer(player, stack);
             } else if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
-                FluidActionResult fluidActionResult = FluidUtil.tryFillContainerAndStow(player.getMainHandItem(), fluidBarrelBlockEntity.getFluidHandler(),
-                        new InvWrapper(player.getInventory()), Integer.MAX_VALUE, player, true);
-                if (fluidActionResult.isSuccess()) {
-                    player.setItemInHand(InteractionHand.MAIN_HAND, fluidActionResult.getResult());
-                }
-            }*/
+                Storage<FluidVariant> storage = fluidBarrelBlockEntity.getFluidStorage();
+                FluidMovingUtil.interactWithFluidStorageEmpty(storage,player,InteractionHand.MAIN_HAND);
+            }
         }
     }
 
