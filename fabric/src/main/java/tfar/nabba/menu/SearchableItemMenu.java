@@ -90,6 +90,7 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
                 slot.set(rejected);
                 slot.onTake(playerIn, stack);
             }
+            refreshDisplay((ServerPlayer) playerIn,false);
         }
         return ItemStack.EMPTY;
     }
@@ -106,6 +107,7 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         int diff = store.getCount() - reject.getCount();
         //todo: does this break things
         setCarried(CommonUtils.copyStackWithSize(carried,carried.getCount() - diff));
+        refreshDisplay(player,false);
     }
 
     public void handleItemExtract(ServerPlayer player, ItemStack stack, boolean shift) {
@@ -115,5 +117,6 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
         } else {
             setCarried(received);
         }
+        refreshDisplay(player,false);
     }
 }

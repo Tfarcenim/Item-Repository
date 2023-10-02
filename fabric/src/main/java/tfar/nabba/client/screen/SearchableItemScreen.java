@@ -37,7 +37,7 @@ public class SearchableItemScreen<T extends SearchableItemHandler,U extends Sear
     @Override
     protected void renderLabels(GuiGraphics pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        pPoseStack.drawString(font,menu.getFilledSlotCount()+"", this.titleLabelX + 60, this.inventoryLabelY, 0x404040);
+        pPoseStack.drawString(font,menu.getFilledSlotCount()+"", this.titleLabelX + 60, this.inventoryLabelY, 0x404040,false);
     }
 
     public void setGuiStacks(List<ItemStack> stacks) {

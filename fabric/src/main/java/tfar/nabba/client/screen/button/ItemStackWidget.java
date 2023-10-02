@@ -74,6 +74,7 @@ public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemSc
     public void renderItem(GuiGraphics matrices) {
         CommonClientUtils.drawSmallItemNumbers(matrices,getX(),getY(),stack);
         matrices.renderItemDecorations(Minecraft.getInstance().font,stack, getX(), getY());
+        matrices.renderFakeItem(stack,getX(),getY());
     }
 
     public void renderTooltip(GuiGraphics matrices,int x,int y) {
