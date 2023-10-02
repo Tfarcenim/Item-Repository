@@ -15,7 +15,6 @@ import tfar.nabba.client.FabricSlider;
 import tfar.nabba.menu.VanityKeyMenu;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.CommonUtils;
-import tfar.nabba.util.FabricUtils;
 
 public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
 
@@ -125,8 +124,8 @@ public class VanityKeyScreen extends AbstractContainerScreen<VanityKeyMenu> {
     @Override
     protected void renderLabels(GuiGraphics graphics, int pMouseX, int pMouseY) {
         super.renderLabels(graphics, pMouseX, pMouseY);
-        graphics.drawString(font, Component.literal("Color:"), this.titleLabelX, this.titleLabelY + 24, 0x404040);
-        graphics.drawString(font, Component.literal("Size:"), this.titleLabelX, this.titleLabelY + 45, 0x404040);
+        graphics.drawString(font, Component.literal("Color:"), this.titleLabelX, this.titleLabelY + 24, 0x404040,false);
+        graphics.drawString(font, Component.literal("Size:"), this.titleLabelX, this.titleLabelY + 45, 0x404040,false);
     }
 
     public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {

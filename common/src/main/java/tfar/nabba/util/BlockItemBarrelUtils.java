@@ -50,8 +50,8 @@ public class BlockItemBarrelUtils {
 
     public static ItemStack getStoredItem(ItemStack barrel) {
         if (BlockItemBarrelUtils.getBlockEntityTag(barrel) != null) {
-            ItemStack stack = ItemStack.of(BlockItemBarrelUtils.getBlockEntityTag(barrel).getCompound("Stack"));
-            stack.setCount(BlockItemBarrelUtils.getBlockEntityTag(barrel).getInt("RealCount"));
+            ItemStack stack = ItemStack.of(BlockItemBarrelUtils.getBlockEntityTag(barrel).getCompound(NBTKeys.Stack.name()));
+            stack.setCount(BlockItemBarrelUtils.getBlockEntityTag(barrel).getInt(NBTKeys.RealCount.name()));
             return stack;
         }
         return ItemStack.EMPTY;
