@@ -14,10 +14,7 @@ import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.shim.IFluidHandlerShim;
-import tfar.nabba.util.FabricFluidStack;
-import tfar.nabba.util.FabricFluidUtils;
-import tfar.nabba.util.FabricUtils;
-import tfar.nabba.util.NBTKeys;
+import tfar.nabba.util.*;
 
 public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFluidStack> implements HasFluidHandler {
 
@@ -180,8 +177,7 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFl
         }
 
         public boolean isFluidValid(@NotNull FabricFluidStack incoming) {
-            return (!barrelBlockEntity.hasGhost() || incoming.getFluidVariant().equals(barrelBlockEntity.getGhost().getFluidVariant()))
-                    && (this.stack.isEmpty() || this.stack.getFluidVariant().equals(incoming.getFluidVariant()));
+            return FabricUtils.isFluidValid(stack,incoming,barrelBlockEntity.ghost);
         }
 
         public void markDirty() {

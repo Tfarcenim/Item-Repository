@@ -143,12 +143,6 @@ public class FabricUtils {
     public static final Predicate<BlockEntity> isFreeAndControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect();
 
 
-    public static boolean isFluidValid(FabricFluidStack existing, @NotNull FabricFluidStack incoming, FabricFluidStack ghost) {
-        return (ghost.isEmpty() || incoming.equals(ghost))
-                && (existing.isEmpty() || existing.equals(incoming));
-    }
-
-
     public static int getRedstoneSignalFromContainer(ItemHandler pContainer) {
         ItemStack itemstack = pContainer.getStackInSlot(0);
         if (!itemstack.isEmpty()) {
@@ -157,6 +151,11 @@ public class FabricUtils {
         } else {
             return 0;
         }
+    }
+
+    public static boolean isFluidValid(FabricFluidStack existing, @NotNull FabricFluidStack incoming, FabricFluidStack ghost) {
+        return (ghost.isEmpty() || incoming.sameFluid(ghost))
+                && (existing.isEmpty() || existing.sameFluid(incoming));
     }
 
     public static int getRedstoneSignalFromContainer(IFluidHandlerShim pContainer) {
