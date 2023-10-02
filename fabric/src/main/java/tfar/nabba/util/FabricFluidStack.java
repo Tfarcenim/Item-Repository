@@ -89,6 +89,6 @@ public class FabricFluidStack {
     }
 
     public boolean sameFluid(FabricFluidStack other) {
-        return this.fluidVariant == other.fluidVariant;
+        return this.fluidVariant.equals(other.fluidVariant);
     }
 }

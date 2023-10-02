@@ -34,6 +34,7 @@ import tfar.nabba.capability.AntiBarrelItemStackItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
+import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.EmptyFluidHandlerItem;
 import tfar.nabba.util.ItemStackWrapper;
 import tfar.nabba.util.ForgeUtils;
@@ -598,7 +599,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                 }
             }
 
-            List<ItemStackWrapper> wrappers = ForgeUtils.wrap(stacks);
+            List<ItemStackWrapper> wrappers = CommonUtils.wrap(stacks);
 
             Collections.sort(wrappers);
 

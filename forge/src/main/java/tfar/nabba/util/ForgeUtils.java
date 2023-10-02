@@ -162,9 +162,6 @@ public class ForgeUtils {
                 && (existing.isEmpty() || existing.isFluidEqual(incoming));
     }
 
-    public static List<ItemStackWrapper> wrap(List<ItemStack> stacks) {
-        return stacks.stream().map(ItemStackWrapper::new).toList();
-    }
 
     public static void merge(List<ItemStack> stacks, ItemStack toMerge) {
         for (ItemStack stack : stacks) {
