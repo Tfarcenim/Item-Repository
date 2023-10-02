@@ -1,5 +1,7 @@
 package tfar.nabba.block;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,6 +17,7 @@ import tfar.nabba.api.InteractsWithBarrel;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.util.BarrelType;
+import tfar.nabba.util.FluidMovingUtil;
 
 import javax.annotation.Nullable;
 
@@ -37,11 +40,8 @@ public class FluidBarrelBlock extends SingleSlotBarrelBlock {
                 if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(pState,handStack,pLevel,pPos,pPlayer)) {
 
                 } else {
-    //                FluidActionResult fluidActionResult = FluidUtil.tryEmptyContainerAndStow(handStack, betterBarrelBlockEntity.getFluidHandler(),
-    //                        new InvWrapper(pPlayer.getInventory()), Integer.MAX_VALUE, pPlayer, true);
-    //                if (fluidActionResult.isSuccess()) {
-    //                    pPlayer.setItemInHand(pHand,fluidActionResult.getResult());
-    //                }
+                    Storage<FluidVariant> storage = betterBarrelBlockEntity.getFluidStorage();
+                    FluidMovingUtil.interactWithFluidStorageFill(storage,pPlayer,InteractionHand.MAIN_HAND);
                 }
             }
         }

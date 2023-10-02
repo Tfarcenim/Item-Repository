@@ -1,5 +1,6 @@
 package tfar.nabba.blockentity;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
@@ -170,7 +171,7 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFl
         }
 
         public long getActualCapacity(int tank) {
-            return barrelBlockEntity.getStorageMultiplier() * 1000 *
+            return barrelBlockEntity.getStorageMultiplier() * FluidConstants.BUCKET *
                     (barrelBlockEntity.hasDowngrade() ? 1 : NABBAFabric.ServerCfg.fluid_barrel_base_storage);
         }
 
