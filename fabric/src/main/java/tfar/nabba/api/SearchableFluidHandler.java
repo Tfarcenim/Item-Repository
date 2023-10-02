@@ -1,24 +1,26 @@
 package tfar.nabba.api;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.core.Registry;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+import tfar.nabba.util.FabricFluidStack;
+import tfar.nabba.util.FabricFluidUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface SearchableFluidHandler extends FluidHandler {
-    default List<FluidStack> getFluidDisplaySlots(int row, String search) {
-        List<FluidStack> disp = new ArrayList<>();
+    default List<FabricFluidStack> getFluidDisplaySlots(int row, String search) {
+        List<FabricFluidStack> disp = new ArrayList<>();
         int countForDisplay = 0;
         int index = 0;
         int startPos = 9 * row;
         while (countForDisplay < 54) {
-            FluidVariant stack = getFluidInTank(startPos + index).copy();//don't accidentally modify the stack!
+            FabricFluidStack stack = getFluidInTank(startPos + index);//don't accidentally modify the stack!
             if (matches(stack, search)) {
                 if (!merge(disp, stack)) {
                     countForDisplay++;
@@ -31,9 +33,10 @@ public interface SearchableFluidHandler extends FluidHandler {
         return disp;
     }
 
-    default boolean merge(List<FluidStack> stacks, FluidStack toMerge) {
-        for (FluidVariant stack : stacks) {
-            if (stack.isFluidEqual(toMerge)) {
+    default boolean merge(List<FabricFluidStack> stacks, FabricFluidStack toMerge) {
+        for (FabricFluidStack stack : stacks) {
+            if (stack.equals(toMerge)) {
+
                 stack.grow(toMerge.getAmount());
                 return true;
             }
@@ -42,12 +45,12 @@ public interface SearchableFluidHandler extends FluidHandler {
         return false;
     }
 
-    default boolean matches(FluidVariant stack, String search) {
-        if (stack.isBlank()) return false;
+    default boolean matches(FabricFluidStack stack, String search) {
+        if (stack.isEmpty()) return false;
         if (search.isEmpty()) {
             return true;
         } else {
-            Fluid item = stack.getFluid();
+            Fluid item = stack.getFluidVariant().getFluid();
             if (search.startsWith("#")) {
                 String sub = search.substring(1);
 
@@ -68,7 +71,7 @@ public interface SearchableFluidHandler extends FluidHandler {
     default int getFullFluidSlots(String search) {
         int j = 0;
         for (int i = 0; i < getTanks(); i++) {
-            FluidStack stack = getFluidInTank(i);
+            @NotNull FabricFluidStack stack = getFluidInTank(i);
             if (matches(stack, search)) {
                 i++;
             }

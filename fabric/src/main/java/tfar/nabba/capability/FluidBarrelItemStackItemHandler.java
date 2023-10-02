@@ -6,14 +6,15 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
-import tfar.nabba.inventory.ImmutableFluidStack;
+import tfar.nabba.inventory.ImmutableFabricFluidStack;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
 import tfar.nabba.item.barrels.FluidBarrelBlockItem;
+import tfar.nabba.shim.IFluidHandlerShim;
+import tfar.nabba.util.FabricFluidStack;
 
 public class FluidBarrelItemStackItemHandler implements IFluidHandlerItem, ICapabilityProvider {
     private final ItemStack container;
@@ -39,15 +40,15 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandlerItem, ICapa
     }
 
     @Override
-    public @NotNull FluidStack getFluidInTank(int slot) {
-        return ImmutableFluidStack.of(FluidBarrelBlockItem.getStoredFluid(container));
+    public @NotNull FabricFluidStack getFluidInTank(int slot) {
+        return ImmutableFabricFluidStack.of(FluidBarrelBlockItem.getStoredFluid(container));
     }
 
     @Override
-    public int fill(@NotNull FluidStack stack, FluidAction simulate) {
+    public long fill(@NotNull FabricFluidStack stack, IFluidHandlerShim.FluidAction simulate) {
             if (isFluidValid(0, stack)) {
                 int limit = getTankCapacity(0);
-                FluidStack existing = getFluidInTank(0);
+                FabricFluidStack existing = getFluidInTank(0);
 
                 if (existing.getAmount()>= limit) {
                     return BetterBarrelBlockItem.isVoid(container) ? stack.getAmount() : 0;
@@ -55,12 +56,12 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandlerItem, ICapa
 
                 if (existing.getAmount() + stack.getAmount() >= limit) {
                     if (!simulate.simulate()) {
-                        FluidBarrelBlockItem.setFluid(container, new FluidStack(stack, limit));
+                        FluidBarrelBlockItem.setFluid(container, new FabricFluidStack(stack, limit));
                     }
                     return BetterBarrelBlockItem.isVoid(container) ? stack.getAmount() : limit - existing.getAmount();
                 } else {
                     if (!simulate.simulate()) {
-                        FluidBarrelBlockItem.setFluid(container, new FluidStack(stack, existing.getAmount() + stack.getAmount()));
+                        FluidBarrelBlockItem.setFluid(container, new FabricFluidStack(stack, existing.getAmount() + stack.getAmount()));
                     }
                     return stack.getAmount();
                 }
@@ -69,39 +70,39 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandlerItem, ICapa
         }
 
     @Override
-    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-        FluidStack existing = getFluidInTank(0);
+    public @NotNull FabricFluidStack drain(FabricFluidStack resource, IFluidHandlerShim.FluidAction action) {
+        FabricFluidStack existing = getFluidInTank(0);
         if (existing.isFluidEqual(resource))
             return drain(resource.getAmount(), action);
-        return FluidStack.EMPTY;
+        return FabricFluidStack.EMPTY;
     }
 
     @Override
-    public @NotNull FluidStack drain(int amount, FluidAction simulate) {
+    public @NotNull FabricFluidStack drain(long amount, IFluidHandlerShim.FluidAction simulate) {
         if (amount == 0 || !container.hasTag()) {
-            return FluidStack.EMPTY;
+            return FabricFluidStack.empty();
         }
 
         for (int i = 0; i < getTanks();i++) {
-            FluidStack existing = getFluidInTank(i);
+            FabricFluidStack existing = getFluidInTank(i);
 
             if (BetterBarrelBlockItem.infiniteVending(container)) {
-                return new FluidStack(existing,amount);
+                return new FabricFluidStack(existing,amount);
             }
 
             if (amount >= existing.getAmount()) {
                 if (!simulate.simulate()) {
-                    FluidBarrelBlockItem.setFluid(container, FluidStack.EMPTY);
+                    FluidBarrelBlockItem.setFluid(container, FabricFluidStack.EMPTY);
                 }
                 return existing.copy();
             } else {
                 if (!simulate.simulate()) {
-                    FluidBarrelBlockItem.setFluid(container, new FluidStack(existing, existing.getAmount() - amount));
+                    FluidBarrelBlockItem.setFluid(container, new FabricFluidStack(existing, existing.getAmount() - amount));
                 }
-                return new FluidStack(existing, amount);
+                return new FabricFluidStack(existing, amount);
             }
         }
-        return FluidStack.EMPTY;
+        return FabricFluidStack.EMPTY;
     }
 
 
@@ -117,7 +118,7 @@ public class FluidBarrelItemStackItemHandler implements IFluidHandlerItem, ICapa
 
 
     @Override
-    public boolean isFluidValid(int slot, @NotNull FluidStack stack) {
+    public boolean isFluidValid(int slot, @NotNull FabricFluidStack stack) {
         return FluidBarrelBlockItem.isFluidValid(container,stack);
     }
 }

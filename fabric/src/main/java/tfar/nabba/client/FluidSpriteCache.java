@@ -3,22 +3,24 @@ package tfar.nabba.client;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import tfar.nabba.util.FabricFluidStack;
 
 public class FluidSpriteCache {
     private static final LoadingCache<ResourceLocation, TextureAtlasSprite> SPRITE_CACHE = buildCache();
 
-    public static TextureAtlasSprite getStillTexture(FluidStack fluid) {
-        return SPRITE_CACHE.getUnchecked(IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(fluid));
+    public static TextureAtlasSprite getStillTexture(FabricFluidStack fluid) {
+        return FluidRenderHandlerRegistry.INSTANCE.get(fluid.getFluidVariant().getFluid())
+                .getFluidSprites(null,null,null)[0];
     }
 
-    public static TextureAtlasSprite getFlowingTexture(FluidStack fluid) {
-        return SPRITE_CACHE.getUnchecked(IClientFluidTypeExtensions.of(fluid.getFluid()).getFlowingTexture(fluid));
+    public static TextureAtlasSprite getFlowingTexture(FabricFluidStack fluid) {
+        return FluidRenderHandlerRegistry.INSTANCE.get(fluid.getFluidVariant().getFluid())
+                .getFluidSprites(null,null,null)[1];
     }
 
     public static void invalidateSpriteCache() {

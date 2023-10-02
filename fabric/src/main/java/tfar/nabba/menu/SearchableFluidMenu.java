@@ -1,26 +1,30 @@
 package tfar.nabba.menu;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.net.PacketHandler;
+import tfar.nabba.util.FabricFluidStack;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
-public class SearchableFluidMenu<T extends SearchableFluidHandler> extends SearchableMenu<FluidVariant> {
+public class SearchableFluidMenu<T extends SearchableFluidHandler> extends SearchableMenu<FabricFluidStack> {
 
     public final T fluidHandler;
 
@@ -30,13 +34,13 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
     }
 
     public void refreshDisplay(ServerPlayer player, boolean forced) {
-        List<FluidStack> list = getDisplaySlots();
+        List<FabricFluidStack> list = getDisplaySlots();
 
         boolean changed = forced || list.size() != remoteStacks.size();
 
         if (!changed) {
             for (int i = 0; i < list.size(); i++) {
-                if (!remoteStacks.get(i).isFluidStackIdentical(list.get(i))) {
+                if (!remoteStacks.get(i).equals(list.get(i))) {
                     changed = true;
                     break;
                 }
@@ -46,12 +50,27 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         if (changed) {
             remoteStacks.clear();
             remoteStacks.addAll(list);
-            PacketHandler.sendToClient(new S2CRefreshClientFluidStacksPacket(list), player);
+            PacketHandler.sendToClient(player,PacketHandler.refresh_fluids,new FluidSync(list));
+        }
+    }
+
+    public static class FluidSync implements Consumer<FriendlyByteBuf> {
+
+        private final List<FabricFluidStack> fabricFluidStacks;
+
+        public FluidSync(List<FabricFluidStack> list) {
+            this.fabricFluidStacks = list;
+        }
+
+        @Override
+        public void accept(FriendlyByteBuf buf) {
+            buf.writeInt(fabricFluidStacks.size());
+            IntStream.range(0,fabricFluidStacks.size()).forEach(integer -> fabricFluidStacks.get(integer).toPacket(buf));
         }
     }
 
     @Override
-    public List<FluidStack> getDisplaySlots() {
+    public List<FabricFluidStack> getDisplaySlots() {
         return fluidHandler.getFluidDisplaySlots(getRowSlot().get(), getAccess().evaluate((level, pos) -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof HasSearchBar repositoryBlock) {
@@ -70,15 +89,17 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
         if (slot != null && slot.hasItem()) {
             ItemStack stack = slot.getItem();
 
-            stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
-                if (!iFluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
-                    FluidActionResult result = fluidHandler.storeFluid(stack, new PlayerInvWrapper(playerIn.getInventory()), (ServerPlayer) playerIn, false);
-                    if (result.isSuccess()) {
-                        slot.set(result.getResult());
-                        slot.onTake(playerIn, stack);
-                    }
-                }
-            });
+
+// Build the ContainerItemContext.
+            ContainerItemContext handContext = ContainerItemContext.ofPlayerCursor(playerIn, this);
+// Use it to query a fluid storage.
+            Storage<FluidVariant> handStorage = handContext.find(FluidStorage.ITEM);
+
+            Storage<FluidVariant> blockStorage = null;//fluidHandler.getFluidStorage();
+
+            if (handStorage != null) {
+
+            }
         }
         return ItemStack.EMPTY;
     }
@@ -90,14 +111,14 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
     public void handleInsert(ServerPlayer player, int count) {
         ItemStack carried = getCarried();
-        FluidActionResult result = fluidHandler.storeFluid(carried, new PlayerInvWrapper(player.getInventory()), player, false);
-        if (result.isSuccess()) {
-            setCarried(result.getResult());
-        }
+   //     FluidActionResult result = fluidHandler.storeFluid(carried, new PlayerInvWrapper(player.getInventory()), player, false);
+   //     if (result.isSuccess()) {
+  //          setCarried(result.getResult());
+   //     }
     }
 
 
-    public void handleFluidExtract(ServerPlayer player, FluidVariant fluidStack, boolean shift) {
+    public void handleFluidExtract(ServerPlayer player, FabricFluidStack fluidStack, boolean shift) {
 
         //if (!antiBarrelInventory.isSlotValid(slot)) {
         //   return;
@@ -105,21 +126,21 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
         if (!shift) {
             ItemStack container = getCarried();
-            FluidActionResult result = fluidHandler.requestFluid(fluidStack, container, new InvWrapper(player.getInventory()), player, false);
+            FabricFluidStack result = fluidHandler.requestFluid(fluidStack, container, player.getInventory(), player, false);
 
-            if (result.isSuccess()) {
-                setCarried(result.getResult());
-            }
+       //     if (result.isSuccess()) {
+       //         setCarried(result.getResult());
+         //   }
 
         } else {
             for (int i = 0; i < player.getInventory().items.size(); i++) {
                 ItemStack stack = player.getInventory().items.get(i);
-                if (!stack.isEmpty()) {
-                    FluidActionResult result = fluidHandler.requestFluid(fluidStack, stack, new InvWrapper(player.getInventory()), player, false);
-                    if (result.isSuccess()) {
-                        player.getInventory().items.set(i, result.getResult());
-                    }
-                }
+   //             if (!stack.isEmpty()) {
+    //                FluidActionResult result = fluidHandler.requestFluid(fluidStack, stack, new InvWrapper(player.getInventory()), player, false);
+    //                if (result.isSuccess()) {
+    //                    player.getInventory().items.set(i, result.getResult());
+    //                }
+    //            }
             }
         }
     }

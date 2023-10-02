@@ -4,11 +4,13 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.client.gui.screens.SearchableScreen;
 import tfar.nabba.client.screen.button.FluidStackWidget;
 import tfar.nabba.menu.SearchableFluidMenu;
+import tfar.nabba.util.FabricFluidStack;
 
 import java.util.List;
 
@@ -35,9 +37,9 @@ public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends Se
         }
     }
 
-    public void renderFluidTooltip(GuiGraphics graphics, FluidStack pItemStack, int pMouseX, int pMouseY) {
+    public void renderFluidTooltip(GuiGraphics graphics, FabricFluidStack pItemStack, int pMouseX, int pMouseY) {
         //super.renderTooltip(graphics, pItemStack, pMouseX, pMouseY);
-        graphics.renderTooltip(this.font, List.of(pItemStack.getDisplayName()), java.util.Optional.empty(), pMouseX, pMouseY);
+        graphics.renderTooltip(this.font, List.of(pItemStack.getFluidVariant().getFluid().getBucket().getName(ItemStack.EMPTY)), java.util.Optional.empty(), pMouseX, pMouseY);
     }
 
     @Override

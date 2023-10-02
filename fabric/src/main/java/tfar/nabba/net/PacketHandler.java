@@ -18,6 +18,7 @@ import tfar.nabba.menu.SearchableItemMenu;
 import tfar.nabba.menu.SearchableMenu;
 import tfar.nabba.menu.VanityKeyMenu;
 import tfar.nabba.util.CommonUtils;
+import tfar.nabba.util.FabricFluidStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class PacketHandler {
     private static void receiveExtractFluid(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) {
         AbstractContainerMenu container = player.containerMenu;
         if (container instanceof SearchableFluidMenu<?> antiBarrelMenu) {
-            FluidVariant fluidVariant = FluidVariant.fromPacket(buf);
+            FabricFluidStack fluidVariant = FabricFluidStack.fromPacket(buf);
             antiBarrelMenu.handleFluidExtract(player,fluidVariant, buf.readBoolean());//stack, shift
         }
     }

@@ -85,12 +85,12 @@ public class FabricUtils {
                 ).forEachOrdered(pos -> {
                     FluidState fluidState = level.getFluidState(pos);
 
-                    if (hasFluidHandler.isValid(FabricFluidUtils.createFluidVariantWithAmount(fluidState.getType(), 1000))) {
+                    if (hasFluidHandler.isValid(new FabricFluidStack(FluidVariant.of(fluidState.getType()), 1000))) {
 
                         Fluid fluid = fluidState.getType();
 
                         if (fluid instanceof FlowingFluid flowingFluid && flowingFluid.canConvertToSource(level)) {
-                            hasFluidHandler.getFluidHandler().fill(FabricFluidUtils.createFluidVariantWithAmount(fluidState.getType(), 1000), IFluidHandlerShim.FluidAction.EXECUTE);
+                            hasFluidHandler.getFluidHandler().fill(FabricFluidUtils.copyFluidStackWithSize(fluidState.getType(), 1000), IFluidHandlerShim.FluidAction.EXECUTE);
                         } else {
                             BlockState state = level.getBlockState(pos);
                             if (state.getBlock() instanceof BucketPickup bucketPickup) {
@@ -145,9 +145,9 @@ public class FabricUtils {
     public static final Predicate<BlockEntity> isFreeAndControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect();
 
 
-    public static boolean isFluidValid(FluidVariant existing, @NotNull FluidVariant incoming, FluidVariant ghost) {
-        return (ghost.isBlank() || incoming.equals(ghost))
-                && (existing.isBlank() || existing.equals(incoming));
+    public static boolean isFluidValid(FabricFluidStack existing, @NotNull FabricFluidStack incoming, FabricFluidStack ghost) {
+        return (ghost.isEmpty() || incoming.equals(ghost))
+                && (existing.isEmpty() || existing.equals(incoming));
     }
 
 
@@ -162,10 +162,9 @@ public class FabricUtils {
     }
 
     public static int getRedstoneSignalFromContainer(IFluidHandlerShim pContainer) {
-        FluidVariant fluid = pContainer.getFluidInTank(0);
-        if (!fluid.isBlank()) {
-            long amount = fluid.getNbt().getLong("amount");
-            float f = (float) amount / (float) pContainer.getTankCapacity(0);
+        FabricFluidStack fluid = pContainer.getFluidInTank(0);
+        if (!fluid.isEmpty()) {
+            float f = (float) fluid.getAmount() / (float) pContainer.getTankCapacity(0);
             return Mth.floor(f * 14.0F) + 1;
         } else {
             return 0;

@@ -21,10 +21,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import org.apache.commons.lang3.tuple.Pair;
 import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.init.*;
@@ -52,7 +48,7 @@ public class NABBAFabric implements ModInitializer {
         PacketHandler.registerMessages();
         addGameEvents();
         ItemStorage.SIDED.registerForBlockEntity(BetterBarrelBlockEntity::getStorage,ModBlockEntityTypes.BETTER_BARREL);
-        FluidStorage.SIDED.registerForBlockEntity((myTank, direction) -> myTank.fluidStorage, ModBlockEntityTypes.FLUID_BARREL);
+        FluidStorage.SIDED.registerForBlockEntity((myTank, direction) -> myTank.getFluidStorage(), ModBlockEntityTypes.FLUID_BARREL);
 
         Constants.LOG.info("Hello Fabric world!");
         NABBA.init();
@@ -64,7 +60,7 @@ public class NABBAFabric implements ModInitializer {
 
         PlayerBlockBreakEvents.BEFORE.register(this::blockBreak);
 
-        MinecraftForge.EVENT_BUS.addListener(this::setupSync);
+   //     MinecraftForge.EVENT_BUS.addListener(this::setupSync);
     }
 
     public static AntiBarrelSubData getData(UUID uuid,MinecraftServer server) {
@@ -125,12 +121,12 @@ public class NABBAFabric implements ModInitializer {
         }
     }*/
 
-    private void setupSync(PlayerContainerEvent.Open e) {
+   /* private void setupSync(PlayerContainerEvent.Open e) {
         AbstractContainerMenu menu = e.getContainer();
         if (menu instanceof SearchableMenu<?> searchableItemMenu && e.getEntity() instanceof ServerPlayer player) {
             searchableItemMenu.setFakeSlotSynchronizer(new FakeSlotSynchronizer(player));
         }
-    }
+    }*/
 
 
     public static class ServerCfg {

@@ -35,12 +35,12 @@ public class BetterBarrelSlotWrapper extends SingleStackStorage {
 
 	@Override
 	protected boolean canInsert(ItemVariant itemVariant) {
-		return storage.canPlaceItem(slot, itemVariant.toStack());
+		return storage.isItemValid(0, itemVariant.toStack());
 	}
 
 	@Override
 	public int getCapacity(ItemVariant variant) {
-		return storage.getMaxStackSize();
+		return storage.getSlotLimit(0);
 	}
 
 	// We override updateSnapshots to also schedule a markDirty call for the backing inventory.

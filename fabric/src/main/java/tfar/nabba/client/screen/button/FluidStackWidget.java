@@ -4,18 +4,17 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import tfar.nabba.client.gui.RightClickButton;
 import tfar.nabba.client.screen.SearchableFluidScreen;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.ClientUtils;
+import tfar.nabba.util.FabricFluidStack;
 
-public class FluidStackWidget extends RightClickButton<FluidStack,SearchableFluidScreen<?,?>> {
+public class FluidStackWidget extends RightClickButton<FabricFluidStack,SearchableFluidScreen<?,?>> {
 
     public FluidStackWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage, SearchableFluidScreen<?,?> screen) {
         super(pX, pY, pWidth, pHeight, pMessage, screen);
-        stack = FluidStack.EMPTY;
+        stack = FabricFluidStack.empty();
     }
 
     @Override
@@ -26,18 +25,24 @@ public class FluidStackWidget extends RightClickButton<FluidStack,SearchableFlui
 
         if (carried.isEmpty()&& shift) {
             //shiftclicking on a slot should try to extract to fluid containers in inventory
-            PacketHandler.sendToServer(new C2SExtractFluidPacket(stack,shift));
+            PacketHandler.sendToServer(PacketHandler.extract_fluid,buf -> {
+              stack.toPacket(buf);
+              buf.writeBoolean(shift);
+            });
         } else {
-            carried.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(fluidHandlerItem -> {
-                boolean emptyContainer = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty();
+           /* carried.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(fluidHandlerItem -> {
+                boolean emptyContainer = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandlerShim.FluidAction.SIMULATE).isEmpty();
                 if (emptyContainer && !stack.isEmpty()) {//try to take fluid
-                    PacketHandler.sendToServer(new C2SExtractFluidPacket(stack, shift));
+                    PacketHandler.sendToServer(PacketHandler.extract_fluid,buf -> {
+                        stack.toPacket(buf);
+                        buf.writeBoolean(shift);
+                    });
 
                 } else {//try to insert fluid
                     PacketHandler.sendToServer(new C2SInsertPacket(Integer.MAX_VALUE));
                 }
 
-            });
+            });*/
         }
         super.onClick(pMouseX, pMouseY);
     }

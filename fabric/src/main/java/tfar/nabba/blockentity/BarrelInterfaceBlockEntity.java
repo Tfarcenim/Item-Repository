@@ -1,7 +1,6 @@
 package tfar.nabba.blockentity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -15,27 +14,18 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.EmptyHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tfar.nabba.NABBA;
+import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.*;
 import tfar.nabba.capability.AntiBarrelItemStackItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
 import tfar.nabba.menu.BarrelInterfaceMenu;
+import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.shim.IItemHandlerShim;
 import tfar.nabba.util.CommonUtils;
-import tfar.nabba.util.EmptyFluidHandlerItem;
+import tfar.nabba.util.FabricFluidStack;
 import tfar.nabba.util.ItemStackWrapper;
 
 import java.util.ArrayList;
@@ -44,8 +34,8 @@ import java.util.List;
 
 public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements MenuProvider, DisplayMenuProvider {
 
-    private BarrelInterfaceItemHandler handler = new BarrelInterfaceItemHandler(this);
-    private BarrelWrapper wrapper = new BarrelWrapper(this);
+    private final BarrelInterfaceItemHandler handler = new BarrelInterfaceItemHandler(this);
+    private final BarrelWrapper wrapper = new BarrelWrapper(this);
 
     public BarrelInterfaceBlockEntity(BlockPos pPos, BlockState pBlockState) {
         this(ModBlockEntityTypes.BARREL_INTERFACE, pPos, pBlockState);
@@ -66,8 +56,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             }
 
             public void set(int pIndex, int pValue) {
-                switch (pIndex) {
-                    case 0:
+                if (pIndex == 0) {
                 }
             }
 
@@ -89,8 +78,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             }
 
             public void set(int pIndex, int pValue) {
-                switch (pIndex) {
-                    case 0:
+                if (pIndex == 0) {
                 }
             }
             public int getCount() {
@@ -112,8 +100,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
 
         public void set(int pIndex, int pValue) {
-            switch (pIndex) {
-                case 0:
+            if (pIndex == 0) {
             }
         }
 
@@ -160,29 +147,16 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         getInventory().deserializeNBT(pTag.getList("Items", Tag.TAG_COMPOUND));
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        if (!level.isClientSide) {
-            wrapper.recomputeSlots();
-        }
-    }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap == ForgeCapabilities.ITEM_HANDLER || cap == ForgeCapabilities.FLUID_HANDLER ? LazyOptional.of(() -> wrapper).cast() : super.getCapability(cap, side);
-    }
-
     public static class BarrelWrapper implements SearchableItemHandler, SearchableFluidHandler {
 
-        private BarrelInterfaceBlockEntity blockEntity;
+        private final BarrelInterfaceBlockEntity blockEntity;
 
         protected List<Integer> baseItemHandlerIndices = new ArrayList<>();
         protected List<Integer> baseFluidHandlerIndices = new ArrayList<>();
         protected int totalItemSlotCount;
         protected int totalFluidSlotCount;
-        protected List<LazyOptional<IItemHandler>> itemHandlers; // the handlers
-        protected List<LazyOptional<IFluidHandlerItem>> fluidHandlers; // the handlers
+        protected List<IItemHandlerShim> itemHandlers; // the handlers
+        protected List<IFluidHandlerShim> fluidHandlers; // the handlers
 
         public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
@@ -208,7 +182,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             baseItemHandlerIndices.clear();
             int index = 0;
             for (int i = 0; i < itemHandlers.size(); i++) {
-                index += itemHandlers.get(i).map(IItemHandler::getSlots).orElse(0);
+                index += itemHandlers.get(i).getSlots();
                 baseItemHandlerIndices.add(index);
             }
             this.totalItemSlotCount = index;
@@ -219,33 +193,32 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             baseFluidHandlerIndices.clear();
             int index = 0;
             for (int i = 0; i < fluidHandlers.size(); i++) {
-                index += fluidHandlers.get(i).map(IFluidHandler::getTanks).orElse(0);
+                index += fluidHandlers.get(i).getTanks();
                 baseFluidHandlerIndices.add(index);
             }
             this.totalFluidSlotCount = index;
         }
 
-        public List<LazyOptional<IItemHandler>> itemCaps() {
-            return caps(ForgeCapabilities.ITEM_HANDLER);
+        public List<IItemHandlerShim> itemCaps() {
+            return null;//caps(ForgeCapabilities.ITEM_HANDLER);
         }
 
-        public List<LazyOptional<IFluidHandlerItem>> fluidCaps() {
-            return caps(ForgeCapabilities.FLUID_HANDLER_ITEM);
+        public List<IFluidHandlerShim> fluidCaps() {
+            return null;//caps(ForgeCapabilities.FLUID_HANDLER_ITEM);
         }
 
-        public <T> List<LazyOptional<T>> caps(Capability<T> capability) {
+      /*  public <T> List<LazyOptional<T>> caps(Capability<T> capability) {
             List<LazyOptional<T>> list = new ArrayList<>();
             for (ItemStack stack : getBarrelInt().barrels) {
+
+
+
                 if (stack.getCapability(capability).isPresent()) {
                     list.add(stack.getCapability(capability));
                 }
             }
             return list;
-        }
-
-        public <T> LazyOptional<T> getCapInSlot(int slot, Capability<T> capability) {
-            return getBarrelInt().getStackInSlot(slot).getCapability(capability);
-        }
+        }*/
 
         public BarrelInterfaceItemHandler getBarrelInt() {
             return blockEntity.getInventory();
@@ -272,9 +245,9 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         protected IItemHandlerShim getItemHandlerFromIndex(int index) {
             if (index < 0 || index >= itemHandlers.size()) {
-                return EmptyHandler.INSTANCE;
+                return null;
             }
-            return itemHandlers.get(index).orElse(EmptyHandler.INSTANCE);
+            return itemHandlers.get(index);
         }
 
         protected int getItemSlotFromIndex(int slot, int index) {
@@ -298,11 +271,11 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             return -1;
         }
 
-        protected IFluidHandler getFluidHandlerFromIndex(int index) {
+        protected IFluidHandlerShim getFluidHandlerFromIndex(int index) {
             if (index < 0 || index >= fluidHandlers.size()) {
-                return EmptyFluidHandler.INSTANCE;
+                return null;
             }
-            return fluidHandlers.get(index).orElse(EmptyFluidHandlerItem.INSTANCE);
+            return fluidHandlers.get(index);
         }
 
         protected int getFluidSlotFromIndex(int slot, int index) {
@@ -350,7 +323,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
             int index = getIndexForItemSlot(slot);
-            IItemHandler handler = getItemHandlerFromIndex(index);
+            IItemHandlerShim handler = getItemHandlerFromIndex(index);
             slot = getItemSlotFromIndex(slot, index);
 
 
@@ -374,7 +347,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         @Override
         public int getSlotLimit(int slot) {
             int index = getIndexForItemSlot(slot);
-            IItemHandler handler = getItemHandlerFromIndex(index);
+            IItemHandlerShim handler = getItemHandlerFromIndex(index);
             int localSlot = getItemSlotFromIndex(slot, index);
             return handler.getSlotLimit(localSlot);
         }
@@ -382,7 +355,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             int index = getIndexForItemSlot(slot);
-            IItemHandler handler = getItemHandlerFromIndex(index);
+            IItemHandlerShim handler = getItemHandlerFromIndex(index);
             int localSlot = getItemSlotFromIndex(slot, index);
             return handler.isItemValid(localSlot, stack);
         }
@@ -397,61 +370,60 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
 
         @Override
-        public @NotNull FluidStack getFluidInTank(int tank) {
+        public @NotNull FabricFluidStack getFluidInTank(int tank) {
             int index = getIndexForFluidSlot(tank);
-            IFluidHandler handler = getFluidHandlerFromIndex(index);
+            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
             tank = getFluidSlotFromIndex(tank, index);
             return handler.getFluidInTank(tank);
         }
 
         @Override
-        public int getTankCapacity(int tank) {
+        public long getTankCapacity(int tank) {
             int index = getIndexForFluidSlot(tank);
-            IFluidHandler handler = getFluidHandlerFromIndex(index);
+            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
             int localSlot = getFluidSlotFromIndex(tank, index);
             return handler.getTankCapacity(localSlot);
         }
 
         @Override
-        public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        public boolean isFluidValid(int tank, @NotNull FabricFluidStack stack) {
             int index = getIndexForFluidSlot(tank);
-            IFluidHandler handler = getFluidHandlerFromIndex(index);
+            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
             int localSlot = getFluidSlotFromIndex(tank, index);
             return handler.isFluidValid(localSlot, stack);
         }
 
         @Override
-        public int fill(FluidStack resource, FluidAction action) {
+        public long fill(FabricFluidStack resource, FluidAction action) {
             int filled = 0;
-            FluidStack remaining = resource.copy();
-            for (LazyOptional<IFluidHandlerItem> handlerLazyOptional : fluidHandlers) {
-                int fill = handlerLazyOptional.map(fl -> {
-                    ItemStack container = fl.getContainer();
+            FabricFluidStack remaining = resource.copy();
+            long fill = 0;
+            for (IFluidHandlerShim handlerLazyOptional : fluidHandlers) {
+                    ItemStack container = handlerLazyOptional.getContainer();
                     if (container.getCount() > 1) {
                             //need to split and add remainder
                             ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
                             container.setCount(1);
                             blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
                     }
-                    return fl.fill(remaining, action);
-                }).orElse(0);
+                    return handlerLazyOptional.fill(remaining, action);
+                }
                 if (fill > 0) {
                     remaining.shrink(fill);
                     filled += fill;
                 }
-            }
             return filled;
         }
 
         @Override
-        public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+        public @NotNull FabricFluidStack drain(FabricFluidStack resource, FluidAction action) {
 
-            FluidStack drained = FluidStack.EMPTY;
-            FluidStack remaining = resource.copy();
-            for (LazyOptional<IFluidHandlerItem> handlerLazyOptional : fluidHandlers) {
-                FluidStack drain = handlerLazyOptional.map(fl -> {
+            FabricFluidStack drained =  FabricFluidStack.empty();
+            FabricFluidStack remaining = resource.copy();
+            for (IFluidHandlerShim fluidHandler : fluidHandlers) {
+                FabricFluidStack drain = null;//fluidHandler.map(fl -> {
 
-                    ItemStack container = fl.getContainer();
+                    ItemStack container = fluidHandler.getContainer();
                     if (container.getCount() > 1) {
                         //need to split and add remainder
                         ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
@@ -459,15 +431,14 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                         blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
                     }
 
-                    return fl.drain(remaining, action);
-                }).orElse(FluidStack.EMPTY);
+                   // return fl.drain(remaining, action);
 
                 if (!drain.isEmpty()) {
                     if (drained.isEmpty()) {
                         drained = drain;
                         remaining.shrink(drain.getAmount());
                     } else {
-                        if (drain.isFluidEqual(drained)) {
+                        if (drain.sameFluid(drained)) {
                             drained.grow(drain.getAmount());
                             remaining.shrink(drain.getAmount());
                         } else {
@@ -481,31 +452,32 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
 
         @Override
-        public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+        public @NotNull FabricFluidStack drain(long maxDrain, FluidAction action) {
 
-            FluidStack drained = FluidStack.EMPTY;
-            final int[] remaining = new int[1];
+            FabricFluidStack drained = FabricFluidStack.empty();
+            final long[] remaining = new long[1];
             remaining[0] = maxDrain;
-            for (LazyOptional<IFluidHandlerItem> handlerLazyOptional : fluidHandlers) {
-                FluidStack drain = handlerLazyOptional.map(fl -> {
 
-                    ItemStack container = fl.getContainer();
-                    if (container.getCount() > 1) {
-                        //need to split and add remainder
-                        ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
-                        container.setCount(1);
-                        blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
-                    }
+            FabricFluidStack drain = FabricFluidStack.empty();//todo
 
-                    return fl.drain(remaining[0], action);
-                }).orElse(FluidStack.EMPTY);
+            for (IFluidHandlerShim handlerLazyOptional : fluidHandlers) {
 
+                ItemStack container = handlerLazyOptional.getContainer();
+                if (container.getCount() > 1) {
+                    //need to split and add remainder
+                    ItemStack leftover = CommonUtils.copyStackWithSize(container, container.getCount() - 1);
+                    container.setCount(1);
+                    blockEntity.handler.insertItem(blockEntity.handler.getSlots(), leftover, false);
+                }
+
+                return FabricFluidStack.empty();//fl.drain(remaining[0], action);
+            }
                 if (!drain.isEmpty()) {
                     if (drained.isEmpty()) {
                         drained = drain;
                         remaining[0] -= drain.getAmount();
                     } else {
-                        if (drain.isFluidEqual(drained)) {
+                        if (drain.getFluidVariant().equals(drained.getFluidVariant())) {
                             drained.grow(drain.getAmount());
                             remaining[0] -= drain.getAmount();
                         } else {
@@ -513,8 +485,12 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                         }
                     }
                 }
+                return null;
             }
-            return drained;
+
+        @Override
+        public ItemStack getContainer() {
+            return null;
         }
 
         @Override
@@ -523,13 +499,13 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
 
         @Override
-        public int fill(int tank, FluidStack incoming, FluidAction action) {
+        public long fill(int tank, FabricFluidStack incoming, IFluidHandlerShim.FluidAction action) {
 
             int index = getIndexForFluidSlot(tank);
-            IFluidHandler handler = getFluidHandlerFromIndex(index);
+            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
 
             //probably a safe cast
-            IFluidHandlerItem iItemHandlerItem = (IFluidHandlerItem) handler;
+            IFluidHandlerShim iItemHandlerItem = handler;
             ItemStack container = iItemHandlerItem.getContainer();
             if (container.getCount() > 1) {
                 //need to split and add remainder
@@ -539,7 +515,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             }
 
             tank = getFluidSlotFromIndex(tank, index);
-            int fill = handler.fill(incoming, action);
+            long fill = handler.fill(incoming, action);
             if (fill > 0) {
                 markDirty();
             }
@@ -547,24 +523,23 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
 
         @Override
-        public @NotNull FluidStack drain(int tank, FluidStack resource, FluidAction action) {
-            FluidStack fluidStack = getFluidInTank(tank);
-            if (resource.isEmpty() || !resource.isFluidEqual(fluidStack)) {
-                return FluidStack.EMPTY;
+        public @NotNull FabricFluidStack drain(int tank, FabricFluidStack resource, FluidAction action) {
+            FabricFluidStack stack = getFluidInTank(tank);
+            if (resource.isEmpty() || !resource.sameFluid(stack)) {
+                return FabricFluidStack.empty();
             }
             return drain(tank,resource.getAmount(), action);
         }
 
         @Override
-        public @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action) {
+        public @NotNull FabricFluidStack drain(int tank, long maxDrain, IFluidHandlerShim.FluidAction action) {
             int index = getIndexForFluidSlot(tank);
-            IFluidHandler handler = getFluidHandlerFromIndex(index);
+            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
             tank = getFluidSlotFromIndex(tank, index);
 
 
             //probably a safe cast
-            IFluidHandlerItem iFluidHandlerItem = (IFluidHandlerItem) handler;
-            ItemStack container = iFluidHandlerItem.getContainer();
+            ItemStack container = handler.getContainer();
             if (container.getCount() > 1) {
                 //need to split and add remainder
                 ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
@@ -572,7 +547,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                 blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
             }
 
-            FluidStack stack = handler.drain(maxDrain, action);
+            FabricFluidStack stack = handler.drain(maxDrain, action);
             if (!action.simulate() && !stack.isEmpty()) {
                 markDirty();
             }
@@ -580,7 +555,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
     }
 
-    public static class BarrelInterfaceItemHandler implements SearchableItemHandler, INBTSerializable<ListTag> {
+    public static class BarrelInterfaceItemHandler implements SearchableItemHandler{
 
         private final BarrelInterfaceBlockEntity blockEntity;
 
@@ -611,7 +586,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public boolean isFull() {
-            return getStoredCount() >= NABBA.ServerCfg.barrel_interface_storage.get();
+            return getStoredCount() >= NABBAFabric.ServerCfg.barrel_interface_storage;
         }
 
         @Override
@@ -708,7 +683,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
 
 
-        @Override
+    //    @Override
         public ListTag serializeNBT() {
             ListTag nbtTagList = new ListTag();
             for (int i = 0; i < barrels.size(); i++) {
@@ -720,7 +695,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             return nbtTagList;
         }
 
-        @Override
+       // @Override
         public void deserializeNBT(ListTag nbt) {
             barrels.clear();
             for (int i = 0; i < nbt.size(); i++) {

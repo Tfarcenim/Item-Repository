@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
+import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.blockentity.BarrelInterfaceBlockEntity;
 
@@ -37,7 +38,7 @@ public class BarrelInterfaceBlock extends Block implements EntityBlock {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        pTooltip.add(Component.translatable(getDescriptionId() +".tooltip", NABBA.ServerCfg.barrel_interface_storage.get()));
+        pTooltip.add(Component.translatable(getDescriptionId() +".tooltip", NABBAFabric.ServerCfg.barrel_interface_storage));
     }
 
     @Override

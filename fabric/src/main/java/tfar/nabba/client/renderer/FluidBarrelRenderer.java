@@ -1,21 +1,23 @@
 package tfar.nabba.client.renderer;
 
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.blockentity.FluidBarrelBlockEntity;
 import tfar.nabba.client.FluidSpriteCache;
 import tfar.nabba.item.UpgradeItem;
-import tfar.nabba.util.FabricUtils;
+import tfar.nabba.util.CommonUtils;
+import tfar.nabba.util.FabricFluidStack;
 
 public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlockEntity> {
 
@@ -30,12 +32,12 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
     }
 
     protected void renderTextAndItems(FluidBarrelBlockEntity betterBarrelBlockEntity,PoseStack pPoseStack,MultiBufferSource bufferSource, int pPackedLight, int pPackedOverlay) {
-        FluidStack stack = betterBarrelBlockEntity.getFluidHandler().getFluid();
+        FabricFluidStack stack = betterBarrelBlockEntity.getFluidHandler().getFluid();
 
         boolean infiniteVend = betterBarrelBlockEntity.infiniteVending();
 
-        int cap = betterBarrelBlockEntity.getFluidHandler().getActualCapacity(0);
-        String toDraw = infiniteVend ? FabricUtils.INFINITY :stack.getAmount() + " / "+ cap;
+        long cap = betterBarrelBlockEntity.getFluidHandler().getActualCapacity(0);
+        String toDraw = infiniteVend ? CommonUtils.INFINITY :stack.getAmount() + " / "+ cap;
 
         renderText(betterBarrelBlockEntity, pPoseStack, bufferSource, pPackedLight, pPackedOverlay, toDraw, 14/16d, betterBarrelBlockEntity.getColor(), .0075f);
         if (Minecraft.getInstance().player.getMainHandItem().getItem() instanceof UpgradeItem upgradeItem&& betterBarrelBlockEntity.isValid(upgradeItem)) {
@@ -66,7 +68,7 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
 
         return new int[] { r, g, b, a };
     }
-    protected void renderFluid(FluidBarrelBlockEntity abstractBarrelBlockEntity, FluidStack fluid, PoseStack pPoseStack, MultiBufferSource buffer, int pPackedLight, int overlay) {
+    protected void renderFluid(FluidBarrelBlockEntity abstractBarrelBlockEntity, FabricFluidStack fluid, PoseStack pPoseStack, MultiBufferSource buffer, int pPackedLight, int overlay) {
 
         if (fluid.isEmpty()) return;
         float scale = (float) abstractBarrelBlockEntity.getSize();
@@ -78,9 +80,9 @@ public class FluidBarrelRenderer extends AbstractBarrelRenderer<FluidBarrelBlock
 
         TextureAtlasSprite sprite = FluidSpriteCache.getStillTexture(fluid);
 
-        IClientFluidTypeExtensions renderProperties = IClientFluidTypeExtensions.of(fluid.getFluid());
+        FluidRenderHandler fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(fluid.getFluidVariant().getFluid());
 
-        int color = renderProperties.getTintColor(fluid);
+        int color = fluidRenderHandler.getFluidColor(null,null,null);
         
         VertexConsumer builder = buffer.getBuffer(Sheets.translucentCullBlockSheet());
         Matrix4f matrix = pPoseStack.last().pose();

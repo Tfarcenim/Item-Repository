@@ -57,20 +57,4 @@ public class ClientUtils {
         viewModelPose.popPose();
         RenderSystem.applyModelViewMatrix();
     }
-
-    public static void drawSmallItemNumbers(GuiGraphics matrices, int x, int y, ItemStack stack) {
-
-
-        PoseStack viewModelPose = RenderSystem.getModelViewStack();
-        viewModelPose.pushPose();
-        viewModelPose.translate(x + 8, y + 8, 100);
-        float scale = .5f;
-        viewModelPose.scale(scale, scale, scale);
-        viewModelPose.translate(-x, -y, 0);
-        RenderSystem.applyModelViewMatrix();
-        String amount = (stack.getCount() > 1) ? CommonUtils.formatLargeNumber(stack.getCount()) : null;
-        matrices.renderItemDecorations(Minecraft.getInstance().font, stack, x, y, amount);
-        viewModelPose.popPose();
-        RenderSystem.applyModelViewMatrix();
-    }
 }

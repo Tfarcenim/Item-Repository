@@ -111,7 +111,7 @@ public abstract class SearchableItemMenu<T extends SearchableItemHandler> extend
     public void handleItemExtract(ServerPlayer player, ItemStack stack, boolean shift) {
         ItemStack received = itemHandler.requestItem(stack);
         if (shift) {
-            ItemHandlerHelper.giveItemToPlayer(player, received);
+            CommonUtils.giveItemToPlayer(player, received);
         } else {
             setCarried(received);
         }

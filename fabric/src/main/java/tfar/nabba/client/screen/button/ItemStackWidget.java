@@ -6,9 +6,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import tfar.nabba.client.CommonClientUtils;
+import tfar.nabba.client.gui.RightClickButton;
 import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.net.PacketHandler;
-import tfar.nabba.util.ClientUtils;
 import tfar.nabba.util.CommonUtils;
 
 public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemScreen<?,?>> {
@@ -28,9 +29,12 @@ public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemSc
         ItemStack mouseStack = screen.getMenu().getCarried();
 
         if (mouseStack.isEmpty() &&!stack.isEmpty()) {//try to take item
-            PacketHandler.sendToServer(new C2SExtractItemPacket(stack, shift));
+            PacketHandler.sendToServer(PacketHandler.extract_item,buf -> {
+                buf.writeItem(stack);
+                buf.writeBoolean(shift);
+            });
         } else if (!mouseStack.isEmpty()) {//try to insert full stack
-            PacketHandler.sendToServer(new C2SInsertPacket(mouseStack.getCount()));
+            PacketHandler.sendToServer(PacketHandler.insert,buf -> buf.writeInt(mouseStack.getCount()));
         }
         super.onClick(pMouseX, pMouseY);
     }
@@ -41,11 +45,14 @@ public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemSc
         ItemStack mouseStack = screen.getMenu().getCarried();
 
         if (!mouseStack.isEmpty() && stack.isEmpty()) {//try to add one item
-            PacketHandler.sendToServer(new C2SInsertPacket(1));
+            PacketHandler.sendToServer(PacketHandler.insert,buf -> buf.writeInt(1));
         } else if (mouseStack.isEmpty()) {
             //take half
             int count = (int) Math.ceil(Math.min(stack.getMaxStackSize(),stack.getCount()) / 2d);
-            PacketHandler.sendToServer(new C2SExtractItemPacket(CommonUtils.copyStackWithSize(stack,count), false));
+            PacketHandler.sendToServer(PacketHandler.extract_item,buf -> {
+                buf.writeItem(CommonUtils.copyStackWithSize(stack,count));
+                buf.writeBoolean(false);
+            });
         }
 
         super.onClick(pMouseX, pMouseY);
@@ -65,7 +72,7 @@ public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemSc
     }
 
     public void renderItem(GuiGraphics matrices) {
-        ClientUtils.drawSmallItemNumbers(matrices,getX(),getY(),stack);
+        CommonClientUtils.drawSmallItemNumbers(matrices,getX(),getY(),stack);
         matrices.renderItemDecorations(Minecraft.getInstance().font,stack, getX(), getY());
     }
 

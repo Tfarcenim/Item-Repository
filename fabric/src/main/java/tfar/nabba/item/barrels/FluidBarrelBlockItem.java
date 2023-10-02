@@ -1,17 +1,15 @@
 package tfar.nabba.item.barrels;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.FluidStack;
-import org.jetbrains.annotations.Nullable;
-import tfar.nabba.capability.FluidBarrelItemStackItemHandler;
 import tfar.nabba.inventory.tooltip.FluidBarrelTooltip;
+import tfar.nabba.util.BlockItemBarrelUtils;
+import tfar.nabba.util.FabricFluidStack;
 import tfar.nabba.util.FabricUtils;
+import tfar.nabba.util.NBTKeys;
 
 import java.util.Optional;
 
@@ -20,42 +18,37 @@ public class FluidBarrelBlockItem extends BlockItem {
         super(pBlock, pProperties);
     }
 
-    public static void setFluid(ItemStack container, FluidStack copyStackWithSize) {
-        CompoundTag tag = copyStackWithSize.writeToNBT(new CompoundTag());
-        BetterBarrelBlockItem.getOrCreateBlockEntityTag(container).put(NBTKeys.Stack.name(), tag);
+    public static void setFluid(ItemStack container, FabricFluidStack copyStackWithSize) {
+        CompoundTag tag = copyStackWithSize.toTag();
+        BlockItemBarrelUtils.getOrCreateBlockEntityTag(container).put(NBTKeys.Stack.name(), tag);
     }
 
-    @Override
-    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new FluidBarrelItemStackItemHandler(stack);
-    }
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        FluidVariant disp = getStoredFluid(stack);
+        FabricFluidStack disp = getStoredFluid(stack);
         return disp.isEmpty() ? super.getTooltipImage(stack) : Optional.of(new FluidBarrelTooltip(disp));
     }
 
-    public static FluidVariant getStoredFluid(ItemStack barrel) {
+    public static FabricFluidStack getStoredFluid(ItemStack barrel) {
         if (barrel.getTagElement(BlockItem.BLOCK_ENTITY_TAG) != null) {
-            FluidStack stack = FluidStack.loadFluidStackFromNBT(BetterBarrelBlockItem.getBlockEntityTag(barrel).getCompound(NBTKeys.Stack.name()));
+            FabricFluidStack stack = FabricFluidStack.of(BlockItemBarrelUtils.getBlockEntityTag(barrel).getCompound(NBTKeys.Stack.name()));
             return stack;
         }
-        return FluidStack.EMPTY;
+        return FabricFluidStack.empty();
     }
 
-    public static boolean isFluidValid(ItemStack barrel,FluidStack stack) {
+    public static boolean isFluidValid(ItemStack barrel,FabricFluidStack stack) {
         if (!barrel.hasTag()) return true;
-        FluidStack existing = getStoredFluid(barrel);
-        FluidStack ghost = getGhost(barrel);
+        FabricFluidStack existing = getStoredFluid(barrel);
+        FabricFluidStack ghost = getGhost(barrel);
         return FabricUtils.isFluidValid(existing,stack,ghost);
     }
 
-    public static FluidStack getGhost(ItemStack barrel) {
-        if (BetterBarrelBlockItem.getBlockEntityTag(barrel)!=null) {
-            return FluidStack.loadFluidStackFromNBT(BetterBarrelBlockItem.getBlockEntityTag(barrel).getCompound(NBTKeys.Ghost.name()));
+    public static FabricFluidStack getGhost(ItemStack barrel) {
+        if (BlockItemBarrelUtils.getBlockEntityTag(barrel)!=null) {
+            return FabricFluidStack.of(BlockItemBarrelUtils.getBlockEntityTag(barrel).getCompound(NBTKeys.Ghost.name()));
         }
-        return FluidStack.EMPTY;
+        return FabricFluidStack.empty();
     }
-
 }

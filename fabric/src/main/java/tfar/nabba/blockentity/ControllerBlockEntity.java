@@ -2,7 +2,6 @@ package tfar.nabba.blockentity;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -15,13 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
@@ -30,7 +22,7 @@ import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.util.BarrelType;
-import tfar.nabba.util.FabricFluidUtils;
+import tfar.nabba.util.FabricFluidStack;
 import tfar.nabba.util.FabricUtils;
 
 import javax.annotation.Nonnull;
@@ -67,8 +59,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
             }
 
             public void set(int pIndex, int pValue) {
-                switch (pIndex) {
-                    case 0:
+                if (pIndex == 0) {
                 }
             }
 
@@ -91,8 +82,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
             }
 
             public void set(int pIndex, int pValue) {
-                switch (pIndex) {
-                    case 0:
+                if (pIndex == 0) {
                 }
             }
 
@@ -413,15 +403,15 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         }
 
         //attempts to add fluid to every connected tank
-        public int universalFill(FluidVariant stack, FluidVariant action) {
-            FluidVariant remainder = FabricFluidUtils.copyFluidVariant(stack);
+        public long universalFill(FabricFluidStack stack, FluidAction action) {
+            FabricFluidStack remainder = stack.copy();
             int totalFilled = 0;
             for (int i = 0; i < getTanks();i++) {
 
                 if (isFluidValid(i,stack)) {
                     BlockEntity blockEntity = controllerBlockEntity.getBE(i,BarrelType.FLUID);
                     if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
-                        int filled = fluidBarrelBlockEntity.getFluidHandler().fill(remainder,action);
+                        long filled = fluidBarrelBlockEntity.getFluidHandler().fill(remainder,action);
                         remainder.shrink(filled);
                         totalFilled += filled;
                         if (remainder.isEmpty()) {
@@ -433,64 +423,69 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
             return totalFilled;
         }
 
-        public FluidStack universalDrain(int amount,FluidAction action) {
-            int totalDrained = 0;
-            int remaining = amount;
-            Fluid fluid = null;
+        public FabricFluidStack universalDrain(long amount,FluidAction action) {
+            long totalDrained = 0;
+            long remaining = amount;
+            FluidVariant fluid = null;
             for (int i = 0; i < getTanks();i++) {
                 BlockEntity blockEntity = controllerBlockEntity.getBE(i,BarrelType.FLUID);
                 if (blockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
-                    FluidStack drained = fluidBarrelBlockEntity.getFluidHandler().drain(remaining,action);
+                    FabricFluidStack drained = fluidBarrelBlockEntity.getFluidHandler().drain(remaining,action);
                     if (!drained.isEmpty()) {
                         if (fluid == null) {
-                            fluid = drained.getFluid();
+                            fluid = drained.getFluidVariant();
                         }
-                        int drainedAmount = drained.getAmount();
+                        long drainedAmount = drained.getAmount();
                         totalDrained += drainedAmount;
                         remaining -= drainedAmount;
                         if (remaining <= 0 && fluid != null) {
-                            return new FluidStack(fluid,totalDrained);
+                            return new FabricFluidStack(fluid,totalDrained);
                         }
                     }
                 }
             }
             if (fluid != null) {
-                return new FluidStack(fluid,totalDrained);
+                return new FabricFluidStack(fluid,totalDrained);
             }
-            return FluidStack.EMPTY;
+            return FabricFluidStack.empty();
         }
 
         @Override
-        public @NotNull FluidVariant getFluidInTank(int slot) {
-            if (slot >= getTanks()) return FluidVariant.EMPTY;
+        public @NotNull FabricFluidStack getFluidInTank(int slot) {
+            if (slot >= getTanks()) return FabricFluidStack.empty();
             BlockEntity blockEntity = controllerBlockEntity.getBE(slot,BarrelType.FLUID);
             if (blockEntity instanceof FluidBarrelBlockEntity barrelBlockEntity) {
                 return barrelBlockEntity.getFluidHandler().getFluidInTank(0);
             } else {
                 controllerBlockEntity.synchronize();
             }
-            return FluidStack.EMPTY;
+            return FabricFluidStack.empty();
         }
 
         @Override
-        public int fill(@NotNull FluidStack stack, IFluidHandlerShim.FluidAction action) {
+        public long fill(@NotNull FabricFluidStack stack, IFluidHandlerShim.FluidAction action) {
             if (stack.isEmpty()) return 0;
             return universalFill(stack, action);
         }
 
         @Override
-        public @NotNull FluidStack drain(int amount, FluidAction action) {
-            if (amount == 0) return FluidStack.EMPTY;
+        public @NotNull FabricFluidStack drain(long amount, FluidAction action) {
+            if (amount == 0) return FabricFluidStack.empty();
             return universalDrain(amount, action);
         }
 
         @Override
-        public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
+        public ItemStack getContainer() {
+            return null;
+        }
+
+        @Override
+        public @NotNull FabricFluidStack drain(FabricFluidStack resource, FluidAction action) {
             return drain(resource.getAmount(),action);
         }
 
         @Override
-        public int getTankCapacity(int slot) {
+        public long getTankCapacity(int slot) {
             if (slot >= getTanks()) return 0;
             BlockEntity blockEntity = controllerBlockEntity.getBE(slot,BarrelType.FLUID);
             if (blockEntity instanceof FluidBarrelBlockEntity barrelBlockEntity) {
@@ -502,7 +497,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         }
 
         @Override
-        public boolean isFluidValid(int slot, @NotNull FluidVariant incoming) {
+        public boolean isFluidValid(int slot, @NotNull FabricFluidStack incoming) {
             if (slot < getTanks()) {
                 if (controllerBlockEntity.getBE(slot,BarrelType.FLUID) instanceof FluidBarrelBlockEntity barrelBlockEntity) {
                     return barrelBlockEntity.getFluidHandler().isFluidValid(0, incoming);
@@ -514,29 +509,29 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         }
 
         @Override
-        public int fill(int tank, FluidStack stack, IFluidHandlerShim.FluidAction action) {
+        public long fill(int tank, FabricFluidStack stack, IFluidHandlerShim.FluidAction action) {
             return 0;
         }
 
         @Override
-        public @NotNull FluidStack drain(int tank, FluidStack resource, IFluidHandlerShim.FluidAction action) {
-            FluidStack fluidStack = getFluidInTank(tank);
-            if (resource.isEmpty() || !resource.isFluidEqual(fluidStack)) {
-                return FluidStack.EMPTY;
+        public @NotNull FabricFluidStack drain(int tank, FabricFluidStack resource, IFluidHandlerShim.FluidAction action) {
+            FabricFluidStack stack = getFluidInTank(tank);
+            if (resource.isEmpty() || !resource.sameFluid(stack)) {
+                return FabricFluidStack.empty();
             }
             return drain(tank,resource.getAmount(), action);
         }
 
         @Override
-        public @NotNull FluidStack drain(int tank, int maxDrain, FluidAction action) {
-            if (tank >= getTanks())return FluidStack.EMPTY;
+        public @NotNull FabricFluidStack drain(int tank, long maxDrain, FluidAction action) {
+            if (tank >= getTanks())return FabricFluidStack.empty();
 
             BlockEntity be = controllerBlockEntity.getBE(tank,BarrelType.FLUID);
 
             if (be instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
                 return fluidBarrelBlockEntity.getFluidHandler().drain(maxDrain,action);
             }
-            return FluidStack.EMPTY;
+            return FabricFluidStack.empty();
         }
 
     }
@@ -552,29 +547,4 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    private LazyOptional<IItemHandler> item_optional = LazyOptional.of(this::getHandler);
-    private LazyOptional<IFluidHandler> fluid_optional = LazyOptional.of(this::getHandler);
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return item_optional.cast();
-        } else if (cap == ForgeCapabilities.FLUID_HANDLER) {
-            return fluid_optional.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        item_optional.invalidate();
-        fluid_optional.invalidate();
-    }
-
-    @Override
-    public void reviveCaps() {
-        super.reviveCaps();
-        item_optional = LazyOptional.of(this::getHandler);
-        fluid_optional = LazyOptional.of(this::getHandler);
-    }
 }

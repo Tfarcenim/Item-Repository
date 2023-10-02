@@ -2,22 +2,17 @@ package tfar.nabba.capability;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBA;
+import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.IItemHandlerItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
+import tfar.nabba.util.CommonUtils;
 
-public class BetterBarrelItemStackItemHandler implements IItemHandlerItem, ICapabilityProvider {
+public class BetterBarrelItemStackItemHandler implements IItemHandlerItem {
     private final ItemStack container;
 
-    private final LazyOptional<IItemHandler> holder = LazyOptional.of(() -> this);
 
     public BetterBarrelItemStackItemHandler(ItemStack stack) {
         this.container = stack;
@@ -26,11 +21,7 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem, ICapa
     public ItemStack getContainer() {
         return container;
     }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, holder);
-    }
+    
 
     @Override
     public int getSlots() {
@@ -48,13 +39,13 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem, ICapa
             ItemStack existing = getStackInSlot(slot);
             if (existing.getCount() + stack.getCount() > getSlotLimit(slot)) {
                 if (!simulate) {
-                    BetterBarrelBlockItem.setStack(container, ItemHandlerHelper.copyStackWithSize(stack, getSlotLimit(slot)));
+                    BetterBarrelBlockItem.setStack(container, CommonUtils.copyStackWithSize(stack, getSlotLimit(slot)));
                 }
                 return BetterBarrelBlockItem.isVoid(container) ? ItemStack.EMPTY :
-                        ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() + existing.getCount() - getSlotLimit(slot));
+                        CommonUtils.copyStackWithSize(stack, stack.getCount() + existing.getCount() - getSlotLimit(slot));
             } else {
                 if (!simulate) {
-                    BetterBarrelBlockItem.setStack(container, ItemHandlerHelper.copyStackWithSize(stack, existing.getCount() + stack.getCount()));
+                    BetterBarrelBlockItem.setStack(container, CommonUtils.copyStackWithSize(stack, existing.getCount() + stack.getCount()));
                 }
                 return ItemStack.EMPTY;
             }
@@ -76,9 +67,9 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem, ICapa
             return existing;
         } else {
             if (!simulate) {
-                BetterBarrelBlockItem.setStack(container, ItemHandlerHelper.copyStackWithSize(existing,existing.getCount() - amount));
+                BetterBarrelBlockItem.setStack(container, CommonUtils.copyStackWithSize(existing,existing.getCount() - amount));
             }
-            return ItemHandlerHelper.copyStackWithSize(existing,amount);
+            return CommonUtils.copyStackWithSize(existing,amount);
         }
     }
 
@@ -91,7 +82,7 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem, ICapa
     public int getActualLimit(int slot) {
         ItemStack existing = getStackInSlot(slot);
         return BetterBarrelBlockItem.getStorageMultiplier(container) * existing.getMaxStackSize() *
-                (BetterBarrelBlockItem.storageDowngrade(container) ? 1 : NABBA.ServerCfg.better_barrel_base_storage.get());
+                (BetterBarrelBlockItem.storageDowngrade(container) ? 1 : NABBAFabric.ServerCfg.better_barrel_base_storage);
     }
 
     @Override
