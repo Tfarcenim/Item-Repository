@@ -14,13 +14,13 @@ import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.ModMenuTypes;
 
 public class VanityKeyMenu extends AbstractContainerMenu {
-    private final BlockEntity blockEntity;
+    private final BlockPos pos;
     private final Player player;
 
     public VanityKeyMenu(int pContainerId, Inventory inventory, BlockPos access) {
-        super(ModMenuTypes.VANITY_KEY, pContainerId);;
+        super(ModMenuTypes.VANITY_KEY, pContainerId);
+        this.pos = access;
         this.player = inventory.player;
-        this.blockEntity = player.level().getBlockEntity(access);
         int playerX = 8;
         int playerY = 84;
 
@@ -35,6 +35,9 @@ public class VanityKeyMenu extends AbstractContainerMenu {
         }
     }
 
+    public BlockPos getPos() {
+        return pos;
+    }
 
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
@@ -47,6 +50,7 @@ public class VanityKeyMenu extends AbstractContainerMenu {
     }
 
     public void receiveVanity(int color, double size) {
+        BlockEntity blockEntity = player.level().getBlockEntity(pos);
         if (blockEntity instanceof AbstractBarrelBlockEntity betterBarrelBlockEntity) {
             betterBarrelBlockEntity.setColor(color);
             betterBarrelBlockEntity.setSize(size);
@@ -62,11 +66,7 @@ public class VanityKeyMenu extends AbstractContainerMenu {
     }
 
     protected boolean stillValid(Player pPlayer, TagKey<Block> targetBlocks) {
-        return true;// pPlayer.level().getBlockState(pos).is(targetBlocks)
-                //&& pPlayer.distanceToSqr((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D) <= 64.0D;
-    }
-
-    public BlockEntity getBlockEntity() {
-        return blockEntity;
+        return pPlayer.level().getBlockState(pos).is(targetBlocks)
+                && pPlayer.distanceToSqr((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D) <= 64.0D;
     }
 }
