@@ -51,7 +51,7 @@ public class ClientUtils {
         viewModelPose.scale(scale, scale, scale);
         viewModelPose.translate(-1 * x, -1 * y, 0);
         RenderSystem.applyModelViewMatrix();
-        String s = CommonUtils.formatLargeNumber(fluidStack.getAmount());
+        String s = CommonUtils.formatLargeNumber(fluidStack.getAmount()/81);
         matrices.drawString(Minecraft.getInstance().font, s, x - Minecraft.getInstance().font.width(s), y, 0xffffff);
         viewModelPose.popPose();
         RenderSystem.applyModelViewMatrix();
