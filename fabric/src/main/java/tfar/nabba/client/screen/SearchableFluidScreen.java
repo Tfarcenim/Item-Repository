@@ -12,6 +12,7 @@ import tfar.nabba.menu.SearchableFluidMenu;
 import tfar.nabba.util.FabricFluidStack;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends SearchableFluidMenu<T>> extends SearchableScreen<FabricFluidStack,U> {
 
@@ -38,13 +39,13 @@ public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends Se
 
     public void renderFluidTooltip(GuiGraphics graphics, FabricFluidStack pItemStack, int pMouseX, int pMouseY) {
         //super.renderTooltip(graphics, pItemStack, pMouseX, pMouseY);
-        graphics.renderTooltip(this.font, List.of(pItemStack.getFluidVariant().getFluid().getBucket().getName(ItemStack.EMPTY)), java.util.Optional.empty(), pMouseX, pMouseY);
+        graphics.renderTooltip(this.font, List.of(pItemStack.getFluidVariant().getFluid().getBucket().getName(ItemStack.EMPTY)), Optional.empty(), pMouseX, pMouseY);
     }
 
     @Override
     protected void renderLabels(GuiGraphics pPoseStack, int pMouseX, int pMouseY) {
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
-        pPoseStack.drawString(font,menu.getFilledSlotCount()+"", this.titleLabelX + 60, this.inventoryLabelY, 0x404040);
+        pPoseStack.drawString(font,menu.getFilledSlotCount()+"", this.titleLabelX + 60, this.inventoryLabelY, 0x404040,false);
     }
 
     public void setGuiFluids(List<FabricFluidStack> stacks) {

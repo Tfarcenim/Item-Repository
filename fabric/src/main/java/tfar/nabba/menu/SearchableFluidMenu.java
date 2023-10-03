@@ -123,10 +123,47 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
     public void handleInsert(ServerPlayer player, int count) {
         ItemStack carried = getCarried();
-   //     FluidActionResult result = fluidHandler.storeFluid(carried, new PlayerInvWrapper(player.getInventory()), player, false);
-   //     if (result.isSuccess()) {
-  //          setCarried(result.getResult());
-   //     }
+        //trying to add fluid
+        Storage<FluidVariant> handStorage = ContainerItemContext.ofPlayerCursor(player,this).find(FluidStorage.ITEM);
+        if (handStorage != null) {
+
+            Storage<FluidVariant> from = handStorage;
+
+            for (StorageView<FluidVariant> view : from) {
+                if (view.isResourceBlank()) continue;
+                FluidVariant resource = view.getResource();
+                long maxExtracted;
+
+                // check how much can be extracted
+                try (Transaction extractionTestTransaction = Transaction.openOuter()) {
+                    maxExtracted = view.extract(resource,count, extractionTestTransaction);
+                    extractionTestTransaction.abort();
+                }
+
+                try (Transaction transferTransaction = Transaction.openOuter()) {
+                    // check how much can be inserted
+                    long accepted = getFluidHandler().getFluidStorage().insert(resource, maxExtracted, transferTransaction);
+
+                    // extract it, or rollback if the amounts don't match
+                    if (accepted > 0 && view.extract(resource, accepted, transferTransaction) == accepted) {
+                        transferTransaction.commit();
+
+                        //SoundEvent sound = fill ? FluidVariantAttributes.getFillSound(resource) : FluidVariantAttributes.getEmptySound(resource);
+
+                        // Temporary workaround to use the correct sound for water bottles.
+                        // TODO: Look into providing a proper item-aware fluid sound API.
+                        //    if (resource.isOf(Fluids.WATER)) {
+                        //      if (fill && handItem == Items.GLASS_BOTTLE) sound = SoundEvents.BOTTLE_FILL;
+                        //      if (!fill && handItem == Items.POTION) sound = SoundEvents.BOTTLE_EMPTY;
+                    }
+
+                    //  player.playNotifySound(sound, SoundSource.BLOCKS, 1, 1);
+
+                    //     }
+                }
+            }
+        }
+
     }
 
 
@@ -178,8 +215,6 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
                    //     }
                     }
                 }
-
-
             }
 
         } else {
