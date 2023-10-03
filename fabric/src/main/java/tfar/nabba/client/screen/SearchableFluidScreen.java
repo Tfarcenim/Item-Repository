@@ -1,5 +1,6 @@
 package tfar.nabba.client.screen;
 
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -37,8 +38,8 @@ public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends Se
         }
     }
 
-    public void renderFluidTooltip(GuiGraphics graphics, FabricFluidStack pItemStack, int pMouseX, int pMouseY) {
-        graphics.renderTooltip(this.font, List.of(pItemStack.getFluidVariant().getFluid().getBucket().getName(ItemStack.EMPTY)),
+    public void renderFluidTooltip(GuiGraphics graphics, FabricFluidStack stack, int pMouseX, int pMouseY) {
+        graphics.renderTooltip(this.font, FluidVariantRendering.getTooltip(stack.getFluidVariant()),
                 Optional.empty(), pMouseX, pMouseY);
     }
 

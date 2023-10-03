@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import tfar.nabba.client.FluidSpriteCache;
+import tfar.nabba.client.StackSizeRenderer;
 
 public class ClientUtils {
 
@@ -25,8 +26,8 @@ public class ClientUtils {
 
         matrices.blit(x, y, 0, 16, 16, sprite);
 
-        drawSmallFluidNumbers(matrices, x, y, 0, fluidStack);
-
+        String amount = fluidStack.getAmount() > 1 ? CommonUtils.formatLargeNumber(fluidStack.getAmount()) : "";
+        StackSizeRenderer.renderSizeLabel(matrices,Minecraft.getInstance().font, x,y,amount);
     }
 
     public static void renderFluidTooltip(GuiGraphics matrices, int x, int y, FluidStack fluidStack) {
@@ -41,20 +42,8 @@ public class ClientUtils {
 
         matrices.blit(x, y, 400, 16, 16, sprite);
 
-        drawSmallFluidNumbers(matrices, x, y, 500, fluidStack);
+        String amount = fluidStack.getAmount() > 1 ? CommonUtils.formatLargeNumber(fluidStack.getAmount()) : "";
+        StackSizeRenderer.renderSizeLabel(matrices,Minecraft.getInstance().font, x,y,amount);
     }
 
-    public static void drawSmallFluidNumbers(GuiGraphics matrices, int x, int y, int z, FluidStack fluidStack) {
-        PoseStack viewModelPose = RenderSystem.getModelViewStack();
-        viewModelPose.pushPose();
-        viewModelPose.translate(x + 16, y + 12, z);
-        float scale = .5f;
-        viewModelPose.scale(scale, scale, scale);
-        viewModelPose.translate(-1 * x, -1 * y, 0);
-        RenderSystem.applyModelViewMatrix();
-        String s = CommonUtils.formatLargeNumber(fluidStack.getAmount());
-        matrices.drawString(Minecraft.getInstance().font, s, x - Minecraft.getInstance().font.width(s), y, 0xffffff);
-        viewModelPose.popPose();
-        RenderSystem.applyModelViewMatrix();
-    }
 }
