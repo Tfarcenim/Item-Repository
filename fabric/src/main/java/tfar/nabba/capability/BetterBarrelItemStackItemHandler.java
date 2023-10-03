@@ -8,6 +8,7 @@ import tfar.nabba.NABBA;
 import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.IItemHandlerItem;
 import tfar.nabba.item.barrels.BetterBarrelBlockItem;
+import tfar.nabba.util.BlockItemBarrelUtils;
 import tfar.nabba.util.CommonUtils;
 
 public class BetterBarrelItemStackItemHandler implements IItemHandlerItem {
@@ -30,7 +31,7 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem {
 
     @Override
     public @NotNull ItemStack getStackInSlot(int slot) {
-        return BetterBarrelBlockItem.getStoredItem(container);
+        return BlockItemBarrelUtils.getStoredItem(container);
     }
 
     @Override
@@ -39,13 +40,13 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem {
             ItemStack existing = getStackInSlot(slot);
             if (existing.getCount() + stack.getCount() > getSlotLimit(slot)) {
                 if (!simulate) {
-                    BetterBarrelBlockItem.setStack(container, CommonUtils.copyStackWithSize(stack, getSlotLimit(slot)));
+                    BlockItemBarrelUtils.setStack(container, CommonUtils.copyStackWithSize(stack, getSlotLimit(slot)));
                 }
                 return BetterBarrelBlockItem.isVoid(container) ? ItemStack.EMPTY :
                         CommonUtils.copyStackWithSize(stack, stack.getCount() + existing.getCount() - getSlotLimit(slot));
             } else {
                 if (!simulate) {
-                    BetterBarrelBlockItem.setStack(container, CommonUtils.copyStackWithSize(stack, existing.getCount() + stack.getCount()));
+                    BlockItemBarrelUtils.setStack(container, CommonUtils.copyStackWithSize(stack, existing.getCount() + stack.getCount()));
                 }
                 return ItemStack.EMPTY;
             }
@@ -62,12 +63,12 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem {
         if (existing.isEmpty())return ItemStack.EMPTY;
         if (amount >= existing.getCount()) {
             if (!simulate) {
-                BetterBarrelBlockItem.setStack(container, ItemStack.EMPTY);
+                BlockItemBarrelUtils.setStack(container, ItemStack.EMPTY);
             }
             return existing;
         } else {
             if (!simulate) {
-                BetterBarrelBlockItem.setStack(container, CommonUtils.copyStackWithSize(existing,existing.getCount() - amount));
+                BlockItemBarrelUtils.setStack(container, CommonUtils.copyStackWithSize(existing,existing.getCount() - amount));
             }
             return CommonUtils.copyStackWithSize(existing,amount);
         }
@@ -87,6 +88,6 @@ public class BetterBarrelItemStackItemHandler implements IItemHandlerItem {
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return BetterBarrelBlockItem.isItemValid(container,stack);
+        return BlockItemBarrelUtils.isItemValid(container,stack);
     }
 }

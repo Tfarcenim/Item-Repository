@@ -25,28 +25,9 @@ public class BetterBarrelBlockItem extends BlockItem {
     }
 
 
-
-    public static ItemStack getStoredItem(ItemStack barrel) {
-        if (BlockItemBarrelUtils.getBlockEntityTag(barrel) != null) {
-            ItemStack stack = ItemStack.of(BlockItemBarrelUtils.getBlockEntityTag(barrel).getCompound("Stack"));
-            stack.setCount(BlockItemBarrelUtils.getBlockEntityTag(barrel).getInt("RealCount"));
-            return stack;
-        }
-        return ItemStack.EMPTY;
-    }
-
-    public static void setStack(ItemStack container, ItemStack copyStackWithSize) {
-        CompoundTag tag = copyStackWithSize.save(new CompoundTag());
-        BlockItemBarrelUtils.getOrCreateBlockEntityTag(container).put(NBTKeys.Stack.name(), tag);
-        BlockItemBarrelUtils.getBlockEntityTag(container).putInt(NBTKeys.RealCount.name(), copyStackWithSize.getCount());
-    }
-
-
-
-
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        ItemStack disp = getStoredItem(stack);
+        ItemStack disp = BlockItemBarrelUtils.getStoredItem(stack);
         return disp.isEmpty() ? super.getTooltipImage(stack) : Optional.of(new BetterBarrelTooltip(disp));
     }
 
@@ -80,37 +61,14 @@ public class BetterBarrelBlockItem extends BlockItem {
     }
 
     public static boolean isVoid(ItemStack barrel) {
-        return getBooleanBlockStateValue(barrel, SingleSlotBarrelBlock.VOID);
+        return BlockItemBarrelUtils.getBooleanBlockStateValue(barrel, SingleSlotBarrelBlock.VOID);
     }
     public static boolean infiniteVending(ItemStack barrel) {
-        return getBooleanBlockStateValue(barrel, SingleSlotBarrelBlock.INFINITE_VENDING);
+        return BlockItemBarrelUtils.getBooleanBlockStateValue(barrel, SingleSlotBarrelBlock.INFINITE_VENDING);
     }
 
     public static boolean storageDowngrade(ItemStack barrel) {
-        return getBooleanBlockStateValue(barrel,SingleSlotBarrelBlock.STORAGE_DOWNGRADE);
+        return BlockItemBarrelUtils.getBooleanBlockStateValue(barrel,SingleSlotBarrelBlock.STORAGE_DOWNGRADE);
     }
-
-    public static boolean getBooleanBlockStateValue(ItemStack barrel, BooleanProperty property) {
-        if (BlockItemBarrelUtils.getBlockStateTag(barrel)!=null) {
-            CompoundTag blockStateTag = BlockItemBarrelUtils.getBlockStateTag(barrel);
-            blockStateTag.getBoolean(property.getName());
-        }
-        return false;
-    }
-
-    public static boolean isItemValid(ItemStack barrel,ItemStack stack) {
-        if (!barrel.hasTag()) return true;
-        ItemStack existing = getStoredItem(barrel);
-        ItemStack ghost = getGhost(barrel);
-        return CommonUtils.isItemValid(existing,stack,ghost);
-    }
-
-    public static ItemStack getGhost(ItemStack barrel) {
-        if (BlockItemBarrelUtils.getBlockEntityTag(barrel)!=null) {
-            return ItemStack.of(BlockItemBarrelUtils.getBlockEntityTag(barrel).getCompound(NBTKeys.Ghost.name()));
-        }
-        return ItemStack.EMPTY;
-    }
-
 
 }
