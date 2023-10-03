@@ -16,7 +16,7 @@ import tfar.nabba.client.Client;
 public class LevelRendererMixin {
 
     @Inject(method = "renderLevel",
-            at = @At(value = "INVOKE",target = "Lnet/minecraft/client/renderer/debug/DebugRenderer;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;DDD)V"))
+            at = @At(value = "INVOKE",target = "Lnet/minecraft/client/renderer/LevelRenderer;renderWorldBorder(Lnet/minecraft/client/Camera;)V"))
         private void outline(PoseStack pPoseStack, float pPartialTick, long pFinishNanoTime, boolean pRenderBlockOutline, Camera pCamera, GameRenderer pGameRenderer, LightTexture pLightTexture, Matrix4f pProjectionMatrix, CallbackInfo ci) {
         Client.renderNetwork(pPoseStack,pCamera);
     }

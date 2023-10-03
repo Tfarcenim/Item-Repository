@@ -67,6 +67,7 @@ public class Client {
     }
 
     public static void worldLast(RenderLevelStageEvent e) {
+        if (e.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER)
         renderNetwork(e.getPoseStack(),Minecraft.getInstance().gameRenderer.getMainCamera());
     }
 
