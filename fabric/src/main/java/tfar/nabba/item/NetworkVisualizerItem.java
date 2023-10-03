@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.InteractsWithController;
 import tfar.nabba.blockentity.ControllerBlockEntity;
+import tfar.nabba.util.NBTKeys;
 
 import java.util.List;
 
@@ -44,8 +45,8 @@ public class NetworkVisualizerItem extends Item implements InteractsWithControll
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
 
-        if (stack.getTagElement(ControllerBlockEntity.NET_INFO) != null && !pLevel.isClientSide) {
-            CompoundTag tag = stack.getTagElement(ControllerBlockEntity.NET_INFO);
+        if (stack.getTagElement(NBTKeys.NetworkInfo.name()) != null && !pLevel.isClientSide) {
+            CompoundTag tag = stack.getTagElement(NBTKeys.NetworkInfo.name());
             int[] posCont = tag.getIntArray("controller");
             BlockPos pos = new BlockPos(posCont[0],posCont[1],posCont[2]);
             BlockEntity blockEntity = pLevel.getBlockEntity(pos);
@@ -53,7 +54,7 @@ public class NetworkVisualizerItem extends Item implements InteractsWithControll
                 controllerBlockEntity.storeNetworkInfo(stack);
             } else {
                 pPlayer.sendSystemMessage(Component.translatable("No controller present at %s",pos));
-                stack.removeTagKey(ControllerBlockEntity.NET_INFO);
+                stack.removeTagKey(NBTKeys.NetworkInfo.name());
             }
         }
         return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide());

@@ -68,6 +68,10 @@ public class CommonUtils {
         }
     }
 
+    public static int[] getArray(BlockPos pos) {
+        return new int[]{pos.getX(), pos.getY(), pos.getZ()};
+    }
+
     //forge has to check caps
     public static boolean canItemStacksStack(@NotNull ItemStack a, @NotNull ItemStack b) {
         return Services.PLATFORM.canItemStacksStack(a,b);

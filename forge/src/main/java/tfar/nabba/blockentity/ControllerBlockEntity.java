@@ -28,7 +28,9 @@ import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
 import tfar.nabba.util.BarrelType;
+import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.ForgeUtils;
+import tfar.nabba.util.NBTKeys;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -279,7 +281,6 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
 
 
 
-    public static final String NET_INFO = "NetworkInfo";
     public void storeNetworkInfo(ItemStack itemstack) {
         CompoundTag tag = new CompoundTag();
         tag.putIntArray("controller", new int[]{getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()});
@@ -292,7 +293,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
             List<BlockPos> blockPosList = barrels.get(barrelType);
             for (BlockPos pos : blockPosList) {
                 CompoundTag tag2 = new CompoundTag();
-                tag2.putIntArray("pos",getArray(pos));
+                tag2.putIntArray("pos",CommonUtils.getArray(pos));
                 list.add(tag2);
             }
             if (!blockPosList.isEmpty())
@@ -302,13 +303,13 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         ListTag list = new ListTag();
         for (BlockPos pos : findConnectedProxies()) {
             CompoundTag tag2 = new CompoundTag();
-            tag2.putIntArray("pos",getArray(pos));
+            tag2.putIntArray("pos", CommonUtils.getArray(pos));
             list.add(tag2);
         }
         tag.put("proxies",list);
 
         tag.put("barrels",tag1);
-        itemstack.getOrCreateTag().put(NET_INFO,tag);
+        itemstack.getOrCreateTag().put(NBTKeys.NetworkInfo.name(),tag);
     }
 
     public List<BlockPos> findConnectedProxies() {
@@ -317,9 +318,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
                 .map(BlockEntity::getBlockPos).toList();
     }
 
-    public static int[] getArray(BlockPos pos) {
-        return new int[]{pos.getX(), pos.getY(), pos.getZ()};
-    }
+
 
     public static class ControllerHandler implements SearchableItemHandler,SearchableFluidHandler {
         private final ControllerBlockEntity controllerBlockEntity;

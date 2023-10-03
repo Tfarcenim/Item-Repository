@@ -24,6 +24,7 @@ import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.FabricFluidStack;
 import tfar.nabba.util.FabricUtils;
+import tfar.nabba.util.NBTKeys;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -272,7 +273,6 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
 
 
 
-    public static final String NET_INFO = "NetworkInfo";
     public void storeNetworkInfo(ItemStack itemstack) {
         CompoundTag tag = new CompoundTag();
         tag.putIntArray("controller", new int[]{getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()});
@@ -301,7 +301,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         tag.put("proxies",list);
 
         tag.put("barrels",tag1);
-        itemstack.getOrCreateTag().put(NET_INFO,tag);
+        itemstack.getOrCreateTag().put(NBTKeys.NetworkInfo.name(),tag);
     }
 
     public List<BlockPos> findConnectedProxies() {

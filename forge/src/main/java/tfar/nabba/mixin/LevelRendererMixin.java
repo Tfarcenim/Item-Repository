@@ -18,6 +18,6 @@ public class LevelRendererMixin {
     @Inject(method = "renderLevel",
             at = @At(value = "INVOKE",target = "Lnet/minecraft/client/renderer/debug/DebugRenderer;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;DDD)V"))
         private void outline(PoseStack pPoseStack, float pPartialTick, long pFinishNanoTime, boolean pRenderBlockOutline, Camera pCamera, GameRenderer pGameRenderer, LightTexture pLightTexture, Matrix4f pProjectionMatrix, CallbackInfo ci) {
-        Client.renderNetwork(pPoseStack,pCamera);
+        //Client.renderNetwork(pPoseStack,pCamera);
     }
 }
