@@ -1,5 +1,7 @@
 package tfar.nabba.api;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -76,5 +78,7 @@ public interface SearchableFluidHandler extends IFluidHandlerShim {
         }
         return false;
     }
+
+    Storage<FluidVariant> getFluidStorage();
 
 }

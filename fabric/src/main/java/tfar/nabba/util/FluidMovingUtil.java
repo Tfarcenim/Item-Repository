@@ -1,7 +1,6 @@
 package tfar.nabba.util;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
@@ -51,7 +50,7 @@ public class FluidMovingUtil {
         Storage<FluidVariant> handStorage = ContainerItemContext.forPlayerInteraction(player, hand).find(FluidStorage.ITEM);
         if (handStorage == null) return false;
 
-        // Try to fill hand first, otherwise try to empty it.
+        // Try to fill hand
         Item handItem = player.getItemInHand(hand).getItem();
 
         try {
@@ -108,7 +107,7 @@ public class FluidMovingUtil {
         Storage<FluidVariant> handStorage = ContainerItemContext.forPlayerInteraction(player, hand).find(FluidStorage.ITEM);
         if (handStorage == null) return false;
 
-        // Try to fill hand first, otherwise try to empty it.
+        // try to empty it.
         Item handItem = player.getItemInHand(hand).getItem();
 
         try {

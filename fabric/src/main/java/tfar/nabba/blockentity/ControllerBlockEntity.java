@@ -2,6 +2,7 @@ package tfar.nabba.blockentity;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -513,6 +514,10 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
             return false;
         }
 
+        @Override
+        public Storage<FluidVariant> getFluidStorage() {
+            return controllerBlockEntity.getFluidStorage(null);
+        }
     }
 
     @Nonnull
@@ -533,7 +538,9 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
 
     public CombinedStorage<FluidVariant, FluidBarrelSlotWrapper> getFluidStorage(Direction direction) {
 
-        if (fluidStorage != null && fluidStorage.parts.size() != controllerHandler.getSlots()) {
+        int tanks = controllerHandler.getTanks();
+
+        if (fluidStorage != null && fluidStorage.parts.size() != tanks) {
             fluidStorage = null;
         }
         if (fluidStorage == null) {
@@ -544,12 +551,12 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
 
 
     public CombinedStorage<FluidVariant, FluidBarrelSlotWrapper> createFluid() {
-        int slots = controllerHandler.getSlots();
+        int slots = controllerHandler.getTanks();
 
         List<FluidBarrelSlotWrapper> storages = new ArrayList<>();
 
         for (int i = 0 ;i < slots;i++) {
-            BlockEntity blockEntity = getBE(i,BarrelType.BETTER);
+            BlockEntity blockEntity = getBE(i,BarrelType.FLUID);
             if (blockEntity instanceof FluidBarrelBlockEntity barrelBlockEntity) {
                 FluidBarrelSlotWrapper wrapper = barrelBlockEntity.getFluidStorage();
                 storages.add(wrapper);

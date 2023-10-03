@@ -1,5 +1,12 @@
 package tfar.nabba.client.screen.button;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -9,6 +16,7 @@ import tfar.nabba.client.screen.SearchableFluidScreen;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.ClientUtils;
 import tfar.nabba.util.FabricFluidStack;
+import tfar.nabba.util.FluidMovingUtil;
 
 public class FluidStackWidget extends RightClickButton<FabricFluidStack,SearchableFluidScreen<?,?>> {
 
@@ -23,26 +31,33 @@ public class FluidStackWidget extends RightClickButton<FabricFluidStack,Searchab
 
         ItemStack carried = screen.getMenu().getCarried();
 
-        if (carried.isEmpty()&& shift) {
+        if (shift) {
             //shiftclicking on a slot should try to extract to fluid containers in inventory
             PacketHandler.sendToServer(PacketHandler.extract_fluid,buf -> {
               stack.toPacket(buf);
               buf.writeBoolean(shift);
             });
         } else {
-           /* carried.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(fluidHandlerItem -> {
-                boolean emptyContainer = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandlerShim.FluidAction.SIMULATE).isEmpty();
-                if (emptyContainer && !stack.isEmpty()) {//try to take fluid
+
+            //look up the wrapper for the container
+            Storage<FluidVariant> handStorage = ContainerItemContext.ofPlayerCursor(Minecraft.getInstance().player,screen.getMenu()).find(FluidStorage.ITEM);
+
+            if (handStorage != null) {
+                ResourceAmount<FluidVariant> extractableContent = StorageUtil.findExtractableContent(handStorage, null);
+
+                //there is fluid in held container, try to store it
+                if (extractableContent != null && extractableContent.amount() > 0) {
+                    PacketHandler.sendToServer(PacketHandler.insert,buf -> {
+                        buf.writeLong(Long.MAX_VALUE);
+                    });
+                } else {
+                    //try to take fluid from stack
                     PacketHandler.sendToServer(PacketHandler.extract_fluid,buf -> {
                         stack.toPacket(buf);
-                        buf.writeBoolean(shift);
+                        buf.writeBoolean(false);
                     });
-
-                } else {//try to insert fluid
-                    PacketHandler.sendToServer(new C2SInsertPacket(Integer.MAX_VALUE));
                 }
-
-            });*/
+            }
         }
         super.onClick(pMouseX, pMouseY);
     }

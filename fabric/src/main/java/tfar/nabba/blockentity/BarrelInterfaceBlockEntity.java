@@ -1,5 +1,7 @@
 package tfar.nabba.blockentity;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -170,6 +172,11 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
                 return SearchableItemHandler.super.storeItem(stack, simulate);
             }
             return stack;
+        }
+
+        @Override
+        public Storage<FluidVariant> getFluidStorage() {
+            return null;
         }
 
         public void recomputeSlots() {

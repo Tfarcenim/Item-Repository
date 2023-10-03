@@ -3,9 +3,17 @@ package tfar.nabba.menu;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
@@ -13,12 +21,16 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableFluidHandler;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.FabricFluidStack;
+import tfar.nabba.util.FluidMovingUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -126,11 +138,49 @@ public class SearchableFluidMenu<T extends SearchableFluidHandler> extends Searc
 
         if (!shift) {
             ItemStack container = getCarried();
-            FabricFluidStack result = fluidHandler.requestFluid(fluidStack, container, player.getInventory(), player, false);
 
-       //     if (result.isSuccess()) {
-       //         setCarried(result.getResult());
-         //   }
+            //look up the wrapper for the container
+            Storage<FluidVariant> handStorage = ContainerItemContext.ofPlayerCursor(player,this).find(FluidStorage.ITEM);
+            if (handStorage != null) {
+
+                Storage<FluidVariant> from = getFluidHandler().getFluidStorage();
+
+                for (StorageView<FluidVariant> view : from) {
+                    if (view.isResourceBlank()) continue;
+                    FluidVariant resource = view.getResource();
+                    long maxExtracted;
+
+                    // check how much can be extracted
+                    try (Transaction extractionTestTransaction = Transaction.openOuter()) {
+                        maxExtracted = view.extract(resource, fluidStack.getAmount(), extractionTestTransaction);
+                        extractionTestTransaction.abort();
+                    }
+
+                    try (Transaction transferTransaction = Transaction.openOuter()) {
+                        // check how much can be inserted
+                        long accepted = handStorage.insert(resource, maxExtracted, transferTransaction);
+
+                        // extract it, or rollback if the amounts don't match
+                        if (accepted > 0 && view.extract(resource, accepted, transferTransaction) == accepted) {
+                            transferTransaction.commit();
+
+                            //SoundEvent sound = fill ? FluidVariantAttributes.getFillSound(resource) : FluidVariantAttributes.getEmptySound(resource);
+
+                            // Temporary workaround to use the correct sound for water bottles.
+                            // TODO: Look into providing a proper item-aware fluid sound API.
+                        //    if (resource.isOf(Fluids.WATER)) {
+                          //      if (fill && handItem == Items.GLASS_BOTTLE) sound = SoundEvents.BOTTLE_FILL;
+                          //      if (!fill && handItem == Items.POTION) sound = SoundEvents.BOTTLE_EMPTY;
+                            }
+
+                          //  player.playNotifySound(sound, SoundSource.BLOCKS, 1, 1);
+
+                   //     }
+                    }
+                }
+
+
+            }
 
         } else {
             for (int i = 0; i < player.getInventory().items.size(); i++) {
