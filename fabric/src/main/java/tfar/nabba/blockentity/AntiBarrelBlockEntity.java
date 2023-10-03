@@ -139,7 +139,7 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
         if (tag.hasUUID(NBTKeys.Uuid.name())) {
             setUuid(tag.getUUID(NBTKeys.Uuid.name()));
         }
-        if (tag.contains("CustomName", 8)) {
+        if (tag.contains("CustomName", Tag.TAG_STRING)) {
             this.customName = Component.Serializer.fromJson(tag.getString("CustomName"));
         }
         clientStored = tag.getInt("Stored");

@@ -38,7 +38,6 @@ public class BetterBarrelBlock extends SingleSlotBarrelBlock {
                 if (item instanceof InteractsWithBarrel interactsWithBarrel && interactsWithBarrel.handleBarrel(pState,handStack,pLevel,pPos,pPlayer)) {
 
                 } else {
-
                     ItemStack existing = betterBarrelBlockEntity.getItemHandler().getStack();
                     //there is no items in the barrel OR the item that the player is holding is the same as the item in the barrel
                     if (existing.isEmpty() || ItemStack.isSameItemSameTags(handStack,existing)) {

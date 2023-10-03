@@ -35,8 +35,10 @@ public class AntiBarrelSlotWrapper extends SingleStackStorage {
 	protected void setStack(ItemStack stack) {
 		if (barrelHandler.getStacks().size() == i) {
 			barrelHandler.getStacks().add(stack);
+			barrelHandler.setChanged();
 		} else {
 			barrelHandler.getStacks().set(i, stack);
+			barrelHandler.setChanged();
 		}
 	}
 
