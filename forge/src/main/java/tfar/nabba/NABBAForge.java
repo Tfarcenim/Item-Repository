@@ -161,10 +161,7 @@ public class NABBAForge {
     }
 
     private void setupSync(PlayerContainerEvent.Open e) {
-        AbstractContainerMenu menu = e.getContainer();
-        if (menu instanceof SearchableMenu<?> searchableItemMenu && e.getEntity() instanceof ServerPlayer player) {
-            searchableItemMenu.setFakeSlotSynchronizer(new FakeSlotSynchronizer(player));
-        }
+        NABBA.onContainerOpen(e.getContainer(),e.getEntity());
     }
 
 

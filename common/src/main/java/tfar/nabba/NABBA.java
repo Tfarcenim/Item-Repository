@@ -4,13 +4,17 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import org.slf4j.Logger;
+import tfar.nabba.inventory.FakeSlotSynchronizer;
+import tfar.nabba.menu.SearchableMenu;
 import tfar.nabba.platform.Services;
 
 import javax.annotation.Nullable;
@@ -55,6 +59,12 @@ public class NABBA {
         File file = storageSource.getDimensionPath(server.getLevel(Level.OVERWORLD).dimension())
                 .resolve("data/nabba").toFile();
         file.mkdirs();
+    }
+
+    public static void onContainerOpen(AbstractContainerMenu menu,Player player) {
+        if (menu instanceof SearchableMenu<?> searchableItemMenu && player instanceof ServerPlayer serverPlayer) {
+            searchableItemMenu.setFakeSlotSynchronizer(new FakeSlotSynchronizer(serverPlayer));
+        }
     }
 
     public static void onServerStop() {
