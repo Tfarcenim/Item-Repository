@@ -23,9 +23,8 @@ public class ClientUtils {
         RenderSystem.enableDepthTest();
 
         matrices.blit(x, y, 0, 16, 16, sprite);
-
+        RenderSystem.setShaderColor(1,1,1,1);
         drawSmallFluidNumbers(matrices, x, y, 0, fluidStack);
-
     }
 
     public static void renderFluidTooltip(GuiGraphics matrices, int x, int y, FabricFluidStack fluidStack) {
