@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import tfar.nabba.client.CommonClientUtils;
+import tfar.nabba.client.StackSizeRenderer;
 import tfar.nabba.client.gui.RightClickButton;
 import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.net.PacketHandler;
@@ -74,8 +75,11 @@ public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemSc
     }
 
     public void renderItem(GuiGraphics matrices) {
+
+        String amount = (stack.getCount() > 1) ? CommonUtils.formatLargeNumber(stack.getCount()) : "";
+        StackSizeRenderer.renderSizeLabel(matrices,Minecraft.getInstance().font, getX(),getY(),amount);
         //CommonClientUtils.drawSmallItemNumbers(matrices,getX(),getY(),stack);
-        matrices.renderItemDecorations(Minecraft.getInstance().font,stack, getX(), getY());
+        matrices.renderItemDecorations(Minecraft.getInstance().font,stack, getX(), getY(),"");
         matrices.renderFakeItem(stack,getX(),getY());
     }
 

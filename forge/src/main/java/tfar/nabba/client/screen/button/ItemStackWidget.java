@@ -8,11 +8,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tfar.nabba.client.CommonClientUtils;
+import tfar.nabba.client.StackSizeRenderer;
 import tfar.nabba.client.gui.RightClickButton;
 import tfar.nabba.client.screen.SearchableItemScreen;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.net.server.C2SExtractItemPacket;
 import tfar.nabba.net.server.C2SInsertPacket;
+import tfar.nabba.util.CommonUtils;
 
 public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemScreen<?,?>> {
 
@@ -68,8 +70,9 @@ public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemSc
     }
 
     public void renderItem(GuiGraphics matrices) {
-        CommonClientUtils.drawSmallItemNumbers(matrices,getX(),getY(),stack);
-        matrices.renderItemDecorations(Minecraft.getInstance().font,stack, getX(), getY());
+        String amount = (stack.getCount() > 1) ? CommonUtils.formatLargeNumber(stack.getCount()) : null;
+        StackSizeRenderer.renderSizeLabel(matrices,Minecraft.getInstance().font, getX(),getY(),amount);
+        //matrices.renderItemDecorations(Minecraft.getInstance().font,stack, getX(), getY(),"");
     }
 
     public void renderTooltip(GuiGraphics matrices,int x,int y) {
