@@ -21,6 +21,7 @@ import tfar.nabba.block.AbstractBarrelBlock;
 import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.blockentity.*;
 import tfar.nabba.shim.IFluidHandlerShim;
+import tfar.nabba.shim.IItemHandlerShim;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -65,14 +66,14 @@ public class FabricUtils {
 
         if (betterBarrelBlockEntity instanceof HasHandler hasHandler && !hasHandler.isFull()) {
 
-            if (betterBarrelBlockEntity instanceof HasItemHandler) {
+            if (betterBarrelBlockEntity instanceof BetterBarrelBlockEntity) {
 
                 //note, AABBs start at 0,0,0 on the blockEntity, so to get a 3x3x3 cube we need to go from -1,-1,-1 to +2,+2,+2 relative
                 List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class,
                         getBoxCenteredOn(betterBarrelBlockEntity.getBlockPos(), x, y, z)
                 );
                 for (ItemEntity itemEntity : itemEntities) {
-                    addItem((HasItemHandler) betterBarrelBlockEntity, itemEntity);
+                    addItem((BetterBarrelBlockEntity) betterBarrelBlockEntity, itemEntity);
                 }
             } else if (betterBarrelBlockEntity instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
 
@@ -83,7 +84,7 @@ public class FabricUtils {
                     FluidState fluidState = level.getFluidState(pos);
 
                     FabricFluidStack fabricFluidStack = new FabricFluidStack(FluidVariant.of(fluidState.getType()), FluidConstants.BUCKET);
-                    if (fluidBarrelBlockEntity.isValid(fabricFluidStack)) {
+                    if (fluidBarrelBlockEntity.getFluidHandler().isFluidValid(fabricFluidStack)) {
                         Fluid fluid = fluidState.getType();
 
                         if (fluid instanceof FlowingFluid flowingFluid && flowingFluid.canConvertToSource(level)) {
@@ -111,10 +112,10 @@ public class FabricUtils {
     }
 
 
-    public static boolean addItem(HasItemHandler betterBarrelBlockEntity, ItemEntity pItem) {
+    public static boolean addItem(BetterBarrelBlockEntity betterBarrelBlockEntity, ItemEntity pItem) {
         boolean flag = false;
         ItemStack itemstack = pItem.getItem().copy();
-        ItemStack itemstack1 = betterBarrelBlockEntity.tryAddItem(itemstack);
+        ItemStack itemstack1 = betterBarrelBlockEntity.getItemHandler().insertItem(0,itemstack,false);
         if (itemstack1.isEmpty()) {
             flag = true;
             pItem.discard();
@@ -143,10 +144,10 @@ public class FabricUtils {
     public static final Predicate<BlockEntity> isFreeAndControllableBarrel = blockEntity -> blockEntity instanceof SingleSlotBarrelBlockEntity<?> singleSlotBarrelBlockEntity && singleSlotBarrelBlockEntity.canConnect();
 
 
-    public static int getRedstoneSignalFromContainer(ItemHandler pContainer) {
+    public static int getRedstoneSignalFromContainer(IItemHandlerShim pContainer) {
         ItemStack itemstack = pContainer.getStackInSlot(0);
         if (!itemstack.isEmpty()) {
-            float f = (float) itemstack.getCount() / (float) pContainer.getActualLimit();
+            float f = (float) itemstack.getCount() / (float) pContainer.getSlotLimit(0);
             return Mth.floor(f * 14.0F) + 1;
         } else {
             return 0;

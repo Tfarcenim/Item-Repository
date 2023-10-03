@@ -73,8 +73,6 @@ public interface SearchableItemHandler extends ItemHandler {
         return true;
     }
 
-    Map<Character, Predicate<ItemStack>> searchPredicates = new HashMap<>();
-
     default int getFullItemSlots(String search) {
         int j = 0;
         for (int i = 0 ; i< getSlots();i++) {

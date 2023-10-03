@@ -15,17 +15,15 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBAFabric;
-import tfar.nabba.api.HasItemHandler;
+import tfar.nabba.api.HasHandler;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.inventory.AntiBarrelSlotWrapper;
-import tfar.nabba.inventory.BetterBarrelSlotWrapper;
 import tfar.nabba.menu.AntiBarrelMenu;
 import tfar.nabba.util.*;
 
@@ -34,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider, HasItemHandler, HasSearchBar {
+public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements MenuProvider, HasSearchBar {
 
     private UUID uuid;
     private Component customName;
@@ -122,11 +120,6 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         return new AntiBarrelMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(level, getBlockPos()), getInventory(), dataAccess, syncSlotsAccess);
-    }
-
-    @Override
-    public AntiBarrelInventory getItemHandler() {
-        return getInventory();
     }
 
     public void saveAdditional(CompoundTag tag) {

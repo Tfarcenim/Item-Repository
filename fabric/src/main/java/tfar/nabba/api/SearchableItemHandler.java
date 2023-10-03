@@ -1,6 +1,7 @@
 package tfar.nabba.api;
 
 import net.minecraft.world.item.ItemStack;
+import tfar.nabba.shim.IItemHandlerShim;
 import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.SearchHelper;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-public interface SearchableItemHandler extends ItemHandler {
+public interface SearchableItemHandler extends IItemHandlerShim {
     default List<ItemStack> getItemsForDisplay(int row, String search) {
         List<ItemStack> disp = new ArrayList<>();
         int countForDisplay = 0;
@@ -65,6 +66,13 @@ public interface SearchableItemHandler extends ItemHandler {
         return remainder;
     }
 
+    boolean isFull();
+
+    default int getActualLimit() {
+        return Integer.MAX_VALUE;
+    }
+
+
     default boolean merge(List<ItemStack> stacks,ItemStack toMerge) {
         for (ItemStack stack : stacks) {
             if (ItemStack.isSameItemSameTags(stack,toMerge)) {
@@ -105,8 +113,6 @@ public interface SearchableItemHandler extends ItemHandler {
         }
         return true;
     }
-
-    Map<Character, Predicate<ItemStack>> searchPredicates = new HashMap<>();
 
     default int getFullItemSlots(String search) {
         int j = 0;

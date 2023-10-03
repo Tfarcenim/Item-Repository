@@ -1,7 +1,5 @@
 package tfar.nabba.blockentity;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -9,16 +7,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import tfar.nabba.api.HasItemHandler;
-import tfar.nabba.api.ItemHandler;
+import tfar.nabba.api.HasHandler;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.inventory.BetterBarrelSlotWrapper;
+import tfar.nabba.shim.IItemHandlerShim;
 import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.FabricUtils;
 import tfar.nabba.util.NBTKeys;
 
-public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemStack> implements HasItemHandler {
+public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemStack> {
 
 
     protected BetterBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
@@ -67,11 +65,16 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         ghost = ItemStack.of(pTag.getCompound(NBTKeys.Ghost.name()));
     }
 
+    public ItemStack tryAddItem(ItemStack stack) {
+        return getItemHandler().insertItem(0, stack, false);
+    }
+
+
     public BarrelHandler getItemHandler() {
         return barrelHandler;
     }
 
-    public static class BarrelHandler implements ItemHandler {
+    public static class BarrelHandler implements IItemHandlerShim {
         private final BetterBarrelBlockEntity barrelBlockEntity;
 
         BarrelHandler(BetterBarrelBlockEntity barrelBlockEntity) {
@@ -96,11 +99,6 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
             return stack;
-        }
-
-        @Override
-        public boolean isFull() {
-            return getSlotLimit(0) <= getStackInSlot(0).getCount();
         }
 
         @Override

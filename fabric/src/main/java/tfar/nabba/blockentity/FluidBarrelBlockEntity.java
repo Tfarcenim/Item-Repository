@@ -8,14 +8,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import tfar.nabba.NABBAFabric;
-import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.inventory.FluidBarrelSlotWrapper;
 import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.util.*;
 
-public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFluidStack> implements HasFluidHandler {
+public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFluidStack> {
 
     protected FluidBarrelBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
