@@ -38,8 +38,8 @@ public class SearchableFluidScreen<T extends SearchableFluidHandler,U extends Se
     }
 
     public void renderFluidTooltip(GuiGraphics graphics, FabricFluidStack pItemStack, int pMouseX, int pMouseY) {
-        //super.renderTooltip(graphics, pItemStack, pMouseX, pMouseY);
-        graphics.renderTooltip(this.font, List.of(pItemStack.getFluidVariant().getFluid().getBucket().getName(ItemStack.EMPTY)), Optional.empty(), pMouseX, pMouseY);
+        graphics.renderTooltip(this.font, List.of(pItemStack.getFluidVariant().getFluid().getBucket().getName(ItemStack.EMPTY)),
+                Optional.empty(), pMouseX, pMouseY);
     }
 
     @Override

@@ -16,7 +16,6 @@ import tfar.nabba.client.screen.SearchableFluidScreen;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.util.ClientUtils;
 import tfar.nabba.util.FabricFluidStack;
-import tfar.nabba.util.FluidMovingUtil;
 
 public class FluidStackWidget extends RightClickButton<FabricFluidStack,SearchableFluidScreen<?,?>> {
 
@@ -78,7 +77,7 @@ public class FluidStackWidget extends RightClickButton<FabricFluidStack,Searchab
     }
 
     public void renderFluid(GuiGraphics matrices) {
-        ClientUtils.renderFluid(matrices, getX(), getY(),stack);
+        ClientUtils.renderFluidinSlot(matrices, getX(), getY(),stack);
     }
 
 

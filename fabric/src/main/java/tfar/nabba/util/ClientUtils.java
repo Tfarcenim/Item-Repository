@@ -10,10 +10,11 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
 import tfar.nabba.client.FluidSpriteCache;
+import tfar.nabba.client.StackSizeRenderer;
 
 public class ClientUtils {
 
-    public static void renderFluid(GuiGraphics matrices, int x, int y, FabricFluidStack fluidStack) {
+    public static void renderFluidinSlot(GuiGraphics matrices, int x, int y, FabricFluidStack fluidStack) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         FluidRenderHandler fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(fluidStack.getFluidVariant().getFluid());
@@ -24,7 +25,9 @@ public class ClientUtils {
 
         matrices.blit(x, y, 0, 16, 16, sprite);
         RenderSystem.setShaderColor(1,1,1,1);
-        drawSmallFluidNumbers(matrices, x, y, 0, fluidStack);
+
+        String s = CommonUtils.formatLargeNumber(fluidStack.getAmount()/81);
+        StackSizeRenderer.renderSizeLabel(matrices,Minecraft.getInstance().font,x,y,s);
     }
 
     public static void renderFluidTooltip(GuiGraphics matrices, int x, int y, FabricFluidStack fluidStack) {
@@ -38,22 +41,8 @@ public class ClientUtils {
         RenderSystem.enableDepthTest();
 
         matrices.blit(x, y, 400, 16, 16, sprite);
-
-        drawSmallFluidNumbers(matrices, x, y, 500, fluidStack);
-    }
-
-    public static void drawSmallFluidNumbers(GuiGraphics matrices, int x, int y, int z, FabricFluidStack fluidStack) {
-        PoseStack viewModelPose = RenderSystem.getModelViewStack();
-        viewModelPose.pushPose();
-        viewModelPose.translate(x + 16, y + 12, z);
-        float scale = .5f;
-        viewModelPose.scale(scale, scale, scale);
-        viewModelPose.translate(-1 * x, -1 * y, 0);
-        RenderSystem.applyModelViewMatrix();
+        RenderSystem.setShaderColor(1,1,1,1);
         String s = CommonUtils.formatLargeNumber(fluidStack.getAmount()/81);
-        matrices.drawString(Minecraft.getInstance().font, s, x - Minecraft.getInstance().font.width(s), y, 0xffffff);
-        viewModelPose.popPose();
-        RenderSystem.applyModelViewMatrix();
+        StackSizeRenderer.renderSizeLabel(matrices,Minecraft.getInstance().font,x,y,s);
     }
-
 }
