@@ -23,6 +23,7 @@ import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 import tfar.nabba.blockentity.ControllerBlockEntity;
+import tfar.nabba.blockentity.ControllerProxyBlockEntity;
 import tfar.nabba.init.*;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.world.AntiBarrelSubData;
@@ -47,10 +48,17 @@ public class NABBAFabric implements ModInitializer {
         addGameEvents();
         ItemStorage.SIDED.registerForBlockEntity(BetterBarrelBlockEntity::getStorage,ModBlockEntityTypes.BETTER_BARREL);
         ItemStorage.SIDED.registerForBlockEntity(AntiBarrelBlockEntity::getItemStorage,ModBlockEntityTypes.ANTI_BARREL);
-        FluidStorage.SIDED.registerForBlockEntity((myTank, direction) -> myTank.getFluidStorage(), ModBlockEntityTypes.FLUID_BARREL);
+        FluidStorage.SIDED.registerForBlockEntity((barrelBlockEntity, direction) -> barrelBlockEntity.getFluidStorage(), ModBlockEntityTypes.FLUID_BARREL);
+
+        ItemStorage.SIDED.registerForBlockEntity(BetterBarrelBlockEntity::getStorage,ModBlockEntityTypes.DISCRETE_BETTER_BARREL);
+        ItemStorage.SIDED.registerForBlockEntity(AntiBarrelBlockEntity::getItemStorage,ModBlockEntityTypes.DISCRETE_ANTI_BARREL);
+        FluidStorage.SIDED.registerForBlockEntity((barrelBlockEntity, direction) -> barrelBlockEntity.getFluidStorage(), ModBlockEntityTypes.DISCRETE_FLUID_BARREL);
 
         ItemStorage.SIDED.registerForBlockEntity((ControllerBlockEntity::getItemStorage),ModBlockEntityTypes.CONTROLLER);
         FluidStorage.SIDED.registerForBlockEntity((ControllerBlockEntity::getFluidStorage),ModBlockEntityTypes.CONTROLLER);
+
+        ItemStorage.SIDED.registerForBlockEntity((ControllerProxyBlockEntity::getItemStorage),ModBlockEntityTypes.CONTROLLER_PROXY);
+        FluidStorage.SIDED.registerForBlockEntity((ControllerProxyBlockEntity::getFluidStorage),ModBlockEntityTypes.CONTROLLER_PROXY);
 
         Constants.LOG.info("Hello Fabric world!");
         NABBA.init();

@@ -1,13 +1,21 @@
 package tfar.nabba.blockentity;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.inventory.BetterBarrelSlotWrapper;
+import tfar.nabba.inventory.FluidBarrelSlotWrapper;
+import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.FabricUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ControllerProxyBlockEntity extends BlockEntity {
@@ -96,11 +104,35 @@ public class ControllerProxyBlockEntity extends BlockEntity {
         }
     }
 
-    public ControllerBlockEntity.ControllerHandler getHandler() {
+
+    //fluid api
+
+    private CombinedStorage<FluidVariant, FluidBarrelSlotWrapper> fluidStorage;
+
+    public CombinedStorage<FluidVariant, FluidBarrelSlotWrapper> getFluidStorage(Direction direction) {
         ControllerBlockEntity controllerBlockEntity = getController();
+        if (controllerBlockEntity == null) return null;
+
+        if (fluidStorage == null) {
+            fluidStorage = controllerBlockEntity.getFluidStorage(direction);
+        }
+        return fluidStorage;
+    }
+
+    //item api
+
+    private CombinedStorage<ItemVariant, BetterBarrelSlotWrapper> itemStorage;
+
+    public CombinedStorage<ItemVariant,BetterBarrelSlotWrapper> getItemStorage(Direction direction) {
+
+        ControllerBlockEntity controllerBlockEntity = getController();
+
         if (controllerBlockEntity == null) {
             return null;
         }
-        return controllerBlockEntity.getHandler();
+        if (itemStorage == null) {
+            itemStorage = controllerBlockEntity.getItemStorage(direction);//delegate to connected controller
+        }
+        return itemStorage;
     }
 }
