@@ -1,6 +1,7 @@
 package tfar.nabba.api;
 
 import net.minecraft.world.item.ItemStack;
+import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.SearchHelper;
 
 import java.util.ArrayList;
@@ -30,7 +31,39 @@ public interface SearchableItemHandler extends ItemHandler {
         return disp;
     }
 
+    default ItemStack requestItem(ItemStack stack) {
+        ItemStack remaining = CommonUtils.copyStackWithSize(stack,Math.min(stack.getMaxStackSize(),stack.getCount()));
+        ItemStack extracted = ItemStack.EMPTY;
+        for (int i = 0; i < getSlots();i++) {
+            ItemStack simExtract = extractItem(i,remaining.getCount(),true);
+            if (!simExtract.isEmpty() && ItemStack.isSameItemSameTags(simExtract,remaining)) {
+                extractItem(i,remaining.getCount(),false);
+                if (extracted.isEmpty()) {
+                    extracted = simExtract;
+                } else {
+                    extracted.grow(simExtract.getCount());
+                }
+                remaining.shrink(simExtract.getCount());
+                if (remaining.isEmpty()) {
+                    return extracted;
+                }
+            }
+        }
+        return extracted;
+    }
 
+    default ItemStack storeItem(ItemStack stack, boolean simulate) {
+        if (isFull()) return stack;
+        ItemStack remainder = stack;
+
+        for (int i = 0; i < getSlots();i++) {
+            remainder = insertItem(i,remainder,simulate);
+            if (remainder.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
+        }
+        return remainder;
+    }
 
     default boolean merge(List<ItemStack> stacks,ItemStack toMerge) {
         for (ItemStack stack : stacks) {

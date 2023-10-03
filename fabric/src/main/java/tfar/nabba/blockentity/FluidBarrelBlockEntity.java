@@ -1,8 +1,6 @@
 package tfar.nabba.blockentity;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +11,7 @@ import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.HasFluidHandler;
 import tfar.nabba.block.BetterBarrelBlock;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.inventory.FluidBarrelSlotWrapper;
 import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.util.*;
 
@@ -185,8 +184,13 @@ public class FluidBarrelBlockEntity extends SingleSlotBarrelBlockEntity<FabricFl
         }
     }
 
-    public Storage<FluidVariant> getFluidStorage() {
-        return new SingleBarrelFluidStorage(this);
+    public FluidBarrelSlotWrapper storage;
+
+    public FluidBarrelSlotWrapper getFluidStorage() {
+        if (storage == null) {
+            storage = new FluidBarrelSlotWrapper(this);
+        }
+        return storage;
     }
 
     @Override

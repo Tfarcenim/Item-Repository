@@ -54,7 +54,7 @@ public class ControllerBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return ControllerBlockEntity.create(pPos, pState);
+        return ControllerBlockEntity.createItem(pPos, pState);
     }
 
     @Override

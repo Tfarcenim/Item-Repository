@@ -175,9 +175,9 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
     }
 
 
-    private Storage<ItemVariant> storage;
+    private BetterBarrelSlotWrapper storage;
 
-    public Storage<ItemVariant> getStorage(Direction direction) {
+    public BetterBarrelSlotWrapper getStorage(Direction direction) {
         BarrelHandler itemHandler = getItemHandler();
         if (storage == null) {
             storage = create(itemHandler);
@@ -185,9 +185,8 @@ public class BetterBarrelBlockEntity extends SingleSlotBarrelBlockEntity<ItemSta
         return storage;
     }
 
-    public static Storage<ItemVariant> create(BarrelHandler barrelHandler) {
-        BetterBarrelSlotWrapper storage = new BetterBarrelSlotWrapper(barrelHandler);
-        return storage;
+    public static BetterBarrelSlotWrapper create(BarrelHandler barrelHandler) {
+        return new BetterBarrelSlotWrapper(barrelHandler);
     }
 
 

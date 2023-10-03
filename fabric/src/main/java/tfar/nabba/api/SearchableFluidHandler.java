@@ -1,19 +1,18 @@
 package tfar.nabba.api;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
+import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.util.FabricFluidStack;
-import tfar.nabba.util.FabricFluidUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface SearchableFluidHandler extends FluidHandler {
+public interface SearchableFluidHandler extends IFluidHandlerShim {
     default List<FabricFluidStack> getFluidDisplaySlots(int row, String search) {
         List<FabricFluidStack> disp = new ArrayList<>();
         int countForDisplay = 0;
@@ -45,6 +44,16 @@ public interface SearchableFluidHandler extends FluidHandler {
         return false;
     }
 
+    default FabricFluidStack requestFluid(FabricFluidStack requested, ItemStack container, Inventory playerInv, ServerPlayer player, boolean simulate) {
+        for (int i = 0; i < getTanks();i++) {
+            FabricFluidStack fluidStack = getFluidInTank(i);
+            if (fluidStack.getFluidVariant().equals(requested.getFluidVariant())) {
+                return null;//uidUtil.tryFillContainerAndStow(container, new SingleFluidSlotWrapper(this,i), playerInv, Integer.MAX_VALUE, player, !simulate);
+            }
+        }
+        return null;//FluidActionResult.FAILURE;
+    }
+
     default boolean matches(FabricFluidStack stack, String search) {
         if (stack.isEmpty()) return false;
         if (search.isEmpty()) {
@@ -68,14 +77,4 @@ public interface SearchableFluidHandler extends FluidHandler {
         return false;
     }
 
-    default int getFullFluidSlots(String search) {
-        int j = 0;
-        for (int i = 0; i < getTanks(); i++) {
-            @NotNull FabricFluidStack stack = getFluidInTank(i);
-            if (matches(stack, search)) {
-                i++;
-            }
-        }
-        return j;
-    }
 }

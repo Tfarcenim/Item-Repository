@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.world.item.ItemStack;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
 
 /**
@@ -12,41 +13,47 @@ import tfar.nabba.blockentity.BetterBarrelBlockEntity;
  * or the transaction logic will not work correctly.
  * This is handled by the Map in InventoryStorageImpl.
  */
-public class BetterBarrelSlotWrapper extends SingleStackStorage {
+public class AntiBarrelSlotWrapper extends SingleStackStorage {
 	/**
 	 * The strong reference to the InventoryStorageImpl ensures that the weak value doesn't get GC'ed when individual slots are still being accessed.
 	 */
-	private final BetterBarrelBlockEntity.BarrelHandler barrelHandler;
+	private final AntiBarrelBlockEntity.AntiBarrelInventory barrelHandler;
+	private final int i;
 	private ItemStack lastReleasedSnapshot = null;
 
-	public BetterBarrelSlotWrapper(BetterBarrelBlockEntity.BarrelHandler storage) {
-		this.barrelHandler = storage;
+	public AntiBarrelSlotWrapper(AntiBarrelBlockEntity.AntiBarrelInventory inventory, int i) {
+		barrelHandler = inventory;
+		this.i = i;
 	}
 
 	@Override
 	protected ItemStack getStack() {
-		return barrelHandler.getStack();
+		return barrelHandler.getStackInSlot(i);
 	}
 
 	@Override
 	protected void setStack(ItemStack stack) {
-		barrelHandler.setStack(stack);
+		if (barrelHandler.getStacks().size() == i) {
+			barrelHandler.getStacks().add(stack);
+		} else {
+			barrelHandler.getStacks().set(i, stack);
+		}
 	}
 
 	@Override
 	protected boolean canInsert(ItemVariant itemVariant) {
-		return barrelHandler.isItemValid(0, itemVariant.toStack());
+		return barrelHandler.isItemValid(i, itemVariant.toStack());
 	}
 
 	@Override
 	public int getCapacity(ItemVariant variant) {
-		return barrelHandler.getSlotLimit(0);
+		return barrelHandler.getSlotLimit(i);
 	}
 
 	// We override updateSnapshots to also schedule a markDirty call for the backing inventory.
 	@Override
 	public void updateSnapshots(TransactionContext transaction) {
-		barrelHandler.markDirty();
+		barrelHandler.setChanged();
 		super.updateSnapshots(transaction);
 	}
 

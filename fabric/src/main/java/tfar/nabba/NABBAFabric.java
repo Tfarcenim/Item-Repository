@@ -10,11 +10,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -23,10 +20,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import tfar.nabba.block.SingleSlotBarrelBlock;
+import tfar.nabba.blockentity.AntiBarrelBlockEntity;
 import tfar.nabba.blockentity.BetterBarrelBlockEntity;
+import tfar.nabba.blockentity.ControllerBlockEntity;
 import tfar.nabba.init.*;
-import tfar.nabba.inventory.FakeSlotSynchronizer;
-import tfar.nabba.menu.SearchableMenu;
 import tfar.nabba.net.PacketHandler;
 import tfar.nabba.world.AntiBarrelSubData;
 
@@ -49,7 +46,11 @@ public class NABBAFabric implements ModInitializer {
         PacketHandler.registerMessages();
         addGameEvents();
         ItemStorage.SIDED.registerForBlockEntity(BetterBarrelBlockEntity::getStorage,ModBlockEntityTypes.BETTER_BARREL);
+        ItemStorage.SIDED.registerForBlockEntity(AntiBarrelBlockEntity::getItemStorage,ModBlockEntityTypes.ANTI_BARREL);
         FluidStorage.SIDED.registerForBlockEntity((myTank, direction) -> myTank.getFluidStorage(), ModBlockEntityTypes.FLUID_BARREL);
+
+        ItemStorage.SIDED.registerForBlockEntity((ControllerBlockEntity::getItemStorage),ModBlockEntityTypes.CONTROLLER);
+        FluidStorage.SIDED.registerForBlockEntity((ControllerBlockEntity::getFluidStorage),ModBlockEntityTypes.CONTROLLER);
 
         Constants.LOG.info("Hello Fabric world!");
         NABBA.init();

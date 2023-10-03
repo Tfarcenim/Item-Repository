@@ -31,7 +31,7 @@ public class ModBlockEntityTypes {
     public static final BlockEntityType<FluidBarrelBlockEntity> DISCRETE_FLUID_BARREL = BlockEntityType.Builder.of(Suppliers.DISCRETE_FB,fb_blocks).build(null);
 
     public static final BlockEntityType<ControllerBlockEntity> CONTROLLER =
-            BlockEntityType.Builder.of(ControllerBlockEntity::create,ModBlocks.CONTROLLER).build(null);
+            BlockEntityType.Builder.of(ControllerBlockEntity::createItem,ModBlocks.CONTROLLER).build(null);
 
     public static final BlockEntityType<ControllerProxyBlockEntity> CONTROLLER_PROXY =
             BlockEntityType.Builder.of(ControllerProxyBlockEntity::create,ModBlocks.CONTROLLER_PROXY).build(null);

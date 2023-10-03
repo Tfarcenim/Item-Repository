@@ -498,61 +498,6 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             return false;
         }
 
-        @Override
-        public long fill(int tank, FabricFluidStack incoming, IFluidHandlerShim.FluidAction action) {
-
-            int index = getIndexForFluidSlot(tank);
-            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
-
-            //probably a safe cast
-            IFluidHandlerShim iItemHandlerItem = handler;
-            ItemStack container = iItemHandlerItem.getContainer();
-            if (container.getCount() > 1) {
-                //need to split and add remainder
-                ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
-                container.setCount(1);
-                blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
-            }
-
-            tank = getFluidSlotFromIndex(tank, index);
-            long fill = handler.fill(incoming, action);
-            if (fill > 0) {
-                markDirty();
-            }
-            return fill;
-        }
-
-        @Override
-        public @NotNull FabricFluidStack drain(int tank, FabricFluidStack resource, FluidAction action) {
-            FabricFluidStack stack = getFluidInTank(tank);
-            if (resource.isEmpty() || !resource.sameFluid(stack)) {
-                return FabricFluidStack.empty();
-            }
-            return drain(tank,resource.getAmount(), action);
-        }
-
-        @Override
-        public @NotNull FabricFluidStack drain(int tank, long maxDrain, IFluidHandlerShim.FluidAction action) {
-            int index = getIndexForFluidSlot(tank);
-            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
-            tank = getFluidSlotFromIndex(tank, index);
-
-
-            //probably a safe cast
-            ItemStack container = handler.getContainer();
-            if (container.getCount() > 1) {
-                //need to split and add remainder
-                ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
-                container.setCount(1);
-                blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
-            }
-
-            FabricFluidStack stack = handler.drain(maxDrain, action);
-            if (!action.simulate() && !stack.isEmpty()) {
-                markDirty();
-            }
-            return stack;
-        }
     }
 
     public static class BarrelInterfaceItemHandler implements SearchableItemHandler{

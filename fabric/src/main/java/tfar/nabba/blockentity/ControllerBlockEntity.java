@@ -1,7 +1,10 @@
 package tfar.nabba.blockentity;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -20,6 +23,8 @@ import tfar.nabba.NABBA;
 import tfar.nabba.api.*;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModBlockTags;
+import tfar.nabba.inventory.BetterBarrelSlotWrapper;
+import tfar.nabba.inventory.FluidBarrelSlotWrapper;
 import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.util.BarrelType;
 import tfar.nabba.util.FabricFluidStack;
@@ -97,7 +102,7 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
     private final ControllerHandler controllerHandler;
 
 
-    public static ControllerBlockEntity create(BlockPos pos, BlockState state) {
+    public static ControllerBlockEntity createItem(BlockPos pos, BlockState state) {
         return new ControllerBlockEntity(ModBlockEntityTypes.CONTROLLER, pos, state);
     }
 
@@ -508,32 +513,6 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
             return false;
         }
 
-        @Override
-        public long fill(int tank, FabricFluidStack stack, IFluidHandlerShim.FluidAction action) {
-            return 0;
-        }
-
-        @Override
-        public @NotNull FabricFluidStack drain(int tank, FabricFluidStack resource, IFluidHandlerShim.FluidAction action) {
-            FabricFluidStack stack = getFluidInTank(tank);
-            if (resource.isEmpty() || !resource.sameFluid(stack)) {
-                return FabricFluidStack.empty();
-            }
-            return drain(tank,resource.getAmount(), action);
-        }
-
-        @Override
-        public @NotNull FabricFluidStack drain(int tank, long maxDrain, FluidAction action) {
-            if (tank >= getTanks())return FabricFluidStack.empty();
-
-            BlockEntity be = controllerBlockEntity.getBE(tank,BarrelType.FLUID);
-
-            if (be instanceof FluidBarrelBlockEntity fluidBarrelBlockEntity) {
-                return fluidBarrelBlockEntity.getFluidHandler().drain(maxDrain,action);
-            }
-            return FabricFluidStack.empty();
-        }
-
     }
 
     @Nonnull
@@ -547,4 +526,66 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+
+    //fluid api
+
+    private CombinedStorage<FluidVariant, FluidBarrelSlotWrapper> fluidStorage;
+
+    public CombinedStorage<FluidVariant, FluidBarrelSlotWrapper> getFluidStorage(Direction direction) {
+
+        if (fluidStorage != null && fluidStorage.parts.size() != controllerHandler.getSlots()) {
+            fluidStorage = null;
+        }
+        if (fluidStorage == null) {
+            fluidStorage = createFluid();
+        }
+        return fluidStorage;
+    }
+
+
+    public CombinedStorage<FluidVariant, FluidBarrelSlotWrapper> createFluid() {
+        int slots = controllerHandler.getSlots();
+
+        List<FluidBarrelSlotWrapper> storages = new ArrayList<>();
+
+        for (int i = 0 ;i < slots;i++) {
+            BlockEntity blockEntity = getBE(i,BarrelType.BETTER);
+            if (blockEntity instanceof FluidBarrelBlockEntity barrelBlockEntity) {
+                FluidBarrelSlotWrapper wrapper = barrelBlockEntity.getFluidStorage();
+                storages.add(wrapper);
+            }
+        }
+        return new CombinedStorage<>(storages);
+    }
+
+    //item api
+
+    private CombinedStorage<ItemVariant,BetterBarrelSlotWrapper> itemStorage;
+
+    public CombinedStorage<ItemVariant,BetterBarrelSlotWrapper> getItemStorage(Direction direction) {
+
+        if (itemStorage != null && itemStorage.parts.size() != controllerHandler.getSlots()) {
+            itemStorage = null;
+        }
+        if (itemStorage == null) {
+            itemStorage = createItem();
+        }
+        return itemStorage;
+    }
+
+
+    public CombinedStorage<ItemVariant, BetterBarrelSlotWrapper> createItem() {
+        int slots = controllerHandler.getSlots();
+
+        List<BetterBarrelSlotWrapper> storages = new ArrayList<>();
+
+        for (int i = 0 ;i < slots;i++) {
+            BlockEntity blockEntity = getBE(i,BarrelType.BETTER);
+            if (blockEntity instanceof BetterBarrelBlockEntity barrelBlockEntity) {
+                BetterBarrelSlotWrapper wrapper = barrelBlockEntity.getStorage(null);
+                storages.add(wrapper);
+            }
+        }
+        return new CombinedStorage<>(storages);
+    }
 }

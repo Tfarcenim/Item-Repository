@@ -1,6 +1,9 @@
 package tfar.nabba.blockentity;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -12,6 +15,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -20,11 +24,10 @@ import tfar.nabba.api.HasItemHandler;
 import tfar.nabba.api.HasSearchBar;
 import tfar.nabba.api.SearchableItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
+import tfar.nabba.inventory.AntiBarrelSlotWrapper;
+import tfar.nabba.inventory.BetterBarrelSlotWrapper;
 import tfar.nabba.menu.AntiBarrelMenu;
-import tfar.nabba.util.CommonUtils;
-import tfar.nabba.util.FabricUtils;
-import tfar.nabba.util.ItemStackUtil;
-import tfar.nabba.util.NBTKeys;
+import tfar.nabba.util.*;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -350,4 +353,34 @@ public class AntiBarrelBlockEntity extends AbstractBarrelBlockEntity implements 
             return slot < getSlots();
         }
     }
+
+
+    private CombinedStorage<ItemVariant,AntiBarrelSlotWrapper> itemStorage;
+
+    public CombinedStorage<ItemVariant,AntiBarrelSlotWrapper> getItemStorage(Direction direction) {
+
+        AntiBarrelInventory inventory = getInventory();
+
+        if (itemStorage != null && itemStorage.parts.size() != inventory.getSlots()) {
+            itemStorage = null;
+        }
+        if (itemStorage == null) {
+            itemStorage = createItem(inventory);
+        }
+        return itemStorage;
+    }
+
+
+    public CombinedStorage<ItemVariant, AntiBarrelSlotWrapper> createItem(AntiBarrelInventory inventory) {
+        int slots = inventory.getSlots();
+
+        List<AntiBarrelSlotWrapper> storages = new ArrayList<>();
+
+        for (int i = 0 ;i < slots;i++) {
+                AntiBarrelSlotWrapper wrapper = new AntiBarrelSlotWrapper(inventory,i);
+                storages.add(wrapper);
+        }
+        return new CombinedStorage<>(storages);
+    }
+
 }
