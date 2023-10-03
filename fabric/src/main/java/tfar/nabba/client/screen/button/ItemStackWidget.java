@@ -28,9 +28,11 @@ public class ItemStackWidget extends RightClickButton<ItemStack,SearchableItemSc
 
         ItemStack mouseStack = screen.getMenu().getCarried();
 
+        int count = Math.min(stack.getMaxStackSize(),stack.getCount());
+
         if (mouseStack.isEmpty() &&!stack.isEmpty()) {//try to take item
             PacketHandler.sendToServer(PacketHandler.extract_item,buf -> {
-                buf.writeItem(stack);
+                buf.writeItem(CommonUtils.copyStackWithSize(stack,count));
                 buf.writeBoolean(shift);
             });
         } else if (!mouseStack.isEmpty()) {//try to insert full stack
