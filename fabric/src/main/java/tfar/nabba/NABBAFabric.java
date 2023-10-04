@@ -35,7 +35,7 @@ import static tfar.nabba.NABBA.MODID;
 
 public class NABBAFabric implements ModInitializer {
 
-    
+
     @Override
     public void onInitialize() {
 

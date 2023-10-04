@@ -54,7 +54,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             public int get(int pIndex) {
                 switch (pIndex) {
                     case 0:
-                        return getWrapper().totalItemSlotCount;
+                        return getWrapper().getSlots();
                     case 1:
                         return 1;//getWrapper().getFullSlots(search);
                     default:
@@ -76,7 +76,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
             public int get(int pIndex) {
                 switch (pIndex) {
                     case 0:
-                        return getWrapper().totalFluidSlotCount;
+                        return getWrapper().getTanks();
                     case 1:
                         return 1;//getItemHandler().getFullSlots(search);
                     default:
@@ -160,14 +160,9 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         private final Map<BarrelType,List<Integer>> slot_cache = new HashMap<>();
 
-        protected int totalItemSlotCount;
-        protected int totalFluidSlotCount;
-        protected List<IItemHandlerShim> itemHandlers; // the handlers
-      //  protected List<IFluidHandlerShim> fluidHandlers; // the handlers
-
         public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
-
+            recomputeSlots();
         }
 
         //prevent voiding
@@ -207,7 +202,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public int getSlots() {
-            return totalItemSlotCount;
+            return slot_cache.get(BarrelType.BETTER).size();
         }
 
 
@@ -285,7 +280,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public int getTanks() {
-            return totalFluidSlotCount;
+            return slot_cache.get(BarrelType.FLUID).size();
         }
 
         @Override
@@ -385,7 +380,7 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
     }
 
-    public static class BarrelInterfaceItemHandler implements SearchableItemHandler{
+    public static class BarrelInterfaceItemHandler implements SearchableItemHandler {
 
         private final BarrelInterfaceBlockEntity blockEntity;
 
@@ -414,13 +409,13 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (stack.isEmpty() || !isItemValid(slot, stack)) return stack;
             if (slot >= barrels.size()) {
-                //add and move to next slot
+                //add one and return
                 if (!simulate) {
-                    barrels.add(stack.copy());
+                    barrels.add(CommonUtils.copyStackWithSize(stack,1));
                     blockEntity.wrapper.recomputeSlots();
                     markDirty();
                 }
-                return ItemStack.EMPTY;
+                return CommonUtils.copyStackWithSize(stack,stack.getCount() - 1);
             } else {
                 ItemStack existing = barrels.get(slot);
                 int limit = getSlotLimit(slot);
