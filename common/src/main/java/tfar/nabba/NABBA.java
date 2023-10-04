@@ -45,9 +45,9 @@ public class NABBA {
         // your own abstraction layer. You can learn more about this in our provided services class. In this example
         // we have an interface in the common code and use a loader specific implementation to delegate our call to
         // the platform specific approach.
-        if (Services.PLATFORM.isModLoaded("examplemod")) {
-            Constants.LOG.info("Hello to examplemod");
-        }
+    //    if (Services.PLATFORM.isModLoaded("examplemod")) {
+    //        Constants.LOG.info("Hello to examplemod");
+    //    }
 
         Services.PLATFORM.registerGameObjects();
     }

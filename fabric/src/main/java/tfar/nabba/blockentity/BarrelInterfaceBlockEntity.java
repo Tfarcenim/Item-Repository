@@ -1,8 +1,11 @@
 package tfar.nabba.blockentity;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -14,25 +17,27 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.*;
-import tfar.nabba.capability.AntiBarrelItemStackItemHandler;
+import tfar.nabba.capability.BetterBarrelItemStackItemHandler;
+import tfar.nabba.capability.FluidBarrelItemStackItemHandler;
 import tfar.nabba.init.ModBlockEntityTypes;
 import tfar.nabba.init.tag.ModItemTags;
+import tfar.nabba.inventory.BetterBarrelSlotWrapper;
+import tfar.nabba.inventory.FluidBarrelSlotWrapper;
+import tfar.nabba.item.barrels.BetterBarrelBlockItem;
+import tfar.nabba.item.barrels.FluidBarrelBlockItem;
 import tfar.nabba.menu.BarrelInterfaceMenu;
 import tfar.nabba.shim.IFluidHandlerShim;
 import tfar.nabba.shim.IItemHandlerShim;
-import tfar.nabba.util.CommonUtils;
-import tfar.nabba.util.FabricFluidStack;
-import tfar.nabba.util.ItemStackWrapper;
+import tfar.nabba.util.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements MenuProvider, DisplayMenuProvider {
 
@@ -153,12 +158,12 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         private final BarrelInterfaceBlockEntity blockEntity;
 
-        protected List<Integer> baseItemHandlerIndices = new ArrayList<>();
-        protected List<Integer> baseFluidHandlerIndices = new ArrayList<>();
+        private final Map<BarrelType,List<Integer>> slot_cache = new HashMap<>();
+
         protected int totalItemSlotCount;
         protected int totalFluidSlotCount;
         protected List<IItemHandlerShim> itemHandlers; // the handlers
-        protected List<IFluidHandlerShim> fluidHandlers; // the handlers
+      //  protected List<IFluidHandlerShim> fluidHandlers; // the handlers
 
         public BarrelWrapper(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
@@ -180,52 +185,21 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
 
         public void recomputeSlots() {
-            recomputeItemSlots();
-            recomputeFluidSlots();
-        }
+            slot_cache.clear();
 
-        public void recomputeItemSlots() {
-            itemHandlers = itemCaps();
-            baseItemHandlerIndices.clear();
-            int index = 0;
-            for (int i = 0; i < itemHandlers.size(); i++) {
-                index += itemHandlers.get(i).getSlots();
-                baseItemHandlerIndices.add(index);
-            }
-            this.totalItemSlotCount = index;
-        }
+            slot_cache.put(BarrelType.BETTER,new ArrayList<>());
+            slot_cache.put(BarrelType.FLUID,new ArrayList<>());
 
-        public void recomputeFluidSlots() {
-            fluidHandlers = fluidCaps();
-            baseFluidHandlerIndices.clear();
-            int index = 0;
-            for (int i = 0; i < fluidHandlers.size(); i++) {
-                index += fluidHandlers.get(i).getTanks();
-                baseFluidHandlerIndices.add(index);
-            }
-            this.totalFluidSlotCount = index;
-        }
-
-        public List<IItemHandlerShim> itemCaps() {
-            return null;//caps(ForgeCapabilities.ITEM_HANDLER);
-        }
-
-        public List<IFluidHandlerShim> fluidCaps() {
-            return null;//caps(ForgeCapabilities.FLUID_HANDLER_ITEM);
-        }
-
-      /*  public <T> List<LazyOptional<T>> caps(Capability<T> capability) {
-            List<LazyOptional<T>> list = new ArrayList<>();
-            for (ItemStack stack : getBarrelInt().barrels) {
-
-
-
-                if (stack.getCapability(capability).isPresent()) {
-                    list.add(stack.getCapability(capability));
+            List<ItemStack> barrels = getBarrelInt().barrels;
+            for (int i = 0; i < barrels.size(); i++) {
+                ItemStack stack = barrels.get(i);
+                if (stack.getItem() instanceof BetterBarrelBlockItem) {
+                    slot_cache.get(BarrelType.BETTER).add(i);
+                } else if (stack.getItem() instanceof FluidBarrelBlockItem) {
+                    slot_cache.get(BarrelType.FLUID).add(i);
                 }
             }
-            return list;
-        }*/
+        }
 
         public BarrelInterfaceItemHandler getBarrelInt() {
             return blockEntity.getInventory();
@@ -237,114 +211,52 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         }
 
 
-        // returns the handler index for the slot
-        protected int getIndexForItemSlot(int slot) {
+        protected int mapSlotToItemBarrelIndex(int slot) {
             if (slot < 0)
                 return -1;
-
-            for (int i = 0; i < baseItemHandlerIndices.size(); i++) {
-                if (slot - baseItemHandlerIndices.get(i) < 0) {
-                    return i;
-                }
+            if (slot < slot_cache.get(BarrelType.BETTER).size()) {
+                return slot_cache.get(BarrelType.BETTER).get(slot);
             }
             return -1;
         }
 
-        protected IItemHandlerShim getItemHandlerFromIndex(int index) {
-            if (index < 0 || index >= itemHandlers.size()) {
-                return null;
-            }
-            return itemHandlers.get(index);
-        }
-
-        protected int getItemSlotFromIndex(int slot, int index) {
-            if (index <= 0 || index >= baseItemHandlerIndices.size()) {
-                return slot;
-            }
-            return slot - baseItemHandlerIndices.get(index - 1);
-        }
-
 
         // returns the handler index for the slot
-        protected int getIndexForFluidSlot(int slot) {
+        protected int mapSlotToFluidBarrelSlot(int slot) {
             if (slot < 0)
                 return -1;
-
-            for (int i = 0; i < baseFluidHandlerIndices.size(); i++) {
-                if (slot - baseFluidHandlerIndices.get(i) < 0) {
-                    return i;
-                }
+            if (slot < slot_cache.get(BarrelType.FLUID).size()) {
+                return slot_cache.get(BarrelType.FLUID).get(slot);
             }
             return -1;
         }
-
-        protected IFluidHandlerShim getFluidHandlerFromIndex(int index) {
-            if (index < 0 || index >= fluidHandlers.size()) {
-                return null;
-            }
-            return fluidHandlers.get(index);
-        }
-
-        protected int getFluidSlotFromIndex(int slot, int index) {
-            if (index <= 0 || index >= baseFluidHandlerIndices.size()) {
-                return slot;
-            }
-            return slot - baseFluidHandlerIndices.get(index - 1);
-        }
-
 
         @Override
         public @NotNull ItemStack getStackInSlot(int slot) {
-            int index = getIndexForItemSlot(slot);
-            IItemHandlerShim handler = getItemHandlerFromIndex(index);
-            slot = getItemSlotFromIndex(slot, index);
-            return handler.getStackInSlot(slot);
+            int index = mapSlotToItemBarrelIndex(slot);
+            if (index == -1) return ItemStack.EMPTY;
+            ItemStack barrel = getBarrelInt().barrels.get(index);
+            return BlockItemBarrelUtils.getStoredItem(barrel);
         }
 
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack incoming, boolean simulate) {
-            int index = getIndexForItemSlot(slot);
-            IItemHandlerShim handler = getItemHandlerFromIndex(index);
-
-            //probably a safe cast
-            IItemHandlerItem iItemHandlerItem = (IItemHandlerItem)handler;
-            ItemStack container = iItemHandlerItem.getContainer();
-            if (container.getCount() > 1) {
-                //need to split and add remainder
-                ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
-                container.setCount(1);
-                blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
-            }
-
-            slot = getItemSlotFromIndex(slot, index);
-            ItemStack stack = handler.insertItem(slot, incoming, simulate);
+            int index = mapSlotToItemBarrelIndex(slot);
+            if (index == -1) return incoming;
+            IItemHandlerShim iItemHandlerShim = new BetterBarrelItemStackItemHandler(getBarrelInt().barrels.get(index));
+            ItemStack stack = iItemHandlerShim.insertItem(slot, incoming, simulate);
             if (!simulate && stack != incoming) {
                 markDirty();
-                if (handler instanceof AntiBarrelItemStackItemHandler) {
-                    recomputeItemSlots();
-                }
             }
             return stack;
         }
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            int index = getIndexForItemSlot(slot);
-            IItemHandlerShim handler = getItemHandlerFromIndex(index);
-            slot = getItemSlotFromIndex(slot, index);
-
-
-            //probably a safe cast
-            IItemHandlerItem iItemHandlerItem = (IItemHandlerItem)handler;
-            ItemStack container = iItemHandlerItem.getContainer();
-            if (container.getCount() > 1) {
-                //need to split and add remainder
-                ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
-                container.setCount(1);
-                blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
-            }
-
-            ItemStack stack = handler.extractItem(slot, amount, simulate);
+            int index = mapSlotToItemBarrelIndex(slot);
+            if (index == -1) return ItemStack.EMPTY;
+            IItemHandlerShim iItemHandlerShim = new BetterBarrelItemStackItemHandler(getBarrelInt().barrels.get(index));
+            ItemStack stack = iItemHandlerShim.extractItem(slot, amount, simulate);
             if (!simulate && !stack.isEmpty()) {
                 markDirty();
             }
@@ -353,18 +265,18 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public int getSlotLimit(int slot) {
-            int index = getIndexForItemSlot(slot);
-            IItemHandlerShim handler = getItemHandlerFromIndex(index);
-            int localSlot = getItemSlotFromIndex(slot, index);
-            return handler.getSlotLimit(localSlot);
+            int index = mapSlotToItemBarrelIndex(slot);
+            if (index == -1) return 0;
+            IItemHandlerShim iItemHandlerShim = new BetterBarrelItemStackItemHandler(getBarrelInt().barrels.get(index));
+            return iItemHandlerShim.getSlotLimit(0);
         }
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            int index = getIndexForItemSlot(slot);
-            IItemHandlerShim handler = getItemHandlerFromIndex(index);
-            int localSlot = getItemSlotFromIndex(slot, index);
-            return handler.isItemValid(localSlot, stack);
+            int index = mapSlotToItemBarrelIndex(slot);
+            if (index == -1) return false;
+            IItemHandlerShim iItemHandlerShim = new BetterBarrelItemStackItemHandler(getBarrelInt().barrels.get(index));
+            return iItemHandlerShim.isItemValid(0, stack);
         }
 
         public void markDirty() {
@@ -378,122 +290,88 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public @NotNull FabricFluidStack getFluidInTank(int tank) {
-            int index = getIndexForFluidSlot(tank);
-            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
-            tank = getFluidSlotFromIndex(tank, index);
-            return handler.getFluidInTank(tank);
+            int index = mapSlotToFluidBarrelSlot(tank);
+            IFluidHandlerShim handler = new FluidBarrelItemStackItemHandler(getBarrelInt().barrels.get(index));
+            return handler.getFluidInTank(0);
         }
 
         @Override
         public long getTankCapacity(int tank) {
-            int index = getIndexForFluidSlot(tank);
-            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
-            int localSlot = getFluidSlotFromIndex(tank, index);
-            return handler.getTankCapacity(localSlot);
+            int index = mapSlotToFluidBarrelSlot(tank);
+            IFluidHandlerShim handler = new FluidBarrelItemStackItemHandler(getBarrelInt().barrels.get(index));
+            return handler.getTankCapacity(0);
         }
 
         @Override
         public boolean isFluidValid(int tank, @NotNull FabricFluidStack stack) {
-            int index = getIndexForFluidSlot(tank);
-            IFluidHandlerShim handler = getFluidHandlerFromIndex(index);
-            int localSlot = getFluidSlotFromIndex(tank, index);
-            return handler.isFluidValid(localSlot, stack);
+            int index = mapSlotToFluidBarrelSlot(tank);
+            IFluidHandlerShim handler = new FluidBarrelItemStackItemHandler(getBarrelInt().barrels.get(index));
+            return handler.isFluidValid(0, stack);
         }
 
         @Override
         public long fill(FabricFluidStack resource, FluidAction action) {
             int filled = 0;
             FabricFluidStack remaining = resource.copy();
-            long fill = 0;
-            for (IFluidHandlerShim handlerLazyOptional : fluidHandlers) {
-                    ItemStack container = handlerLazyOptional.getContainer();
-                    if (container.getCount() > 1) {
-                            //need to split and add remainder
-                            ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
-                            container.setCount(1);
-                            blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
-                    }
-                    return handlerLazyOptional.fill(remaining, action);
-                }
-                if (fill > 0) {
-                    remaining.shrink(fill);
-                    filled += fill;
-                }
+            List<Integer> fluidBarrelSlots = slot_cache.get(BarrelType.FLUID);
+            for (int i = 0; i < fluidBarrelSlots.size();i++) {
+                int index = fluidBarrelSlots.get(i);
+                ItemStack barrel = getBarrelInt().barrels.get(index);
+                FluidBarrelItemStackItemHandler fluidBarrelItemStackItemHandler = new FluidBarrelItemStackItemHandler(barrel);
+                long amount = fluidBarrelItemStackItemHandler.fill(remaining,FluidAction.EXECUTE);
+                remaining.shrink(amount);
+                filled+= amount;
+                if (remaining.isEmpty()) break;
+            }
             return filled;
         }
 
         @Override
         public @NotNull FabricFluidStack drain(FabricFluidStack resource, FluidAction action) {
 
-            FabricFluidStack drained =  FabricFluidStack.empty();
+            FabricFluidStack drained = FabricFluidStack.empty();
             FabricFluidStack remaining = resource.copy();
-            for (IFluidHandlerShim fluidHandler : fluidHandlers) {
-                FabricFluidStack drain = null;//fluidHandler.map(fl -> {
-
-                    ItemStack container = fluidHandler.getContainer();
-                    if (container.getCount() > 1) {
-                        //need to split and add remainder
-                        ItemStack leftover = CommonUtils.copyStackWithSize(container,container.getCount() - 1);
-                        container.setCount(1);
-                        blockEntity.handler.insertItem(blockEntity.handler.getSlots(),leftover,false);
-                    }
-
-                   // return fl.drain(remaining, action);
-
-                if (!drain.isEmpty()) {
+            List<Integer> fluidBarrelSlots = slot_cache.get(BarrelType.FLUID);
+            for (int i = 0; i < fluidBarrelSlots.size();i++) {
+                int index = fluidBarrelSlots.get(i);
+                ItemStack barrel = getBarrelInt().barrels.get(index);
+                FluidBarrelItemStackItemHandler fluidBarrelItemStackItemHandler = new FluidBarrelItemStackItemHandler(barrel);
+                FabricFluidStack drain = fluidBarrelItemStackItemHandler.drain(remaining,FluidAction.SIMULATE);
+                if (remaining.sameFluid(drain)) {
                     if (drained.isEmpty()) {
                         drained = drain;
-                        remaining.shrink(drain.getAmount());
                     } else {
-                        if (drain.sameFluid(drained)) {
-                            drained.grow(drain.getAmount());
-                            remaining.shrink(drain.getAmount());
-                        } else {
-
-                        }
+                        drained.grow(drain.getAmount());
                     }
+                    remaining.shrink(drain.getAmount());
+                } else {
+                    continue;
                 }
+                if (remaining.isEmpty()) break;
             }
-
             return drained;
         }
 
         @Override
         public @NotNull FabricFluidStack drain(long maxDrain, FluidAction action) {
-
             FabricFluidStack drained = FabricFluidStack.empty();
-            final long[] remaining = new long[1];
-            remaining[0] = maxDrain;
-
-            FabricFluidStack drain = FabricFluidStack.empty();//todo
-
-            for (IFluidHandlerShim handlerLazyOptional : fluidHandlers) {
-
-                ItemStack container = handlerLazyOptional.getContainer();
-                if (container.getCount() > 1) {
-                    //need to split and add remainder
-                    ItemStack leftover = CommonUtils.copyStackWithSize(container, container.getCount() - 1);
-                    container.setCount(1);
-                    blockEntity.handler.insertItem(blockEntity.handler.getSlots(), leftover, false);
+            long remaining = maxDrain;
+            List<Integer> fluidBarrelSlots = slot_cache.get(BarrelType.FLUID);
+            for (int i = 0; i < fluidBarrelSlots.size();i++) {
+                int index = fluidBarrelSlots.get(i);
+                ItemStack barrel = getBarrelInt().barrels.get(index);
+                FluidBarrelItemStackItemHandler fluidBarrelItemStackItemHandler = new FluidBarrelItemStackItemHandler(barrel);
+                FabricFluidStack drain = fluidBarrelItemStackItemHandler.drain(remaining,FluidAction.SIMULATE);
+                if (drained.isEmpty()) {
+                    drained = drain;
+                } else {
+                    drained.grow(drain.getAmount());
                 }
-
-                return FabricFluidStack.empty();//fl.drain(remaining[0], action);
+                remaining -= drain.getAmount();
+                if (remaining <= 0) break;
             }
-                if (!drain.isEmpty()) {
-                    if (drained.isEmpty()) {
-                        drained = drain;
-                        remaining[0] -= drain.getAmount();
-                    } else {
-                        if (drain.getFluidVariant().equals(drained.getFluidVariant())) {
-                            drained.grow(drain.getAmount());
-                            remaining[0] -= drain.getAmount();
-                        } else {
-
-                        }
-                    }
-                }
-                return null;
-            }
+            return drained;
+        }
 
         @Override
         public ItemStack getContainer() {
@@ -515,25 +393,6 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         BarrelInterfaceItemHandler(BarrelInterfaceBlockEntity blockEntity) {
             this.blockEntity = blockEntity;
-        }
-
-        public void sort() {
-            List<ItemStack> stacks = new ArrayList<>();
-            for (ItemStack stack : barrels) {
-                if (!stack.isEmpty()) {
-                    CommonUtils.merge(stacks, stack.copy());
-                }
-            }
-
-            List<ItemStackWrapper> wrappers = CommonUtils.wrap(stacks);
-
-            Collections.sort(wrappers);
-
-            barrels.clear();
-
-            //split up the stacks and add them to the slot
-
-            wrappers.forEach(itemStackWrapper -> barrels.add(itemStackWrapper.stack));
         }
 
         @Override
@@ -622,12 +481,12 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
 
         @Override
         public int getSlotLimit(int slot) {
-            return Integer.MAX_VALUE;
+            return 1;
         }
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return stack.is(ModItemTags.BARRELS) && !isFull();
+            return (stack.is(ModItemTags.BETTER_BARRELS) || stack.is(ModItemTags.FLUID_BARRELS)) && !isFull();
         }
 
         public int getStoredCount() {
@@ -667,6 +526,65 @@ public class BarrelInterfaceBlockEntity extends SearchableBlockEntity implements
         public List<ItemStack> getBarrels() {
             return barrels;
         }
+    }
+
+    //fluid api
+
+    private CombinedStorage<FluidVariant, FluidBarrelBlockItem.SingleItemBarrelWrapper> fluidStorage;
+
+    public CombinedStorage<FluidVariant, FluidBarrelBlockItem.SingleItemBarrelWrapper> getFluidStorage(Direction direction) {
+
+        int tanks = wrapper.getTanks();
+
+        if (fluidStorage != null && fluidStorage.parts.size() != tanks) {
+            fluidStorage = null;
+        }
+        if (fluidStorage == null) {
+            fluidStorage = createFluid();
+        }
+        return fluidStorage;
+    }
+
+
+    public CombinedStorage<FluidVariant, FluidBarrelBlockItem.SingleItemBarrelWrapper> createFluid() {
+        List<Integer> fluidBarrelSlots = wrapper.slot_cache.get(BarrelType.FLUID);
+        List<FluidBarrelBlockItem.SingleItemBarrelWrapper> storages = new ArrayList<>();
+        for (int i = 0 ;i < fluidBarrelSlots.size();i++) {
+            int index = fluidBarrelSlots.get(i);
+            ItemStack barrel = handler.barrels.get(index);
+            FluidBarrelBlockItem.SingleItemBarrelWrapper singleItemBarrelWrapper = FluidBarrelBlockItem.getStorage(barrel);
+            storages.add(singleItemBarrelWrapper);
+        }
+        return new CombinedStorage<>(storages);
+    }
+
+    //item api
+
+    private CombinedStorage<ItemVariant, BetterBarrelBlockItem.SingleItemBarrelWrapper> itemStorage;
+
+    public CombinedStorage<ItemVariant, BetterBarrelBlockItem.SingleItemBarrelWrapper> getItemStorage(Direction direction) {
+        int slots = wrapper.getSlots();
+
+        if (itemStorage != null && itemStorage.parts.size() != slots) {
+            itemStorage = null;
+        }
+        if (itemStorage == null) {
+            itemStorage = createItem();
+        }
+        return itemStorage;
+    }
+
+
+    public CombinedStorage<ItemVariant, BetterBarrelBlockItem.SingleItemBarrelWrapper> createItem() {
+        List<Integer> betterBarrelSlots = wrapper.slot_cache.get(BarrelType.BETTER);
+        List<BetterBarrelBlockItem.SingleItemBarrelWrapper> storages = new ArrayList<>();
+        for (int i = 0 ;i < betterBarrelSlots.size();i++) {
+            int index = betterBarrelSlots.get(i);
+            ItemStack barrel = handler.barrels.get(index);
+            BetterBarrelBlockItem.SingleItemBarrelWrapper singleItemBarrelWrapper = BetterBarrelBlockItem.getStorage(barrel);
+            storages.add(singleItemBarrelWrapper);
+        }
+        return new CombinedStorage<>(storages);
     }
 
     @Nullable

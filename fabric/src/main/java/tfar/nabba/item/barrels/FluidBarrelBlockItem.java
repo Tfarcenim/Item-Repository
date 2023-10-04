@@ -5,6 +5,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import tfar.nabba.NABBAFabric;
 import tfar.nabba.inventory.tooltip.FluidBarrelTooltip;
 import tfar.nabba.util.BlockItemBarrelUtils;
 import tfar.nabba.util.FabricFluidStack;
@@ -51,4 +52,67 @@ public class FluidBarrelBlockItem extends BlockItem {
         }
         return FabricFluidStack.empty();
     }
+
+    public static SingleItemBarrelWrapper getStorage(ItemStack stack) {
+        if (stack.getItem() instanceof FluidBarrelBlockItem) {
+            return new SingleItemBarrelWrapper(stack);
+        }
+        return null;
+    }
+
+    public static class SingleItemBarrelWrapper extends SingleFluidStackStorage {
+
+        private final ItemStack barrel;
+
+        private FabricFluidStack lastReleasedSnapshot = null;
+
+
+        public SingleItemBarrelWrapper(ItemStack barrel) {
+            this.barrel = barrel;
+        }
+
+        @Override
+        protected FabricFluidStack getStack() {
+            return getStoredFluid(barrel);
+        }
+
+        @Override
+        protected void setStack(FabricFluidStack stack) {
+            FluidBarrelBlockItem.setFluid(barrel,stack);
+        }
+
+        @Override
+        public long getCapacity() {
+            return BetterBarrelBlockItem.getStorageMultiplier(barrel) * 1000L *
+                    (BetterBarrelBlockItem.storageDowngrade(barrel) ? 1L : NABBAFabric.ServerCfg.fluid_barrel_base_storage);
+        }
+
+
+//        @Override
+        //       public void updateSnapshots(TransactionContext transaction) {
+        //           storage.setChanged();
+        //           super.updateSnapshots(transaction);
+        //       }
+
+        @Override
+        protected void releaseSnapshot(FabricFluidStack snapshot) {
+            lastReleasedSnapshot = snapshot;
+        }
+
+        @Override
+        protected void onFinalCommit() {
+            // Try to apply the change to the original stack
+            FabricFluidStack original = lastReleasedSnapshot;
+            FabricFluidStack currentStack = getStack();
+
+            if (!original.isEmpty() && original.sameFluid(currentStack)) {
+                // None is empty and the items match: just update the amount and NBT, and reuse the original stack.
+                setStack(currentStack.copy());
+            } else {
+                // Otherwise assume everything was taken from original so empty it.
+                original.setAmount(0);
+            }
+        }
+    }
+
 }

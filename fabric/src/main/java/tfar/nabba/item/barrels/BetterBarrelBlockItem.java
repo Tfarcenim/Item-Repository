@@ -1,5 +1,7 @@
 package tfar.nabba.item.barrels;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -7,12 +9,11 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import tfar.nabba.NABBAFabric;
 import tfar.nabba.api.UpgradeStack;
 import tfar.nabba.block.SingleSlotBarrelBlock;
 import tfar.nabba.inventory.tooltip.BetterBarrelTooltip;
 import tfar.nabba.util.BlockItemBarrelUtils;
-import tfar.nabba.util.CommonUtils;
 import tfar.nabba.util.NBTKeys;
 
 import java.util.ArrayList;
@@ -71,4 +72,70 @@ public class BetterBarrelBlockItem extends BlockItem {
         return BlockItemBarrelUtils.getBooleanBlockStateValue(barrel,SingleSlotBarrelBlock.STORAGE_DOWNGRADE);
     }
 
+    public static SingleItemBarrelWrapper getStorage(ItemStack stack) {
+        if (stack.getItem() instanceof BetterBarrelBlockItem) {
+            return new SingleItemBarrelWrapper(stack);
+        }
+        return null;
+    }
+
+
+
+    public static class SingleItemBarrelWrapper extends SingleStackStorage {
+
+        private final ItemStack barrel;
+
+        private ItemStack lastReleasedSnapshot = null;
+
+
+        public SingleItemBarrelWrapper(ItemStack barrel) {
+            this.barrel = barrel;
+        }
+
+        @Override
+        protected ItemStack getStack() {
+            return BlockItemBarrelUtils.getStoredItem(barrel);
+        }
+
+        @Override
+        protected void setStack(ItemStack stack) {
+            BlockItemBarrelUtils.setStack(barrel,stack);
+        }
+
+        @Override
+        protected int getCapacity(ItemVariant variant) {
+            ItemStack existing = BlockItemBarrelUtils.getStoredItem(barrel);
+            return BetterBarrelBlockItem.getStorageMultiplier(barrel) * existing.getMaxStackSize() *
+                    (BetterBarrelBlockItem.storageDowngrade(barrel) ? 1 : NABBAFabric.ServerCfg.better_barrel_base_storage);
+        }
+
+
+//        @Override
+ //       public void updateSnapshots(TransactionContext transaction) {
+ //           storage.setChanged();
+ //           super.updateSnapshots(transaction);
+ //       }
+
+        @Override
+        protected void releaseSnapshot(ItemStack snapshot) {
+            lastReleasedSnapshot = snapshot;
+        }
+
+        @Override
+        protected void onFinalCommit() {
+            // Try to apply the change to the original stack
+            ItemStack original = lastReleasedSnapshot;
+            ItemStack currentStack = getStack();
+
+            if (!original.isEmpty() && original.getItem() == currentStack.getItem()) {
+                // None is empty and the items match: just update the amount and NBT, and reuse the original stack.
+                original.setCount(currentStack.getCount());
+                original.setTag(currentStack.hasTag() ? currentStack.getTag().copy() : null);
+                setStack(original);
+            } else {
+                // Otherwise assume everything was taken from original so empty it.
+                original.setCount(0);
+            }
+        }
+    }
 }
