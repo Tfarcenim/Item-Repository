@@ -186,13 +186,14 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         CompoundTag barrelListNBT = new CompoundTag();
-
         for (BarrelType type : barrels.keySet()) {
             ListTag listTag = new ListTag();
             List<BlockPos> blockPosList = barrels.get(type);
             for (BlockPos pos : blockPosList) {
                 CompoundTag tag = new CompoundTag();
-                tag.putIntArray("pos", new int[]{pos.getX(), pos.getY(), pos.getZ()});
+                BlockPos offset = pos.subtract(getBlockPos());
+                //convert absolute position to offset
+                tag.putIntArray("offset", new int[]{offset.getX(), offset.getY(), offset.getZ()});
                 listTag.add(tag);
             }
             barrelListNBT.put(type.name(),listTag);
@@ -213,12 +214,13 @@ public class ControllerBlockEntity extends SearchableBlockEntity implements Disp
             List<BlockPos> blockPosList = new ArrayList<>();
             for (Tag tag : listTag) {
                 CompoundTag compoundTag = (CompoundTag)tag;
-                int[] pos = compoundTag.getIntArray("pos");
-                BlockPos pos1 = new BlockPos(pos[0],pos[1],pos[2]);
-                if (!blockPosList.contains(pos1)) {
-                    blockPosList.add(pos1);
+                int[] pos = compoundTag.getIntArray("offset");
+                BlockPos offset = new BlockPos(pos[0],pos[1],pos[2]);
+                //convert offset to absolute position
+                if (!blockPosList.contains(offset)) {
+                    blockPosList.add(getBlockPos().offset(offset));
                 } else {
-                    NABBA.LOGGER.warn("Removed duplicate {}",pos1);
+                    NABBA.LOGGER.warn("Removed duplicate {}",offset);
                 }
             }
             barrels.put(type,blockPosList);
